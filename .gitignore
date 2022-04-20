@@ -2,8 +2,8 @@
 .idea
 .htaccess
 .env
+.phpunit.result.cache
 
 # Ignore all vendor files included by composer and the lock file
 /vendor
 composer.lock
-node_modules

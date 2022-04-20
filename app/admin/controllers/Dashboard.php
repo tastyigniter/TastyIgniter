@@ -1,10 +1,12 @@
-<?php namespace Admin\Controllers;
+<?php
+
+namespace Admin\Controllers;
 
 use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Widgets\DashboardContainer;
-use AdminMenu;
-use Request;
-use Template;
+use Illuminate\Support\Facades\Request;
 
 class Dashboard extends \Admin\Classes\AdminController
 {
@@ -32,9 +34,9 @@ class Dashboard extends \Admin\Classes\AdminController
 
     public function initDashboardContainer()
     {
-        $this->containerConfig['canSetDefault'] = AdminAuth::isSuperUser();
-        $this->containerConfig['defaultWidgets'] = $this->getDefaultWidgets();
-        $this->containerConfig['canAddAndDelete'] = $this->canAddAndDeleteWidgets();
+        $this->containerConfig['canManage'] = array_get($this->containerConfig, 'canManage', $this->canManageWidgets());
+        $this->containerConfig['canSetDefault'] = array_get($this->containerConfig, 'canSetDefault', AdminAuth::isSuperUser());
+        $this->containerConfig['defaultWidgets'] = array_get($this->containerConfig, 'defaultWidgets', $this->getDefaultWidgets());
 
         new DashboardContainer($this, $this->containerConfig);
     }
@@ -93,9 +95,8 @@ class Dashboard extends \Admin\Classes\AdminController
         ];
     }
 
-    protected function canAddAndDeleteWidgets()
+    protected function canManageWidgets()
     {
-        return $this->getUser()->hasPermission('Admin.Dashboard.Add')
-            AND $this->getUser()->hasPermission('Admin.Dashboard.Delete');
+        return $this->getUser()->hasPermission('Admin.Dashboard');
     }
 }

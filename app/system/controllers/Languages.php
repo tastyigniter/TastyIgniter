@@ -1,7 +1,9 @@
-<?php namespace System\Controllers;
+<?php
 
+namespace System\Controllers;
+
+use Admin\Facades\AdminMenu;
 use Admin\Widgets\Form;
-use AdminMenu;
 use System\Classes\ExtensionManager;
 use System\Classes\LanguageManager;
 use System\Models\Languages_model;
@@ -29,15 +31,18 @@ class Languages extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:system::lang.languages.text_form_name',
         'model' => 'System\Models\Languages_model',
+        'request' => 'System\Requests\Language',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
+            'redirectNew' => 'languages/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'languages/edit/{language_id}',
             'redirectClose' => 'languages',
+            'redirectNew' => 'languages/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -66,8 +71,7 @@ class Languages extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Site.Languages.Manage'))
-            Languages_model::applySupportedLanguages();
+        Languages_model::applySupportedLanguages();
 
         $this->asExtension('ListController')->index();
     }
@@ -86,13 +90,13 @@ class Languages extends \Admin\Classes\AdminController
         $this->asExtension('FormController')->initForm($model, $context);
 
         $file = post('Language._file');
-        $this->setFilterValue('file', (!strlen($file) OR strpos($file, '::') == FALSE) ? null : $file);
+        $this->setFilterValue('file', (!strlen($file) || strpos($file, '::') == FALSE) ? null : $file);
 
         $term = post('Language._search');
-        $this->setFilterValue('search', (!strlen($term) OR !is_string($term)) ? null : $term);
+        $this->setFilterValue('search', (!strlen($term) || !is_string($term)) ? null : $term);
 
         $stringFilter = post('Language._string_filter');
-        $this->setFilterValue('string_filter', (!strlen($stringFilter) OR !is_string($stringFilter)) ? null : $stringFilter);
+        $this->setFilterValue('string_filter', (!strlen($stringFilter) || !is_string($stringFilter)) ? null : $stringFilter);
 
         return $this->asExtension('FormController')->makeRedirect('edit', $model);
     }
@@ -120,22 +124,7 @@ class Languages extends \Admin\Classes\AdminController
 
         $this->vars['totalStrings'] = $this->totalStrings;
         $this->vars['totalTranslated'] = $this->totalTranslated;
-        $this->vars['translatedProgress'] = $this->totalStrings ? round(($this->totalTranslated * 100) / $this->totalStrings) : 0;
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules = [
-            ['name', 'lang:system::lang.languages.label_name', 'required|min:2|max:32'],
-            ['code', 'lang:system::lang.languages.label_code', 'required|regex:/^[a-zA-Z_]+$/'],
-//            ['idiom', 'lang:system::lang.languages.label_idiom', 'required|min:2|max:32'.
-//                ((!$model->exists) ? '|unique:languages,idiom' : '')],
-            ['status', 'lang:admin::lang.label_status', 'required|integer'],
-            ['translations.*.source', 'lang:system::lang.column_source', 'string|max:2500'],
-            ['translations.*.translation', 'lang:system::lang.column_translation', 'string|max:2500'],
-        ];
-
-        return $this->validatePasses(post($form->arrayName), $rules);
+        $this->vars['translatedProgress'] = $this->totalStrings ? round(($this->totalTranslated * 100) / $this->totalStrings, 2) : 0;
     }
 
     protected function getFilterValue($key, $default = null)
@@ -158,7 +147,7 @@ class Languages extends \Admin\Classes\AdminController
             $name = sprintf('%s::%s', $file['namespace'], $file['group']);
 
             if (!array_get($file, 'system', FALSE)
-                AND ($extension = $extensionManager->findExtension($file['namespace']))) {
+                && ($extension = $extensionManager->findExtension($file['namespace']))) {
                 $result[$name] = array_get($extension->extensionMeta(), 'name').' - '.$name;
             }
             else {
@@ -177,7 +166,7 @@ class Languages extends \Admin\Classes\AdminController
         $files = collect($this->localeFiles);
 
         $file = $this->getFilterValue('file');
-        if (strlen($file) AND strpos($file, '::')) {
+        if (strlen($file) && strpos($file, '::')) {
             [$namespace, $group] = explode('::', $file);
             $files = $files->where('group', $group)->where('namespace', $namespace);
         }

@@ -2,13 +2,15 @@
 
 namespace Admin\Traits;
 
-use App;
 use Closure;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Exception\ValidationException;
 use Illuminate\Contracts\Validation\Factory;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Validator;
-use Session;
+use System\Helpers\ValidationHelper;
 
 trait ValidatesForm
 {
@@ -18,9 +20,9 @@ trait ValidatesForm
      * Validate the given request with the given rules.
      *
      * @param  $request
-     * @param  array $rules
-     * @param  array $messages
-     * @param  array $customAttributes
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
      *
      * @return array|bool
      */
@@ -29,7 +31,7 @@ trait ValidatesForm
         $validator = $this->makeValidator($request, $rules, $messages, $customAttributes);
 
         if ($validator->fails()) {
-            $this->flashErrors($validator);
+            $this->flashValidationErrors($validator->errors());
 
             return FALSE;
         }
@@ -41,9 +43,9 @@ trait ValidatesForm
      * Validate the given request with the given rules.
      *
      * @param  $request
-     * @param  array $rules
-     * @param  array $messages
-     * @param  array $customAttributes
+     * @param array $rules
+     * @param array $messages
+     * @param array $customAttributes
      *
      * @return array
      */
@@ -52,7 +54,7 @@ trait ValidatesForm
         $validator = $this->makeValidator($request, $rules, $messages, $customAttributes);
 
         if ($validator->fails()) {
-            $this->flashErrors($validator);
+            $this->flashValidationErrors($validator->errors());
             throw new ValidationException($validator);
         }
 
@@ -61,10 +63,9 @@ trait ValidatesForm
 
     public function makeValidator($request, array $rules, array $messages = [], array $customAttributes = [])
     {
-        if (!$customAttributes)
-            $customAttributes = $this->parseAttributes($rules);
-
-        $rules = $this->parseRules($rules);
+        $parsed = ValidationHelper::prepareRules($rules);
+        $rules = Arr::get($parsed, 'rules', $rules);
+        $customAttributes = Arr::get($parsed, 'attributes', $customAttributes);
 
         $validator = $this->getValidationFactory()->make(
             $request ?? [], $rules, $messages, $customAttributes
@@ -95,8 +96,8 @@ trait ValidatesForm
             return [];
 
         $result = [];
-        foreach ($rules as $key => list($name, $attribute,)) {
-            $result[$name] = (sscanf($attribute, 'lang:%s', $line) === 1) ? lang($line) : $attribute;
+        foreach ($rules as $key => [$name, $attribute]) {
+            $result[$name] = is_lang_key($attribute) ? lang($attribute) : $attribute;
         }
 
         return $result;
@@ -105,8 +106,8 @@ trait ValidatesForm
     /**
      * Get the request input based on the given validation rules.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  array $rules
+     * @param \Illuminate\Http\Request $request
+     * @param array $rules
      *
      * @return array
      */
@@ -133,13 +134,40 @@ trait ValidatesForm
         $this->validateAfterCallback = $callback;
     }
 
-    protected function flashErrors(Validator $validator)
+    protected function flashValidationErrors($errors)
     {
         $sessionKey = 'errors';
 
         if (App::runningInAdmin())
             $sessionKey = 'admin_errors';
 
-        return Session::flash($sessionKey, $validator->errors());
+        return Session::flash($sessionKey, $errors);
+    }
+
+    protected function validateFormWidget($form, $saveData)
+    {
+        // for backwards support, first of all try and use a rules in the config if we have them
+        if ($rules = array_get($form->config, 'rules')) {
+            return $this->validate($saveData, $rules,
+                array_get($form->config, 'validationMessages', []),
+                array_get($form->config, 'validationAttributes', [])
+            );
+        }
+
+        // if we dont have in config then fallback to a FormRequest class
+        if ($requestClass = array_get($this->config, 'request')) {
+            if (!class_exists($requestClass))
+                throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
+
+            app()->resolving($requestClass, function ($request, $app) use ($form) {
+                if (method_exists($request, 'setController'))
+                    $request->setController($this->controller);
+
+                if (method_exists($request, 'setInputKey'))
+                    $request->setInputKey($form->arrayName);
+            });
+
+            app()->make($requestClass);
+        }
     }
 }

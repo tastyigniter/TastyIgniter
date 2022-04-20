@@ -1,12 +1,13 @@
-<?php namespace System\Models;
+<?php
 
+namespace System\Models;
+
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
-use Main\Models\Image_tool_model;
-use Model;
+use Igniter\Flame\Exception\ValidationException;
 
 /**
  * Countries Model Class
- * @package System
  */
 class Countries_model extends Model
 {
@@ -24,7 +25,12 @@ class Countries_model extends Model
      */
     protected $primaryKey = 'country_id';
 
-    protected $fillable = ['country_id', 'country_name', 'iso_code_2', 'iso_code_3', 'format', 'status'];
+    protected $guarded = [];
+
+    protected $casts = [
+        'status' => 'boolean',
+        'priority' => 'integer',
+    ];
 
     public $relation = [
         'hasOne' => [
@@ -32,9 +38,51 @@ class Countries_model extends Model
         ],
     ];
 
+    public $timestamps = TRUE;
+
+    /**
+     * @var self Default country cache.
+     */
+    protected static $defaultCountry;
+
     public static function getDropdownOptions()
     {
         return static::isEnabled()->dropdown('country_name');
+    }
+
+    public function makeDefault()
+    {
+        if (!$this->status) {
+            throw new ValidationException(['status' => sprintf(
+                lang('admin::lang.alert_error_set_default'), $this->country_name
+            )]);
+        }
+
+        setting('country_id', $this->country_id);
+        setting()->save();
+    }
+
+    /**
+     * Returns the default currency defined.
+     * @return self
+     */
+    public static function getDefault()
+    {
+        if (self::$defaultCountry !== null) {
+            return self::$defaultCountry;
+        }
+
+        $defaultCountry = self::isEnabled()
+            ->where('country_id', setting('country_id'))
+            ->first();
+
+        if (!$defaultCountry) {
+            if ($defaultCountry = self::whereIsEnabled()->first()) {
+                $defaultCountry->makeDefault();
+            }
+        }
+
+        return self::$defaultCountry = $defaultCountry;
     }
 
     //

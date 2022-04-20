@@ -1,12 +1,14 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Admin\Models\Categories_model;
 use Admin\Models\Locations_model;
 use Admin\Models\Menus_model;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use Log;
 use Main\Classes\MediaLibrary;
 
 class CreateMediaAttachmentsTable extends Migration
@@ -73,7 +75,7 @@ class CreateMediaAttachmentsTable extends Migration
             $path = $mediaLibrary->getMediaRelativePath($path);
 
             $media = $model->newMediaInstance();
-            $media->addFromFile(image_path($mediaLibrary->getMediaPath($path)), $tagName);
+            $media->addFromFile(assets_path($mediaLibrary->getMediaPath($path)), $tagName);
 
             $media->save();
             $model->media()->save($media);

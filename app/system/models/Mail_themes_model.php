@@ -1,13 +1,14 @@
-<?php namespace System\Models;
+<?php
 
-use Cache;
+namespace System\Models;
+
 use Exception;
-use File;
-use Model;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * MailThemes Model Class
- * @package System
  * @method static instance()
  * @method static get($var, $default)
  */
@@ -55,7 +56,7 @@ class Mail_themes_model extends Model
         }
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->resetCache();
     }
@@ -129,12 +130,5 @@ class Mail_themes_model extends Model
         $basePath = app_path('system/views/_mail/themes');
 
         return File::get($basePath.'/default.css');
-
-        $parser = new Less_Parser(['compress' => TRUE]);
-        $parser->ModifyVars(static::makeCssVars());
-
-        $parser->parse(FileHelper::get($basePath.'/default.scss'));
-
-        return $parser->getCss();
     }
 }

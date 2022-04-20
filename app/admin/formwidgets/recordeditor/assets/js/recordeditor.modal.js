@@ -18,12 +18,10 @@
         this.$modalRootElement.remove()
         this.$modalElement = null
         this.$modalRootElement = null
+        delete RecordEditorModal.DEFAULTS.recordDataCache[this.options.alias]
     }
 
     RecordEditorModal.prototype.init = function () {
-        if (this.options.alias === undefined)
-            throw new Error('Record editor modal option "alias" is not set.')
-
         this.$modalRootElement = $('<div/>', this.options.attributes)
 
         this.$modalRootElement.one('hide.bs.modal', $.proxy(this.onModalHidden, this))
@@ -32,9 +30,9 @@
 
     RecordEditorModal.prototype.show = function () {
         this.$modalRootElement.html(
-            '<div class="modal-dialog"><div class="modal-content"><div class="modal-body">'
-            +'<span class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>'
-            +'</div></div></div>'
+            '<div class="modal-dialog"><div class="modal-content"><div class="modal-body"><div class="progress-indicator">'
+            +'<span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>Loading...'
+            +'</div></div></div></div>'
         );
 
         this.$modalRootElement.modal({backdrop: 'static', keyboard: false})
@@ -45,28 +43,34 @@
             this.$modalElement.modal('hide')
     }
 
-    RecordEditorModal.prototype.handleFormError = function (event, dataOrXhr, textStatus, jqXHR) {
-        $.ti.flashMessage({
-            container: '#modal-notification',
-            class: 'danger',
-            text: jqXHR.responseText,
-            interval: 0
-        })
-
-        event.preventDefault()
+    RecordEditorModal.prototype.handleFormSetup = function (event, context) {
+        if (this.options.onSubmit !== undefined)
+            this.options.onSubmit.call(this, context)
     }
 
-    RecordEditorModal.prototype.onRecordSaved = function (event, data, textStatus, jqXHR) {
+    RecordEditorModal.prototype.handleFormError = function (event, context, textStatus, jqXHR) {
+        if (this.options.onFail !== undefined)
+            this.options.onFail.call(this, context, jqXHR)
+    }
+
+    RecordEditorModal.prototype.handleFormDone = function (event, data, textStatus, jqXHR) {
         if (this.options.onSave !== undefined)
             this.options.onSave.call(this, data, jqXHR)
     }
 
-    RecordEditorModal.prototype.onRecordLoaded = function (json) {
-        this.$modalElement.html(json);
-        $(window).trigger('ajaxUpdateComplete')
+    RecordEditorModal.prototype.onRecordLoaded = function (data) {
+        this.$modalElement.html(data.result);
 
+        var _event = jQuery.Event('recordEditorModalShown')
+        $(window).trigger(_event, [this.$modalElement])
+        if (_event.isDefaultPrevented()) return
+
+        if (this.options.onLoad !== undefined)
+            this.options.onLoad.call(this, data)
+
+        this.$modalElement.find('form').on('ajaxSetup', $.proxy(this.handleFormSetup, this))
         this.$modalElement.find('form').on('ajaxError', $.proxy(this.handleFormError, this))
-        this.$modalElement.find('form').on('ajaxDone', $.proxy(this.onRecordSaved, this))
+        this.$modalElement.find('form').on('ajaxDone', $.proxy(this.handleFormDone, this))
     }
 
     RecordEditorModal.prototype.onModalHidden = function (event) {
@@ -78,22 +82,32 @@
 
     RecordEditorModal.prototype.onModalShown = function (event) {
         var self = this,
-            handler = this.options.alias + '::onLoadRecord'
+            handler = this.options.handler ? this.options.handler : this.options.alias + '::onLoadRecord',
+            recordData = this.options.recordData ? this.options.recordData : {recordId: this.options.recordId}
 
-        this.$modalElement = $(event.target)
+        self.$modalElement = $(event.target)
+
+        if (this.options.alias)
+            RecordEditorModal.DEFAULTS.recordDataCache[this.options.alias] = recordData
 
         $.request(handler, {
-            data: {
-                recordId: this.options.recordId,
-            },
-            success: $.proxy(this.onRecordLoaded, this),
+            data: recordData,
+        }).done($.proxy(this.onRecordLoaded, this)).fail(function () {
+            self.$modalElement.modal('hide')
+        }).always(function () {
+            self.$modalElement.modal('handleUpdate')
         })
     }
 
     RecordEditorModal.DEFAULTS = {
         alias: undefined,
+        handler: undefined,
         recordId: undefined,
+        recordData: undefined,
+        onLoad: undefined,
+        onSubmit: undefined,
         onSave: undefined,
+        onFail: undefined,
         onClose: undefined,
         attributes: {
             id: 'record-editor-modal',
@@ -102,9 +116,30 @@
             tabindex: -1,
             ariaLabelled: '#record-editor-modal',
             ariaHidden: true,
-        }
+        },
+        recordDataCache: {}
     }
 
     $.ti.recordEditor.modal = RecordEditorModal
+
+    $(document).on('click', '[data-toggle="record-editor"]', function (event) {
+        var $button = $(event.currentTarget),
+            options = $.extend({
+                onSave: function () {
+                    this.hide()
+                }
+            }, $button.data())
+
+        event.preventDefault()
+
+        new $.ti.recordEditor.modal(options)
+    })
+
+    $.ajaxPrefilter(function(options) {
+        if (!$.isEmptyObject(RecordEditorModal.DEFAULTS.recordDataCache)) {
+            if (!options.headers) options.headers = {}
+            options.headers['X-IGNITER-RECORD-EDITOR-REQUEST-DATA'] = JSON.stringify(RecordEditorModal.DEFAULTS.recordDataCache)
+        }
+    })
 }(window.jQuery);
 

@@ -1,5 +1,8 @@
-<?php namespace Admin\Classes;
+<?php
 
+namespace Admin\Classes;
+
+use Admin\Traits\LocationAwareWidget;
 use Admin\Traits\WidgetMaker;
 use Igniter\Flame\Support\Extendable;
 use Igniter\Flame\Traits\EventEmitter;
@@ -11,7 +14,6 @@ use System\Traits\ViewMaker;
 /**
  * Base Widget Class
  * Adapted from october\backend\classes\WidgetBase
- * @package Admin
  */
 class BaseWidget extends Extendable
 {
@@ -21,6 +23,7 @@ class BaseWidget extends Extendable
     use AssetMaker;
     use ConfigMaker;
     use EventEmitter;
+    use LocationAwareWidget;
 
     /**
      * @var \Admin\Classes\AdminController Admin controller object.
@@ -45,7 +48,7 @@ class BaseWidget extends Extendable
     /**
      * Constructor
      *
-     * @param \System\Classes\BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      * @param array $config
      */
     public function __construct($controller, $config = [])
@@ -59,8 +62,11 @@ class BaseWidget extends Extendable
         $classPath = strtolower(str_replace('\\', '/', get_called_class()));
         $this->partialPath[] = '~/app/'.dirname($classPath); // match view folder/file
         $this->partialPath[] = '~/app/'.$classPath;
+        $this->partialPath[] = '$/'.dirname($classPath);
+        $this->partialPath[] = '$/'.$classPath;
 
-        $this->assetPath = '~/app/'.$classPath.'/assets';
+        $this->assetPath[] = '~/app/'.$classPath.'/assets';
+        $this->assetPath[] = '$/'.$classPath.'/assets';
 
         $this->configPath = $controller->configPath;
 
@@ -196,7 +202,7 @@ class BaseWidget extends Extendable
         $result = isset($this->config[$fieldName]) ? $this->config[$fieldName] : $default;
 
         foreach ($nameArray as $key) {
-            if (!is_array($result) OR !array_key_exists($key, $result))
+            if (!is_array($result) || !array_key_exists($key, $result))
                 return $default;
 
             $result = $result[$key];

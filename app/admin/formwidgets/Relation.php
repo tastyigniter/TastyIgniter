@@ -1,22 +1,25 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
-use DB;
+use Admin\Traits\LocationAwareWidget;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\Relation as RelationBase;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Form Relationship
  * Renders a field prepopulated with a belongsTo and belongsToHasMany relation.
  *
  * Adapted from october\backend\formwidgets\Relation
- *
- * @package Admin
  */
 class Relation extends BaseFormWidget
 {
+    use LocationAwareWidget;
+
     //
     // Configurable properties
     //
@@ -41,6 +44,16 @@ class Relation extends BaseFormWidget
      */
     public $emptyOption;
 
+    /**
+     * @var string Use a custom scope method for the list query.
+     */
+    public $scope;
+
+    /**
+     * @var string Define the order of the list query.
+     */
+    public $order;
+
     //
     // Object properties
     //
@@ -60,6 +73,7 @@ class Relation extends BaseFormWidget
             'relationFrom',
             'nameFrom',
             'emptyOption',
+            'scope',
         ]);
 
         if (isset($this->config['select'])) {
@@ -76,7 +90,7 @@ class Relation extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled OR $this->formField->hidden) {
+        if ($this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 
@@ -101,7 +115,7 @@ class Relation extends BaseFormWidget
      * a nested HTML array attribute.
      * Eg: list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
      *
-     * @param  string $attribute .
+     * @param string $attribute .
      *
      * @return array
      */
@@ -118,12 +132,13 @@ class Relation extends BaseFormWidget
     protected function makeFormField()
     {
         return $this->clonedFormField = RelationBase::noConstraints(function () {
-
             $field = clone $this->formField;
             $relationObject = $this->getRelationObject();
             $query = $relationObject->newQuery();
 
-            list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
+            $this->locationApplyScope($query);
+
+            [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
             $relationType = $model->getRelationType($attribute);
             $this->relatedModel = $model->makeRelation($attribute);
 
@@ -133,6 +148,13 @@ class Relation extends BaseFormWidget
             }
             elseif (in_array($relationType, ['belongsTo', 'hasOne'])) {
                 $field->config['mode'] = 'radio';
+            }
+
+            if ($this->order) {
+                $query->orderByRaw($this->order);
+            }
+            elseif (method_exists($this->relatedModel, 'scopeSorted')) {
+                $query->sorted();
             }
 
             $field->value = $this->processFieldValue($this->getLoadValue(), $this->relatedModel);
@@ -147,6 +169,10 @@ class Relation extends BaseFormWidget
             // Even though "no constraints" is applied, belongsToMany constrains the query
             // by joining its pivot table. Remove all joins from the query.
             $query->getQuery()->getQuery()->joins = [];
+
+            if ($scopeMethod = $this->scope) {
+                $query->$scopeMethod($model);
+            }
 
             // The "sqlSelect" config takes precedence over "nameFrom".
             // A virtual column called "selection" will contain the result.
@@ -183,10 +209,10 @@ class Relation extends BaseFormWidget
      */
     protected function getRelationObject()
     {
-        list($model, $attribute) = $this->resolveModelAttribute($this->valueFrom);
+        [$model, $attribute] = $this->resolveModelAttribute($this->valueFrom);
 
-        if (!$model OR !$model->hasRelation($attribute)) {
-            throw new Exception(sprintf("Model '%s' does not contain a definition for '%s'.",
+        if (!$model || !$model->hasRelation($attribute)) {
+            throw new Exception(sprintf(lang('admin::lang.alert_missing_model_definition'),
                 get_class($this->model),
                 $this->valueFrom
             ));

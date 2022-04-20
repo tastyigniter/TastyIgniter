@@ -7,7 +7,6 @@ use Igniter\Flame\Traits\EventEmitter;
 
 /**
  * Base Controller Class
- * @package System
  */
 class BaseController extends Extendable
 {
@@ -42,6 +41,7 @@ class BaseController extends Extendable
      * @var array Default actions which cannot be called as actions.
      */
     public $hiddenActions = [
+        'checkAction',
         'execPageAction',
         'handleError',
     ];
@@ -57,11 +57,6 @@ class BaseController extends Extendable
     protected $statusCode = 200;
 
     /**
-     * @var array A list of libraries to be auto-loaded
-     */
-    protected $libraries = [];
-
-    /**
      * Class constructor
      */
     public function __construct()
@@ -72,7 +67,7 @@ class BaseController extends Extendable
 
         $this->extendableConstruct();
 
-        $this->fireEvent('controller.beforeConstructor', [$this]);
+        $this->fireSystemEvent('main.controller.beforeConstructor', [$this]);
     }
 
     public function getClass()
@@ -100,11 +95,6 @@ class BaseController extends Extendable
         }
 
         return $methodExists;
-    }
-
-    public function pageUrl($uri = '', $protocol = null)
-    {
-        return site_url($uri, $protocol);
     }
 
     public function setStatusCode($code)

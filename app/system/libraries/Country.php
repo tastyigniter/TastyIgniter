@@ -1,11 +1,11 @@
-<?php namespace System\Libraries;
+<?php
+
+namespace System\Libraries;
 
 use System\Models\Countries_model;
 
 /**
  * Country Class
- *
- * @package System
  */
 class Country
 {
@@ -13,7 +13,9 @@ class Country
 
     const ISO_CODE_3 = 3;
 
-    protected $defaultFormat = [];
+    protected $defaultFormat = [
+        "{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}",
+    ];
 
     protected $requiredAddressKeys = [
         'address_1',
@@ -28,15 +30,19 @@ class Country
 
     public function addressFormat($address, $useLineBreaks = TRUE)
     {
-        list($format, $placeholders) = $this->getDefaultFormat();
+        $format = $this->getDefaultFormat();
+
+        $address = $this->evalAddress($address);
 
         // Override format if present in address array
         if (!empty($address['format']))
             $format = $address['format'];
 
-        $formattedAddress = str_replace(["\r\n", "\r", "\n"], '<br />',
-            preg_replace(["/\s\s+/", "/\r\r+/", "/\n\n+/"], '<br />',
-                trim(str_replace($placeholders, $this->evalAddress($address), $format))
+        $formattedAddress = str_replace(['\r\n', '\r', '\n'], '<br />',
+            preg_replace(['/\s\s+/', '/\r\r+/', '/\n\n+/'], '<br />',
+                trim(str_replace([
+                    '{address_1}', '{address_2}', '{city}', '{postcode}', '{state}', '{country}',
+                ], array_except($address, 'format'), $format))
             )
         );
 
@@ -63,7 +69,7 @@ class Country
         if (!$countryModel = $this->countriesCollection->where('country_id', $id)->first())
             return null;
 
-        return (is_null($codeType) OR $codeType == static::ISO_CODE_2)
+        return (is_null($codeType) || $codeType == static::ISO_CODE_2)
             ? $countryModel->iso_code_2 : $countryModel->iso_code_3;
     }
 
@@ -79,12 +85,10 @@ class Country
 
     public function getDefaultFormat()
     {
-        return $this->defaultFormat;
-    }
+        if ($defaultCountry = Countries_model::getDefault())
+            return $defaultCountry->format;
 
-    public function setDefaultFormat($format, $placeholders = [])
-    {
-        $this->defaultFormat = [$format, $placeholders];
+        return $this->defaultFormat;
     }
 
     public function listAll($column = null, $key = 'country_id')
@@ -99,33 +103,36 @@ class Country
 
     protected function evalAddress($address)
     {
-        if (isset($address['country_id']) AND !isset($address['country']))
+        if (isset($address['country_id']) && !isset($address['country']))
             $address['country'] = $address['country_id'];
 
         $result = [];
         foreach ($this->requiredAddressKeys as $key) {
-            $value = isset($address[$key]) ? $address[$key] : '';
-
             if ($key == 'country') {
-                $value = $this->processCountryValue($value);
+                $this->processCountryValue($address[$key], $result);
             }
-
-            $result[$key] = $value;
+            else {
+                $result[$key] = $address[$key] ?? '';
+            }
         }
 
         return $result;
     }
 
-    protected function processCountryValue($country)
+    protected function processCountryValue($country, &$result)
     {
-        if (is_numeric($country)) {
-            return $this->getCountryNameById($country);
+        if (!is_string($country) && isset($country['country_name'])) {
+            $result['country'] = $country['country_name'];
+            $result['format'] = $country['format'];
         }
-        else if (!is_string($country) AND isset($country['country_name'])) {
-            return $country['country_name'];
-        }
+        elseif (is_numeric($country)) {
+            $this->loadCountries();
 
-        return $country;
+            if ($countryModel = $this->countriesCollection->find($country)) {
+                $result['country'] = $countryModel->country_name;
+                $result['format'] = $countryModel->format;
+            }
+        }
     }
 
     protected function loadCountries()

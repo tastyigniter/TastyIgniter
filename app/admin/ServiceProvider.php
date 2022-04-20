@@ -4,15 +4,21 @@ namespace Admin;
 
 use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
+use Admin\Classes\PermissionManager;
+use Admin\Classes\UserState;
 use Admin\Classes\Widgets;
-use AdminAuth;
-use AdminMenu;
-use Event;
+use Admin\Facades\AdminLocation;
+use Admin\Facades\AdminMenu;
+use Admin\Middleware\LogUserLastSeen;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
+use System\Models\Settings_model;
 
 class ServiceProvider extends AppServiceProvider
 {
@@ -30,7 +36,7 @@ class ServiceProvider extends AppServiceProvider
             $this->resolveFlashSessionKey();
             $this->replaceNavMenuItem();
 
-            $this->bindActivityEvents();
+            $this->app['router']->pushMiddlewareToGroup('web', LogUserLastSeen::class);
         }
     }
 
@@ -42,12 +48,16 @@ class ServiceProvider extends AppServiceProvider
     {
         parent::register('admin');
 
+        $this->registerAssets();
         $this->registerActivityTypes();
         $this->registerMailTemplates();
+        $this->registerSchedule();
 
         if ($this->app->runningInAdmin()) {
-            $this->registerAssets();
+            $this->registerSystemSettings();
+            $this->registerPermissions();
             $this->registerDashboardWidgets();
+            $this->registerBulkActionWidgets();
             $this->registerFormWidgets();
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
@@ -70,9 +80,21 @@ class ServiceProvider extends AppServiceProvider
     protected function registerAssets()
     {
         Assets::registerCallback(function (Assets $manager) {
-            $manager->registerSourcePath(app_path('admin/assets'));
+            if ($this->app->runningInAdmin()) {
+                $manager->registerSourcePath(app_path('admin/assets'));
 
-            $manager->addFromManifest('~/app/admin/views/_meta/assets.json');
+                $manager->addFromManifest('~/app/admin/views/_meta/assets.json', 'admin');
+            }
+
+            // Admin asset bundles
+            $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
+            $manager->registerBundle('js', [
+                '~/app/system/assets/ui/flame.js',
+                '~/app/admin/assets/node_modules/js-cookie/src/js.cookie.js',
+                '~/app/admin/assets/node_modules/select2/dist/js/select2.min.js',
+                '~/app/admin/assets/node_modules/metismenu/dist/metisMenu.min.js',
+                '~/app/admin/assets/js/src/app.js',
+            ], '~/app/admin/assets/js/admin.js', 'admin');
         });
     }
 
@@ -114,6 +136,19 @@ class ServiceProvider extends AppServiceProvider
         });
     }
 
+    protected function registerBulkActionWidgets()
+    {
+        Widgets::instance()->registerBulkActionWidgets(function (Widgets $manager) {
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Status::class, [
+                'code' => 'status',
+            ]);
+
+            $manager->registerBulkActionWidget(\Admin\BulkActionWidgets\Delete::class, [
+                'code' => 'delete',
+            ]);
+        });
+    }
+
     /**
      * Register widgets
      */
@@ -128,11 +163,6 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerFormWidget('Admin\FormWidgets\ColorPicker', [
                 'label' => 'Color picker',
                 'code' => 'colorpicker',
-            ]);
-
-            $manager->registerFormWidget('Admin\FormWidgets\Components', [
-                'label' => 'Components',
-                'code' => 'components',
             ]);
 
             $manager->registerFormWidget('Admin\FormWidgets\Connector', [
@@ -153,6 +183,11 @@ class ServiceProvider extends AppServiceProvider
             $manager->registerFormWidget('Admin\FormWidgets\MapArea', [
                 'label' => 'Map Area',
                 'code' => 'maparea',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\MapView', [
+                'label' => 'Map View',
+                'code' => 'mapview',
             ]);
 
             $manager->registerFormWidget('Admin\FormWidgets\MarkdownEditor', [
@@ -195,9 +230,14 @@ class ServiceProvider extends AppServiceProvider
                 'code' => 'statuseditor',
             ]);
 
-            $manager->registerFormWidget('Admin\FormWidgets\StarRating', [
-                'label' => 'Star Rating',
-                'code' => 'starrating',
+            $manager->registerFormWidget('Admin\FormWidgets\ScheduleEditor', [
+                'label' => 'Schedule Editor',
+                'code' => 'scheduleeditor',
+            ]);
+
+            $manager->registerFormWidget('Admin\FormWidgets\StockEditor', [
+                'label' => 'Stock Editor',
+                'code' => 'stockeditor',
             ]);
         });
     }
@@ -245,6 +285,20 @@ class ServiceProvider extends AppServiceProvider
                 'user' => [
                     'type' => 'partial',
                     'path' => 'top_nav_user_menu',
+                    'options' => ['Admin\Classes\UserPanel', 'listMenuLinks'],
+                ],
+            ]);
+        });
+
+        Event::listen('admin.menu.extendUserMenuLinks', function (Collection $items) {
+            $items->put('userState', [
+                'priority' => 10,
+                'label' => 'admin::lang.text_set_status',
+                'iconCssClass' => 'fa fa-circle fa-fw text-'.UserState::forUser()->getStatusColorName(),
+                'attributes' => [
+                    'data-toggle' => 'modal',
+                    'data-target' => '#editStaffStatusModal',
+                    'role' => 'button',
                 ],
             ]);
         });
@@ -263,7 +317,6 @@ class ServiceProvider extends AppServiceProvider
                     'href' => admin_url('dashboard'),
                     'icon' => 'fa-tachometer-alt',
                     'title' => lang('admin::lang.side_menu.dashboard'),
-                    'permission' => 'Admin.Dashboard',
                 ],
                 'restaurant' => [
                     'priority' => 10,
@@ -278,41 +331,33 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.location'),
                             'permission' => 'Admin.Locations',
                         ],
-                        'tables' => [
-                            'priority' => 20,
-                            'class' => 'tables',
-                            'href' => admin_url('tables'),
-                            'title' => lang('admin::lang.side_menu.table'),
-                            'permission' => 'Admin.Tables',
-                        ],
-                    ],
-                ],
-                'kitchen' => [
-                    'priority' => 20,
-                    'class' => 'kitchen',
-                    'icon' => 'fa-utensils',
-                    'title' => lang('admin::lang.side_menu.kitchen'),
-                    'child' => [
                         'menus' => [
-                            'priority' => 10,
+                            'priority' => 20,
                             'class' => 'menus',
                             'href' => admin_url('menus'),
                             'title' => lang('admin::lang.side_menu.menu'),
                             'permission' => 'Admin.Menus',
                         ],
                         'categories' => [
-                            'priority' => 20,
+                            'priority' => 30,
                             'class' => 'categories',
                             'href' => admin_url('categories'),
                             'title' => lang('admin::lang.side_menu.category'),
                             'permission' => 'Admin.Categories',
                         ],
                         'mealtimes' => [
-                            'priority' => 30,
+                            'priority' => 40,
                             'class' => 'mealtimes',
                             'href' => admin_url('mealtimes'),
                             'title' => lang('admin::lang.side_menu.mealtimes'),
                             'permission' => 'Admin.Mealtimes',
+                        ],
+                        'tables' => [
+                            'priority' => 50,
+                            'class' => 'tables',
+                            'href' => admin_url('tables'),
+                            'title' => lang('admin::lang.side_menu.table'),
+                            'permission' => 'Admin.Tables',
                         ],
                     ],
                 ],
@@ -337,14 +382,14 @@ class ServiceProvider extends AppServiceProvider
                             'permission' => 'Admin.Reservations',
                         ],
                         'statuses' => [
-                            'priority' => 30,
+                            'priority' => 40,
                             'class' => 'statuses',
                             'href' => admin_url('statuses'),
                             'title' => lang('admin::lang.side_menu.status'),
                             'permission' => 'Admin.Statuses',
                         ],
                         'payments' => [
-                            'priority' => 40,
+                            'priority' => 50,
                             'class' => 'payments',
                             'href' => admin_url('payments'),
                             'title' => lang('admin::lang.side_menu.payment'),
@@ -357,22 +402,7 @@ class ServiceProvider extends AppServiceProvider
                     'class' => 'marketing',
                     'icon' => 'fa-chart-line',
                     'title' => lang('admin::lang.side_menu.marketing'),
-                    'child' => [
-                        'coupons' => [
-                            'priority' => 10,
-                            'class' => 'coupons',
-                            'href' => admin_url('coupons'),
-                            'title' => lang('admin::lang.side_menu.coupon'),
-                            'permission' => 'Admin.Coupons',
-                        ],
-                        'reviews' => [
-                            'priority' => 20,
-                            'class' => 'reviews',
-                            'href' => admin_url('reviews'),
-                            'title' => lang('admin::lang.side_menu.review'),
-                            'permission' => 'Admin.Reviews',
-                        ],
-                    ],
+                    'child' => [],
                 ],
                 'design' => [
                     'priority' => 200,
@@ -489,12 +519,12 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.updates'),
                             'permission' => 'Site.Updates',
                         ],
-                        'error_logs' => [
+                        'system_logs' => [
                             'priority' => 50,
-                            'class' => 'error_logs',
-                            'href' => admin_url('error_logs'),
-                            'title' => lang('admin::lang.side_menu.error_log'),
-                            'permission' => 'Admin.ErrorLogs',
+                            'class' => 'system_logs',
+                            'href' => admin_url('system_logs'),
+                            'title' => lang('admin::lang.side_menu.system_logs'),
+                            'permission' => 'Admin.SystemLogs',
                         ],
                     ],
                 ],
@@ -506,18 +536,12 @@ class ServiceProvider extends AppServiceProvider
     {
         AdminMenu::registerCallback(function (Navigation $manager) {
             // Change nav menu if single location mode is activated
-            if (!AdminAuth::isSingleLocationContext())
-                return;
-
-            $manager->removeNavItem('locations', 'restaurant');
-
-            $manager->addNavItem('locations', [
-                'priority' => '1',
-                'class' => 'locations',
-                'href' => admin_url('locations/settings'),
-                'title' => lang('admin::lang.side_menu.setting'),
-                'permission' => 'Admin.Locations',
-            ], 'restaurant');
+            if (AdminLocation::check()) {
+                $manager->mergeNavItem('locations', [
+                    'href' => admin_url('locations/settings'),
+                    'title' => lang('admin::lang.side_menu.setting'),
+                ], 'restaurant');
+            }
         });
     }
 
@@ -525,13 +549,12 @@ class ServiceProvider extends AppServiceProvider
     {
         Relation::morphMap([
             'addresses' => 'Admin\Models\Addresses_model',
+            'allergens' => 'Admin\Models\Allergens_model',
+            'assignable_logs' => 'Admin\Models\Assignable_logs_model',
             'categories' => 'Admin\Models\Categories_model',
-            'coupons_history' => 'Admin\Models\Coupons_history_model',
-            'coupons' => 'Admin\Models\Coupons_model',
             'customer_groups' => 'Admin\Models\Customer_groups_model',
             'customers' => 'Admin\Models\Customers_model',
             'location_areas' => 'Admin\Models\Location_areas_model',
-            'location_tables' => 'Admin\Models\Location_tables_model',
             'locations' => 'Admin\Models\Locations_model',
             'mealtimes' => 'Admin\Models\Mealtimes_model',
             'menu_categories' => 'Admin\Models\Menu_categories_model',
@@ -545,11 +568,12 @@ class ServiceProvider extends AppServiceProvider
             'payment_logs' => 'Admin\Models\Payment_logs_model',
             'payments' => 'Admin\Models\Payments_model',
             'reservations' => 'Admin\Models\Reservations_model',
-            'reviews' => 'Admin\Models\Reviews_model',
             'staff_groups' => 'Admin\Models\Staff_groups_model',
             'staffs' => 'Admin\Models\Staffs_model',
             'status_history' => 'Admin\Models\Status_history_model',
             'statuses' => 'Admin\Models\Statuses_model',
+            'stocks' => 'Admin\Models\Stocks_model',
+            'stock_history' => 'Admin\Models\Stock_history_model',
             'tables' => 'Admin\Models\Tables_model',
             'users' => 'Admin\Models\Users_model',
             'working_hours' => 'Admin\Models\Working_hours_model',
@@ -622,30 +646,126 @@ class ServiceProvider extends AppServiceProvider
     {
         Activity::registerCallback(function (Activity $manager) {
             $manager->registerActivityTypes([
-                ActivityTypes\OrderAssigned::class,
-                ActivityTypes\OrderStatusUpdated::class,
-                ActivityTypes\ReservationAssigned::class,
-                ActivityTypes\ReservationStatusUpdated::class,
+                ActivityTypes\AssigneeUpdated::class => [
+                    ActivityTypes\AssigneeUpdated::ORDER_ASSIGNED_TYPE,
+                    ActivityTypes\AssigneeUpdated::RESERVATION_ASSIGNED_TYPE,
+                ],
+                ActivityTypes\StatusUpdated::class => [
+                    ActivityTypes\StatusUpdated::ORDER_UPDATED_TYPE,
+                    ActivityTypes\StatusUpdated::RESERVATION_UPDATED_TYPE,
+                ],
             ]);
         });
     }
 
-    protected function bindActivityEvents()
+    protected function registerPermissions()
     {
-        Event::listen('admin.order.assigned', function ($model) {
-            ActivityTypes\OrderAssigned::pushActivityLog($model);
+        PermissionManager::instance()->registerCallback(function ($manager) {
+            $manager->registerPermissions('Admin', [
+                'Admin.Dashboard' => [
+                    'label' => 'admin::lang.permissions.dashboard', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Allergens' => [
+                    'label' => 'admin::lang.permissions.allergens', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Categories' => [
+                    'label' => 'admin::lang.permissions.categories', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Menus' => [
+                    'label' => 'admin::lang.permissions.menus', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Mealtimes' => [
+                    'label' => 'admin::lang.permissions.mealtimes', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Locations' => [
+                    'label' => 'admin::lang.permissions.locations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Tables' => [
+                    'label' => 'admin::lang.permissions.tables', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Orders' => [
+                    'label' => 'admin::lang.permissions.orders', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.DeleteOrders' => [
+                    'label' => 'admin::lang.permissions.delete_orders', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.AssignOrders' => [
+                    'label' => 'admin::lang.permissions.assign_orders', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Reservations' => [
+                    'label' => 'admin::lang.permissions.reservations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.DeleteReservations' => [
+                    'label' => 'admin::lang.permissions.delete_reservations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.AssignReservations' => [
+                    'label' => 'admin::lang.permissions.assign_reservations', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Payments' => [
+                    'label' => 'admin::lang.permissions.payments', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.CustomerGroups' => [
+                    'label' => 'admin::lang.permissions.customer_groups', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Customers' => [
+                    'label' => 'admin::lang.permissions.customers', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Impersonate' => [
+                    'label' => 'admin::lang.permissions.impersonate_staff', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.ImpersonateCustomers' => [
+                    'label' => 'admin::lang.permissions.impersonate_customers', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.StaffGroups' => [
+                    'label' => 'admin::lang.permissions.staff_groups', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Staffs' => [
+                    'label' => 'admin::lang.permissions.staffs', 'group' => 'admin::lang.permissions.name',
+                ],
+                'Admin.Statuses' => [
+                    'label' => 'admin::lang.permissions.statuses', 'group' => 'admin::lang.permissions.name',
+                ],
+            ]);
         });
+    }
 
-        Event::listen('admin.reservation.assigned', function ($model) {
-            ActivityTypes\ReservationAssigned::pushActivityLog($model);
+    protected function registerSchedule()
+    {
+        Event::listen('console.schedule', function (Schedule $schedule) {
+            // Check for assignables to assign every minute
+            if (Classes\Allocator::isEnabled()) {
+                $schedule->call(function () {
+                    Classes\Allocator::allocate();
+                })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
+            }
         });
+    }
 
-        Event::listen('admin.statusHistory.beforeAddStatus', function ($model, $object, $statusId, $previousStatus) {
-            if ($object instanceof Models\Orders_model)
-                ActivityTypes\OrderStatusUpdated::pushActivityLog($model, $object);
-
-            if ($object instanceof Models\Reservations_model)
-                ActivityTypes\ReservationStatusUpdated::pushActivityLog($model, $object);
+    protected function registerSystemSettings()
+    {
+        Settings_model::registerCallback(function (Settings_model $manager) {
+            $manager->registerSettingItems('core', [
+                'setup' => [
+                    'label' => 'lang:admin::lang.settings.text_tab_setup',
+                    'description' => 'lang:admin::lang.settings.text_tab_desc_setup',
+                    'icon' => 'fa fa-toggle-on',
+                    'priority' => 1,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/setup'),
+                    'form' => '~/app/admin/models/config/setup_settings',
+                    'request' => 'Admin\Requests\SetupSettings',
+                ],
+                'user' => [
+                    'label' => 'lang:admin::lang.settings.text_tab_user',
+                    'description' => 'lang:admin::lang.settings.text_tab_desc_user',
+                    'icon' => 'fa fa-user',
+                    'priority' => 3,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/user'),
+                    'form' => '~/app/admin/models/config/user_settings',
+                    'request' => 'Admin\Requests\UserSettings',
+                ],
+            ]);
         });
     }
 }

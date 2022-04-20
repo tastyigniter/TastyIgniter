@@ -1,17 +1,19 @@
-<?php namespace Main\Classes;
+<?php
 
-use Cache;
-use Config;
-use File;
+namespace Main\Classes;
+
 use Igniter\Flame\Database\Attach\Manipulator;
+use Igniter\Flame\Exception\SystemException;
+use Igniter\Flame\Support\Facades\File;
+use Igniter\Flame\Support\Str;
 use Igniter\Flame\Traits\Singleton;
-use Storage;
-use Str;
-use SystemException;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
+use System\Models\Settings_model;
 
 /**
  * MediaLibrary Class
- * @package System
  */
 class MediaLibrary
 {
@@ -30,8 +32,6 @@ class MediaLibrary
     protected $ignorePatterns;
 
     protected $storageFolderNameLength;
-
-    protected $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico'];
 
     protected $config = [];
 
@@ -74,7 +74,7 @@ class MediaLibrary
             Cache::put(
                 self::$cacheKey,
                 base64_encode(serialize($cached)),
-                Config::get('system.assets.media.ttl', 10)
+                Config::get('system.assets.media.ttl', now()->addMinutes(10))
             );
         }
 
@@ -110,14 +110,17 @@ class MediaLibrary
             $result[] = $folder;
         }
 
-        if ($path == '/' AND !in_array('/', $result))
+        if ($path == '/' && !in_array('/', $result))
             array_unshift($result, '/');
 
         return $result;
     }
 
-    public function fetchFiles($path, $sortBy = [], $search = null)
+    public function fetchFiles($path, $sortBy = [], $options = null)
     {
+        if (is_string($options))
+            $options = ['search' => $options, 'filter' => 'all'];
+
         $path = $this->validatePath($path);
 
         $fullPath = $this->getMediaPath($path);
@@ -126,7 +129,9 @@ class MediaLibrary
 
         $this->sortFiles($files, $sortBy);
 
-        $this->searchFiles($files, $search);
+        $this->searchFiles($files, array_get($options, 'search'));
+
+        $this->filterFiles($files, array_get($options, 'filter'));
 
         return $files;
     }
@@ -274,9 +279,14 @@ class MediaLibrary
         if (!File::exists($filePath))
             $filePath = $this->getDefaultThumbPath($thumbPath, array_get($options, 'default'));
 
-        Manipulator::make($filePath)
-                   ->manipulate(array_except($options, ['extension', 'default']))
-                   ->save($thumbPath);
+        $manipulator = Manipulator::make($filePath)->useSource(
+            $this->getStorageDisk()->getDriver()
+        );
+
+        if ($manipulator->isSupported())
+            $manipulator->manipulate(array_except($options, ['extension', 'default']));
+
+        $manipulator->save($thumbPath);
 
         return asset($thumbPublicPath);
     }
@@ -311,7 +321,7 @@ class MediaLibrary
 
     public function getAllowedExtensions()
     {
-        return $this->allowedExtensions;
+        return Settings_model::defaultExtensions();
     }
 
     public function isAllowedExtension($filename)
@@ -381,7 +391,7 @@ class MediaLibrary
 
     protected function sortFiles(&$files, $sortBy)
     {
-        list($by, $direction) = $sortBy;
+        [$by, $direction] = $sortBy;
         usort($files, function ($a, $b) use ($by) {
             switch ($by) {
                 case 'name':
@@ -403,6 +413,22 @@ class MediaLibrary
 
         if ($direction == 'descending')
             $files = array_reverse($files);
+    }
+
+    protected function filterFiles(&$files, $filterBy)
+    {
+        if (!$filterBy || $filterBy === 'all') {
+            return;
+        }
+
+        $result = [];
+        foreach ($files as $item) {
+            if ($item->getFileType() === $filterBy) {
+                $result[] = $item;
+            }
+        }
+
+        $files = $result;
     }
 
     protected function searchFiles(&$files, $filter)

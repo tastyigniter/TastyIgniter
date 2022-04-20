@@ -1,13 +1,14 @@
 +function ($) {
     "use strict";
 
-    // FIELD MENUOPTIONEDITOR CLASS DEFINITION
+    // FIELD CONNECTOR CLASS DEFINITION
     // ============================
 
     var Connector = function (element, options) {
         this.options = options
         this.$el = $(element)
-        this.$sortable = $(options.sortableContainer, this.$el)
+        this.$sortable = null
+        this.$sortableContainer = $(this.options.sortableContainer, this.$el)
 
         // Init
         this.init()
@@ -15,12 +16,15 @@
 
     Connector.DEFAULTS = {
         alias: undefined,
+        editable: true,
         sortableHandle: '.connector-item-handle',
-        sortableContainer: '.field-connector-items'
+        sortableContainer: '.field-connector-items',
     }
 
     Connector.prototype.init = function () {
-        this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+        if (this.options.editable)
+            this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+
         this.$el.on('click', '[data-control="delete-item"]', $.proxy(this.onDeleteItem, this))
 
         this.bindSorting()
@@ -29,15 +33,13 @@
     Connector.prototype.bindSorting = function () {
         var sortableOptions = {
             handle: this.options.sortableHandle,
-            itemSelector: '.card',
-            placeholder: '<div class="placeholder sortable-placeholder"></div>'
         }
 
-        this.$sortable.sortable(sortableOptions)
+        this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
     }
 
     Connector.prototype.unbind = function () {
-        this.$sortable.sortable('destroy')
+        this.$sortable.destroy()
         this.$el.removeData('ti.connector')
         this.$el = null
     }

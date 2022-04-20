@@ -1,15 +1,20 @@
-<?php namespace Admin\Models;
+<?php
 
+namespace Admin\Models;
+
+use Admin\Traits\Locationable;
 use Carbon\Carbon;
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Mealtimes Model Class
- *
- * @package Admin
  */
 class Mealtimes_model extends Model
 {
+    use Locationable;
+
+    const LOCATIONABLE_RELATION = 'locations';
+
     /**
      * @var string The database table name
      */
@@ -20,11 +25,19 @@ class Mealtimes_model extends Model
      */
     protected $primaryKey = 'mealtime_id';
 
-    public $casts = [
-        'start_time'      => 'time',
-        'end_time'        => 'time',
+    protected $casts = [
+        'start_time' => 'time',
+        'end_time' => 'time',
         'mealtime_status' => 'boolean',
     ];
+
+    public $relation = [
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+        ],
+    ];
+
+    public $timestamps = TRUE;
 
     public function getDropdownOptions()
     {
@@ -40,11 +53,23 @@ class Mealtimes_model extends Model
         return $query->where('mealtime_status', 1);
     }
 
+    public function isAvailable($datetime = null)
+    {
+        if (is_null($datetime))
+            $datetime = Carbon::now();
+
+        if (!$datetime instanceof Carbon) {
+            $datetime = Carbon::parse($datetime);
+        }
+
+        return $datetime->between(
+            $datetime->copy()->setTimeFromTimeString($this->start_time),
+            $datetime->copy()->setTimeFromTimeString($this->end_time)
+        );
+    }
+
     public function isAvailableNow()
     {
-        return Carbon::now()->between(
-            Carbon::createFromTimeString($this->start_time),
-            Carbon::createFromTimeString($this->end_time)
-        );
+        return $this->isAvailable();
     }
 }

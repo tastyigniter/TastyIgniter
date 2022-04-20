@@ -1,24 +1,34 @@
-<?php namespace System\Classes;
+<?php
 
-use App;
-use ApplicationException;
+namespace System\Classes;
+
 use Carbon\Carbon;
-use Config;
-use File;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use Main\Classes\ThemeManager;
-use Schema;
+use System\Models\Extensions_model;
+use System\Models\Themes_model;
 use ZipArchive;
 
 /**
  * TastyIgniter Updates Manager Class
- * @package System
  */
 class UpdateManager
 {
     use \Igniter\Flame\Traits\Singleton;
 
     protected $logs = [];
+
+    /**
+     * The output interface implementation.
+     *
+     * @var \Illuminate\Console\OutputStyle
+     */
+    protected $logsOutput;
 
     protected $baseDirectory;
 
@@ -69,8 +79,6 @@ class UpdateManager
         $this->extensionManager = ExtensionManager::instance();
         $this->languageManager = LanguageManager::instance();
 
-        $this->markdown = new Markdown;
-
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
         $this->disableCoreUpdates = config('system.disableCoreUpdates', FALSE);
@@ -84,8 +92,25 @@ class UpdateManager
         $this->repository = App::make('migration.repository');
     }
 
+    /**
+     * Set the output implementation that should be used by the console.
+     *
+     * @param \Illuminate\Console\OutputStyle $output
+     * @return $this
+     */
+    public function setLogsOutput($output)
+    {
+        $this->logsOutput = $output;
+        $this->migrator->setOutput($output);
+
+        return $this;
+    }
+
     public function log($message)
     {
+        if (!is_null($this->logsOutput))
+            $this->logsOutput->writeln($message);
+
         $this->logs[] = $message;
 
         return $this;
@@ -106,6 +131,10 @@ class UpdateManager
         return $this->logs;
     }
 
+    //
+    //
+    //
+
     public function down()
     {
         // Rollback extensions
@@ -115,15 +144,11 @@ class UpdateManager
         }
 
         // Rollback app
-        $modules = Config::get('system.modules', []);
+        $modules = array_reverse(Config::get('system.modules', []));
         foreach ($modules as $module) {
             $path = $this->getMigrationPath($module);
             $this->migrator->rollbackAll([$module => $path]);
-
-            $this->log($module);
-            foreach ($this->migrator->getNotes() as $note) {
-                $this->log(' - '.$note);
-            }
+            $this->log("<info>Rolled back app $module</info>");
         }
 
         $this->repository->deleteRepository();
@@ -160,7 +185,10 @@ class UpdateManager
     public function setCoreVersion($version = null, $hash = null)
     {
         params()->set('ti_version', $version ?? $this->getHubManager()->applyCoreVersion());
-        params()->set('sys_hash', $hash);
+
+        if (strlen($hash))
+            params()->set('sys_hash', $hash);
+
         params()->save();
     }
 
@@ -169,7 +197,7 @@ class UpdateManager
         $migrationTable = Config::get('database.migrations', 'migrations');
 
         if ($hasColumn = Schema::hasColumns($migrationTable, ['group', 'batch'])) {
-            $this->log('Migration table already created');
+            $this->log('Migration table already exists');
 
             return TRUE;
         }
@@ -186,10 +214,7 @@ class UpdateManager
 
         $this->migrator->run([$name => $path]);
 
-        $this->log($name);
-        foreach ($this->migrator->getNotes() as $note) {
-            $this->log(' - '.$note);
-        }
+        $this->log("<info>Migrated app $name</info>");
 
         return $this;
     }
@@ -210,27 +235,25 @@ class UpdateManager
 
     public function migrateExtension($name)
     {
-        if (!($extension = $this->extensionManager->findExtension($name))) {
+        if (!$this->extensionManager->findExtension($name)) {
             $this->log('<error>Unable to find:</error> '.$name);
 
             return FALSE;
         }
 
-        $extensionName = array_get($extension->extensionMeta(), 'name');
-        $this->log($extensionName);
+        $this->log("<info>Migrating extension $name</info>");
+
         $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
         $this->migrator->run([$name => $path]);
 
-        foreach ($this->migrator->getNotes() as $note) {
-            $this->log(' - '.$note);
-        }
+        $this->log("<info>Migrated extension $name</info>");
 
         return $this;
     }
 
     public function purgeExtension($name)
     {
-        if (!($extension = $this->extensionManager->findExtension($name))) {
+        if (!$this->extensionManager->findExtension($name)) {
             $this->log('<error>Unable to find:</error> '.$name);
 
             return FALSE;
@@ -239,11 +262,23 @@ class UpdateManager
         $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
         $this->migrator->rollbackAll([$name => $path]);
 
-        $extensionName = array_get($extension->extensionMeta(), 'name');
-        $this->log($extensionName);
-        foreach ($this->migrator->getNotes() as $note) {
-            $this->log(' - '.$note);
+        $this->log("<info>Purged extension $name</info>");
+
+        return $this;
+    }
+
+    public function rollbackExtension($name, array $options = [])
+    {
+        if (!$this->extensionManager->findExtension($name)) {
+            $this->log('<error>Unable to find:</error> '.$name);
+
+            return FALSE;
         }
+
+        $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
+        $this->migrator->rollbackAll([$name => $path], $options);
+
+        $this->log("<info>Rolled back extension $name</info>");
 
         return $this;
     }
@@ -269,10 +304,10 @@ class UpdateManager
 
     public function isLastCheckDue()
     {
-        $response = $this->requestUpdateList(FALSE);
+        $response = $this->requestUpdateList();
 
         if (isset($response['last_check'])) {
-            return (strtotime('-7 day') < strtotime($response['last_check']));
+            return strtotime('-7 day') < strtotime($response['last_check']);
         }
 
         return TRUE;
@@ -284,12 +319,15 @@ class UpdateManager
 
         $items = $this->getHubManager()->listItems([
             'browse' => 'recommended',
-            'type' => $itemType,
             'limit' => 12,
+            'type' => $itemType,
         ]);
 
         $installedItems = array_column($installedItems, 'name');
         if (isset($items['data'])) foreach ($items['data'] as &$item) {
+            if ($item['type'] !== 'theme')
+                $item['icon'] = generate_extension_icon($item['icon'] ?? []);
+
             $item['installed'] = in_array($item['code'], $installedItems);
         }
 
@@ -307,6 +345,7 @@ class UpdateManager
 
         $installedItems = array_column($installedItems, 'name');
         if (isset($items['data'])) foreach ($items['data'] as &$item) {
+            $item['icon'] = generate_extension_icon($item['icon'] ?? []);
             $item['installed'] = in_array($item['code'], $installedItems);
         }
 
@@ -325,7 +364,7 @@ class UpdateManager
         $this->setSecurityKey($key, $info);
 
         $result = $this->getHubManager()->getDetail('site');
-        if (isset($result['data']) AND is_array($result['data']))
+        if (isset($result['data']) && is_array($result['data']))
             $info = $result['data'];
 
         $this->setSecurityKey($key, $info);
@@ -348,6 +387,7 @@ class UpdateManager
         $installedItems = collect($installedItems)->keyBy('name')->all();
 
         $updateCount = 0;
+        $hasCoreUpdate = FALSE;
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
             $update['installedVer'] = array_get(array_get($installedItems, $update['code'], []), 'ver');
@@ -358,13 +398,17 @@ class UpdateManager
                 $update['installedVer'] = params('ti_version');
                 if ($this->disableCoreUpdates)
                     continue;
+
+                $hasCoreUpdate = TRUE;
+            }
+            else {
+                if ($hasCoreUpdate || $this->isMarkedAsIgnored($update['code'])) {
+                    $ignoredItems[] = $update;
+                    continue;
+                }
             }
 
-            if ($this->isMarkedAsIgnored($update['code'])) {
-                $ignoredItems[] = $update;
-                continue;
-            }
-
+            $update['icon'] = generate_extension_icon($update['icon'] ?? []);
             $items[] = $update;
         }
 
@@ -378,30 +422,27 @@ class UpdateManager
     public function getInstalledItems($type = null)
     {
         if ($this->installedItems)
-            return ($type AND isset($this->installedItems[$type]))
+            return ($type && isset($this->installedItems[$type]))
                 ? $this->installedItems[$type] : $this->installedItems;
 
         $installedItems = [];
 
-        foreach ($this->extensionManager->listExtensions() as $extensionCode) {
-            $extensionObj = $this->extensionManager->findExtension($extensionCode);
-            if ($extensionObj AND $meta = $extensionObj->extensionMeta()) {
-                $installedItems['extensions'][] = [
-                    'name' => $extensionCode,
-                    'ver' => $meta['version'],
-                    'type' => 'extension',
-                ];
-            }
+        $extensionVersions = Extensions_model::pluck('version', 'name');
+        foreach ($extensionVersions as $code => $version) {
+            $installedItems['extensions'][] = [
+                'name' => $code,
+                'ver' => $version,
+                'type' => 'extension',
+            ];
         }
 
-        foreach ($this->themeManager->listThemes() as $themeCode) {
-            if ($theme = $this->themeManager->findTheme($themeCode)) {
-                $installedItems['themes'][] = [
-                    'name' => $theme->name,
-                    'ver' => $theme->version ?? null,
-                    'type' => 'theme',
-                ];
-            }
+        $themeVersions = Themes_model::pluck('version', 'code');
+        foreach ($themeVersions as $code => $version) {
+            $installedItems['themes'][] = [
+                'name' => $code,
+                'ver' => $version,
+                'type' => 'theme',
+            ];
         }
 
         foreach ($this->languageManager->listLanguages() as $languageCode) {
@@ -425,8 +466,8 @@ class UpdateManager
         $applies = $this->getHubManager()->applyItems($names);
 
         if (isset($applies['data'])) foreach ($applies['data'] as $index => $item) {
-            $filterCore = array_get($item, 'type') == 'core' AND $this->disableCoreUpdates;
-            if ($filterCore OR $this->isMarkedAsIgnored($item['code']))
+            $filterCore = array_get($item, 'type') == 'core' && $this->disableCoreUpdates;
+            if ($filterCore || $this->isMarkedAsIgnored($item['code']))
                 unset($applies['data'][$index]);
         }
 
@@ -458,16 +499,17 @@ class UpdateManager
 
     public function isMarkedAsIgnored($code)
     {
-        $ignoredUpdates = $this->getIgnoredUpdates();
+        if (!collect($this->getInstalledItems())->firstWhere('name', $code))
+            return FALSE;
 
-        return array_get($ignoredUpdates, $code, FALSE);
+        return array_get($this->getIgnoredUpdates(), $code, FALSE);
     }
 
     public function setSecurityKey($key, $info)
     {
-        params()->set('carte_key', $key ? encrypt($key) : '');
+        params()->set('carte_key', $key ?: '');
 
-        if ($info AND is_array($info))
+        if ($info && is_array($info))
             params()->set('carte_info', $info);
 
         params()->save();
@@ -503,12 +545,14 @@ class UpdateManager
         return $result;
     }
 
-    public function extractFile($fileCode, $directory = null)
+    public function extractFile($fileCode, $extractTo = null)
     {
         $filePath = $this->getFilePath($fileCode);
-        $extractTo = base_path();
-        if ($directory)
-            $extractTo .= '/'.$directory.str_replace('.', '/', $fileCode);
+        if ($extractTo)
+            $extractTo .= '/'.str_replace('.', '/', $fileCode);
+
+        if (is_null($extractTo))
+            $extractTo = base_path();
 
         if (!file_exists($extractTo))
             mkdir($extractTo, 0755, TRUE);
@@ -544,7 +588,8 @@ class UpdateManager
     {
         $tags = array_get($update, 'tags.data', []);
         foreach ($tags as &$tag) {
-            $tag['description'] = $this->markdown->parse($tag['description']);
+            if (strlen($tag['description']))
+                $tag['description'] = Markdown::parse($tag['description'])->toHtml();
         }
 
         array_set($update, 'tags.data', $tags);

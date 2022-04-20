@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Main\Classes\ThemeManager;
 use Symfony\Component\Console\Input\InputArgument;
 use System\Classes\UpdateManager;
-use System\Models\Themes_model;
 
 class ThemeInstall extends Command
 {
@@ -33,7 +32,7 @@ class ThemeInstall extends Command
             'type' => 'theme',
         ]]);
 
-        $themeDetails = array_get($response, 'data.0');
+        $themeDetails = array_first(array_get($response, 'data'));
         if (!$themeDetails)
             return $this->output->writeln(sprintf('<info>Theme %s not found</info>', $themeName));
 
@@ -49,11 +48,11 @@ class ThemeInstall extends Command
         ]);
 
         $this->output->writeln(sprintf('<info>Extracting theme %s files</info>', $code));
-        $manager->extractFile($code, 'themes/');
+        $manager->extractFile($code, theme_path('/'));
 
         $this->output->writeln(sprintf('<info>Installing %s theme</info>', $code));
         ThemeManager::instance()->loadThemes();
-        Themes_model::syncAll();
+        ThemeManager::instance()->installTheme($code, $version);
     }
 
     /**

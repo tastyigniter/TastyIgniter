@@ -1,8 +1,10 @@
-<?php namespace Admin\Models;
+<?php
 
-use AdminAuth;
+namespace Admin\Models;
+
+use Admin\Facades\AdminAuth;
 use Exception;
-use Model;
+use Igniter\Flame\Database\Model;
 
 class User_preferences_model extends Model
 {
@@ -11,9 +13,8 @@ class User_preferences_model extends Model
      */
     protected $table = 'user_preferences';
 
-    public $timestamps = FALSE;
-
-    public $casts = [
+    protected $casts = [
+        'user_id' => 'integer',
         'value' => 'json',
     ];
 
@@ -41,7 +42,7 @@ class User_preferences_model extends Model
     {
         $user = AdminAuth::getUser();
         if (!$user) {
-            throw new Exception('User is not logged in');
+            throw new Exception(lang('admin::lang.alert_user_not_logged'));
         }
 
         return $user;

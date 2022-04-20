@@ -1,63 +1,101 @@
-<?php namespace Admin\Models;
+<?php
 
+namespace Admin\Models;
+
+use Admin\Facades\AdminLocation;
+use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Igniter\Flame\Database\Traits\Validation;
-use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_options_model extends Model
 {
+    use Locationable;
     use Purgeable;
-    use Validation;
+
+    const LOCATIONABLE_RELATION = 'locations';
+
+    protected static $allergensOptionsCache;
 
     /**
      * @var string The database table name
      */
-    protected $table = 'options';
+    protected $table = 'menu_options';
 
     /**
      * @var string The database table primary key
      */
     protected $primaryKey = 'option_id';
 
-    protected $guarded = [];
+    protected $fillable = ['option_id', 'option_name', 'display_type', 'update_related_menu_item'];
 
-    protected $fillable = ['option_id', 'option_name', 'display_type'];
+    protected $casts = [
+        'option_id' => 'integer',
+        'priority' => 'integer',
+    ];
 
     public $relation = [
         'hasMany' => [
             'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
             'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
         ],
+        'hasManyThrough' => [
+            'menu_option_values' => [
+                'Admin\Models\Menu_item_option_values_model',
+                'through' => 'Admin\Models\Menu_item_options_model',
+                'throughKey' => 'menu_option_id',
+                'foreignKey' => 'option_id',
+            ],
+        ],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
+        ],
     ];
 
-    public $rules = [
-        ['option_name', 'lang:admin::lang.menu_options.label_option_name', 'required|min:2|max:32'],
-        ['display_type', 'lang:admin::lang.menu_options.label_display_type', 'required|alpha'],
-    ];
+    protected $purgeable = ['values'];
 
-    public $purgeable = ['option_values'];
+    public $timestamps = TRUE;
 
     public static function getRecordEditorOptions()
     {
-        return self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name')
-                   ->dropdown('display_name');
+        $query = self::selectRaw('option_id, concat(option_name, " (", display_type, ")") AS display_name');
+
+        if (!is_null($ids = AdminLocation::getIdOrAll()))
+            $query->whereHasLocation($ids);
+
+        return $query->dropdown('display_name');
+    }
+
+    public function getDisplayTypeOptions()
+    {
+        return [
+            'radio' => 'lang:admin::lang.menu_options.text_radio',
+            'checkbox' => 'lang:admin::lang.menu_options.text_checkbox',
+            'select' => 'lang:admin::lang.menu_options.text_select',
+            'quantity' => 'lang:admin::lang.menu_options.text_quantity',
+        ];
     }
 
     //
     // Events
     //
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->restorePurgedValues();
 
-        if (array_key_exists('option_values', $this->attributes))
-            $this->addOptionValues($this->attributes['option_values']);
+        if (array_key_exists('values', $this->attributes))
+            $this->addOptionValues($this->attributes['values']);
+
+        if ($this->update_related_menu_item)
+            $this->updateRelatedMenuItemsOptionValues();
+    }
+
+    protected function beforeDelete()
+    {
+        $this->locations()->detach();
     }
 
     //
@@ -95,6 +133,9 @@ class Menu_options_model extends Model
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {
+            if (!array_key_exists('allergens', $value))
+                $value['allergens'] = [];
+
             $optionValue = $this->option_values()->firstOrNew([
                 'option_value_id' => array_get($value, 'option_value_id'),
                 'option_id' => $optionId,
@@ -105,8 +146,48 @@ class Menu_options_model extends Model
         }
 
         $this->option_values()->where('option_id', $optionId)
-             ->whereNotIn('option_value_id', $idsToKeep)->delete();
+            ->whereNotIn('option_value_id', $idsToKeep)->delete();
+
+        $this->menu_option_values()
+            ->whereNotIn('option_value_id', $idsToKeep)->delete();
 
         return count($idsToKeep);
+    }
+
+    public function attachToMenu($menu)
+    {
+        $menuItemOption = $menu->menu_options()->create([
+            'option_id' => $this->getKey(),
+        ]);
+
+        $this->option_values()->get()->each(function ($model) use ($menuItemOption) {
+            $menuItemOption->menu_option_values()->create([
+                'menu_option_id' => $menuItemOption->menu_option_id,
+                'option_value_id' => $model->option_value_id,
+                'new_price' => $model->price,
+            ]);
+        });
+    }
+
+    /**
+     * Overwrite any menu items this option is attached to
+     *
+     * @return void
+     */
+    protected function updateRelatedMenuItemsOptionValues()
+    {
+        $optionValues = $this->option_values()->get()->map(function ($optionValue) {
+            return [
+                'menu_option_id' => $this->option_id,
+                'option_value_id' => $optionValue->option_value_id,
+                'new_price' => $optionValue->price,
+                'quantity' => 0,
+                'priority' => $optionValue->priority,
+            ];
+        })->all();
+
+        $this->menu_options->each(function ($menuOption) use ($optionValues) {
+            $menuOption->addMenuOptionValues($optionValues);
+        });
     }
 }

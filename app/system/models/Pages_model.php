@@ -2,21 +2,15 @@
 
 namespace System\Models;
 
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\HasPermalink;
-use Model;
 
 /**
  * Pages Model Class
- *
- * @package Admin
  */
 class Pages_model extends Model
 {
     use HasPermalink;
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
 
     /**
      * @var string The database table name
@@ -33,14 +27,18 @@ class Pages_model extends Model
      */
     public $timestamps = TRUE;
 
+    protected $guarded = [];
+
+    protected $casts = [
+        'language_id' => 'integer',
+        'metadata' => 'json',
+        'status' => 'boolean',
+    ];
+
     public $relation = [
         'belongsTo' => [
             'language' => 'System\Models\Languages_model',
         ],
-    ];
-
-    public $casts = [
-        'navigation' => 'serialize',
     ];
 
     protected $permalinkable = [
@@ -51,7 +49,7 @@ class Pages_model extends Model
 
     public static function getDropdownOptions()
     {
-        return static::isEnabled()->dropdown('name');
+        return static::isEnabled()->dropdown('title');
     }
 
     //

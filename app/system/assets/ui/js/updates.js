@@ -25,20 +25,15 @@
         updateSteps: [],
         itemInModal: null,
         itemsToApply: [],
-        fetchItems: null,
         installedItems: []
     }
 
     Updates.prototype.init = function () {
-        if (this.options.fetchItems) {
-            $.request('onFetchItems', {
-                data: {type: this.options.fetchItems}
-            })
-        }
-
         this.bindSearch(this.options.searchInput)
 
         $(document).on('click', '#update-carte', $.proxy(this.onUpdateCarteClick, this))
+
+        $(document).on('click', '[data-control="apply-recommended"]', $.proxy(this.onApplyRecommended, this))
 
         $(document).on('click', '#apply-updates', $.proxy(this.onApplyUpdateClick, this))
 
@@ -65,7 +60,7 @@
                 requestChain.push(function () {
                     var deferred = $.Deferred()
 
-                    $.request('onProcess', {
+                    $.request('onProcessItems', {
                         data: {step: group, meta: step},
                         beforeSend: self.setProgressBar(step.label, 'primary'),
                         success: function (json) {
@@ -257,7 +252,7 @@
 
         $button.attr('disable', true).addClass('disabled')
 
-        $.request('onApply', {
+        $.request('onApplyItems', {
             data: {items: this.options.itemsToApply}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
@@ -290,7 +285,7 @@
             })
         })
 
-        $.request('onApply', {
+        $.request('onApplyUpdate', {
             data: {items: this.options.itemsToApply}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
@@ -321,6 +316,22 @@
             data: {items: itemsToIgnore}
         }).always(function () {
             $button.attr('disable', false).removeClass('disabled')
+        })
+    }
+
+    Updates.prototype.onApplyRecommended = function (event) {
+        var self = this,
+            $button = $(event.currentTarget),
+            $modal = $button.closest('.modal'),
+            $form = $button.closest('form')
+
+        $button.attr('disabled', true)
+
+        $form.request('onApplyRecommended').always(function () {
+            $modal.modal('hide')
+        }).done(function (json) {
+            if (json['steps'])
+                self.executeSteps(json['steps'])
         })
     }
 
@@ -398,7 +409,7 @@
             '{{#thumb}}',
             '<img src="{{thumb}}" class="img-rounded" alt="No Image" style="width: 48px; height: 48px;" />',
             '{{/thumb}}{{^thumb}}',
-            '<i class="fa {{icon}} fa-2x"></i>',
+            '<span class="extension-icon rounded" style="{{icon.styles}};"><i class="{{icon.class}}"></i></span>',
             '{{/thumb}}',
             '</div>',
             '<div class="item-name">{{name}}</div>',
@@ -422,7 +433,7 @@
             '{{#thumb}}',
             '<img src="{{thumb}}" class="img-rounded" alt="No Image" style="width: 68px; height: 68px;">',
             '{{/thumb}}{{^thumb}}',
-            '<i class="fa {{icon}} fa-3x text-muted"></i>',
+            '<span class="extension-icon icon-lg rounded" style="{{icon.styles}};"><i class="{{icon.class}}"></i></span>',
             '{{/thumb}}',
             '</a><div class="media-body pl-3">',
             '<p>{{{description}}}</p><span class="text-muted">Version:</span> <strong>{{version}}</strong>, ',
@@ -450,7 +461,7 @@
 
         modalFooter: [
             '<div class="text-right">',
-            '<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>',
+            '<button type="button" class="btn btn-link" data-dismiss="modal" aria-hidden="true">Close</button>',
             '&nbsp;&nbsp;&nbsp;&nbsp;',
             '{{#installed}}',
             '<button type="submit" class="btn btn-primary" disabled><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{{submit}}</button>',
@@ -491,7 +502,7 @@
     $.fn.updates.Constructor = Updates
 
     $(document).render(function () {
-        $('#list-items').updates()
+        $('.page-content').updates()
     })
 
 }(jQuery)

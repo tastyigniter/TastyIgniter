@@ -1,6 +1,11 @@
-<?php namespace Admin\Controllers;
+<?php
 
-use AdminMenu;
+namespace Admin\Controllers;
+
+use Admin\ActivityTypes\StatusUpdated;
+use Admin\Facades\AdminMenu;
+use Admin\Models\Orders_model;
+use Admin\Models\Statuses_model;
 use Igniter\Flame\Exception\ApplicationException;
 
 class Orders extends \Admin\Classes\AdminController
@@ -8,6 +13,8 @@ class Orders extends \Admin\Classes\AdminController
     public $implement = [
         'Admin\Actions\ListController',
         'Admin\Actions\FormController',
+        'Admin\Actions\LocationAwareController',
+        'Admin\Actions\AssigneeController',
     ];
 
     public $listConfig = [
@@ -23,6 +30,7 @@ class Orders extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.orders.text_form_name',
         'model' => 'Admin\Models\Orders_model',
+        'request' => 'Admin\Requests\Order',
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'orders/edit/{order_id}',
@@ -38,7 +46,11 @@ class Orders extends \Admin\Classes\AdminController
         'configFile' => 'orders_model',
     ];
 
-    protected $requiredPermissions = 'Admin.Orders';
+    protected $requiredPermissions = [
+        'Admin.Orders',
+        'Admin.AssignOrders',
+        'Admin.DeleteOrders',
+    ];
 
     public function __construct()
     {
@@ -47,70 +59,62 @@ class Orders extends \Admin\Classes\AdminController
         AdminMenu::setContext('orders', 'sales');
     }
 
+    public function index()
+    {
+        $this->asExtension('ListController')->index();
+
+        $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForOrder();
+    }
+
+    public function index_onDelete()
+    {
+        if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
+            throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
+
+        return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
+    }
+
+    public function index_onUpdateStatus()
+    {
+        $model = Orders_model::find((int)post('recordId'));
+        $status = Statuses_model::find((int)post('statusId'));
+        if (!$model || !$status)
+            return;
+
+        if ($record = $model->addStatusHistory($status))
+            StatusUpdated::log($record, $this->getUser());
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang('admin::lang.statuses.text_form_name').' updated'))->now();
+
+        return $this->redirectBack();
+    }
+
+    public function edit_onDelete($context, $recordId)
+    {
+        if (!$this->getUser()->hasPermission('Admin.DeleteOrders'))
+            throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
+
+        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete($context, $recordId);
+    }
+
     public function invoice($context, $recordId = null)
     {
         $model = $this->formFindModelObject($recordId);
 
         if (!$model->hasInvoice())
-            throw new ApplicationException('Invoice has not yet been generated');
+            throw new ApplicationException(lang('admin::lang.orders.alert_invoice_not_generated'));
 
         $this->vars['model'] = $model;
 
         $this->suppressLayout = TRUE;
     }
 
-    public function edit_onGenerateInvoice($context = null, $recordId = null)
-    {
-        $model = $this->formFindModelObject($recordId);
-
-        if ($invoiceNo = $model->generateInvoice()) {
-            flash()->success(sprintf(lang('admin::lang.alert_success'), 'Invoice generated'));
-        }
-        else {
-            flash()->danger(sprintf(lang('admin::lang.alert_error_nothing'), 'generated'));
-        }
-
-        return $this->refresh();
-    }
-
-    public function formExtendFieldsBefore($form)
-    {
-        if (!$form->model->hasInvoice() AND (bool)setting('auto_invoicing')) {
-            array_pull($form->fields['invoice_id'], 'addonRight');
-        }
-
-        if ($form->model->hasInvoice()) {
-            $form->fields['invoice_id']['addonRight']['label'] = 'admin::lang.orders.button_view_invoice';
-            $form->fields['invoice_id']['addonRight']['tag'] = 'a';
-            $form->fields['invoice_id']['addonRight']['attributes']['href'] = admin_url('orders/invoice/'.$form->model->getKey());
-            $form->fields['invoice_id']['addonRight']['attributes']['target'] = '_blank';
-
-            unset(
-                $form->fields['invoice_id']['addonRight']['attributes']['data-request'],
-                $form->fields['invoice_id']['addonRight']['attributes']['type']
-            );
-        }
-    }
-
     public function formExtendQuery($query)
     {
         $query->with([
             'status_history' => function ($q) {
-                $q->orderBy('date_added', 'desc');
+                $q->orderBy('created_at', 'desc');
             },
         ]);
-    }
-
-    public function formValidate($model, $form)
-    {
-        $namedRules = [
-            ['status_id', 'lang:admin::lang.label_status', 'required|integer|exists:statuses'],
-            ['statusData.status_id', 'lang:admin::lang.orders.label_status', 'required|same:status_id'],
-            ['statusData.comment', 'lang:admin::lang.orders.label_comment', 'max:1500'],
-            ['statusData.notify', 'lang:admin::lang.orders.label_notify', 'required|integer'],
-            ['assignee_id', 'lang:admin::lang.orders.label_assign_staff', 'required|integer'],
-        ];
-
-        return $this->validatePasses(post($form->arrayName), $namedRules);
     }
 }

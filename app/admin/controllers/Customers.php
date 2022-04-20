@@ -1,9 +1,12 @@
-<?php namespace Admin\Controllers;
+<?php
 
-use AdminAuth;
-use AdminMenu;
-use Auth;
-use Redirect;
+namespace Admin\Controllers;
+
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
+use Igniter\Flame\Exception\ApplicationException;
+use Main\Facades\Auth;
 
 class Customers extends \Admin\Classes\AdminController
 {
@@ -25,15 +28,18 @@ class Customers extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.customers.text_form_name',
         'model' => 'Admin\Models\Customers_model',
+        'request' => 'Admin\Requests\Customer',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'customers/edit/{customer_id}',
             'redirectClose' => 'customers',
+            'redirectNew' => 'customers/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'customers/edit/{customer_id}',
             'redirectClose' => 'customers',
+            'redirectNew' => 'customers/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -51,56 +57,49 @@ class Customers extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        $this->addJs('js/addresstabs.js', 'addresstabs-js');
-
         AdminMenu::setContext('customers', 'users');
     }
 
-    public function impersonate($context = null, $id = null)
+    public function onImpersonate($context, $recordId = null)
     {
-        if (!AdminAuth::canAccessCustomerAccount()) {
-            flash()->warning(lang('admin::lang.customers.alert_login_restricted'));
-
-            return $this->redirectBack();
+        if (!AdminAuth::user()->hasPermission('Admin.ImpersonateCustomers')) {
+            throw new ApplicationException(lang('admin::lang.customers.alert_login_restricted'));
         }
 
-        $customerModel = $this->formFindModelObject((int)$id);
-        if ($customerModel) {
-
+        $id = post('recordId', $recordId);
+        if ($customer = $this->formFindModelObject((int)$id)) {
             Auth::stopImpersonate();
+            Auth::impersonate($customer);
+            flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $customer->full_name));
+        }
+    }
 
-            Auth::impersonate($customerModel);
-
-            return Redirect::to(root_url());
+    public function edit_onActivate($context, $recordId = null)
+    {
+        if ($customer = $this->formFindModelObject((int)$recordId)) {
+            $customer->completeActivation($customer->getActivationCode());
+            flash()->success(sprintf(lang('admin::lang.customers.alert_activation_success'), $customer->full_name));
         }
 
         return $this->redirectBack();
     }
 
-    public function formValidate($model, $form)
+    public function formExtendModel($model)
     {
-        $rules = [
-            ['first_name', 'lang:admin::lang.customers.label_first_name', 'required|min:2|max:32'],
-            ['last_name', 'lang:admin::lang.customers.label_last_name', 'required|min:2|max:32'],
-            ['email', 'lang:admin::lang.label_email', 'required|email|max:96'
-                .(!$model->exists ? '|unique:customers,email' : null)],
-            ['telephone', 'lang:admin::lang.customers.label_telephone', 'sometimes'],
-            ['newsletter', 'lang:admin::lang.customers.label_newsletter', 'required|integer'],
-            ['customer_group_id', 'lang:admin::lang.customers.label_customer_group', 'required|integer'],
-            ['status', 'lang:admin::lang.label_status', 'required|integer'],
-        ];
-
-        if (!$model->exists OR post($form->arrayName.'.password')) {
-            $rules[] = ['password', 'lang:admin::lang.customers.label_password', 'required|min:8|max:40|same:_confirm_password'];
-            $rules[] = ['_confirm_password', 'lang:admin::lang.customers.label_confirm_password'];
+        if ($model->exists && !$model->is_activated) {
+            Template::setButton(lang('admin::lang.customers.button_activate'), [
+                'class' => 'btn btn-success pull-right',
+                'data-request' => 'onActivate',
+            ]);
         }
+    }
 
-        $rules[] = ['addresses.*.address_1', 'lang:admin::lang.customers.label_address_1', 'required|min:3|max:128'];
-        $rules[] = ['addresses.*.city', 'lang:admin::lang.customers.label_city', 'required|min:2|max:128'];
-        $rules[] = ['addresses.*.state', 'lang:admin::lang.customers.label_state', 'max:128'];
-        $rules[] = ['addresses.*.postcode', 'lang:admin::lang.customers.label_postcode'];
-        $rules[] = ['addresses.*.country_id', 'lang:admin::lang.customers.label_country', 'required|integer'];
+    public function formAfterSave($model)
+    {
+        if (!$model->group || $model->group->requiresApproval())
+            return;
 
-        return $this->validatePasses(post($form->arrayName), $rules);
+        if ($this->status && !$this->is_activated)
+            $model->completeActivation($model->getActivationCode());
     }
 }

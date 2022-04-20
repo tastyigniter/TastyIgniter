@@ -1,6 +1,8 @@
-<?php namespace System\Classes;
+<?php
 
-use SystemException;
+namespace System\Classes;
+
+use Igniter\Flame\Exception\SystemException;
 
 /**
  * Components class for TastyIgniter.
@@ -48,7 +50,7 @@ class ComponentManager
     {
         // Load manually registered components
         foreach ($this->componentsCallbacks as $callback) {
-            $callback($this->instance);
+            $callback($this);
         }
 
         // Load extensions components
@@ -119,7 +121,7 @@ class ComponentManager
         $this->classMap[$class_path] = $code;
         $this->components[$code] = array_merge($component, [
             'code' => $code,
-            'path' => $class_path
+            'path' => $class_path,
         ]);
 
         if ($extension !== null) {
@@ -214,10 +216,6 @@ class ComponentManager
             return $this->components[$name];
         }
 
-//        if (isset($this->paymentGateways[$name])) {
-//            return $this->paymentGateways[$name];
-//        }
-
         return null;
     }
 
@@ -229,7 +227,7 @@ class ComponentManager
      * @param array $params The properties set by the Page or Layout.
      *
      * @return \System\Classes\BaseComponent The component object.
-     * @throws \SystemException
+     * @throws \Igniter\Flame\Exception\SystemException
      */
     public function makeComponent($name, $page = null, $params = [])
     {
@@ -292,7 +290,7 @@ class ComponentManager
      * Returns a component property configuration as a JSON string or array.
      *
      * @param mixed $component The component object
-     * @param boolean $addAliasProperty Determines if the Alias property should be added to the result.
+     * @param bool $addAliasProperty Determines if the Alias property should be added to the result.
      *
      * @return array
      */
@@ -306,7 +304,7 @@ class ComponentManager
                 'label' => '',
                 'type' => 'text',
                 'comment' => '',
-                'validationPattern' => '^[a-zA-Z]+[0-9a-z\_]*$',
+                'validationRule' => ['required', 'regex:^[a-zA-Z]+$'],
                 'validationMessage' => '',
                 'required' => TRUE,
                 'showExternalParam' => FALSE,
@@ -327,7 +325,7 @@ class ComponentManager
                 'showExternalParam' => array_get($params, 'showExternalParam', FALSE),
             ];
 
-            if (!in_array($propertyType, ['text', 'number']) AND !array_key_exists('options', $params)) {
+            if (!in_array($propertyType, ['text', 'number']) && !array_key_exists('options', $params)) {
                 $methodName = 'get'.studly_case($name).'Options';
                 $property['options'] = [get_class($component), $methodName];
             }
@@ -378,6 +376,21 @@ class ComponentManager
         }
 
         return $result;
+    }
+
+    public function getComponentPropertyRules($component)
+    {
+        $properties = $component->defineProperties();
+
+        $rules = $attributes = [];
+        foreach ($properties as $name => $params) {
+            if (strlen($rule = array_get($params, 'validationRule', ''))) {
+                $rules[$name] = $rule;
+                $attributes[$name] = array_get($params, 'label', $name);
+            }
+        }
+
+        return [$rules, $attributes];
     }
 
     protected function checkComponentPropertyType($type)

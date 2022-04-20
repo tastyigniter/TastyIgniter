@@ -1,15 +1,24 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Igniter\Flame\Location\Models\AbstractWorkingHour;
 
 /**
  * Working hours Model Class
- *
- * @package Admin
  */
 class Working_hours_model extends AbstractWorkingHour
 {
     public $fillable = ['location_id', 'weekday', 'opening_time', 'closing_time', 'status', 'type'];
+
+    protected $casts = [
+        'weekday' => 'integer',
+        'opening_time' => 'time',
+        'closing_time' => 'time',
+        'status' => 'boolean',
+    ];
+
+    public static $weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     public function getHoursByLocation($id)
     {
@@ -17,7 +26,7 @@ class Working_hours_model extends AbstractWorkingHour
 
         foreach (self::where('location_id', $id)->get() as $row) {
             $row = $this->parseRecord($row);
-            $collection[$row['type']][$row['weekday']] = $this->parseRecord($row);
+            $collection[$row['type']][$row['weekday']] = $row;
         }
 
         return $collection;
@@ -36,5 +45,25 @@ class Working_hours_model extends AbstractWorkingHour
         ]);
 
         return $collection;
+    }
+
+    public function getWeekDaysOptions()
+    {
+        return collect(self::$weekDays)->map(function ($day, $index) {
+            return now()->startOfWeek()->addDays($index)->isoFormat(lang('system::lang.moment.weekday_format'));
+        })->all();
+    }
+
+    public function getTimesheetOptions($value, $data)
+    {
+        $result = new \stdClass();
+        $result->timesheet = $value ?? [];
+
+        $result->daysOfWeek = [];
+        foreach ($this->getWeekDaysOptions() as $key => $day) {
+            $result->daysOfWeek[$key] = ['name' => $day];
+        }
+
+        return $result;
     }
 }

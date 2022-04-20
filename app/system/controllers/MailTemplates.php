@@ -1,8 +1,10 @@
-<?php namespace System\Controllers;
+<?php
 
-use AdminMenu;
-use ApplicationException;
-use Mail;
+namespace System\Controllers;
+
+use Admin\Facades\AdminMenu;
+use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Support\Facades\Mail;
 use System\Models\Mail_templates_model;
 
 class MailTemplates extends \Admin\Classes\AdminController
@@ -17,7 +19,7 @@ class MailTemplates extends \Admin\Classes\AdminController
             'model' => 'System\Models\Mail_templates_model',
             'title' => 'lang:system::lang.mail_templates.text_template_title',
             'emptyMessage' => 'lang:system::lang.mail_templates.text_empty',
-            'defaultSort' => ['template_data_id', 'DESC'],
+            'defaultSort' => ['template_id', 'DESC'],
             'configFile' => 'mail_templates_model',
         ],
     ];
@@ -25,19 +27,22 @@ class MailTemplates extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:system::lang.mail_templates.text_form_name',
         'model' => 'System\Models\Mail_templates_model',
+        'request' => 'System\Requests\MailTemplate',
         'create' => [
             'title' => 'lang:system::lang.mail_templates.text_new_template_title',
-            'redirect' => 'mail_templates/edit/{template_data_id}',
+            'redirect' => 'mail_templates/edit/{template_id}',
             'redirectClose' => 'mail_templates',
+            'redirectNew' => 'mail_templates/create',
         ],
         'edit' => [
             'title' => 'lang:system::lang.mail_templates.text_edit_template_title',
-            'redirect' => 'mail_templates/edit/{template_data_id}',
+            'redirect' => 'mail_templates/edit/{template_id}',
             'redirectClose' => 'mail_templates',
+            'redirectNew' => 'mail_templates/create',
         ],
         'preview' => [
             'title' => 'lang:system::lang.mail_templates.text_preview_template_title',
-            'redirect' => 'mail_templates/preview/{template_data_id}',
+            'redirect' => 'mail_templates/preview/{template_id}',
         ],
         'delete' => [
             'redirect' => 'mail_templates',
@@ -56,8 +61,7 @@ class MailTemplates extends \Admin\Classes\AdminController
 
     public function index()
     {
-        if ($this->getUser()->hasPermission('Admin.MailTemplates.Manage'))
-            Mail_templates_model::syncAll();
+        Mail_templates_model::syncAll();
 
         $this->asExtension('ListController')->index();
     }
@@ -78,12 +82,14 @@ class MailTemplates extends \Admin\Classes\AdminController
     public function onTestTemplate($context, $recordId)
     {
         if (!strlen($recordId))
-            throw new ApplicationException('Template id not found');
+            throw new ApplicationException(lang('system::lang.mail_templates.alert_template_id_not_found'));
 
         if (!$model = $this->formFindModelObject($recordId))
-            throw new ApplicationException('Template not found');
+            throw new ApplicationException(lang('system::lang.mail_templates.alert_template_not_found'));
 
         $adminUser = $this->getUser()->staff;
+
+        config()->set('system.suppressTemplateRuntimeNotice', true);
 
         Mail::send($model->code, [], function ($message) use ($adminUser) {
             $message->to($adminUser->staff_email, $adminUser->staff_name);
@@ -94,18 +100,5 @@ class MailTemplates extends \Admin\Classes\AdminController
         return [
             '#notification' => $this->makePartial('flash'),
         ];
-    }
-
-    public function formValidate($model, $form)
-    {
-        $rules[] = ['template_id', 'lang:system::lang.mail_templates.label_layout', 'integer'];
-        $rules[] = ['label', 'lang:system::lang.mail_templates.label_description', 'required'];
-        $rules[] = ['subject', 'lang:system::lang.mail_templates.label_code', 'required'];
-
-        if ($form->context == 'create') {
-            $rules[] = ['code', 'lang:system::lang.mail_templates.label_code', 'required|min:2|max:32'];
-        }
-
-        return $this->validatePasses(post($form->arrayName), $rules);
     }
 }

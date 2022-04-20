@@ -1,6 +1,9 @@
-<?php namespace Admin\Classes;
+<?php
 
-use AdminAuth;
+namespace Admin\Classes;
+
+use Admin\Facades\AdminAuth;
+use Igniter\Flame\Traits\EventEmitter;
 use System\Classes\BaseExtension;
 use System\Classes\ExtensionManager;
 use System\Traits\ViewMaker;
@@ -8,6 +11,7 @@ use System\Traits\ViewMaker;
 class Navigation
 {
     use ViewMaker;
+    use EventEmitter;
 
     protected $navItems = [];
 
@@ -47,14 +51,16 @@ class Navigation
 
     public function getVisibleNavItems()
     {
-        uasort($this->navItems, function ($a, $b) {
+        $navItems = $this->getNavItems();
+
+        uasort($navItems, function ($a, $b) {
             return $a['priority'] - $b['priority'];
         });
 
-        $this->navItems = $this->filterPermittedNavItems($this->navItems);
+        $navItems = $this->filterPermittedNavItems($navItems);
 
-        foreach ($this->navItems as $code => &$navItem) {
-            if (!isset($navItem['child']) OR !count($navItem['child'])) {
+        foreach ($navItems as $code => &$navItem) {
+            if (!isset($navItem['child']) || !count($navItem['child'])) {
                 continue;
             }
 
@@ -65,7 +71,7 @@ class Navigation
             $navItem['child'] = $this->filterPermittedNavItems($navItem['child']);
         }
 
-        return $this->navItems;
+        return $navItems;
     }
 
     public function isActiveNavItem($code)
@@ -125,6 +131,18 @@ class Navigation
         }
     }
 
+    public function mergeNavItem($itemCode, array $options = [], $parentCode = null)
+    {
+        if ($parentCode) {
+            if ($oldItem = array_get($this->navItems, $parentCode.'.child.'.$itemCode, []))
+                $this->navItems[$parentCode]['child'][$itemCode] = array_merge($oldItem, $options);
+        }
+        else {
+            if ($oldItem = array_get($this->navItems, $itemCode, []))
+                $this->navItems[$itemCode] = array_merge($oldItem, $options);
+        }
+    }
+
     public function removeNavItem($itemCode, $parentCode = null)
     {
         if (!is_null($parentCode)) {
@@ -161,6 +179,8 @@ class Navigation
             $this->registerNavItems($items);
         }
 
+        $this->fireSystemEvent('admin.navigation.extendItems');
+
         $this->navItemsLoaded = TRUE;
     }
 
@@ -169,15 +189,6 @@ class Navigation
         return collect($items)->filter(function ($item) {
             if (!$permission = array_get($item, 'permission'))
                 return TRUE;
-
-            if (!is_array($permission))
-                $permission = [$permission];
-
-            $permission = array_map(function ($value) {
-                $permArray = explode('.', $value);
-                $name = array_slice($permArray, 0, 2);
-                return implode('.', $name).'.Access';
-            }, $permission);
 
             return AdminAuth::user()->hasPermission($permission);
         })->toArray();
@@ -205,7 +216,7 @@ class Navigation
         }
 
         foreach ($definitions as $name => $definition) {
-            if (isset($definition['child']) AND count($definition['child'])) {
+            if (isset($definition['child']) && count($definition['child'])) {
                 $this->registerNavItems($definition['child'], $name);
             }
 

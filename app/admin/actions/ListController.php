@@ -2,15 +2,12 @@
 
 namespace Admin\Actions;
 
+use Admin\Facades\Template;
 use Admin\Traits\ListExtendable;
-use System\Classes\BaseController;
 use System\Classes\ControllerAction;
-use Template;
 
 /**
  * List Controller Class
- *
- * @package Admin
  */
 class ListController extends ControllerAction
 {
@@ -65,7 +62,7 @@ class ListController extends ControllerAction
     /**
      * List_Controller constructor.
      *
-     * @param BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -106,7 +103,7 @@ class ListController extends ControllerAction
     public function index_onDelete()
     {
         $checkedIds = post('checked');
-        if (!$checkedIds OR !is_array($checkedIds) OR !count($checkedIds)) {
+        if (!$checkedIds || !is_array($checkedIds) || !count($checkedIds)) {
             flash()->success(lang('admin::lang.list.delete_empty'));
 
             return $this->controller->refreshList();
@@ -168,10 +165,9 @@ class ListController extends ControllerAction
      */
     public function makeList($alias)
     {
-        if (!$alias OR !isset($this->listConfig[$alias]))
+        if (!$alias || !isset($this->listConfig[$alias]))
             $alias = $this->primaryAlias;
 
-        $locationContext = $this->controller->locationContext();
         $listConfig = $this->controller->getListConfig($alias);
 
         $modelClass = $listConfig['model'];
@@ -184,10 +180,10 @@ class ListController extends ControllerAction
         $configFile = $listConfig['configFile'];
         $modelConfig = $this->loadConfig($configFile, $requiredConfig, 'list');
 
+        $columnConfig['bulkActions'] = $modelConfig['bulkActions'] ?? [];
         $columnConfig['columns'] = $modelConfig['columns'];
         $columnConfig['model'] = $model;
         $columnConfig['alias'] = $alias;
-        $columnConfig['locationContext'] = $locationContext;
 
         $widget = $this->makeWidget('Admin\Widgets\Lists', array_merge($columnConfig, $listConfig));
 
@@ -200,7 +196,6 @@ class ListController extends ControllerAction
         });
 
         $widget->bindEvent('list.extendQuery', function ($query) use ($alias) {
-            $this->controller->applyLocationScope($query);
             $this->controller->listExtendQuery($query, $alias);
         });
 
@@ -215,17 +210,16 @@ class ListController extends ControllerAction
         $widget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($modelConfig['toolbar']) AND isset($this->controller->widgets['toolbar'])) {
+        if (isset($this->controller->widgets['toolbar']) && (isset($listConfig['toolbar']) || isset($modelConfig['toolbar']))) {
             $this->toolbarWidget = $this->controller->widgets['toolbar'];
             if ($this->toolbarWidget instanceof \Admin\Widgets\Toolbar)
-                $this->toolbarWidget->addButtons(array_get($modelConfig['toolbar'], 'buttons', []));
+                $this->toolbarWidget->reInitialize($listConfig['toolbar'] ?? $modelConfig['toolbar']);
         }
 
         // Prep the optional filter widget
-        if (isset($modelConfig['filter'])) {
+        if (array_get($modelConfig, 'filter')) {
             $filterConfig = $modelConfig['filter'];
             $filterConfig['alias'] = "{$widget->alias}_filter";
-            $filterConfig['locationContext'] = $locationContext;
             $filterWidget = $this->makeWidget('Admin\Widgets\Filter', $filterConfig);
             $filterWidget->bindToController();
 
@@ -245,7 +239,7 @@ class ListController extends ControllerAction
                 $widget->setSearchTerm($searchWidget->getActiveTerm());
             }
 
-            $filterWidget->bindEvent('filter.submit', function () use ($widget, $filterWidget) {
+            $filterWidget->bindEvent('filter.submit', function () use ($widget) {
                 return $widget->onRefresh();
             });
 
@@ -272,7 +266,7 @@ class ListController extends ControllerAction
 
     public function renderList($alias = null)
     {
-        if (is_null($alias) OR !isset($this->listConfig[$alias]))
+        if (is_null($alias) || !isset($this->listConfig[$alias]))
             $alias = $this->primaryAlias;
 
         $list = [];
@@ -296,7 +290,7 @@ class ListController extends ControllerAction
             $this->makeLists();
         }
 
-        if (!$alias OR !isset($this->listConfig[$alias])) {
+        if (!$alias || !isset($this->listConfig[$alias])) {
             $alias = $this->primaryAlias;
         }
 

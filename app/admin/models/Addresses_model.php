@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
 
-use Model;
+namespace Admin\Models;
+
+use Igniter\Flame\Database\Model;
 
 /**
  * Addresses Model Class
- *
- * @package Admin
  */
 class Addresses_model extends Model
 {
@@ -26,6 +26,11 @@ class Addresses_model extends Model
             'customer' => 'Admin\Models\Customers_model',
             'country' => 'System\Models\Countries_model',
         ],
+    ];
+
+    protected $casts = [
+        'customer_id' => 'integer',
+        'country_id' => 'integer',
     ];
 
     public static $allowedSortingColumns = [
@@ -56,7 +61,7 @@ class Addresses_model extends Model
         if ($customer instanceof Customers_model) {
             $query->where('customer_id', $customer->getKey());
         }
-        else if (strlen($customer)) {
+        elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 
@@ -70,10 +75,12 @@ class Addresses_model extends Model
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');
                 }
-                list($sortField, $sortDirection) = $parts;
+                [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
             }
         }
+
+        $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
     }

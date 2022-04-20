@@ -1,12 +1,13 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Igniter\Flame\ActivityLog\Models\Activity;
-use Model;
+use Igniter\Flame\Database\Model;
 use System\Classes\ExtensionManager;
 
 /**
  * Activities Model Class
- * @package System
  */
 class Activities_model extends Activity
 {
@@ -45,23 +46,23 @@ class Activities_model extends Activity
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
-            'sort' => 'date_added desc',
+            'sort' => 'created_at desc',
             'onlyUser' => null,
             'exceptUser' => null,
         ], $options));
 
-        $query->with(['subject', 'causer']);
+        $query->with(['subject']);
 
         if ($onlyUser) {
             $query->where('user_id', $onlyUser->getKey())
-                  ->where('user_type', $onlyUser->getMorphClass());
+                ->where('user_type', $onlyUser->getMorphClass());
         }
 
         if ($exceptUser) {
             $query->where('causer_type', '!=', $exceptUser->getMorphClass());
             $query->orWhere(function ($q) use ($exceptUser) {
                 $q->where('causer_type', $exceptUser->getMorphClass())
-                  ->where('causer_id', '<>', $exceptUser->getKey());
+                    ->where('causer_id', '<>', $exceptUser->getKey());
             });
         }
 
@@ -72,13 +73,12 @@ class Activities_model extends Activity
         }
 
         foreach ($sort as $_sort) {
-
-            if (in_array($_sort, ['date_added asc', 'date_added desc', 'date_updated asc', 'date_updated desc'])) {
+            if (in_array($_sort, ['created_at asc', 'created_at desc', 'updated_at asc', 'updated_at desc'])) {
                 $parts = explode(' ', $_sort);
                 if (count($parts) < 2) {
                     array_push($parts, 'desc');
                 }
-                list($sortField, $sortDirection) = $parts;
+                [$sortField, $sortDirection] = $parts;
                 $query->orderBy($sortField, $sortDirection);
             }
         }

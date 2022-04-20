@@ -1,12 +1,12 @@
-<?php namespace Admin\Classes;
+<?php
 
-use Html;
+namespace Admin\Classes;
+
+use Igniter\Flame\Html\HtmlFacade as Html;
 
 /**
  * Menu item definition
  * A translation of the menu item configuration
- *
- * @package Admin
  */
 class MenuItem
 {
@@ -215,7 +215,7 @@ class MenuItem
 
         foreach ($attributes as $key => $value) {
             if ($key == 'href') $value = preg_match('#^(\w+:)?//#i', $value) ? $value : admin_url($value);
-            $attributes[$key] = (is_string($value) AND sscanf($value, 'lang:%s', $__line) === 1) ? lang($__line) : $value;
+            $attributes[$key] = is_lang_key($value) ? lang($value) : $value;
         }
 
         return $htmlBuild ? Html::attributes($attributes) : $attributes;

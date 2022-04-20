@@ -1,11 +1,10 @@
 <?php
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'mail_partials/create'],
-        'delete' => [
-            'label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form',
-            'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'mail_partials/create',
         ],
         'templates' => [
             'label' => 'lang:system::lang.mail_templates.text_templates',
@@ -20,6 +19,14 @@ $config['list']['toolbar'] = [
     ],
 ];
 
+$config['list']['bulkActions'] = [
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+    ],
+];
+
 $config['list']['columns'] = [
     'edit' => [
         'type' => 'button',
@@ -30,7 +37,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:system::lang.mail_templates.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'searchable' => TRUE,
     ],
@@ -47,26 +54,34 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'back' => ['label' => 'lang:admin::lang.button_icon_back', 'class' => 'btn btn-default', 'href' => 'mail_partials'],
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
+            'href' => 'mail_partials',
+        ],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
+            'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
-            'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => 'edit',
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
+            'context' => 'edit',
         ],
     ],
 ];
 
 $config['form']['fields'] = [
     'name' => [
-        'label' => 'lang:system::lang.mail_templates.label_name',
+        'label' => 'lang:admin::lang.label_name',
         'span' => 'left',
         'type' => 'text',
     ],
@@ -83,7 +98,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:system::lang.mail_templates.label_body',
             'type' => 'codeeditor',
         ],
-        'plain' => [
+        'text' => [
             'tab' => 'lang:system::lang.mail_templates.label_plain',
             'type' => 'textarea',
             'attributes' => [

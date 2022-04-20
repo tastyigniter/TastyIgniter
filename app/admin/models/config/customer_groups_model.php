@@ -1,9 +1,24 @@
 <?php
 $config['list']['toolbar'] = [
     'buttons' => [
-        'back' => ['label' => 'lang:admin::lang.button_icon_back', 'class' => 'btn btn-default', 'href' => 'customers'],
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'customer_groups/create'],
-        'delete' => ['label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm'],
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'customers',
+        ],
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'customer_groups/create',
+        ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -20,7 +35,7 @@ $config['list']['columns'] = [
         'type' => 'button',
         'iconCssClass' => 'fa fa-star-o',
         'attributes' => [
-            'class' => 'btn btn-outline-warning',
+            'class' => 'btn btn-outline-warning bg-transparent',
             'data-request' => 'onSetDefault',
             'data-request-data' => 'default:{customer_group_id}',
         ],
@@ -43,23 +58,41 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
+            'href' => 'customer_groups',
+        ],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
+            'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
-            'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => ['edit'],
+            'context' => ['edit'],
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
         ],
     ],
 ];

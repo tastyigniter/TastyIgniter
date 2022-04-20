@@ -1,20 +1,17 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Igniter\Flame\Auth\Manager;
 
 /**
  * Admin User authentication manager
- * @package Admin
  */
 class User extends Manager
 {
-    protected $sessionKey = 'admin_info';
+    protected $sessionKey = 'admin_auth';
 
     protected $model = 'Admin\Models\Users_model';
-
-    protected $groupModel = 'Admin\Models\Staff_groups_model';
-
-    protected $identifier = 'username';
 
     protected $isSuperUser = FALSE;
 
@@ -28,94 +25,88 @@ class User extends Manager
         return $this->user()->isSuperUser();
     }
 
+    /**
+     * @return \Admin\Models\Staffs_model
+     */
+    public function staff()
+    {
+        return optional($this->user())->staff;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function locations()
+    {
+        return optional($this->staff())->locations;
+    }
+
+    //
+    //
+    //
+
+    public function extendUserQuery($query)
+    {
+        $query
+            ->with(['staff', 'staff.role', 'staff.groups', 'staff.locations'])
+            ->whereHas('staff', function ($query) {
+                $query->where('staff_status', TRUE);
+            });
+    }
+
+    //
+    //
+    //
+
     public function getId()
     {
-        return $this->fromModel('user_id', 'user');
+        return $this->user()->user_id;
     }
 
     public function getUserName()
     {
-        return $this->fromModel('username', 'user');
+        return $this->user()->username;
     }
 
     public function getStaffId()
     {
-        return $this->fromModel('staff_id', 'user');
+        return $this->staff()->staff_id;
     }
 
     public function getStaffName()
     {
-        return $this->fromModel('staff_name', 'staff');
+        return $this->staff()->staff_name;
     }
 
     public function getStaffEmail()
     {
-        return $this->fromModel('staff_email', 'staff');
+        return $this->staff()->staff_email;
     }
 
-    public function getLocationId()
+    public function register(array $attributes, $activate = FALSE)
     {
-        return $this->fromModel('staff_location_id', 'staff', params('default_location_id'));
-    }
+        $model = $this->createModel();
 
-    public function getLocationName()
-    {
-        return $this->fromModel('location_name', 'location');
-    }
+        $staff = $model->staff()->getModel()->newInstance();
+        $staff->staff_email = $attributes['staff_email'];
+        $staff->staff_name = $attributes['staff_name'];
+        $staff->language_id = $attributes['language_id'] ?? null;
+        $staff->staff_role_id = $attributes['staff_role_id'] ?? null;
+        $staff->staff_status = $attributes['staff_status'] ?? TRUE;
+        $staff->user = [
+            'username' => $attributes['username'],
+            'password' => $attributes['password'],
+            'super_user' => $attributes['super_user'] ?? FALSE,
+            'activate' => $activate,
+        ];
 
-    public function staffGroupName()
-    {
-        return $this->fromModel('staff_group_name', 'group');
-    }
+        $staff->save();
 
-    public function location()
-    {
-        return $this->staff()->location;
-    }
+        $staff->groups()->attach($attributes['groups']);
 
-    public function staffGroup()
-    {
-        return $this->user()->staff->group;
-    }
+        if (array_key_exists('locations', $attributes))
+            $staff->locations()->attach($attributes['locations']);
 
-    public function staff()
-    {
-        return $this->user()->staff;
-    }
-
-    public function getStaffGroupId()
-    {
-        return $this->fromModel('staff_group_id', 'staff');
-    }
-
-    public function canAccessCustomerAccount()
-    {
-        return $this->isSuperUser() OR $this->fromModel('customer_account_access', 'group');
-    }
-
-    public function isStrictLocation()
-    {
-        return $this->user() AND !$this->isSuperUser() AND $this->user()->hasStrictLocationAccess();
-    }
-
-    public function isSingleLocationContext()
-    {
-        return is_single_location() OR $this->isStrictLocation();
-    }
-
-    protected function fromModel($key, $related = null, $default = null)
-    {
-        $user = $this->user();
-
-        switch ($related) {
-            case 'staff':
-                return $user->staff[$key] ?? $default;
-            case 'group':
-                return $user->staff->group[$key] ?? $default;
-            case 'location':
-                return $user->staff->location[$key] ?? $default;
-            default:
-                return $user[$key] ?? $default;
-        }
+        return $staff->reload()->user;
     }
 }

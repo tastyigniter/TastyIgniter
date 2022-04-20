@@ -1,8 +1,10 @@
-<?php namespace Admin\Database\Migrations;
+<?php
+
+namespace Admin\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 class CreateUserPreferencesTable extends Migration
 {
@@ -10,7 +12,7 @@ class CreateUserPreferencesTable extends Migration
     {
         Schema::create('user_preferences', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('id');
+            $table->integer('id', TRUE);
             $table->integer('user_id');
             $table->string('item');
             $table->text('value');

@@ -1,11 +1,12 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
-use Model;
+use Igniter\Flame\Database\Model;
 
 /**
  * Menu Specials Model Class
- * @package Admin
  */
 class Menus_specials_model extends Model
 {
@@ -16,12 +17,22 @@ class Menus_specials_model extends Model
 
     protected $primaryKey = 'special_id';
 
-    protected $fillable = ['menu_id', 'start_date', 'end_date', 'special_price', 'special_status', 'type',
-        'validity', 'recurring_every', 'recurring_from', 'recurring_to'];
+    protected $fillable = [
+        'menu_id', 'start_date',
+        'end_date', 'special_price',
+        'special_status', 'type',
+        'validity', 'recurring_every',
+        'recurring_from', 'recurring_to',
+    ];
 
-    public $dates = ['start_date', 'end_date'];
-
-    public $casts = [
+    protected $casts = [
+        'menu_id' => 'integer',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'special_price' => 'float',
+        'special_status' => 'boolean',
+        'recurring_from' => 'time',
+        'recurring_to' => 'time',
         'recurring_every' => 'array',
     ];
 
@@ -32,10 +43,10 @@ class Menus_specials_model extends Model
 
     public function getPrettyEndDateAttribute()
     {
-        if ($this->isRecurring() OR !$this->end_date)
+        if ($this->isRecurring() || !$this->end_date)
             return null;
 
-        return mdate(setting('date_format'), $this->end_date->getTimestamp());
+        return $this->end_date->format(lang('system::lang.php.date_time_format'));
     }
 
     public function getTypeAttribute($value)
@@ -58,7 +69,7 @@ class Menus_specials_model extends Model
 
     public function daysRemaining()
     {
-        if ($this->validity != 'period' OR !$this->end_date->greaterThan(Carbon::now()))
+        if ($this->validity != 'period' || !$this->end_date->greaterThan(Carbon::now()))
             return 0;
 
         return $this->end_date->diffForHumans();
@@ -79,7 +90,7 @@ class Menus_specials_model extends Model
             case 'period':
                 return !$now->between($this->start_date, $this->end_date);
             case 'recurring':
-                if (!in_array($now->format('w'), $this->recurring_every))
+                if (!in_array($now->format('w'), $this->recurring_every ?? []))
                     return TRUE;
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from);

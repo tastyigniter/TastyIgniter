@@ -1,22 +1,19 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Location\Models\AbstractLocation;
-use Model;
 
 /**
  * Coupons Model Class
- *
- * @package Admin
+ * @deprecated remove before v4. Added for backward compatibility, see Igniter\Coupons\Models\Coupons_model
  */
 class Coupons_model extends Model
 {
     use \Admin\Traits\Locationable;
-
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -30,11 +27,16 @@ class Coupons_model extends Model
      */
     protected $primaryKey = 'coupon_id';
 
-    public $timestamps = TRUE;
-
     protected $timeFormat = 'H:i';
 
-    public $casts = [
+    public $timestamps = TRUE;
+
+    protected $casts = [
+        'discount' => 'float',
+        'min_total' => 'float',
+        'redemptions' => 'integer',
+        'customer_redemptions' => 'integer',
+        'status' => 'boolean',
         'period_start_date' => 'date',
         'period_end_date' => 'date',
         'fixed_date' => 'date',
@@ -42,6 +44,7 @@ class Coupons_model extends Model
         'fixed_to_time' => 'time',
         'recurring_from_time' => 'time',
         'recurring_to_time' => 'time',
+        'order_restriction' => 'integer',
     ];
 
     public $relation = [
@@ -75,7 +78,7 @@ class Coupons_model extends Model
 
     public function getTypeNameAttribute($value)
     {
-        return ($this->type == 'P') ? lang('admin::lang.coupons.text_percentage') : lang('admin::lang.coupons.text_fixed_amount');
+        return ($this->type == 'P') ? lang('admin::lang.menus.text_percentage') : lang('admin::lang.menus.text_fixed_amount');
     }
 
     public function getFormattedDiscountAttribute($value)
@@ -103,7 +106,7 @@ class Coupons_model extends Model
 
     public function discountWithOperand()
     {
-        return ($this->isFixed() ? "-" : "-%").$this->discount;
+        return ($this->isFixed() ? '-' : '-%').$this->discount;
     }
 
     public function minimumOrderTotal()
@@ -145,12 +148,12 @@ class Coupons_model extends Model
 
         $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
 
-        return array_get($orderTypes, $orderType) != $this->order_restriction;
+        return array_get($orderTypes, $orderType, $orderType) != $this->order_restriction;
     }
 
     public function hasLocationRestriction($locationId)
     {
-        if (!$this->locations OR $this->locations->isEmpty())
+        if (!$this->locations || $this->locations->isEmpty())
             return FALSE;
 
         $locationKeyColumn = $this->locations()->getModel()->qualifyColumn('location_id');
@@ -160,12 +163,12 @@ class Coupons_model extends Model
 
     public function hasReachedMaxRedemption()
     {
-        return $this->redemptions AND $this->redemptions <= $this->countRedemptions();
+        return $this->redemptions && $this->redemptions <= $this->countRedemptions();
     }
 
     public function customerHasMaxRedemption(User $user)
     {
-        return $this->customer_redemptions AND $this->customer_redemptions <= $this->countCustomerRedemptions($user->getKey());
+        return $this->customer_redemptions && $this->customer_redemptions <= $this->countCustomerRedemptions($user->getKey());
     }
 
     public function countRedemptions()
@@ -176,6 +179,6 @@ class Coupons_model extends Model
     public function countCustomerRedemptions($id)
     {
         return $this->history()->isEnabled()
-                    ->where('customer_id', $id)->count();
+            ->where('customer_id', $id)->count();
     }
 }

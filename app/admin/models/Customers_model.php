@@ -1,23 +1,20 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Carbon\Carbon;
-use DB;
 use Exception;
 use Igniter\Flame\Auth\Models\User as AuthUserModel;
 use Igniter\Flame\Database\Traits\Purgeable;
+use System\Traits\SendsMailTemplate;
 
 /**
  * Customers Model Class
- *
- * @package Admin
  */
 class Customers_model extends AuthUserModel
 {
     use Purgeable;
-
-    const UPDATED_AT = null;
-
-    const CREATED_AT = 'date_added';
+    use SendsMailTemplate;
 
     /**
      * @var string The database table name
@@ -38,8 +35,8 @@ class Customers_model extends AuthUserModel
     public $relation = [
         'hasMany' => [
             'addresses' => ['Admin\Models\Addresses_model', 'delete' => TRUE],
-            'orders' => ['Admin\Models\Orders_model', 'delete' => TRUE],
-            'reservations' => ['Admin\Models\Reservations_model', 'delete' => TRUE],
+            'orders' => ['Admin\Models\Orders_model'],
+            'reservations' => ['Admin\Models\Reservations_model'],
         ],
         'belongsTo' => [
             'group' => ['Admin\Models\Customer_groups_model', 'foreignKey' => 'customer_group_id'],
@@ -47,11 +44,20 @@ class Customers_model extends AuthUserModel
         ],
     ];
 
-    public $purgeable = ['addresses'];
+    protected $purgeable = ['addresses', 'send_invite'];
 
     public $appends = ['full_name'];
 
-    public $casts = [
+    protected $casts = [
+        'customer_id' => 'integer',
+        'address_id' => 'integer',
+        'customer_group_id' => 'integer',
+        'newsletter' => 'boolean',
+        'status' => 'boolean',
+        'is_activated' => 'boolean',
+        'last_login' => 'datetime',
+        'date_invited' => 'datetime',
+        'date_activated' => 'datetime',
         'reset_time' => 'datetime',
     ];
 
@@ -74,11 +80,6 @@ class Customers_model extends AuthUserModel
         return strtolower($value);
     }
 
-    public function getDateAddedAttribute($value)
-    {
-        return day_elapsed($value);
-    }
-
     //
     // Scopes
     //
@@ -94,23 +95,29 @@ class Customers_model extends AuthUserModel
 
     public function beforeLogin()
     {
-        if (!$this->group OR !$this->group->requiresApproval())
+        if (!$this->group || !$this->group->requiresApproval())
             return;
 
-        if ($this->is_activated OR $this->status)
+        if ($this->is_activated && $this->status)
             return;
 
         throw new Exception(sprintf(
-            'Cannot login user "%s" until activated.', $this->email
+            lang('admin::lang.customers.alert_customer_not_active'), $this->email
         ));
     }
 
-    public function afterCreate()
+    protected function afterCreate()
     {
         $this->saveCustomerGuestOrder();
+
+        $this->restorePurgedValues();
+
+        if ($this->send_invite) {
+            $this->sendInvite();
+        }
     }
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->restorePurgedValues();
 
@@ -149,7 +156,7 @@ class Customers_model extends AuthUserModel
      */
     public function getCustomerDates()
     {
-        return $this->pluckDates('date_added');
+        return $this->pluckDates('created_at');
     }
 
     /**
@@ -179,8 +186,8 @@ class Customers_model extends AuthUserModel
         $idsToKeep = [];
         foreach ($addresses as $address) {
             $customerAddress = $this->addresses()->updateOrCreate(
-                array_only($address, ['customer_id', 'address_id']),
-                $address
+                array_only($address, ['address_id']),
+                array_except($address, ['address_id', 'customer_id'])
             );
 
             $idsToKeep[] = $customerAddress->getKey();
@@ -199,7 +206,7 @@ class Customers_model extends AuthUserModel
     {
         $query = FALSE;
 
-        if (is_numeric($this->customer_id) AND !empty($this->email)) {
+        if (is_numeric($this->customer_id) && !empty($this->email)) {
             $customer_id = $this->customer_id;
             $customer_email = $this->email;
             $update = ['customer_id' => $customer_id];
@@ -209,16 +216,8 @@ class Customers_model extends AuthUserModel
                 foreach ($orders as $row) {
                     if (empty($row['order_id'])) continue;
 
-                    Coupons_history_model::where('order_id', $row['order_id'])->update($update);
-
-                    if ($row['order_type'] == '1' AND !empty($row['address_id'])) {
+                    if ($row['order_type'] == '1' && !empty($row['address_id'])) {
                         Addresses_model::where('address_id', $row['address_id'])->update($update);
-                    }
-
-                    // @todo: move to paypal extension
-                    if (!empty($row['payment'])) {
-                        DB::table('pp_payments')->where('order_id', $row['order_id'])
-                          ->update(['customer_id' => $customer_id]);
                     }
                 }
             }
@@ -229,5 +228,38 @@ class Customers_model extends AuthUserModel
         }
 
         return $query;
+    }
+
+    protected function sendInvite()
+    {
+        $this->bindEventOnce('model.mailGetData', function ($view, $recipientType) {
+            if ($view === 'admin::_mail.invite_customer') {
+                $this->reset_code = $inviteCode = $this->generateResetCode();
+                $this->reset_time = now();
+                $this->save();
+
+                return ['invite_code' => $inviteCode];
+            }
+        });
+
+        $this->mailSend('admin::_mail.invite_customer');
+    }
+
+    public function mailGetRecipients($type)
+    {
+        return [
+            [$this->email, $this->full_name],
+        ];
+    }
+
+    public function mailGetData()
+    {
+        $model = $this->fresh();
+
+        return array_merge($model->toArray(), [
+            'customer' => $model,
+            'full_name' => $model->full_name,
+            'email' => $model->email,
+        ]);
     }
 }

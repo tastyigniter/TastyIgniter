@@ -18,11 +18,11 @@ if (window.jQuery.request !== undefined)
 +function ($) {
     "use strict";
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(document).trigger('render')
     })
 
-    $(window).on('ajaxUpdateComplete', function() {
+    $(window).on('ajaxUpdateComplete', function () {
         $(document).trigger('render')
     })
 
@@ -33,6 +33,8 @@ if (window.jQuery.request !== undefined)
 
 /*
  * TastyIgniter AJAX plugin..
+ *
+ * Adapted from OctoberCMS AJAX plugin
  *
  * $.request('handler', function() { })
  * $(form).request('handler', function() { })
@@ -55,9 +57,9 @@ if (window.jQuery.request !== undefined)
             loading = options.loading !== undefined && options.loading.length ? $(options.loading) : null,
             isRedirect = options.redirect !== undefined && options.redirect.length
 
-        var _event = jQuery.Event('ajaxBeforeUpdate')
-        $triggerEl.trigger(_event, context)
-        if (_event.isDefaultPrevented()) return
+            var _event = jQuery.Event('ajaxSetup')
+            $triggerEl.trigger(_event, context)
+            if (_event.isDefaultPrevented()) return
 
         if ($.type(loading) == 'string') loading = $(loading)
 
@@ -97,10 +99,10 @@ if (window.jQuery.request !== undefined)
                 // Stop beforeUpdate() OR data-request-before-update returns false
                 if (this.options.beforeUpdate.apply(this, [data, textStatus, jqXHR]) === false) return
                 if (options.fireBeforeUpdate && eval('(function($el, context, data, textStatus, jqXHR) {' +
-                        options.fireBeforeUpdate + '}.call($el.get(0), $el, context, data, textStatus, jqXHR))') === false) return
+                    options.fireBeforeUpdate + '}.call($el.get(0), $el, context, data, textStatus, jqXHR))') === false) return
 
-                // Trigger 'ti.before.update' on the form, stop if event.preventDefault() is called
-                var _event = jQuery.Event('ti.before.update')
+                // Trigger 'ajaxBeforeUpdate' on the form, stop if event.preventDefault() is called
+                var _event = jQuery.Event('ajaxBeforeUpdate')
                 $triggerEl.trigger(_event, [context, data, textStatus, jqXHR])
                 if (_event.isDefaultPrevented()) return
 
@@ -127,8 +129,7 @@ if (window.jQuery.request !== undefined)
                 if (jqXHR.status == 406 && jqXHR.responseJSON) {
                     errorMsg = jqXHR.responseJSON['X_IGNITER_ERROR_MESSAGE']
                     updatePromise = requestOptions.handleUpdateResponse(jqXHR.responseJSON, textStatus, jqXHR)
-                }
-                else {
+                } else {
                     errorMsg = jqXHR.responseText ? jqXHR.responseText : jqXHR.statusText
                     updatePromise.resolve()
                 }
@@ -177,6 +178,27 @@ if (window.jQuery.request !== undefined)
                 if (message) alert(message)
             },
 
+            handleValidationMessage: function(message, fields) {
+                $triggerEl.trigger('ajaxValidation', [context, message, fields])
+
+                var isFirstInvalidField = true
+                $.each(fields, function focusErrorField(fieldName, fieldMessages) {
+                    fieldName = fieldName.replace(/\.(\w+)/g, '[$1]')
+
+                    var fieldElement = $form.find('[name="'+fieldName+'"], [name="'+fieldName+'[]"], [name$="['+fieldName+']"], [name$="['+fieldName+'][]"]').filter(':enabled').first()
+                    if (fieldElement.length > 0) {
+
+                        var _event = jQuery.Event('ajaxInvalidField')
+                        $(window).trigger(_event, [fieldElement.get(0), fieldName, fieldMessages, isFirstInvalidField])
+
+                        if (isFirstInvalidField) {
+                            if (!_event.isDefaultPrevented()) fieldElement.focus()
+                            isFirstInvalidField = false
+                        }
+                    }
+                })
+            },
+
             // Custom function, redirect the browser to another location
             handleRedirectResponse: function (url) {
                 window.location.href = url
@@ -197,6 +219,8 @@ if (window.jQuery.request !== undefined)
                             $(selector.substring(1)).append(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
                         } else if (jQuery.type(selector) == 'string' && selector.charAt(0) == '^') {
                             $(selector.substring(1)).prepend(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
+                        } else if (jQuery.type(selector) == 'string' && selector.charAt(0) == '~') {
+                            $(selector.substring(1)).replaceWith(data[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
                         } else {
                             $(selector).trigger('ajaxBeforeReplace')
                             $(selector).html(dataArray[partial]).trigger('ajaxUpdate', [context, data, textStatus, jqXHR])
@@ -219,6 +243,9 @@ if (window.jQuery.request !== undefined)
 
                 if (isRedirect)
                     requestOptions.handleRedirectResponse(options.redirect)
+
+                if (data['X_IGNITER_ERROR_FIELDS'])
+                    requestOptions.handleValidationMessage(data['X_IGNITER_ERROR_MESSAGE'], data['X_IGNITER_ERROR_FIELDS'])
 
                 updatePromise.resolve()
 
@@ -341,8 +368,7 @@ if (window.jQuery.request !== undefined)
 
         try {
             return JSON.parse(JSON.stringify(eval("({" + value + "})")))
-        }
-        catch (e) {
+        } catch (e) {
             throw new Error('Error parsing the ' + name + ' attribute value. ' + e)
         }
     }
@@ -358,99 +384,3 @@ if (window.jQuery.request !== undefined)
         })
     }
 }(window.jQuery);
-
-/*
- * The loading indicator.
- *
- * Displays the animated loading indicator at the top of the page.
- *
- * JavaScript API:
- * $.ti.loadingIndicator.show(event)
- * $.ti.loadingIndicator.hide()
- *
- * By default if the show() method has been called several times, the hide() method should be
- * called the same number of times in order to hide the card. Use hide(true) to hide the
- * indicator forcibly.
- */
-+function ($) {
-    "use strict"
-    if ($.ti === undefined)
-        $.ti = {}
-
-    var LoadingIndicator = function () {
-        var self = this
-        this.counter = 0
-        this.indicator = $('<div/>').addClass('loading-indicator loaded')
-            .append($('<div />').addClass('meter'))
-            .append($('<div />').addClass('meter-loaded'))
-        this.meter = this.indicator.find('.meter')
-        this.meter.html(LoadingIndicator.meterTemplate)
-
-        $(document).ready(function () {
-            $(document.body).append(self.indicator)
-        })
-    }
-
-    LoadingIndicator.meterTemplate = [
-        '<div class="rect-1"></div>',
-        '<div class="rect-2"></div>',
-        '<div class="rect-3"></div>',
-        '<div class="rect-4"></div>',
-        '<div class="rect-5"></div>',
-        '<div class="rect-6"></div>',
-        '<div class="rect-7"></div>',
-        '<div class="rect-8"></div>',
-        '<div class="rect-9"></div>',
-        '<div class="rect-10"></div>',
-    ].join('\n')
-
-    LoadingIndicator.prototype.show = function () {
-        this.counter++
-
-        // Restart the animation
-        this.meter.after(this.meter = this.meter.clone()).remove()
-
-        if (this.counter > 1)
-            return
-
-        this.indicator.removeClass('loaded')
-        $(document.body).addClass('ti-loading')
-    }
-
-    LoadingIndicator.prototype.hide = function (force) {
-        this.counter--
-        if (force !== undefined && force)
-            this.counter = 0
-
-        if (this.counter <= 0) {
-            this.indicator.addClass('loaded')
-            $(document.body).removeClass('ti-loading')
-        }
-    }
-
-    $.ti.loadingIndicator = new LoadingIndicator()
-
-    // METER LOAD INDICATOR DATA-API
-    // ==============
-
-    // $(document)
-    //     .on('ajaxPromise', '[data-request]', function (event) {
-    //         // Prevent this event from bubbling up to a non-related data-request
-    //         // element, for example a <form> tag wrapping a <button> tag
-    //         event.stopPropagation()
-    //
-    //         $.ti.loadingIndicator.show()
-    //
-    //         // This code will cover instances where the element has been removed
-    //         // from the DOM, making the resolution event below an orphan.
-    //         var $el = $(this)
-    //         $(window).one('ajaxUpdateComplete', function () {
-    //             if ($el.closest('html').length === 0)
-    //                 $.ti.loadingIndicator.hide()
-    //         })
-    //     }).on('ajaxFail ajaxDone', '[data-request]', function (event) {
-    //     event.stopPropagation()
-    //     $.ti.loadingIndicator.hide()
-    // })
-
-}(window.jQuery)

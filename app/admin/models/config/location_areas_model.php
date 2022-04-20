@@ -13,17 +13,83 @@ return [
             ],
             'is_default' => [
                 'label' => 'lang:admin::lang.locations.label_area_default',
-                'type' => 'switch',
+                'type' => 'radiotoggle',
                 'span' => 'right',
-                'on' => 'lang:admin::lang.text_yes',
-                'off' => 'lang:admin::lang.text_no',
+                'options' => [
+                    'lang:admin::lang.text_no',
+                    'lang:admin::lang.text_yes',
+                ],
                 'attributes' => [
                     'data-toggle' => 'area-default',
                 ],
             ],
+            'conditions' => [
+                'label' => 'lang:admin::lang.locations.label_delivery_condition',
+                'type' => 'repeater',
+                'sortable' => TRUE,
+                'commentAbove' => 'lang:admin::lang.locations.help_delivery_condition',
+                'form' => [
+                    'fields' => [
+                        'priority' => [
+                            'type' => 'hidden',
+                        ],
+                        'amount' => [
+                            'label' => 'lang:admin::lang.locations.label_area_charge',
+                            'type' => 'currency',
+                            'default' => 0,
+                        ],
+                        'type' => [
+                            'label' => 'lang:admin::lang.locations.label_charge_condition',
+                            'type' => 'radiotoggle',
+                            'default' => 'above',
+                            'options' => [
+                                'all' => 'lang:admin::lang.locations.text_all_orders',
+                                'below' => 'lang:admin::lang.locations.text_below_order_total',
+                                'above' => 'lang:admin::lang.locations.text_above_order_total',
+                            ],
+                        ],
+                        'total' => [
+                            'label' => 'lang:admin::lang.locations.label_area_min_amount',
+                            'type' => 'currency',
+                            'default' => 0,
+                        ],
+                    ],
+                ],
+            ],
+            'boundaries[distance]' => [
+                'label' => 'lang:admin::lang.locations.label_delivery_distance',
+                'type' => 'repeater',
+                'sortable' => TRUE,
+                'commentAbove' => 'lang:admin::lang.locations.help_delivery_distance',
+                'form' => [
+                    'fields' => [
+                        'priority' => [
+                            'type' => 'hidden',
+                        ],
+                        'type' => [
+                            'label' => 'lang:admin::lang.locations.label_charge_condition',
+                            'type' => 'select',
+                            'options' => [
+                                'greater' => 'greater than',
+                                'less' => 'less than',
+                                'equals_or_greater' => 'equals or greater than',
+                                'equals_or_less' => 'equals or less than',
+                            ],
+                        ],
+                        'distance' => [
+                            'label' => 'lang:admin::lang.locations.label_area_distance',
+                            'type' => 'text',
+                        ],
+                        'charge' => [
+                            'label' => 'lang:admin::lang.locations.label_area_charge',
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
+            ],
             'type' => [
                 'label' => 'lang:admin::lang.locations.label_area_type',
-                'type' => 'radio',
+                'type' => 'radiotoggle',
                 'default' => 'address',
                 'options' => [
                     'address' => 'lang:admin::lang.locations.text_custom',
@@ -54,6 +120,7 @@ return [
                             'default' => 'region',
                             'options' => [
                                 'street' => 'lang:admin::lang.locations.text_address_component_street',
+                                'sub_locality' => 'lang:admin::lang.locations.text_address_component_town',
                                 'locality' => 'lang:admin::lang.locations.text_address_component_city',
                                 'admin_level_2' => 'lang:admin::lang.locations.text_address_component_region',
                                 'admin_level_1' => 'lang:admin::lang.locations.text_address_component_state',
@@ -67,47 +134,25 @@ return [
                     ],
                 ],
             ],
-            'conditions' => [
-                'label' => 'lang:admin::lang.locations.label_delivery_condition',
-                'type' => 'repeater',
-                'sortable' => TRUE,
-                'commentAbove' => 'lang:admin::lang.locations.help_delivery_condition',
-                'form' => [
-                    'fields' => [
-                        'priority' => [
-                            'type' => 'hidden',
-                        ],
-                        'amount' => [
-                            'label' => 'lang:admin::lang.locations.label_area_charge',
-                            'type' => 'number',
-                            'default' => 0,
-                        ],
-                        'type' => [
-                            'label' => 'lang:admin::lang.locations.label_charge_condition',
-                            'type' => 'radio',
-                            'default' => 'above',
-                            'options' => [
-                                'all' => 'lang:admin::lang.locations.text_all_orders',
-                                'below' => 'lang:admin::lang.locations.text_below_order_total',
-                                'above' => 'lang:admin::lang.locations.text_above_order_total',
-                            ],
-                        ],
-                        'total' => [
-                            'label' => 'lang:admin::lang.locations.label_area_min_amount',
-                            'type' => 'number',
-                            'default' => 0,
-                        ],
-                    ],
+            '_mapview' => [
+                'type' => 'mapview',
+                'zoom' => 14,
+                'height' => 640,
+                'shapeSelector' => '[data-map-shape]',
+                'trigger' => [
+                    'action' => 'hide',
+                    'field' => 'type',
+                    'condition' => 'value[address]',
                 ],
             ],
-            'area_id' => [
+            'location_id' => [
+                'type' => 'hidden',
+            ],
+            'color' => [
                 'type' => 'hidden',
                 'attributes' => [
-                    'data-shape-value' => 'area_id',
+                    'data-shape-value' => 'color',
                 ],
-            ],
-            'priority' => [
-                'type' => 'hidden',
             ],
             'boundaries[polygon]' => [
                 'type' => 'hidden',

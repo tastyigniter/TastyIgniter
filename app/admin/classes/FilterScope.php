@@ -7,8 +7,6 @@ namespace Admin\Classes;
  * A translation of the filter scope configuration
  *
  * Adapted from october\backend\classes\FilterScope
- *
- * @package Admin
  */
 class FilterScope
 {
@@ -58,11 +56,6 @@ class FilterScope
     public $context;
 
     /**
-     * @var string Specifies location contextual visibility of this form scope.
-     */
-    public $locationContext;
-
-    /**
      * @var bool Specify if the scope is disabled or not.
      */
     public $disabled = FALSE;
@@ -86,6 +79,11 @@ class FilterScope
      * @var string Specifies a CSS class to attach to the scope container.
      */
     public $cssClass;
+
+    /**
+     * @var string Filter scope mode.
+     */
+    public $mode;
 
     /**
      * @var array Raw scope configuration.
@@ -131,9 +129,6 @@ class FilterScope
         if (isset($config['context']))
             $this->context = $config['context'];
 
-        if (isset($config['locationContext']))
-            $this->locationContext = $config['locationContext'];
-
         if (isset($config['default']))
             $this->defaults = $config['default'];
 
@@ -154,6 +149,9 @@ class FilterScope
 
         if (array_key_exists('disabled', $config))
             $this->disabled = $config['disabled'];
+
+        if (isset($config['mode']))
+            $this->mode = $config['mode'];
 
         return $config;
     }

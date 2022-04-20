@@ -1,5 +1,9 @@
 <?php
 $config['list']['filter'] = [
+    'search' => [
+        'prompt' => 'lang:admin::lang.categories.text_filter_search',
+        'mode' => 'all',
+    ],
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
@@ -7,10 +11,10 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationContext' => 'multiple',
+            'locationAware' => TRUE,
         ],
         'status' => [
-            'label' => 'lang:admin::lang.categories.text_filter_status',
+            'label' => 'lang:admin::lang.text_filter_status',
             'type' => 'switch', // checkbox, switch, date, daterange
             'conditions' => 'status = :filtered',
         ],
@@ -19,9 +23,37 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'categories/create'],
-        'delete' => ['label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm'],
-        'filter' => ['label' => 'lang:admin::lang.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'categories/create',
+        ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
+        ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -35,7 +67,7 @@ $config['list']['columns'] = [
         ],
     ],
     'name' => [
-        'label' => 'lang:admin::lang.categories.column_name',
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
     'parent_cat' => [
@@ -49,7 +81,7 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'locationContext' => 'multiple',
+        'locationAware' => TRUE,
         'invisible' => TRUE,
     ],
     'priority' => [
@@ -64,33 +96,40 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => TRUE,
     ],
-
+    'created_at' => [
+        'label' => 'lang:admin::lang.column_date_added',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
+    ],
 ];
 
 $config['form']['toolbar'] = [
     'buttons' => [
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
+            'class' => 'btn btn-default',
+            'href' => 'categories',
+        ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
             'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
             'class' => 'btn btn-primary',
-            'data-request-submit' => 'true',
             'data-request' => 'onSave',
-        ],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
-            'context' => ['create', 'edit'],
-            'class' => 'btn btn-default',
-            'data-request' => 'onSave',
-            'data-request-submit' => 'true',
-            'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
             'label' => 'lang:admin::lang.button_icon_delete',
             'context' => ['edit'],
             'class' => 'btn btn-danger',
             'data-request' => 'onDelete',
-            'data-request-submit' => 'true',
             'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
         ],
     ],
 ];
@@ -120,7 +159,6 @@ $config['form']['fields'] = [
         'span' => 'right',
         'valueFrom' => 'locations',
         'nameFrom' => 'location_name',
-        'locationContext' => 'multiple',
     ],
     'priority' => [
         'label' => 'lang:admin::lang.categories.label_priority',
@@ -134,7 +172,7 @@ $config['form']['fields'] = [
         'default' => 1,
     ],
     'description' => [
-        'label' => 'lang:admin::lang.categories.label_description',
+        'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
         'span' => 'left',
         'attributes' => [

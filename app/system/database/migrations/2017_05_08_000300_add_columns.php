@@ -1,8 +1,10 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * New column 'label' on mail_templates_data table
@@ -37,7 +39,7 @@ class AddColumns extends Migration
         Schema::table('categories', function (Blueprint $table) {
             $table->string('name')->change();
             $table->integer('nest_left')->nullable();
-            $table->string('nest_right')->nullable();
+            $table->integer('nest_right')->nullable();
             $table->string('permalink_slug')->nullable();
         });
 
@@ -74,7 +76,7 @@ class AddColumns extends Migration
         });
 
         Schema::table('mail_templates_data', function (Blueprint $table) {
-            $table->text('is_custom')->nullable();
+            $table->boolean('is_custom')->nullable();
             $table->text('plain_body')->nullable();
         });
 

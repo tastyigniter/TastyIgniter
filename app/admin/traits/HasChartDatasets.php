@@ -5,11 +5,13 @@ namespace Admin\Traits;
 use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
-use DB;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 trait HasChartDatasets
 {
+    use LocationAwareWidget;
+
     public function loadAssets()
     {
         $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
@@ -29,6 +31,11 @@ trait HasChartDatasets
         $start = Carbon::parse($start);
         $end = Carbon::parse($end);
 
+        if ($start->eq($end)) {
+            $start = $start->startOfDay();
+            $end = $end->endOfDay();
+        }
+
         return $this->getDatasets($start, $end);
     }
 
@@ -42,7 +49,7 @@ trait HasChartDatasets
 
     protected function makeDataset($config, $start, $end)
     {
-        list($r, $g, $b) = sscanf($config['color'], '#%02x%02x%02x');
+        [$r, $g, $b] = sscanf($config['color'], '#%02x%02x%02x');
         $backgroundColor = sprintf('rgba(%s, %s, %s, 0.5)', $r, $g, $b);
         $borderColor = sprintf('rgb(%s, %s, %s)', $r, $g, $b);
 
@@ -64,6 +71,7 @@ trait HasChartDatasets
         $query->whereBetween($dateColumnName, [$start, $end])->groupBy('x');
 
         $dateRanges = $this->getDatePeriod($start, $end);
+        $this->locationApplyScope($query);
 
         return $this->getPointsArray($dateRanges, $query->get());
     }
@@ -71,9 +79,9 @@ trait HasChartDatasets
     protected function getDatePeriod($start, $end)
     {
         return new DatePeriod(
-            Carbon::parse($start),
+            Carbon::parse($start)->startOfDay(),
             new DateInterval('P1D'),
-            Carbon::parse($end)
+            Carbon::parse($end)->endOfDay()
         );
     }
 

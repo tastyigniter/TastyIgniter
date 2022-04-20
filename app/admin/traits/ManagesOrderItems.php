@@ -2,65 +2,61 @@
 
 namespace Admin\Traits;
 
+use Admin\Models\Menu_item_option_values_model;
+use Admin\Models\Menu_item_options_model;
 use Admin\Models\Menus_model;
-use Carbon\Carbon;
-use DB;
-use Event;
-use Igniter\Flame\Cart\CartCondition;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 trait ManagesOrderItems
 {
     public static function bootManagesOrderItems()
     {
-        Event::listen('admin.order.paymentProcessed', function ($model) {
-            $model->handleOnPaymentProcessed();
+        Event::listen('admin.order.beforePaymentProcessed', function (self $model) {
+            $model->handleOnBeforePaymentProcessed();
         });
     }
 
-    protected function handleOnPaymentProcessed()
+    protected function handleOnBeforePaymentProcessed()
     {
         $this->subtractStock();
-
-        $this->redeemCoupon();
     }
 
     /**
      * Subtract cart item quantity from menu stock quantity
      *
-     * @param int $order_id
-     *
-     * @return bool
+     * @return void
      */
     public function subtractStock()
     {
-        $this->getOrderMenus()->each(function ($orderMenu) {
-            if ($menu = Menus_model::find($orderMenu->menu_id))
-                $menu->updateStock($orderMenu->quantity, 'subtract');
+        $orderMenuOptions = $this->getOrderMenuOptions();
+        $this->getOrderMenus()->each(function ($orderMenu) use ($orderMenuOptions) {
+            if (!$menu = Menus_model::find($orderMenu->menu_id))
+                return TRUE;
+
+            optional($menu->getStockByLocation($this->location))
+                ->updateStockSold($this->getKey(), $orderMenu->quantity);
+
+            $orderMenuOptions
+                ->where('order_menu_id', $orderMenu->order_menu_id)
+                ->each(function ($orderMenuOption) {
+                    if (!$menuItemOptionValue = Menu_item_option_values_model::find(
+                        $orderMenuOption->menu_option_value_id
+                    )) return TRUE;
+
+                    if (!$menuOptionValue = $menuItemOptionValue->option_value)
+                        return TRUE;
+
+                    optional($menuOptionValue->getStockByLocation($this->location))
+                        ->updateStockSold($this->getKey(), $orderMenuOption->quantity);
+                });
         });
-    }
-
-    /**
-     * Redeem coupon by order_id
-     *
-     * @return bool TRUE on success, or FALSE on failure
-     */
-    public function redeemCoupon()
-    {
-        $query = $this->coupon_history()->where('status', '!=', '1');
-        if (!$couponHistoryModel = $query->get()->last())
-            return FALSE;
-
-        $couponHistoryModel->touchStatus();
-
-        Event::fire('admin.order.couponRedeemed', [$couponHistoryModel]);
     }
 
     /**
      * Return all order menu by order_id
      *
-     * @param int $order_id
-     *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderMenus()
     {
@@ -70,9 +66,7 @@ trait ManagesOrderItems
     /**
      * Return all order menu options by order_id
      *
-     * @param int $order_id
-     *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderMenuOptions()
     {
@@ -80,11 +74,41 @@ trait ManagesOrderItems
     }
 
     /**
+     * Return all order menus merged with order menu options
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getOrderMenusWithOptions()
+    {
+        $orderMenuOptions = $this->getOrderMenuOptions();
+
+        $menuItemOptionsIds = $orderMenuOptions->collapse()->pluck('order_menu_option_id')->unique();
+
+        $menuItemOptions = Menu_item_options_model::with('option')
+            ->whereIn('menu_option_id', $menuItemOptionsIds)
+            ->get()->keyBy('menu_option_id');
+
+        return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $menuItemOptions) {
+            unset($menu->option_values);
+            $menuOptions = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+
+            $menu->menu_options = collect($menuOptions)
+                ->map(function ($menuOption) use ($menuItemOptions) {
+                    $menuOption->order_option_category = optional($menuItemOptions->get(
+                        $menuOption->order_menu_option_id
+                    ))->option_name;
+
+                    return $menuOption;
+                });
+
+            return $menu;
+        });
+    }
+
+    /**
      * Return all order totals by order_id
      *
-     * @param int $order_id
-     *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function getOrderTotals()
     {
@@ -94,11 +118,11 @@ trait ManagesOrderItems
     /**
      * Add cart menu items to order by order_id
      *
-     * @param array $cartContent
+     * @param array $content
      *
-     * @return bool
+     * @return float
      */
-    public function addOrderMenus(array $cartContent = [])
+    public function addOrderMenus(array $content)
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
@@ -107,22 +131,22 @@ trait ManagesOrderItems
         $this->orderMenusQuery()->where('order_id', $orderId)->delete();
         $this->orderMenuOptionsQuery()->where('order_id', $orderId)->delete();
 
-        foreach ($cartContent as $rowId => $cartItem) {
-            if ($rowId != $cartItem['rowId']) continue;
+        foreach ($content as $rowId => $cartItem) {
+            if ($rowId != $cartItem->rowId) continue;
 
             $orderMenuId = $this->orderMenusQuery()->insertGetId([
                 'order_id' => $orderId,
-                'menu_id' => $cartItem['id'],
-                'name' => $cartItem['name'],
-                'quantity' => $cartItem['qty'],
-                'price' => $cartItem['price'],
-                'subtotal' => $cartItem['subtotal'],
-                'comment' => $cartItem['comment'],
-                'option_values' => serialize($cartItem['options']),
+                'menu_id' => $cartItem->id,
+                'name' => $cartItem->name,
+                'quantity' => $cartItem->qty,
+                'price' => $cartItem->price,
+                'subtotal' => $cartItem->subtotal,
+                'comment' => $cartItem->comment,
+                'option_values' => serialize($cartItem->options),
             ]);
 
-            if ($orderMenuId AND count($cartItem['options'])) {
-                $this->addOrderMenuOptions($orderMenuId, $cartItem['id'], $cartItem['options']);
+            if ($orderMenuId && count($cartItem->options)) {
+                $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
             }
         }
     }
@@ -144,15 +168,16 @@ trait ManagesOrderItems
             return FALSE;
 
         foreach ($options as $option) {
-            foreach ($option['values'] as $value) {
+            foreach ($option->values as $value) {
                 $this->orderMenuOptionsQuery()->insert([
                     'order_menu_id' => $orderMenuId,
                     'order_id' => $orderId,
                     'menu_id' => $menuId,
-                    'order_menu_option_id' => $option['menu_option_id'],
-                    'menu_option_value_id' => $value['menu_option_value_id'],
-                    'order_option_name' => $value['name'],
-                    'order_option_price' => $value['price'],
+                    'order_menu_option_id' => $option->id,
+                    'menu_option_value_id' => $value->id,
+                    'order_option_name' => $value->name,
+                    'order_option_price' => $value->price,
+                    'quantity' => $value->qty,
                 ]);
             }
         }
@@ -171,55 +196,52 @@ trait ManagesOrderItems
         if (!is_numeric($orderId))
             return FALSE;
 
-        $this->orderTotalsQuery()->where('order_id', $orderId)->delete();
-
         foreach ($totals as $total) {
-            $this->orderTotalsQuery()->insert([
-                'order_id' => $orderId,
-                'code' => $total['code'],
-                'title' => $total['title'],
-                'value' => $total['value'],
-                'priority' => $total['priority'],
-            ]);
+            $this->addOrUpdateOrderTotal($total);
         }
+
+        $this->calculateTotals();
     }
 
-    /**
-     * Add cart coupon to order by order_id
-     *
-     * @param \Igniter\Flame\Cart\CartCondition $couponCondition
-     * @param \Admin\Models\Customers_model $customer
-     *
-     * @return int|bool
-     */
-    public function logCouponHistory($couponCondition, $customer)
+    public function addOrUpdateOrderTotal(array $total)
     {
-        if (!$couponCondition instanceof CartCondition) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid argument, expected %s, got %s',
-                CartCondition::class, get_class($couponCondition)
-            ));
-        }
+        return $this->orderTotalsQuery()->updateOrInsert([
+            'order_id' => $this->getKey(),
+            'code' => $total['code'],
+        ], array_except($total, ['order_id', 'code']));
+    }
 
-        $orderId = $this->getKey();
-        if (!is_numeric($orderId))
-            return FALSE;
+    public function calculateTotals()
+    {
+        $subtotal = $this->orderMenusQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('subtotal');
 
-        if (!$coupon = $couponCondition->getModel())
-            return FALSE;
+        $total = $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('is_summable', TRUE)
+            ->sum('value');
 
-        $this->coupon_history()->delete();
+        $orderTotal = $subtotal + $total;
 
-        $couponHistory = $this->coupon_history()->create([
-            'customer_id' => $customer ? $customer->getKey() : 0,
-            'coupon_id' => $coupon->coupon_id,
-            'code' => $coupon->code,
-            'amount' => $couponCondition->getValue(),
-            'min_total' => $coupon->min_total,
-            'date_used' => Carbon::now(),
+        $totalItems = $this->orderMenusQuery()
+            ->where('order_id', $this->getKey())
+            ->sum('quantity');
+
+        $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('code', 'subtotal')
+            ->update(['value' => $subtotal]);
+
+        $this->orderTotalsQuery()
+            ->where('order_id', $this->getKey())
+            ->where('code', 'total')
+            ->update(['value' => $orderTotal]);
+
+        $this->newQuery()->where('order_id', $this->getKey())->update([
+            'total_items' => $totalItems,
+            'order_total' => $orderTotal,
         ]);
-
-        return $couponHistory;
     }
 
     public function orderMenusQuery()
@@ -229,7 +251,7 @@ trait ManagesOrderItems
 
     public function orderMenuOptionsQuery()
     {
-        return DB::table('order_options');
+        return DB::table('order_menu_options');
     }
 
     public function orderTotalsQuery()

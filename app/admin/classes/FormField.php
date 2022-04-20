@@ -1,15 +1,15 @@
-<?php namespace Admin\Classes;
+<?php
 
-use Html;
-use Model;
+namespace Admin\Classes;
+
+use Igniter\Flame\Html\HtmlFacade as Html;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Form Field definition
  * A translation of the form field configuration
  *
  * Adapted from october\backend\classes\FormField
- *
- * @package Admin
  */
 class FormField
 {
@@ -93,6 +93,11 @@ class FormField
      * @var bool Specifies if this field is mandatory.
      */
     public $required = FALSE;
+
+    /**
+     * @var bool Specify if the field is read-only or not.
+     */
+    public $readOnly = FALSE;
 
     /**
      * @var bool Specify if the field is disabled or not.
@@ -221,7 +226,7 @@ class FormField
     /**
      * Sets field options, for dropdowns, radio lists and checkbox lists.
      *
-     * @param  array $value
+     * @param array $value
      *
      * @return self|array
      */
@@ -254,6 +259,7 @@ class FormField
      * - radio - creates a set of radio buttons.
      * - checkbox - creates a single checkbox.
      * - checkboxlist - creates a checkbox list.
+     * - radiolist - creates a radio list.
      *
      * @param string $type Specifies a render mode as described above
      * @param array $config A list of render mode specific config.
@@ -376,8 +382,8 @@ class FormField
      * - field: Attributes are added to the form field element (input, select, textarea, etc)
      * - container: Attributes are added to the form field container (div.form-group)
      *
-     * @param  array $items
-     * @param  string $position
+     * @param array $items
+     * @param string $position
      *
      * @return self
      */
@@ -404,8 +410,8 @@ class FormField
     /**
      * Checks if the field has the supplied [unfiltered] attribute.
      *
-     * @param  string $name
-     * @param  string $position
+     * @param string $name
+     * @param string $position
      *
      * @return bool
      */
@@ -421,7 +427,7 @@ class FormField
     /**
      * Returns the attributes for this field at a given position.
      *
-     * @param  string $position
+     * @param string $position
      *
      * @param bool $htmlBuild
      *
@@ -439,8 +445,8 @@ class FormField
      * Adds any circumstantial attributes to the field based on other
      * settings, such as the 'disabled' option.
      *
-     * @param  array $attributes
-     * @param  string $position
+     * @param array $attributes
+     * @param string $position
      *
      * @return array
      */
@@ -451,8 +457,16 @@ class FormField
         $attributes = $this->filterTriggerAttributes($attributes, $position);
         $attributes = $this->filterPresetAttributes($attributes, $position);
 
-        if ($position == 'field' AND $this->disabled) {
-            $attributes = $attributes + ['disabled' => 'disabled'];
+        if ($position == 'field' && $this->disabled) {
+            $attributes += ['disabled' => 'disabled'];
+        }
+
+        if ($position == 'field' && $this->readOnly) {
+            $attributes += ['readonly' => 'readonly'];
+
+            if ($this->type == 'checkbox' || $this->type == 'switch') {
+                $attributes += ['onclick' => 'return false;'];
+            }
         }
 
         return $attributes;
@@ -461,14 +475,14 @@ class FormField
     /**
      * Adds attributes used specifically by the Trigger API
      *
-     * @param  array $attributes
-     * @param  string $position
+     * @param array $attributes
+     * @param string $position
      *
      * @return array
      */
     protected function filterTriggerAttributes($attributes, $position = 'field')
     {
-        if (!$this->trigger OR !is_array($this->trigger)) {
+        if (!$this->trigger || !is_array($this->trigger)) {
             return $attributes;
         }
 
@@ -477,12 +491,12 @@ class FormField
         $triggerCondition = array_get($this->trigger, 'condition');
 
         // Apply these to container
-        if (in_array($triggerAction, ['hide', 'show']) AND $position != 'container') {
+        if (in_array($triggerAction, ['hide', 'show']) && $position != 'container') {
             return $attributes;
         }
 
         // Apply these to field/input
-        if (in_array($triggerAction, ['enable', 'disable', 'empty']) AND $position != 'field') {
+        if (in_array($triggerAction, ['enable', 'disable', 'empty']) && $position != 'field') {
             return $attributes;
         }
 
@@ -494,9 +508,9 @@ class FormField
         }
 
         $newAttributes = [
-            'data-trigger'                => '[name=\''.trim($fullTriggerField).'\']',
-            'data-trigger-action'         => $triggerAction,
-            'data-trigger-condition'      => $triggerCondition,
+            'data-trigger' => '[name=\''.trim($fullTriggerField).'\']',
+            'data-trigger-action' => $triggerAction,
+            'data-trigger-condition' => $triggerCondition,
             'data-trigger-closest-parent' => 'form',
         ];
 
@@ -508,14 +522,14 @@ class FormField
     /**
      * Adds attributes used specifically by the Input Preset API
      *
-     * @param  array $attributes
-     * @param  string $position
+     * @param array $attributes
+     * @param string $position
      *
      * @return array
      */
     protected function filterPresetAttributes($attributes, $position = 'field')
     {
-        if (!$this->preset OR $position != 'field') {
+        if (!$this->preset || $position != 'field') {
             return $attributes;
         }
 
@@ -534,8 +548,8 @@ class FormField
         }
 
         $newAttributes = [
-            'data-input-preset'                => '[name="'.$fullPresetField.'"]',
-            'data-input-preset-type'           => $presetType,
+            'data-input-preset' => '[name="'.$fullPresetField.'"]',
+            'data-input-preset-type' => $presetType,
             'data-input-preset-closest-parent' => 'form',
         ];
 
@@ -551,7 +565,7 @@ class FormField
     /**
      * Returns a value suitable for the field name property.
      *
-     * @param  string $arrayName Specify a custom array name
+     * @param string $arrayName Specify a custom array name
      *
      * @return string
      */
@@ -572,7 +586,7 @@ class FormField
     /**
      * Returns a value suitable for the field id property.
      *
-     * @param  string $suffix Specify a suffix string
+     * @param string $suffix Specify a suffix string
      *
      * @return string
      */
@@ -599,8 +613,8 @@ class FormField
     /**
      * Returns a raw config item value.
      *
-     * @param  string $value
-     * @param  string $default
+     * @param string $value
+     * @param string $default
      *
      * @return mixed
      */
@@ -651,7 +665,7 @@ class FormField
      * Eg: list($model, $attribute) = $this->resolveAttribute('person[phone]');
      *
      * @param $model
-     * @param  string $attribute .
+     * @param string $attribute .
      *
      * @return array
      */
@@ -691,8 +705,7 @@ class FormField
         // To support relations only the last field should return th
         // relation value, all others will look up the relation object as normal.
         foreach ($keyParts as $key) {
-
-            if ($result instanceof Model AND $result->hasRelation($key)) {
+            if ($result instanceof Model && $result->hasRelation($key)) {
                 if ($key == $lastField) {
                     $result = $result->getRelationValue($key) ?: $default;
                 }

@@ -1,8 +1,10 @@
-<?php namespace System\Helpers;
+<?php
 
-use App;
-use Cache;
-use File;
+namespace System\Helpers;
+
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 
 class CacheHelper
 {
@@ -21,11 +23,20 @@ class CacheHelper
     {
         $instance = self::instance();
         $instance->clearCache();
+        $instance->clearView();
         $instance->clearTemplates();
 
         $instance->clearCombiner();
 
         $instance->clearMeta();
+    }
+
+    public function clearView()
+    {
+        $path = config()->get('view.compiled');
+        foreach (File::glob("{$path}/*") as $view) {
+            File::delete($view);
+        }
     }
 
     public function clearCombiner()

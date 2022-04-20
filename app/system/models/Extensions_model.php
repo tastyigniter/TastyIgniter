@@ -1,19 +1,24 @@
-<?php namespace System\Models;
+<?php
 
-use File;
-use Igniter\Flame\Database\Builder;
+namespace System\Models;
+
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
+use Igniter\Flame\Support\Facades\File;
 use Main\Classes\ThemeManager;
-use Model;
+use System\Classes\ComposerManager;
 use System\Classes\ExtensionManager;
-use System\Classes\UpdateManager;
 
 /**
  * Extensions Model Class
- * @package System
  */
 class Extensions_model extends Model
 {
+    const ICON_MIMETYPES = [
+        'svg' => 'image/svg+xml',
+    ];
+
     /**
      * @var string The database table name
      */
@@ -24,33 +29,17 @@ class Extensions_model extends Model
      */
     protected $primaryKey = 'extension_id';
 
-    protected $fillable = ['type', 'name', 'title', 'version'];
-
-    public $casts = [
-        'data' => 'serialize',
-        'status' => 'boolean',
-    ];
+    protected $fillable = ['name', 'version'];
 
     /**
      * @var array The database records
      */
     protected $extensions = [];
 
-    protected $meta;
-
     /**
      * @var \System\Classes\BaseExtension
      */
     protected $class;
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('type', function (Builder $builder) {
-            $builder->where('type', 'module');
-        });
-    }
 
     public static function onboardingIsComplete()
     {
@@ -61,7 +50,7 @@ class Extensions_model extends Model
         $requiredExtensions = (array)$activeTheme->requires;
         foreach ($requiredExtensions as $name => $constraint) {
             $extension = ExtensionManager::instance()->findExtension($name);
-            if (!$extension OR $extension->disabled)
+            if (!$extension || $extension->disabled)
                 return FALSE;
         }
 
@@ -74,7 +63,17 @@ class Extensions_model extends Model
 
     public function getMetaAttribute()
     {
-        return $this->meta;
+        return $this->class ? $this->class->extensionMeta() : [];
+    }
+
+    public function getVersionAttribute($value = null)
+    {
+        return $value ?? '0.1.0';
+    }
+
+    public function getTitleAttribute()
+    {
+        return array_get($this->meta, 'name', 'Undefined extension title');
     }
 
     public function getClassAttribute()
@@ -82,39 +81,53 @@ class Extensions_model extends Model
         return $this->class;
     }
 
-    public function getStatusAttribute($value)
+    public function getStatusAttribute()
     {
-        return $value AND $this->class AND !$this->class->disabled;
+        return $this->class && !$this->class->disabled;
     }
 
-    public function getVersionAttribute($value)
+    public function getIconAttribute()
     {
-        return array_get($this->meta, 'version', $value);
+        $icon = array_get($this->meta, 'icon', []);
+        if (is_string($icon))
+            $icon = ['class' => 'fa '.$icon];
+
+        if (strlen($image = array_get($icon, 'image'))) {
+            $file = extension_path(str_replace('.', '/', $this->name).'/'.$image);
+            if (file_exists($file)) {
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                if (!array_key_exists($extension, self::ICON_MIMETYPES))
+                    throw new ApplicationException('Invalid extension icon file type in: '.$this->name.'. Only SVG images are supported');
+
+                $mimeType = self::ICON_MIMETYPES[$extension];
+                $data = base64_encode(file_get_contents($file));
+                $icon['backgroundImage'] = [$mimeType, $data];
+                $icon['class'] = 'fa';
+            }
+        }
+
+        return generate_extension_icon($icon);
+    }
+
+    public function getDescriptionAttribute()
+    {
+        return array_get($this->meta, 'description', 'Undefined extension description');
     }
 
     public function getReadmeAttribute($value)
     {
-        $extensionPath = ExtensionManager::instance()->path($this->name);
-        if (!$readmePath = File::existsInsensitive($extensionPath.'readme.md'))
-            return null;
+        $readmePath = ExtensionManager::instance()->path($this->name).'readme.md';
+        if (!$readmePath = File::existsInsensitive($readmePath))
+            return $value;
 
-        return (new Markdown)->parse(File::get($readmePath));
-    }
-
-    //
-    // Scopes
-    //
-
-    public function scopeIsEnabled($query)
-    {
-        $query->where('status', 1);
+        return Markdown::parseFile($readmePath)->toHtml();
     }
 
     //
     // Events
     //
 
-    public function afterFetch()
+    protected function afterFetch()
     {
         $this->applyExtensionClass();
     }
@@ -125,7 +138,7 @@ class Extensions_model extends Model
 
     /**
      * Sets the extension class as a property of this class
-     * @return boolean
+     * @return bool
      */
     public function applyExtensionClass()
     {
@@ -139,137 +152,29 @@ class Extensions_model extends Model
         }
 
         $this->class = $extensionClass;
-        $this->meta = $extensionClass->extensionMeta();
 
         return TRUE;
     }
 
     /**
-     * Save all extension registered permissions to database
+     * Sync all extensions available in the filesystem into database
      */
     public static function syncAll()
     {
-        $extensions = self::get();
-
-        $installedExtensions = [];
-
         $extensionManager = ExtensionManager::instance();
         foreach ($extensionManager->namespaces() as $namespace => $path) {
-
             $code = $extensionManager->getIdentifier($namespace);
 
-            if (!($extensionClass = $extensionManager->findExtension($code))) continue;
+            if (!($extension = $extensionManager->findExtension($code))) continue;
 
-            $extensionMeta = (object)$extensionClass->extensionMeta();
-            $installedExtensions[] = $code;
+            $model = self::firstOrNew(['name' => $code]);
 
-            // Only add extensions with no existing record in extensions table
-            if ($extension = $extensions->where('name', $code)->first()) continue;
+            $enableExtension = ($model->exists && !$extension->disabled);
 
-            $extensionModel = self::make();
-            $extensionModel->type = 'module';
-            $extensionModel->name = $code;
-            $extensionModel->title = $extensionMeta->name;
-            $extensionModel->version = $extensionMeta->version;
-            $extensionModel->save();
+            $model->version = $model->attributes['version'] ?? ComposerManager::instance()->getExtensionVersion($model->name) ?? $model->version;
+            $model->save();
 
-            $extensionManager->updateInstalledExtensions($code, FALSE);
+            $extensionManager->updateInstalledExtensions($code, $enableExtension);
         }
-
-        // Disable extensions not found in file system
-        // This allows admin to remove an enabled extension from admin UI after deleting files
-        self::whereNotIn('name', $installedExtensions)->update(['status' => FALSE]);
-    }
-
-    /**
-     * Install a new or existing extension by code
-     *
-     * @param string $code
-     *
-     * @param null $version
-     * @return bool|null
-     */
-    public static function install($code, $version = null)
-    {
-        $extensionModel = self::firstOrNew(['type' => 'module', 'name' => $code]);
-        if (!$extensionModel->applyExtensionClass())
-            return FALSE;
-
-        $manager = ExtensionManager::instance();
-
-        // Register and boot the extension to make
-        // its services available before migrating
-        if ($extension = $manager->findExtension($extensionModel->name)) {
-            $extension->disabled = FALSE;
-            $manager->registerExtension($extensionModel->name, $extension);
-            $manager->bootExtension($extension);
-        }
-
-        // set extension migration to the latest version
-        UpdateManager::instance()->migrateExtension($extensionModel->name);
-
-        if ($extensionModel AND $extensionModel->meta) {
-            $extensionModel->status = TRUE;
-            $extensionModel->fill([
-                'title' => $extensionModel->meta['name'],
-                'version' => $version ?? $extensionModel->version,
-            ])->save();
-        }
-
-        ExtensionManager::instance()->updateInstalledExtensions($code);
-
-        return TRUE;
-    }
-
-    /**
-     * Uninstall a new or existing extension by code
-     *
-     * @param string $code
-     *
-     * @return bool|null
-     */
-    public static function uninstall($code = '')
-    {
-        $query = FALSE;
-
-        $extensionModel = self::where('name', $code)->first();
-        if ($extensionModel) {
-            $extensionModel->status = FALSE;
-            $query = $extensionModel->save();
-        }
-
-        ExtensionManager::instance()->updateInstalledExtensions($code, FALSE);
-
-        return $query;
-    }
-
-    /**
-     * Delete a single extension by code
-     *
-     * @param string $code
-     * @param bool $deleteData whether to purge extension data
-     * @param bool $keepFiles
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    public static function deleteExtension($code = '', $deleteData = TRUE, $keepFiles = FALSE)
-    {
-        if ($extensionModel = self::where('name', $code)->first())
-            $extensionModel->delete();
-
-        if ($deleteData)
-            UpdateManager::instance()->purgeExtension($code);
-
-        $extensionManager = ExtensionManager::instance();
-
-        // delete extensions from file system
-        if (!$keepFiles)
-            $extensionManager->removeExtension($code);
-
-        // disable extension
-        $extensionManager->updateInstalledExtensions($code, null);
-
-        return TRUE;
     }
 }

@@ -1,50 +1,96 @@
-<?php namespace Admin\Models;
+<?php
 
+namespace Admin\Models;
+
+use Admin\Traits\Stockable;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
-use Igniter\Flame\Database\Traits\Validation;
-use Model;
 
 /**
  * Menu_option_values Model Class
- *
- * @package Admin
  */
 class Menu_option_values_model extends Model
 {
     use Sortable;
-    use Validation;
+    use Stockable;
 
     /**
      * @var string The database table name
      */
-    protected $table = 'option_values';
+    protected $table = 'menu_option_values';
 
     /**
      * @var string The database table primary key
      */
     protected $primaryKey = 'option_value_id';
 
-    protected $fillable = ['option_id', 'value', 'price'];
+    protected $fillable = ['option_id', 'value', 'price', 'allergens', 'priority'];
+
+    protected $casts = [
+        'option_value_id' => 'integer',
+        'option_id' => 'integer',
+        'price' => 'float',
+        'priority' => 'integer',
+    ];
 
     public $relation = [
         'belongsTo' => [
             'option' => ['Admin\Models\Menu_options_model'],
         ],
+        'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
+        ],
     ];
 
     public $sortable = [
-        'sortOrderColumn'  => 'priority',
-        'sortWhenCreating' => FALSE,
-    ];
-
-    public $rules = [
-        ['option_id', 'lang:admin::lang.menu_options.label_option_id', 'required|integer'],
-        ['value', 'lang:admin::lang.menu_options.label_option_value', 'required|min:2|max:128'],
-        ['price', 'lang:admin::lang.menu_options.label_option_price', 'required|numeric'],
+        'sortOrderColumn' => 'priority',
+        'sortWhenCreating' => TRUE,
     ];
 
     public static function getDropDownOptions()
     {
         return static::dropdown('value');
+    }
+
+    public function getAllergensOptions()
+    {
+        if (self::$allergensOptionsCache)
+            return self::$allergensOptionsCache;
+
+        return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
+    }
+
+    public function getStockableName()
+    {
+        return $this->value;
+    }
+
+    public function getStockableLocations()
+    {
+        return $this->option->locations;
+    }
+
+    //
+    // Events
+    //
+
+    protected function beforeDelete()
+    {
+        $this->allergens()->detach();
+    }
+
+    /**
+     * Create new or update existing menu allergens
+     *
+     * @param array $allergenIds if empty all existing records will be deleted
+     *
+     * @return bool
+     */
+    public function addMenuAllergens(array $allergenIds = [])
+    {
+        if (!$this->exists)
+            return FALSE;
+
+        $this->allergens()->sync($allergenIds);
     }
 }

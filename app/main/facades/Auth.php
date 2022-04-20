@@ -1,4 +1,6 @@
-<?php namespace Main\Facades;
+<?php
+
+namespace Main\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

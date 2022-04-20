@@ -1,4 +1,6 @@
-<?php namespace System\Console\Commands;
+<?php
+
+namespace System\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
@@ -31,13 +33,9 @@ class IgniterDown extends Command
             return;
         }
 
-        $manager = UpdateManager::instance()->resetLogs()->down();
-
-        $this->output->writeln('<info>Migrating application and extensions...</info>');
-
-        foreach ($manager->getLogs() as $note) {
-            $this->output->writeln($note);
-        }
+        $manager = UpdateManager::instance();
+        $manager->setLogsOutput($this->output);
+        $manager->down();
     }
 
     /**
@@ -48,16 +46,5 @@ class IgniterDown extends Command
         return [
             ['force', null, InputOption::VALUE_NONE, 'Force the operation to run.'],
         ];
-    }
-
-    /**
-     * Get the default confirmation callback.
-     * @return \Closure
-     */
-    protected function getDefaultConfirmCallback()
-    {
-        return function () {
-            return TRUE;
-        };
     }
 }

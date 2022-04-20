@@ -2,8 +2,8 @@
 
 namespace System\Actions;
 
-use File;
-use Model;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Support\Facades\File;
 
 /**
  * Settings model extension
@@ -32,7 +32,7 @@ class SettingsModel extends ModelAction
     /**
      * Constructor
      *
-     * @param \Model $model
+     * @param \Igniter\Flame\Database\Model $model
      */
     public function __construct(Model $model)
     {
@@ -40,7 +40,7 @@ class SettingsModel extends ModelAction
 
         $this->model->setTable('extension_settings');
         $this->model->setKeyName('id');
-        $this->model->casts = ['data' => 'serialize'];
+        $this->model->addCasts(['data' => 'array']);
         $this->model->guard([]);
         $this->model->timestamps = FALSE;
 
@@ -86,6 +86,15 @@ class SettingsModel extends ModelAction
             $record->delete();
             unset(self::$instances[$this->recordCode]);
         }
+    }
+
+    /**
+     * Checks if the model has been set up previously, intended as a static method
+     * @return bool
+     */
+    public function isConfigured()
+    {
+        return app()->hasDatabase() && $this->getSettingsRecord() !== null;
     }
 
     /**
@@ -159,7 +168,7 @@ class SettingsModel extends ModelAction
     public function afterModelFetch()
     {
         $this->fieldValues = $this->model->data ?: [];
-        $this->model->attributes = array_merge($this->fieldValues, $this->model->attributes);
+        $this->model->setRawAttributes(array_merge($this->fieldValues, $this->model->getAttributes()));
     }
 
     /**
@@ -169,7 +178,7 @@ class SettingsModel extends ModelAction
     public function saveModelInternal()
     {
         // Purge the field values from the attributes
-        $this->model->attributes = array_diff_key($this->model->attributes, $this->fieldValues);
+        $this->model->setRawAttributes(array_diff_key($this->model->getAttributes(), $this->fieldValues));
     }
 
     /**
@@ -192,11 +201,6 @@ class SettingsModel extends ModelAction
     {
     }
 
-    public function validateRules($form)
-    {
-        return [];
-    }
-
     /**
      * Checks if a key is legitimate or should be added to
      * the field value collection
@@ -204,7 +208,7 @@ class SettingsModel extends ModelAction
     protected function isKeyAllowed($key)
     {
         // core columns
-        if ($key == 'id' OR $key == 'item' OR $key == 'data') {
+        if ($key == 'id' || $key == 'item' || $key == 'data') {
             return TRUE;
         }
 

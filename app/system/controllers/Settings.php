@@ -1,16 +1,22 @@
-<?php namespace System\Controllers;
+<?php
 
+namespace System\Controllers;
+
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Traits\FormExtendable;
 use Admin\Traits\WidgetMaker;
-use AdminAuth;
-use AdminMenu;
 use Exception;
-use File;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
 use Illuminate\Mail\Message;
-use Mail;
-use Request;
-use Session;
-use Template;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
+use System\Models\Mail_templates_model;
 
 class Settings extends \Admin\Classes\AdminController
 {
@@ -20,8 +26,6 @@ class Settings extends \Admin\Classes\AdminController
     protected $requiredPermissions = 'Site.Settings';
 
     protected $modelClass = 'System\Models\Settings_model';
-
-    protected $modelConfig;
 
     /**
      * @var \Admin\Widgets\Form
@@ -46,10 +50,12 @@ class Settings extends \Admin\Classes\AdminController
 
     public function index()
     {
-        $this->validateSettingItems(TRUE);
+        Mail_templates_model::syncAll();
+
+        $this->validateSettingItems(true);
 
         // For security reasons, delete setup files if still exists.
-        if (File::isFile(base_path('setup.php')) OR File::isDirectory(base_path('setup'))) {
+        if (File::isFile(base_path('setup.php')) || File::isDirectory(base_path('setup'))) {
             flash()->danger(lang('system::lang.settings.alert_delete_setup_files'))->important()->now();
         }
 
@@ -64,12 +70,15 @@ class Settings extends \Admin\Classes\AdminController
     {
         try {
             $this->settingCode = $settingCode;
-            list($model, $definition) = $this->findSettingDefinitions($settingCode);
+            [$model, $definition] = $this->findSettingDefinitions($settingCode);
             if (!$definition) {
-                throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
+                throw new Exception(sprintf(lang('system::lang.settings.alert_settings_not_found'), $settingCode));
             }
 
-            $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition['label']));
+            if ($definition->permission && !AdminAuth::user()->hasPermission($definition->permission))
+                return Response::make(View::make('admin::access_denied'), 403);
+
+            $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition->label));
             Template::setTitle($pageTitle);
             Template::setHeading($pageTitle);
 
@@ -78,10 +87,6 @@ class Settings extends \Admin\Classes\AdminController
             $this->validateSettingItems();
             if ($errors = array_get($this->settingItemErrors, $settingCode))
                 Session::flash('errors', $errors);
-
-            if ($settingCode == 'setup')
-                $this->addJs('~/app/admin/formwidgets/repeater/assets/js/jquery-sortable.js', 'jquery-sortable-js');
-            $this->addJs('~/app/admin/assets/js/ratings.js', 'ratings-js');
         }
         catch (Exception $ex) {
             $this->handleError($ex);
@@ -90,15 +95,20 @@ class Settings extends \Admin\Classes\AdminController
 
     public function edit_onSave($context, $settingCode = null)
     {
-        list($model, $definition) = $this->findSettingDefinitions($settingCode);
+        [$model, $definition] = $this->findSettingDefinitions($settingCode);
         if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
+        if ($definition->permission && !AdminAuth::user()->hasPermission($definition->permission))
+            return Response::make(View::make('admin::access_denied'), 403);
+
         $this->initWidgets($model, $definition);
 
-        if ($this->formValidate($this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        $this->validateFormRequest($model, $definition);
+
+        if ($this->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         $this->formBeforeSave($model);
 
@@ -107,7 +117,7 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->formAfterSave($model);
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($definition['label']).' settings updated '));
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($definition->label).' settings updated '));
 
         if (post('close')) {
             return $this->redirect('settings');
@@ -118,24 +128,25 @@ class Settings extends \Admin\Classes\AdminController
 
     public function edit_onTestMail()
     {
-        list($model, $definition) = $this->findSettingDefinitions('mail');
+        [$model, $definition] = $this->findSettingDefinitions('mail');
         if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
         $this->initWidgets($model, $definition);
 
-        if ($this->formValidate($this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        $this->validateFormRequest($model, $definition);
+
+        if ($this->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         setting()->set($this->formWidget->getSaveData());
 
         $name = AdminAuth::getStaffName();
         $email = AdminAuth::getStaffEmail();
-        $text = 'This is a test email. If you\'ve received this, it means emails are working in TastyIgniter.';
 
         try {
-            Mail::raw($text, function (Message $message) use ($name, $email) {
+            Mail::raw(lang('system::lang.settings.text_test_email_message'), function (Message $message) use ($name, $email) {
                 $message->to($email, $name)->subject('This a test email');
             });
 
@@ -150,12 +161,12 @@ class Settings extends \Admin\Classes\AdminController
 
     public function initWidgets($model, $definition)
     {
-        $this->modelConfig = $model->getFieldConfig();
+        $modelConfig = $model->getFieldConfig($definition->code);
 
-        $formConfig = array_get($definition, 'form', []);
+        $formConfig = array_except($modelConfig, 'toolbar');
         $formConfig['model'] = $model;
         $formConfig['data'] = array_undot($model->getFieldValues());
-        $formConfig['alias'] = 'form-'.$this->settingCode;
+        $formConfig['alias'] = 'form';
         $formConfig['arrayName'] = str_singular(strip_class_basename($model, '_model'));
         $formConfig['context'] = 'edit';
 
@@ -164,9 +175,9 @@ class Settings extends \Admin\Classes\AdminController
         $this->formWidget->bindToController();
 
         // Prep the optional toolbar widget
-        if (isset($this->modelConfig['toolbar']) AND isset($this->widgets['toolbar'])) {
+        if (isset($modelConfig['toolbar']) && isset($this->widgets['toolbar'])) {
             $this->toolbarWidget = $this->widgets['toolbar'];
-            $this->toolbarWidget->addButtons(array_get($this->modelConfig['toolbar'], 'buttons', []));
+            $this->toolbarWidget->reInitialize($modelConfig['toolbar']);
         }
     }
 
@@ -185,7 +196,7 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function createModel()
     {
-        if (!isset($this->modelClass) OR !strlen($this->modelClass)) {
+        if (!isset($this->modelClass) || !strlen($this->modelClass)) {
             throw new Exception(lang('system::lang.settings.alert_settings_missing_model'));
         }
 
@@ -194,39 +205,51 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function formAfterSave($model)
     {
-        $this->validateSettingItems(TRUE);
+        $this->validateSettingItems(true);
     }
 
-    protected function formValidate($form)
-    {
-        if (!isset($form->config['rules']))
-            return null;
-
-        return $this->validatePasses($form->getSaveData(), $form->config['rules']);
-    }
-
-    protected function validateSettingItems($skipSession = FALSE)
+    protected function validateSettingItems($skipSession = false)
     {
         $settingItemErrors = Session::get('settings.errors', []);
 
-        if ($skipSession OR !$settingItemErrors) {
+        if ($skipSession || !$settingItemErrors) {
             $model = $this->createModel();
-            $settingGroup = $model->listSettingItems();
+            $settingItems = array_get($model->listSettingItems(), 'core');
             $settingValues = array_undot($model->getFieldValues());
 
-            foreach (array_get($settingGroup, 'core') as $listSettingItem) {
-                if (!isset($listSettingItem->form['rules']))
+            foreach ($settingItems as $settingItem) {
+                $settingItemForm = $this->createModel()->getFieldConfig($settingItem->code);
+
+                if (!isset($settingItemForm['rules']))
                     continue;
 
-                $validator = $this->makeValidator($settingValues, $listSettingItem->form['rules']);
+                $validator = $this->makeValidator($settingValues, $settingItemForm['rules']);
                 $errors = $validator->fails() ? $validator->errors() : [];
 
-                $settingItemErrors[$listSettingItem->code] = $errors;
+                $settingItemErrors[$settingItem->code] = $errors;
             }
 
             Session::put('settings.errors', $settingItemErrors);
         }
 
         return $this->settingItemErrors = $settingItemErrors;
+    }
+
+    protected function validateFormRequest($model, $definition)
+    {
+        if (!strlen($requestClass = $definition->request))
+            return;
+
+        if (!class_exists($requestClass))
+            throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
+
+        app()->resolving($requestClass, function ($request, $app) {
+            if (method_exists($request, 'setController'))
+                $request->setController($this);
+
+            $request->setInputKey('Setting');
+        });
+
+        return app()->make($requestClass);
     }
 }

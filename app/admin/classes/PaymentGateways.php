@@ -1,16 +1,16 @@
-<?php namespace Admin\Classes;
+<?php
+
+namespace Admin\Classes;
 
 use Admin\Models\Payments_model;
-use File;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\Singleton;
+use Illuminate\Support\Facades\Response;
 use Main\Classes\ThemeManager;
-use Response;
 use System\Classes\ExtensionManager;
 
 /**
  * Manages payment gateways
- *
- * @package Admin
  */
 class PaymentGateways
 {
@@ -151,8 +151,8 @@ class PaymentGateways
     /**
      * Executes an entry point for registered gateways, defined in routes.php file.
      *
-     * @param  string $code Entry point code
-     * @param  string $uri Remaining uri parts
+     * @param string $code Entry point code
+     * @param string $uri Remaining uri parts
      *
      * @return \Illuminate\Http\Response
      */
@@ -183,26 +183,39 @@ class PaymentGateways
     public static function createPartials()
     {
         $themeManager = ThemeManager::instance();
-        $theme = $themeManager->getActiveTheme();
+        if (!$theme = $themeManager->getActiveTheme())
+            return;
+
         $partials = $theme->listPartials()->pluck('baseFileName', 'baseFileName')->all();
         $paymentMethods = Payments_model::isEnabled()->get();
 
         foreach ($paymentMethods as $paymentMethod) {
             $class = $paymentMethod->getGatewayClass();
 
-            if (!$class OR get_parent_class($class) != BasePaymentGateway::class)
+            if (!$class || get_parent_class($class) != BasePaymentGateway::class)
                 continue;
 
             $partialName = 'payregister/'.strtolower(class_basename($class));
-            $partialPath = $theme->getPath().'/_partials/'.$partialName.'.php';
+            $partialPath = $theme->getPath().'/_partials/'.$partialName.'.blade.php';
 
             if (!File::isDirectory(dirname($partialPath)))
                 File::makeDirectory(dirname($partialPath), null, TRUE);
 
             if (!array_key_exists($partialName, $partials)) {
-                $filePath = dirname(File::fromClass($class)).'/'.strtolower(class_basename($class)).'/payment_form.php';
-                File::put($partialPath, File::get($filePath));
+                File::put($partialPath, self::getFileContent($class));
             }
         }
+    }
+
+    protected static function getFileContent(string $class): string
+    {
+        $filePath = dirname(File::fromClass($class));
+        $filePath .= '/'.strtolower(class_basename($class));
+        $filePath .= '/payment_form';
+
+        if (File::exists($path = $filePath.'.blade.php'))
+            return File::get($path);
+
+        return File::get($filePath.'.php');
     }
 }

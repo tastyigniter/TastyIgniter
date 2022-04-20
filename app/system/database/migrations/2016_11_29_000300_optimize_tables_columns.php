@@ -1,8 +1,10 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Fix nullable and other constraints on columns
@@ -70,16 +72,6 @@ class OptimizeTablesColumns extends Migration
         };
     }
 
-    protected function _optimize_coupons()
-    {
-        return function (Blueprint $table) {
-            $table->text('description')->nullable()->change();
-            $table->boolean('status')->nullable()->change();
-            $table->string('validity', 15)->nullable()->change();
-            $table->string('recurring_every', 35)->nullable()->change();
-        };
-    }
-
     protected function _optimize_countries()
     {
         return function (Blueprint $table) {
@@ -124,20 +116,6 @@ class OptimizeTablesColumns extends Migration
     {
         return function (Blueprint $table) {
             $table->text('description')->nullable()->change();
-        };
-    }
-
-    protected function _optimize_customers_online()
-    {
-        return function (Blueprint $table) {
-            $table->string('access_type')->nullable()->change();
-            $table->string('browser')->nullable()->change();
-            $table->string('ip_address', 40)->nullable()->change();
-            $table->string('country_code')->nullable()->change();
-            $table->text('request_uri')->nullable()->change();
-            $table->text('referrer_uri')->nullable()->change();
-            $table->boolean('status')->default(0)->change();
-            $table->text('user_agent')->nullable()->change();
         };
     }
 
@@ -347,17 +325,6 @@ class OptimizeTablesColumns extends Migration
             $table->text('comment')->nullable()->change();
             $table->integer('assignee_id')->nullable()->change();
             $table->boolean('notify')->nullable()->change();
-        };
-    }
-
-    protected function _optimize_reviews()
-    {
-        return function (Blueprint $table) {
-            $table->integer('customer_id')->nullable()->change();
-//            $table->integer('sale_id')->nullable()->change(); @todo remove index before change
-//            $table->string('sale_type')->nullable()->change();
-            $table->string('author')->nullable()->change();
-            $table->text('review_text')->nullable()->change();
         };
     }
 

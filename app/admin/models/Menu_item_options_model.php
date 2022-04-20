@@ -1,32 +1,40 @@
-<?php namespace Admin\Models;
+<?php
 
+namespace Admin\Models;
+
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Validation;
-use Model;
 
 /**
  * MenuOptions Model Class
- *
- * @package Admin
  */
 class Menu_item_options_model extends Model
 {
     use Purgeable;
     use Validation;
 
-    protected static $optionValuesCollection;
-
     /**
      * @var string The database table name
      */
-    protected $table = 'menu_options';
+    protected $table = 'menu_item_options';
 
     /**
      * @var string The database table primary key
      */
     protected $primaryKey = 'menu_option_id';
 
-    protected $fillable = ['option_id', 'menu_id', 'required', 'priority'];
+    protected $fillable = ['option_id', 'menu_id', 'required', 'priority', 'min_selected', 'max_selected'];
+
+    protected $casts = [
+        'menu_option_id' => 'integer',
+        'option_id' => 'integer',
+        'menu_id' => 'integer',
+        'required' => 'boolean',
+        'priority' => 'integer',
+        'min_selected' => 'integer',
+        'max_selected' => 'integer',
+    ];
 
     public $relation = [
         'hasMany' => [
@@ -46,43 +54,35 @@ class Menu_item_options_model extends Model
     public $appends = ['option_name', 'display_type'];
 
     public $rules = [
-        ['menu_id', 'lang:admin::lang.menus.label_option', 'required|integer'],
-        ['option_id', 'lang:admin::lang.menus.label_option_id', 'required|integer'],
-        ['priority', 'lang:admin::lang.menus.label_option', 'integer'],
-        ['required', 'lang:admin::lang.menus.label_option_required', 'integer'],
+        ['menu_id', 'admin::lang.menus.label_option', 'required|integer'],
+        ['option_id', 'admin::lang.menus.label_option_id', 'required|integer'],
+        ['priority', 'admin::lang.menus.label_option', 'integer'],
+        ['required', 'admin::lang.menus.label_option_required', 'boolean'],
+        ['min_selected', 'admin::lang.menus.label_min_selected', 'integer|lte:max_selected'],
+        ['max_selected', 'admin::lang.menus.label_max_selected', 'integer|gte:min_selected'],
     ];
 
-    public $purgeable = ['menu_option_values'];
+    protected $purgeable = ['menu_option_values'];
 
     public $with = ['option'];
 
+    public $timestamps = TRUE;
+
     public function getOptionNameAttribute()
     {
-        return $this->option ? $this->option->option_name : null;
+        return optional($this->option)->option_name;
     }
 
     public function getDisplayTypeAttribute()
     {
-        return $this->option ? $this->option->display_type : null;
-    }
-
-    public function getOptionValueIdOptions()
-    {
-        if (!empty(self::$optionValuesCollection[$this->option_id]))
-            return self::$optionValuesCollection[$this->option_id];
-
-        $result = $this->option_values()->dropdown('value');
-
-        self::$optionValuesCollection[$this->option_id] = $result;
-
-        return $result;
+        return optional($this->option)->display_type;
     }
 
     //
     // Events
     //
 
-    public function afterSave()
+    protected function afterSave()
     {
         $this->restorePurgedValues();
 
@@ -96,7 +96,12 @@ class Menu_item_options_model extends Model
 
     public function isRequired()
     {
-        return $this->required == 1;
+        return $this->required;
+    }
+
+    public function isSelectDisplayType()
+    {
+        return $this->display_type === 'select';
     }
 
     /**
@@ -126,9 +131,9 @@ class Menu_item_options_model extends Model
         }
 
         $this->menu_option_values()
-             ->where('menu_option_id', $menuOptionId)
-             ->whereNotIn('menu_option_value_id', $idsToKeep)
-             ->delete();
+            ->where('menu_option_id', $menuOptionId)
+            ->whereNotIn('menu_option_value_id', $idsToKeep)
+            ->delete();
 
         return count($idsToKeep);
     }

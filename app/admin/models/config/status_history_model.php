@@ -1,17 +1,12 @@
 <?php
 $config['list']['columns'] = [
-    'date_added' => [
+    'created_at' => [
         'label' => 'lang:admin::lang.statuses.column_time_date',
-        'type' => 'datesince',
+        'type' => 'timetense',
     ],
     'staff_name' => [
         'label' => 'lang:admin::lang.statuses.column_staff',
         'relation' => 'staff',
-        'select' => 'staff_name',
-    ],
-    'assignee_name' => [
-        'label' => 'lang:admin::lang.statuses.column_assignee',
-        'relation' => 'assignee',
         'select' => 'staff_name',
     ],
     'status' => [
@@ -24,6 +19,11 @@ $config['list']['columns'] = [
     ],
     'notified' => [
         'label' => 'lang:admin::lang.statuses.column_notify',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'invisible' => TRUE,
+        'type' => 'timesense',
     ],
 ];
 

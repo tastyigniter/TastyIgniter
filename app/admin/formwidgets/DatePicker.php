@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
@@ -7,8 +9,6 @@ use Carbon\Carbon;
 /**
  * Date picker
  * Renders a date picker field.
- *
- * @package Admin
  */
 class DatePicker extends BaseFormWidget
 {
@@ -82,14 +82,16 @@ class DatePicker extends BaseFormWidget
             $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
             $this->addCss('vendor/datepicker/bootstrap-datepicker.min.css', 'bootstrap-datepicker-css');
             $this->addJs('vendor/datepicker/bootstrap-datepicker.min.js', 'bootstrap-datepicker-js');
+            if (setting('default_language') != 'en')
+                $this->addJs('vendor/datepicker/locales/bootstrap-datepicker.'.strtolower(str_replace('_', '-', setting('default_language'))).'.min.js', 'bootstrap-datepicker-js');
             $this->addCss('css/datepicker.css', 'datepicker-css');
             $this->addJs('js/datepicker.js', 'datepicker-js');
         }
 
         if ($mode == 'datetime') {
             $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
-            $this->addCss('vendor/datetimepicker/bootstrap-datetimepicker.min.css', 'bootstrap-datetimepicker-css');
-            $this->addJs('vendor/datetimepicker/bootstrap-datetimepicker.min.js', 'bootstrap-datetimepicker-js');
+            $this->addCss('vendor/datetimepicker/tempusdominus-bootstrap-4.min.css', 'tempusdominus-bootstrap-4-css');
+            $this->addJs('vendor/datetimepicker/tempusdominus-bootstrap-4.min.js', 'tempusdominus-bootstrap-4-js');
             $this->addCss('css/datepicker.css', 'datepicker-css');
             $this->addJs('js/datepicker.js', 'datepicker-js');
         }
@@ -115,13 +117,13 @@ class DatePicker extends BaseFormWidget
 
         // Display alias, used by preview mode
         if ($this->mode == 'time') {
-            $formatAlias = setting('time_format');
+            $formatAlias = lang('system::lang.php.time_format');
         }
         elseif ($this->mode == 'date') {
-            $formatAlias = setting('date_format');
+            $formatAlias = lang('system::lang.php.date_format');
         }
         else {
-            $formatAlias = setting('date_format').' '.setting('time_format');
+            $formatAlias = lang('system::lang.php.date_time_format');
         }
 
         $find = ['d' => 'dd', 'D' => 'DD', 'm' => 'mm', 'M' => 'MM', 'y' => 'yy', 'Y' => 'yyyy', 'H' => 'HH', 'i' => 'i'];
@@ -145,7 +147,7 @@ class DatePicker extends BaseFormWidget
 
     public function getSaveValue($value)
     {
-        if ($this->formField->disabled OR $this->formField->hidden) {
+        if ($this->formField->disabled || $this->formField->hidden) {
             return FormField::NO_SAVE_DATA;
         }
 

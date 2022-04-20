@@ -14,9 +14,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 body {
-	font-family: 'Titillium Web', sans-serif;
 	background-color: #F5F5F5;
-	padding-bottom: 200px;
 }
 @media (max-width: 767px) {
 	body {
@@ -26,7 +24,7 @@ body {
 
 /*** Main Header ***/
 #main-header {
-	background-color: #ED561A;
+	background-color: #FF4900;
 }
 #main-header .logo {
 	padding: 10px 0;
@@ -44,9 +42,15 @@ body {
 	margin-bottom: 0;
 	margin-top: 0;
 }
+.content-area {
+	font-size: 18px;
+	padding-top: 90px;
+}
+.img-holder {
+	margin-left: -10px;
+}
 #page-footer {
 	background-color: #595959;
-	/*background-image: linear-gradient(to bottom, #EDEFF1, #EDEFF1);*/
 	position: absolute;
 	bottom: 0;
 	width: 100%;

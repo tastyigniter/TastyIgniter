@@ -5,7 +5,7 @@ namespace Admin\Widgets;
 use Admin\Classes\BaseWidget;
 use Carbon\Carbon;
 use Exception;
-use Input;
+use Illuminate\Support\Facades\Request;
 
 class Calendar extends BaseWidget
 {
@@ -56,8 +56,9 @@ class Calendar extends BaseWidget
         $this->addJs('~/app/system/assets/ui/js/vendor/mustache.js', 'mustache-js');
         $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
 
-        $this->addJs('vendor/fullcalendar/fullcalendar.min.js', 'fullcalendar-js');
-        $this->addCss('vendor/fullcalendar/fullcalendar.min.css', 'fullcalendar-css');
+        $this->addJs('vendor/fullcalendar/main.min.js', 'fullcalendar-js');
+        $this->addJs('vendor/fullcalendar/locales-all.min.js', 'fullcalendar-js');
+        $this->addCss('vendor/fullcalendar/main.min.css', 'fullcalendar-css');
 
         $this->addJs('js/calendar.js', 'calendar-js');
         $this->addCss('css/calendar.css', 'calendar-css');
@@ -80,8 +81,8 @@ class Calendar extends BaseWidget
 
     public function onGenerateEvents()
     {
-        $startAt = Input::get('start');
-        $endAt = Input::get('end');
+        $startAt = Request::get('start');
+        $endAt = Request::get('end');
 
         $eventResults = $this->fireEvent('calendar.generateEvents', [$startAt, $endAt]);
 
@@ -97,9 +98,9 @@ class Calendar extends BaseWidget
 
     public function onUpdateEvent()
     {
-        $eventId = Input::get('eventId');
-        $startAt = Input::get('start');
-        $endAt = Input::get('end');
+        $eventId = Request::get('eventId');
+        $startAt = Request::get('start');
+        $endAt = Request::get('end');
 
         $this->fireEvent('calendar.updateEvent', [$eventId, $startAt, $endAt]);
     }

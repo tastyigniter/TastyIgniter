@@ -4,17 +4,20 @@ namespace Admin\Widgets;
 
 use Admin\Classes\BaseWidget;
 use Admin\Classes\FilterScope;
-use DB;
+use Admin\Facades\AdminAuth;
+use Admin\Traits\LocationAwareWidget;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Filter
- * @package Admin
  */
 class Filter extends BaseWidget
 {
+    use LocationAwareWidget;
+
     /**
      * @var array|string Search widget configuration or partial name, optional.
      */
@@ -36,16 +39,10 @@ class Filter extends BaseWidget
      */
     public $context;
 
-    /**
-     * @var string The location context of this filter, scopes that do not belong
-     * to this context will not be shown.
-     */
-    public $locationContext;
-
     protected $defaultAlias = 'filter';
 
     /**
-     * @var boolean Determines if scope definitions have been created.
+     * @var bool Determines if scope definitions have been created.
      */
     protected $scopesDefined = FALSE;
 
@@ -64,18 +61,35 @@ class Filter extends BaseWidget
      */
     public $cssClasses = [];
 
+    public function loadAssets()
+    {
+        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+
+        // daterange picker
+        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');
+        $this->addCss('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.css', 'daterangepicker-css');
+
+        // date picker
+        $this->addJs('js/datepicker.js', 'datepicker-js');
+
+        // selectlist
+        $this->addJs('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
+        $this->addCss('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
+        $this->addJs('~/app/admin/widgets/form/assets/js/selectlist.js', 'selectlist-js');
+        $this->addCss('~/app/admin/widgets/form/assets/css/selectlist.css', 'selectlist-css');
+    }
+
     public function initialize()
     {
         $this->fillFromConfig([
             'search',
             'scopes',
             'context',
-            'locationContext',
         ]);
 
         if (isset($this->search)) {
             $searchConfig = $this->search;
-            $searchConfig['alias'] = $this->alias.'_search';
+            $searchConfig['alias'] = $this->alias.'Search';
             $this->searchWidget = $this->makeWidget('Admin\Widgets\SearchBox', $searchConfig);
             $this->searchWidget->bindToController();
         }
@@ -135,11 +149,11 @@ class Filter extends BaseWidget
             return;
 
         foreach ($scopes as $scope => $value) {
-
             $scope = $this->getScope($scope);
 
             switch ($scope->type) {
                 case 'select':
+                case 'selectlist':
                     $active = $value;
                     $this->setScopeValue($scope, $active);
                     break;
@@ -154,8 +168,17 @@ class Filter extends BaseWidget
                     break;
 
                 case 'date':
-                    $date = $value ? mdate('%Y-%m', strtotime($value)) : null;
+                    $date = $value ? make_carbon($value)->format('Y-m-d') : null;
                     $this->setScopeValue($scope, $date);
+                    break;
+
+                case 'daterange':
+                    $format = array_get($scope->config, 'showTimePicker', FALSE) ? 'Y-m-d H:i:s' : 'Y-m-d';
+                    $dateRange = (is_array($value) && count($value) === 2 && $value[0] != '') ? [
+                        make_carbon($value[0])->format($format),
+                        make_carbon($value[1])->format($format),
+                    ] : null;
+                    $this->setScopeValue($scope, $dateRange);
                     break;
             }
         }
@@ -164,7 +187,7 @@ class Filter extends BaseWidget
         $params = func_get_args();
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
-            list($redirect) = $result;
+            [$redirect] = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
@@ -180,7 +203,7 @@ class Filter extends BaseWidget
         $params = func_get_args();
         $result = $this->fireEvent('filter.submit', [$params]);
         if ($result && is_array($result)) {
-            list($redirect) = $result;
+            [$redirect] = $result;
 
             return ($redirect instanceof RedirectResponse) ? $redirect : $result;
         }
@@ -208,8 +231,8 @@ class Filter extends BaseWidget
      * model relation or from a supplied array. Optionally apply a search
      * constraint to the options.
      *
-     * @param  string $scope
-     * @param  string $searchQuery
+     * @param string $scope
+     * @param string $searchQuery
      *
      * @return array
      */
@@ -241,6 +264,8 @@ class Filter extends BaseWidget
         $model = $this->getScopeModel($scope->scopeName);
         $query = $model->newQuery();
 
+        $this->locationApplyScope($query);
+
         // Extensibility
         $this->fireSystemEvent('admin.filter.extendQuery', [$query, $scope]);
 
@@ -264,12 +289,15 @@ class Filter extends BaseWidget
             $methodName = $options;
 
             if (!$model->methodExists($methodName)) {
-                throw new Exception(sprintf("The model class %s must define a method %s returning options for the '%s' filter.",
+                throw new Exception(sprintf(lang('admin::lang.list.filter_missing_definitions'),
                     get_class($model), $methodName, $scope->scopeName
                 ));
             }
 
             $options = $model->$methodName();
+        }
+        elseif (is_callable($options)) {
+            return $options();
         }
         elseif (!is_array($options)) {
             $options = [];
@@ -288,7 +316,7 @@ class Filter extends BaseWidget
 
         $this->fireSystemEvent('admin.filter.extendScopesBefore');
 
-        if (!isset($this->scopes) OR !is_array($this->scopes)) {
+        if (!isset($this->scopes) || !is_array($this->scopes)) {
             $this->scopes = [];
         }
 
@@ -309,6 +337,12 @@ class Filter extends BaseWidget
         foreach ($scopes as $name => $config) {
             $scopeObj = $this->makeFilterScope($name, $config);
 
+            // Check if admin has permissions to show this column
+            $permissions = array_get($config, 'permissions');
+            if (!empty($permissions) && !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+                continue;
+            }
+
             // Check that the filter scope matches the active context
             if ($scopeObj->context !== null) {
                 $context = (array)$scopeObj->context;
@@ -318,12 +352,7 @@ class Filter extends BaseWidget
             }
 
             // Check that the filter scope matches the active location context
-            if ($scopeObj->locationContext !== null) {
-                $locationContext = (array)$scopeObj->locationContext;
-                if (!in_array($this->getLocationContext(), $locationContext)) {
-                    continue;
-                }
-            }
+            if ($this->isLocationAware($config)) continue;
 
             // Validate scope model
             if (isset($config['modelClass'])) {
@@ -371,7 +400,7 @@ class Filter extends BaseWidget
     /**
      * Applies all scopes to a DB query.
      *
-     * @param  \Igniter\Flame\Database\Builder $query
+     * @param \Igniter\Flame\Database\Builder $query
      *
      * @return \Igniter\Flame\Database\Builder
      */
@@ -389,8 +418,8 @@ class Filter extends BaseWidget
     /**
      * Applies a filter scope constraints to a DB query.
      *
-     * @param  string $scope
-     * @param  \Igniter\Flame\Database\Builder $query
+     * @param string $scope
+     * @param \Igniter\Flame\Database\Builder $query
      *
      * @return \Igniter\Flame\Database\Builder
      */
@@ -400,7 +429,7 @@ class Filter extends BaseWidget
             $scope = $this->getScope($scope);
         }
 
-        if ($scope->disabled OR ($scope->value !== '0' AND !$scope->value)) {
+        if ($scope->disabled || ($scope->value !== '0' && !$scope->value)) {
             return;
         }
 
@@ -409,11 +438,35 @@ class Filter extends BaseWidget
                 $value = $scope->value;
 
                 if ($scopeConditions = $scope->conditions) {
+                    $date = make_carbon($scope->value);
                     $query->whereRaw(strtr($scopeConditions, [
-                        ':filtered' => mdate('%Y-%m-%d', strtotime($scope->value)),
-                        ':year' => mdate('%Y', strtotime($scope->value)),
-                        ':month' => mdate('%m', strtotime($scope->value)),
-                        ':day' => mdate('%d', strtotime($scope->value)),
+                        ':filtered' => $date->format('Y-m-d'),
+                        ':year' => $date->format('Y'),
+                        ':month' => $date->format('m'),
+                        ':day' => $date->format('d'),
+                    ]));
+                } // Scope
+                elseif ($scopeMethod = $scope->scope) {
+                    $query->$scopeMethod($value);
+                }
+
+                break;
+
+            case 'daterange':
+                $value = $scope->value;
+
+                if ($scopeConditions = $scope->conditions) {
+                    $startDate = make_carbon($value[0]);
+                    $endDate = make_carbon($value[1]);
+                    $query->whereRaw(strtr($scopeConditions, [
+                        ':filtered_start' => '"'.$startDate->format('Y-m-d').'"',
+                        ':year_start' => $startDate->format('Y'),
+                        ':month_start' => $startDate->format('m'),
+                        ':day_start' => $startDate->format('d'),
+                        ':filtered_end' => '"'.$endDate->format('Y-m-d').'"',
+                        ':year_end' => $endDate->format('Y'),
+                        ':month_end' => $endDate->format('m'),
+                        ':day_end' => $endDate->format('d'),
                     ]));
                 } // Scope
                 elseif ($scopeMethod = $scope->scope) {
@@ -423,14 +476,13 @@ class Filter extends BaseWidget
                 break;
 
             default:
-                $value = is_array($scope->value) ? array_keys($scope->value) : $scope->value;
+                $value = is_array($scope->value) ? array_values($scope->value) : $scope->value;
 
                 if ($scopeConditions = $scope->conditions) {
-
                     // Switch scope: multiple conditions, value either 1 or 2
                     if (is_array($scopeConditions)) {
                         $conditionNum = is_array($value) ? 0 : $value - 1;
-                        list($scopeConditions) = array_slice($scopeConditions, $conditionNum);
+                        [$scopeConditions] = array_slice($scopeConditions, $conditionNum);
                     }
 
                     if (is_array($value)) {
@@ -516,14 +568,16 @@ class Filter extends BaseWidget
     /**
      * Get a specified scope object
      *
-     * @param  string $scope
+     * @param string $scope
      *
      * @return mixed
      */
     public function getScope($scope)
     {
         if (!isset($this->allScopes[$scope])) {
-            throw new Exception('No definition for scope '.$scope);
+            throw new Exception(sprintf(lang('admin::lang.list.filter_missing_scope_definitions'),
+                $scope
+            ));
         }
 
         return $this->allScopes[$scope];
@@ -532,7 +586,7 @@ class Filter extends BaseWidget
     /**
      * Returns the display name column for a scope.
      *
-     * @param  string $scope
+     * @param string $scope
      *
      * @return string
      */
@@ -552,15 +606,6 @@ class Filter extends BaseWidget
     public function getContext()
     {
         return $this->context;
-    }
-
-    /**
-     * Returns the active location context for displaying the filter.
-     * @return string
-     */
-    public function getLocationContext()
-    {
-        return $this->locationContext;
     }
 
     public function isActiveState()

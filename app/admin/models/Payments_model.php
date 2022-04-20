@@ -1,15 +1,17 @@
-<?php namespace Admin\Models;
+<?php
+
+namespace Admin\Models;
 
 use Admin\Classes\PaymentGateways;
+use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Database\Traits\Sortable;
-use Lang;
-use Model;
+use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Exception\ValidationException;
+use Illuminate\Support\Facades\Lang;
 
 /**
  * Payments Model Class
- *
- * @package Admin
  */
 class Payments_model extends Model
 {
@@ -17,10 +19,6 @@ class Payments_model extends Model
     use Purgeable;
 
     const SORT_ORDER = 'priority';
-
-    const CREATED_AT = 'date_added';
-
-    const UPDATED_AT = 'date_updated';
 
     /**
      * @var string The database table name
@@ -32,15 +30,20 @@ class Payments_model extends Model
      */
     protected $primaryKey = 'payment_id';
 
-    public $timestamps = TRUE;
-
-    public $casts = [
-        'data' => 'serialize',
-    ];
-
     protected $fillable = ['name', 'code', 'class_name', 'description', 'data', 'status', 'is_default', 'priority'];
 
+    public $timestamps = TRUE;
+
+    protected $casts = [
+        'data' => 'array',
+        'status' => 'boolean',
+        'is_default' => 'boolean',
+        'priority' => 'integer',
+    ];
+
     protected $purgeable = ['payment'];
+
+    protected static $defaultPayment;
 
     public function getDropdownOptions()
     {
@@ -91,7 +94,7 @@ class Payments_model extends Model
     // Events
     //
 
-    public function afterFetch()
+    protected function afterFetch()
     {
         $this->applyGatewayClass();
 
@@ -99,10 +102,13 @@ class Payments_model extends Model
             $this->attributes = array_merge($this->data, $this->attributes);
     }
 
-    public function beforeSave()
+    protected function beforeSave()
     {
         if (!$this->exists)
             return;
+
+        if ($this->is_default)
+            $this->makeDefault();
 
         $data = [];
         $fields = ($configFields = $this->getConfigFields()) ? $configFields : [];
@@ -119,16 +125,6 @@ class Payments_model extends Model
         $this->data = $data;
     }
 
-    public function makeDefault()
-    {
-        if (!$this->status) {
-            return FALSE;
-        }
-
-        $this->newQuery()->where('payment_id', $this->payment_id)->update(['is_default' => 1]);
-        $this->newQuery()->where('payment_id', '<>', $this->payment_id)->update(['is_default' => 0]);
-    }
-
     //
     // Manager
     //
@@ -136,9 +132,9 @@ class Payments_model extends Model
     /**
      * Extends this class with the gateway class
      *
-     * @param  string $class Class name
+     * @param string $class Class name
      *
-     * @return boolean
+     * @return bool
      */
     public function applyGatewayClass($class = null)
     {
@@ -149,13 +145,13 @@ class Payments_model extends Model
             $class = null;
         }
 
-        if ($class AND !$this->isClassExtendedWith($class)) {
+        if ($class && !$this->isClassExtendedWith($class)) {
             $this->extendClassWith($class);
         }
 
         $this->class_name = $class;
 
-        return TRUE;
+        return !is_null($class);
     }
 
     public function renderPaymentForm($controller)
@@ -173,9 +169,49 @@ class Payments_model extends Model
         return $this->class_name;
     }
 
+    public function getGatewayObject($class = null)
+    {
+        if (!$class) {
+            $class = $this->class_name;
+        }
+
+        return $this->asExtension($class);
+    }
+
     //
     // Helpers
     //
+
+    public function makeDefault()
+    {
+        if (!$this->status) {
+            throw new ValidationException(['status' => sprintf(
+                lang('admin::lang.alert_error_set_default'), $this->name
+            )]);
+        }
+
+        $this->timestamps = FALSE;
+        $this->newQuery()->where('is_default', '!=', 0)->update(['is_default' => 0]);
+        $this->newQuery()->where('payment_id', $this->payment_id)->update(['is_default' => 1]);
+        $this->timestamps = TRUE;
+    }
+
+    public static function getDefault()
+    {
+        if (self::$defaultPayment !== null) {
+            return self::$defaultPayment;
+        }
+
+        $defaultPayment = self::isEnabled()->where('is_default', TRUE)->first();
+
+        if (!$defaultPayment) {
+            if ($defaultPayment = self::isEnabled()->first()) {
+                $defaultPayment->makeDefault();
+            }
+        }
+
+        return self::$defaultPayment = $defaultPayment;
+    }
 
     /**
      * Return all payments
@@ -202,6 +238,8 @@ class Payments_model extends Model
                 'name' => Lang::get($gateway['name']),
                 'description' => Lang::get($gateway['description']),
                 'class_name' => $gateway['class'],
+                'status' => $code === 'cod',
+                'is_default' => $code === 'cod',
             ]);
 
             $model->applyGatewayClass();
@@ -209,5 +247,61 @@ class Payments_model extends Model
         }
 
         PaymentGateways::createPartials();
+    }
+
+    //
+    // Payment Profiles
+    //
+
+    /**
+     * Finds and returns a customer payment profile for this payment method.
+     * @param \Admin\Models\Customers_model $customer Specifies customer to find a profile for.
+     * @return \Admin\Models\Payment_profiles_model|object Returns the payment profile object or NULL if the payment profile doesn't exist.
+     */
+    public function findPaymentProfile($customer)
+    {
+        if (!$customer)
+            return null;
+
+        $query = Payment_profiles_model::query();
+
+        return $query->where('customer_id', $customer->customer_id)
+            ->where('payment_id', $this->payment_id)
+            ->first();
+    }
+
+    /**
+     * Initializes a new empty customer payment profile.
+     * This method should be used by payment methods internally.
+     * @param \Admin\Models\Customers_model $customer Specifies customer to initialize a profile for.
+     * @return \Admin\Models\Payment_profiles_model Returns the payment profile object or NULL if the payment profile doesn't exist.
+     */
+    public function initPaymentProfile($customer)
+    {
+        $profile = new Payment_profiles_model();
+        $profile->customer_id = $customer->customer_id;
+        $profile->payment_id = $this->payment_id;
+
+        return $profile;
+    }
+
+    public function paymentProfileExists($customer)
+    {
+        return (bool)$this->findPaymentProfile($customer);
+    }
+
+    public function deletePaymentProfile($customer)
+    {
+        $gatewayObj = $this->getGatewayObject();
+
+        $profile = $this->findPaymentProfile($customer);
+
+        if (!$profile) {
+            throw new ApplicationException(lang('admin::lang.customers.alert_customer_payment_profile_not_found'));
+        }
+
+        $gatewayObj->deletePaymentProfile($customer, $profile);
+
+        $profile->delete();
     }
 }

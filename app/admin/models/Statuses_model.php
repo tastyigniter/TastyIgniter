@@ -1,11 +1,11 @@
-<?php namespace Admin\Models;
+<?php
 
-use Model;
+namespace Admin\Models;
+
+use Igniter\Flame\Database\Model;
 
 /**
  * Statuses Model Class
- *
- * @package Admin
  */
 class Statuses_model extends Model
 {
@@ -19,11 +19,17 @@ class Statuses_model extends Model
      */
     protected $primaryKey = 'status_id';
 
+    protected $casts = [
+        'notify_customer' => 'boolean',
+    ];
+
     public $relation = [
         'hasMany' => [
             'status_history' => 'Admin\Models\Status_history_model',
         ],
     ];
+
+    public $timestamps = TRUE;
 
     /**
      * Return status_for attribute as lang text, used by
@@ -41,7 +47,7 @@ class Statuses_model extends Model
     public function getStatusForDropdownOptions()
     {
         return [
-            'order'   => lang('admin::lang.statuses.text_order'),
+            'order' => lang('admin::lang.statuses.text_order'),
             'reserve' => lang('admin::lang.statuses.text_reservation'),
         ];
     }

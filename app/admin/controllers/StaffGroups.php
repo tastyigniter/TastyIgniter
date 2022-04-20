@@ -1,6 +1,9 @@
-<?php namespace Admin\Controllers;
+<?php
 
-use AdminMenu;
+namespace Admin\Controllers;
+
+use Admin\Facades\AdminMenu;
+use Admin\Models\Staff_groups_model;
 
 class StaffGroups extends \Admin\Classes\AdminController
 {
@@ -22,15 +25,18 @@ class StaffGroups extends \Admin\Classes\AdminController
     public $formConfig = [
         'name' => 'lang:admin::lang.staff_groups.text_form_name',
         'model' => 'Admin\Models\Staff_groups_model',
+        'request' => 'Admin\Requests\StaffGroup',
         'create' => [
             'title' => 'lang:admin::lang.form.create_title',
             'redirect' => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
+            'redirectNew' => 'staff_groups/create',
         ],
         'edit' => [
             'title' => 'lang:admin::lang.form.edit_title',
             'redirect' => 'staff_groups/edit/{staff_group_id}',
             'redirectClose' => 'staff_groups',
+            'redirectNew' => 'staff_groups/create',
         ],
         'preview' => [
             'title' => 'lang:admin::lang.form.preview_title',
@@ -51,16 +57,8 @@ class StaffGroups extends \Admin\Classes\AdminController
         AdminMenu::setContext('staffs', 'users');
     }
 
-    public function formValidate($model, $form)
+    public function formAfterSave()
     {
-        $rules = [
-            ['staff_group_name', 'lang:admin::lang.label_name', 'required|min:2|max:32'],
-            ['customer_account_access', 'lang:admin::lang.staff_groups.label_customer_account_access', 'required|integer'],
-            ['location_access', 'lang:admin::lang.staff_groups.label_location_access', 'required|integer'],
-        ];
-
-        $rules[] = ['permissions.*.*', 'Permission', 'string'];
-
-        return $this->validatePasses($form->getSaveData(), $rules);
+        Staff_groups_model::syncAutoAssignStatus();
     }
 }

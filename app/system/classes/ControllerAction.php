@@ -1,4 +1,6 @@
-<?php namespace System\Classes;
+<?php
+
+namespace System\Classes;
 
 use Admin\Traits\WidgetMaker;
 use Exception;
@@ -8,7 +10,6 @@ use System\Traits\ViewMaker;
 
 /**
  * Controller Action base Class
- * @package System
  */
 class ControllerAction
 {
@@ -18,7 +19,7 @@ class ControllerAction
     use ExtensionTrait;
 
     /**
-     * @var BaseController Reference to the controller associated to this action
+     * @var \Illuminate\Routing\Controller Reference to the controller associated to this action
      */
     protected $controller;
 
@@ -35,7 +36,7 @@ class ControllerAction
     /**
      * ControllerAction constructor.
      *
-     * @param \System\Classes\BaseController $controller
+     * @param \Illuminate\Routing\Controller $controller
      *
      * @throws \Exception
      */
@@ -50,7 +51,7 @@ class ControllerAction
 
         foreach ($this->requiredProperties as $property) {
             if (!isset($controller->{$property})) {
-                throw new Exception("Class ".get_class($controller)." must define property [{$property}] used by ".get_called_class());
+                throw new Exception('Class '.get_class($controller)." must define property [{$property}] used by ".get_called_class());
             }
         }
     }
@@ -85,7 +86,7 @@ class ControllerAction
         $result = isset($this->config[$fieldName]) ? $this->config[$fieldName] : $default;
 
         foreach ($nameArray as $key) {
-            if (!is_array($result) OR !array_key_exists($key, $result))
+            if (!is_array($result) || !array_key_exists($key, $result))
                 return $default;
 
             $result = $result[$key];

@@ -15,9 +15,37 @@ $config['list']['filter'] = [
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => ['label' => 'lang:admin::lang.button_new', 'class' => 'btn btn-primary', 'href' => 'payments/create'],
-        'delete' => ['label' => 'lang:admin::lang.button_delete', 'class' => 'btn btn-danger', 'data-request-form' => '#list-form', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'", 'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm'],
-        'filter' => ['label' => 'lang:admin::lang.button_icon_filter', 'class' => 'btn btn-default btn-filter', 'data-toggle' => 'list-filter', 'data-target' => '.list-filter'],
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'payments/create',
+        ],
+    ],
+];
+
+$config['list']['bulkActions'] = [
+    'status' => [
+        'label' => 'lang:admin::lang.list.actions.label_status',
+        'type' => 'dropdown',
+        'class' => 'btn btn-light',
+        'statusColumn' => 'status',
+        'menuItems' => [
+            'enable' => [
+                'label' => 'lang:admin::lang.list.actions.label_enable',
+                'type' => 'button',
+                'class' => 'dropdown-item',
+            ],
+            'disable' => [
+                'label' => 'lang:admin::lang.list.actions.label_disable',
+                'type' => 'button',
+                'class' => 'dropdown-item text-danger',
+            ],
+        ],
+    ],
+    'delete' => [
+        'label' => 'lang:admin::lang.button_delete',
+        'class' => 'btn btn-light text-danger',
+        'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
     ],
 ];
 
@@ -43,9 +71,15 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
     ],
-    'date_updated' => [
-        'label' => 'lang:admin::lang.payments.column_date_updated',
-        'type' => 'datesince',
+    'is_default' => [
+        'label' => 'lang:admin::lang.payments.label_default',
+        'type' => 'switch',
+        'onText' => 'admin::lang.text_yes',
+        'offText' => 'admin::lang.text_no',
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'type' => 'timetense',
     ],
     'payment_id' => [
         'label' => 'lang:admin::lang.column_id',
@@ -56,18 +90,27 @@ $config['list']['columns'] = [
 
 $config['form']['toolbar'] = [
     'buttons' => [
-        'save' => ['label' => 'lang:admin::lang.button_save', 'class' => 'btn btn-primary', 'data-request-submit' => 'true', 'data-request' => 'onSave'],
-        'saveClose' => [
-            'label' => 'lang:admin::lang.button_save_close',
+        'back' => [
+            'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-default',
+            'href' => 'payments',
+        ],
+        'save' => [
+            'label' => 'lang:admin::lang.button_save',
+            'context' => ['create', 'edit'],
+            'partial' => 'form/toolbar_save_button',
+            'class' => 'btn btn-primary',
             'data-request' => 'onSave',
-            'data-request-submit' => 'true',
-            'data-request-data' => 'close:1',
+            'data-progress-indicator' => 'admin::lang.text_saving',
         ],
         'delete' => [
-            'label' => 'lang:admin::lang.button_icon_delete', 'class' => 'btn btn-danger',
-            'data-request-submit' => 'true', 'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
-            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm', 'context' => ['edit'],
+            'label' => 'lang:admin::lang.button_icon_delete',
+            'class' => 'btn btn-danger',
+            'data-request' => 'onDelete',
+            'data-request-data' => "_method:'DELETE'",
+            'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+            'data-progress-indicator' => 'admin::lang.text_deleting',
+            'context' => ['edit'],
         ],
     ],
 ];
@@ -101,16 +144,19 @@ $config['form']['fields'] = [
     'description' => [
         'label' => 'lang:admin::lang.label_description',
         'type' => 'textarea',
+        'span' => 'left',
     ],
     'is_default' => [
         'label' => 'lang:admin::lang.payments.label_default',
         'type' => 'switch',
-        'span' => 'left',
+        'span' => 'right',
+        'cssClass' => 'flex-width',
     ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'span' => 'right',
+        'cssClass' => 'flex-width',
     ],
 ];
 

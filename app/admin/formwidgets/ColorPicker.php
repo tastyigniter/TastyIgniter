@@ -1,4 +1,6 @@
-<?php namespace Admin\FormWidgets;
+<?php
+
+namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
 
@@ -7,8 +9,6 @@ use Admin\Classes\BaseFormWidget;
  * Renders a color picker field.
  *
  * Adapted from october\backend\formwidgets\ColorPicker
- *
- * @package Admin
  */
 class ColorPicker extends BaseFormWidget
 {
@@ -28,6 +28,21 @@ class ColorPicker extends BaseFormWidget
         '#95a5a6', '#7f8c8d',
     ];
 
+    /**
+     * @var bool Show opacity slider
+     */
+    public $showAlpha = FALSE;
+
+    /**
+     * @var bool If true, the color picker is set to read-only mode
+     */
+    public $readOnly = FALSE;
+
+    /**
+     * @var bool If true, the color picker is set to disabled mode
+     */
+    public $disabled = FALSE;
+
     //
     // Object properties
     //
@@ -38,6 +53,9 @@ class ColorPicker extends BaseFormWidget
     {
         $this->fillFromConfig([
             'availableColors',
+            'showAlpha',
+            'readOnly',
+            'disabled',
         ]);
     }
 
@@ -54,9 +72,11 @@ class ColorPicker extends BaseFormWidget
     public function prepareVars()
     {
         $this->vars['name'] = $this->formField->getName();
-        $this->vars['value'] = $value = $this->getLoadValue();
-        $this->vars['availableColors'] = $this->availableColors;
-        $this->vars['isCustomColor'] = !in_array($value, $this->availableColors);
+        $this->vars['value'] = $this->getLoadValue();
+        $this->vars['availableColors'] = $this->availableColors();
+        $this->vars['showAlpha'] = $this->showAlpha;
+        $this->vars['readOnly'] = $this->readOnly;
+        $this->vars['disabled'] = $this->disabled;
     }
 
     public function loadAssets()
@@ -70,5 +90,15 @@ class ColorPicker extends BaseFormWidget
     public function getSaveValue($value)
     {
         return strlen($value) ? $value : null;
+    }
+
+    protected function availableColors()
+    {
+        $colors = [];
+        foreach ($this->availableColors as $availableColor) {
+            $colors[$availableColor] = $availableColor;
+        }
+
+        return $colors;
     }
 }

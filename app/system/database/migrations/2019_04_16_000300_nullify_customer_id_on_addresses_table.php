@@ -1,8 +1,10 @@
-<?php namespace System\Database\Migrations;
+<?php
+
+namespace System\Database\Migrations;
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * customer_id can be NULL on addresses table

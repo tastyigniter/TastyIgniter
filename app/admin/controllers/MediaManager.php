@@ -1,7 +1,9 @@
-<?php namespace Admin\Controllers;
+<?php
 
-use AdminMenu;
-use Template;
+namespace Admin\Controllers;
+
+use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 
 class MediaManager extends \Admin\Classes\AdminController
 {

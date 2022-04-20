@@ -2,9 +2,9 @@
 
 namespace Admin\Traits;
 
-use Admin;
-use AdminAuth;
-use Igniter\Flame\Database\Model;
+use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
+use Igniter\Flame\Exception\ApplicationException;
 
 trait Locationable
 {
@@ -19,8 +19,6 @@ trait Locationable
      */
     public $locationScopeEnabled = FALSE;
 
-    protected $locationableAttributes;
-
     /**
      * Boot the locationable trait for a model.
      *
@@ -28,19 +26,7 @@ trait Locationable
      */
     public static function bootLocationable()
     {
-        static::saving(function (Model $model) {
-            $model->purgeLocationableAttributes();
-        });
-
-        static::saving(function (Model $model) {
-            $model->setLocationableAttributes();
-        });
-
-        static::saved(function (Model $model) {
-            $model->syncLocationsOnSave();
-        });
-
-        static::deleting(function (Model $model) {
+        static::deleting(function (self $model) {
             $model->detachLocationsOnDelete();
         });
     }
@@ -50,12 +36,12 @@ trait Locationable
         if ($this->locationScopeEnabled)
             return TRUE;
 
-        return AdminAuth::isSingleLocationContext();
+        return AdminLocation::check();
     }
 
     public function locationableGetUserLocation()
     {
-        return AdminAuth::getLocationId();
+        return AdminLocation::getId();
     }
 
     //
@@ -70,31 +56,35 @@ trait Locationable
     public function scopeWhereHasOrDoesntHaveLocation($query, $locationId)
     {
         return $query->whereHasLocation($locationId)
-                     ->orDoesntHave($this->locationableRelationName());
+            ->orDoesntHave($this->locationableRelationName());
     }
 
     /**
      * Apply the Location scope query.
      *
      * @param \Igniter\Flame\Database\Builder $builder
-     * @param \Igniter\Flame\Auth\Models\User $userLocation
+     * @param \Igniter\Flame\Database\Model|array|int $userLocation
      */
     protected function applyLocationScope($builder, $userLocation)
     {
-        $locationId = !is_numeric($userLocation)
-            ? $userLocation->getKey() : $userLocation;
+        $locationId = is_object($userLocation)
+            ? $userLocation->getKey()
+            : $userLocation;
+
+        if (!is_array($locationId))
+            $locationId = [$locationId];
 
         $relationName = $this->locationableRelationName();
         $relationObject = $this->getLocationableRelationObject();
         $locationModel = $relationObject->getRelated();
 
         if ($this->locationableIsSingleRelationType()) {
-            $builder->where($locationModel->getKeyName(), $locationId);
+            $builder->whereIn($locationModel->getKeyName(), $locationId);
         }
         else {
             $qualifiedColumnName = $relationObject->getTable().'.'.$locationModel->getKeyName();
             $builder->whereHas($relationName, function ($query) use ($qualifiedColumnName, $locationId) {
-                $query->where($qualifiedColumnName, $locationId);
+                $query->whereIn($qualifiedColumnName, $locationId);
             });
         }
     }
@@ -103,57 +93,18 @@ trait Locationable
     //
     //
 
-    protected function purgeLocationableAttributes()
-    {
-        $attributes = $this->getAttributes();
-        $relationName = $this->locationableRelationName();
-        $cleanAttributes = array_except($attributes, [$relationName]);
-        $this->locationableAttributes = array_get($attributes, $relationName) ?? [];
-
-        return $this->attributes = $cleanAttributes;
-    }
-
-    protected function setLocationableAttributes()
-    {
-        if (!$this->locationableScopeEnabled())
-            return;
-
-        $locationsToSync = $this->locationableAttributes;
-        if (count($locationsToSync))
-            return;
-
-        $this->locationableAttributes = null;
-        if ($this->locationableRelationExists())
-            return;
-
-        if ($this->locationableIsSingleRelationType()) {
-            $relationObj = $this->getLocationableRelationObject();
-            $attributeName = $relationObj->getForeignKey();
-            $this->{$attributeName} = $this->locationableGetUserLocation();
-        }
-        else {
-            $this->locationableAttributes = [$this->locationableGetUserLocation()];
-        }
-    }
-
-    protected function syncLocationsOnSave()
-    {
-        if ($this->locationableIsSingleRelationType())
-            return;
-
-        $locationsToSync = $this->locationableAttributes;
-        if (is_null($locationsToSync))
-            return;
-
-        $this->getLocationableRelationObject()->sync($locationsToSync);
-    }
-
     protected function detachLocationsOnDelete()
     {
         if ($this->locationableIsSingleRelationType())
             return;
 
-        $this->getLocationableRelationObject()->detach();
+        $locationable = $this->getLocationableRelationObject();
+
+        if (app()->runningInAdmin() && !AdminAuth::isSuperUser() && $locationable->count() > 1) {
+            throw new ApplicationException(lang('admin::lang.alert_warning_locationable_delete'));
+        }
+
+        $locationable->detach();
     }
 
     //
@@ -167,19 +118,19 @@ trait Locationable
         return $this->{$relationName}();
     }
 
-    protected function locationableIsSingleRelationType()
+    public function locationableIsSingleRelationType()
     {
         $relationType = $this->getRelationType($this->locationableRelationName());
 
         return in_array($relationType, ['hasOne', 'belongsTo']);
     }
 
-    protected function locationableRelationName()
+    public function locationableRelationName()
     {
         return defined('static::LOCATIONABLE_RELATION') ? static::LOCATIONABLE_RELATION : 'location';
     }
 
-    protected function locationableRelationExists()
+    public function locationableRelationExists()
     {
         $relationName = $this->locationableRelationName();
 
@@ -187,6 +138,6 @@ trait Locationable
             return !is_null($this->{$relationName});
         }
 
-        return count($this->{$relationName});
+        return count($this->{$relationName}) > 0;
     }
 }

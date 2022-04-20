@@ -1,10 +1,13 @@
-<?php namespace Main\Libraries;
+<?php
+
+namespace Main\Libraries;
 
 use Main\Classes\MediaLibrary;
 
 /**
  * MediaManager Class
- * @package System
+ *
+ * @deprecated replaced with \Main\Libraries\MediaLibrary
  */
 class MediaManager extends MediaLibrary
 {

@@ -39,10 +39,13 @@
             $findId = $('[data-find-identifier]', $button.closest('.media-finder'))
 
         if (this.options.useAttachment) {
+            $.ti.loadingIndicator.show()
             $.request(this.options.alias+'::onRemoveAttachment', {
                 data: {media_id: $findId.val()}
             }).done(function () {
                 self.removeMediaItem($button)
+            }).always(function () {
+                $.ti.loadingIndicator.hide()
             })
         } else {
             self.removeMediaItem($button)
@@ -87,6 +90,11 @@
             $button = $(event.target),
             $findValue = $('[data-find-value]', $button.closest('.media-finder'))
 
+        if ($.ti.mediaManager === undefined) {
+            $.ti.flashMessage({text: 'Media manager widget is not loaded', class:'danger'})
+            return
+        }
+
         new $.ti.mediaManager.modal({
             alias: 'mediamanager',
             selectMode: this.options.isMulti ? 'multi' : 'single',
@@ -107,10 +115,13 @@
                 items = self.extractItemData(items)
 
                 if (self.options.useAttachment) {
+                    $.ti.loadingIndicator.show()
                     $.request(self.options.alias+'::onAddAttachment', {
                         data: {items: items}
                     }).done(function (response) {
                         self.updateFinder($button, response)
+                    }).always(function () {
+                        $.ti.loadingIndicator.hide()
                     })
                 } else {
                     self.updateFinder($button, items)
@@ -173,11 +184,13 @@
         var $findIdentifier = $template.find('[data-find-identifier]'),
             $findName = $template.find('[data-find-name]'),
             $findImage = $template.find('[data-find-image]'),
+            $findFile = $template.find('[data-find-file]'),
             $findValue = $template.find('[data-find-value]')
 
         if ($findIdentifier.length) $findIdentifier.val(item.identifier)
         if ($findName.length) $findName.text(item.path)
         if ($findImage.length) $findImage.attr('src', item.publicUrl)
+        if ($findFile.length) $findFile.removeClass('fa-file').addClass('fa-'+item.fileType)
         if ($findValue.length) $findValue.val(item.path)
     }
 

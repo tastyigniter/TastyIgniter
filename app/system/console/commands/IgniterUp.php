@@ -1,4 +1,6 @@
-<?php namespace System\Console\Commands;
+<?php
+
+namespace System\Console\Commands;
 
 use Illuminate\Console\Command;
 use System\Classes\UpdateManager;
@@ -23,12 +25,10 @@ class IgniterUp extends Command
      */
     public function handle()
     {
-        $manager = UpdateManager::instance()->resetLogs()->update();
-
         $this->output->writeln('<info>Migrating application and extensions...</info>');
 
-        foreach ($manager->getLogs() as $note) {
-            $this->output->writeln($note);
-        }
+        $manager = UpdateManager::instance();
+        $manager->setLogsOutput($this->output);
+        $manager->update();
     }
 }

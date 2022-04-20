@@ -1,7 +1,7 @@
 {
   "code": "demo",
   "parent": null,
-  "name": "TastyIgniter Demo Theme",
+  "name": "Demo Theme",
   "description": "Demonstration theme for TastyIgniter front-end",
   "author": "TastyIgniter Dev Team",
   "version": "1.0.0",

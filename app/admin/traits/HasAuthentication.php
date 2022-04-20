@@ -1,12 +1,11 @@
-<?php namespace Admin\Traits;
+<?php
 
-use AdminAuth;
-use Model;
+namespace Admin\Traits;
+
+use Admin\Facades\AdminAuth;
 
 /**
  * Has Authentication Trait Class
- *
- * @package Admin
  */
 trait HasAuthentication
 {
@@ -36,4 +35,3 @@ trait HasAuthentication
         return $this->currentUser;
     }
 }
-

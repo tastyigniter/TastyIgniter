@@ -19,58 +19,71 @@
         this.$toolbar = $('[data-container-toolbar]', this.$form)
 
         this.init();
+        this.initSortable()
     }
 
     DashboardContainer.DEFAULTS = {
         alias: undefined,
         breakpoint: 768,
-        columns: 10
+        columns: 10,
+        sortableContainer: '.is-sortable',
     }
 
     DashboardContainer.prototype.init = function() {
         var self = this
 
-        $.request(this.options.alias+'::onRenderWidgets').done(function () {
-            self.setSortOrders()
-        })
+        $.request(this.options.alias + '::onRenderWidgets')
 
         this.$el.on('click', '[data-control="remove-widget"]', function() {
             var $btn = $(this)
             if (!confirm('Are you sure you want to do this?'))
                 return false;
 
-                self.$form.request(self.options.alias + '::onRemoveWidget', {
-                    data: {
-                        'alias': $('[data-widget-alias]', $btn.closest('div.widget-item')).val()
-                    }
-                }).done(function () {
-                    $btn.closest('div.col').remove()
-                    self.setSortOrders()
+            $.ti.loadingIndicator.show()
+            self.$form.request(self.options.alias + '::onRemoveWidget', {
+                data: {
+                    'alias': $('[data-widget-alias]', $btn.closest('div.widget-item')).val()
+                }
+            }).done(function () {
+                $btn.closest('div.col').remove()
+            }).always(function () {
+                $.ti.loadingIndicator.hide()
+            })
+        })
+    }
+
+    DashboardContainer.prototype.initSortable = function () {
+        var self = this,
+            $sortableContainer
+
+        $(window).on('ajaxUpdateComplete', function () {
+            $sortableContainer = $(self.options.sortableContainer, self.$el)
+            if ($sortableContainer.length) {
+                Sortable.create($sortableContainer.get(0), {
+                    handle: '.handle',
+                    onSort: $.proxy(self.postSortPriorities, self)
                 })
+            }
         })
     }
 
-    DashboardContainer.prototype.setSortOrders = function() {
-        this.sortOrders = []
-
-        var self = this
-        $('[data-widget-priority]', this.$el).each(function() {
-            self.sortOrders.push($(this).val())
-        })
-    }
-
-    DashboardContainer.prototype.postSortOrders = function() {
+    DashboardContainer.prototype.postSortPriorities = function (event) {
         var aliases = [],
+            sortOrders = [],
             self = this
 
-        $('[data-widget-alias]', this.$el).each(function() {
+        $('[data-widget-alias]', this.$el).each(function () {
             aliases.push($(this).val())
         })
 
-        this.$form.request(self.alias + '::onSetWidgetOrders', {
+        $('[data-widget-priority]', this.$el).each(function() {
+            sortOrders.push($(this).val())
+        })
+
+        this.$form.request(self.options.alias + '::onSetWidgetPriorities', {
             data: {
                 'aliases': aliases.join(','),
-                'orders': self.sortOrders.join(',')
+                'priorities': sortOrders.join(',')
             }
         })
     }

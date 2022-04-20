@@ -1,17 +1,28 @@
+.form-control {
+  &:disabled,
+  &[readonly] {
+    border-color: $gray-300;
+  }
+}
 // Widget
 //
 .form-widget {
+  > div > .form-fields {
+    margin-bottom: 0;
+  }
+
   > div:not(:first-child) {
-    margin-top: 25px;
+    margin-top: 0;
   }
 }
 .form-fields {
-  background-color: $gray-200;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: $form-fields-padding-y $form-fields-padding-x;
+  padding: $form-fields-padding-y;
+  margin-bottom: $form-fields-padding-x;
+  border-radius: $input-border-radius;
 }
 .hidden-field {
   margin: 0;
@@ -74,16 +85,22 @@
 // Tabs
 //
 .form-nav {
+  padding-top: 10px;
   padding-left: 20px;
   padding-right: 20px;
 
   &.nav-tabs {
-    border-bottom: 0 none;
+    background-color: $gray-300;
+
+    .nav-item {
+    }
 
     .nav-link {
-      border: 0 none;
+      border-width: 4px 2px 0;
+      border-color: transparent;
       color: $body-color;
       padding: $form-nav-link-padding-y $form-nav-link-padding-x;
+      font-weight: 500;
     }
 
     .nav-link:hover,
@@ -92,18 +109,20 @@
     }
 
     .nav-link.active {
+      border-width: 4px 2px 0;
+      border-style: solid;
+      border-color: $gray-300;
       background-color: $gray-200;
-      font-weight: $font-weight-base;
     }
   }
 }
 @include media-breakpoint-down(sm) {
   .form-widget .tab-heading {
+    background-color: $gray-300;
     width: 100%;
     overflow-x: auto;
     display: block;
   }
-
   .form-nav {
     display: -ms-flexbox;
     display: flex;
@@ -119,17 +138,6 @@
     }
   }
 }
-// Checkbox list
-.field-checkboxlist {
-  .custom-control-label::before,
-  .custom-control-label::after {
-    top: .7rem;
-  }
-
-  label {
-    padding-left: 10px;
-  }
-}
 // Field Section
 .field-section {
   .section-title {
@@ -138,7 +146,21 @@
     margin-bottom: 0;
   }
 }
+.field-custom-container {
+  padding-top: $input-padding-y;
+  padding-bottom: $input-padding-y;
+  height: $input-height-inner;
+}
 // Control label
 .control-label {
   color: $gray-800;
+}
+.help-block {
+  @extend .form-text;
+  color: $gray-600;
+  margin: 0;
+
+  &.before-field {
+    margin-bottom: 10px;
+  }
 }

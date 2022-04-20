@@ -1,14 +1,23 @@
-<?php namespace Admin\Models;
+<?php
 
-use Model;
+namespace Admin\Models;
+
+use Admin\Traits\Locationable;
+use Igniter\Flame\Database\Model;
+use Igniter\Flame\Database\Traits\Sortable;
 
 /**
  * Tables Model Class
- *
- * @package Admin
  */
 class Tables_model extends Model
 {
+    use Locationable;
+    use Sortable;
+
+    const LOCATIONABLE_RELATION = 'locations';
+
+    const SORT_ORDER = 'priority';
+
     /**
      * @var string The database table name
      */
@@ -19,20 +28,28 @@ class Tables_model extends Model
      */
     protected $primaryKey = 'table_id';
 
-    public $fillable = ['table_name', 'min_capacity', 'max_capacity', 'max_capacity'];
+    protected $casts = [
+        'min_capacity' => 'integer',
+        'max_capacity' => 'integer',
+        'extra_capacity' => 'integer',
+        'priority' => 'integer',
+        'is_joinable' => 'boolean',
+        'table_status' => 'boolean',
+    ];
 
     public $relation = [
-        'hasManyThrough' => [
-            'reservations' => [
-                'Admin\Models\Reservations_model',
-                'throughKey' => 'table_id',
-                'through'    => 'Admin\Models\Location_tables_model',
-            ],
-        ],
-        'belongsToMany'  => [
-            'locations' => ['Admin\Models\Locations_model', 'table' => 'location_tables'],
+        'morphToMany' => [
+            'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
+
+    public $timestamps = TRUE;
+
+    public static function getDropdownOptions()
+    {
+        return self::selectRaw('table_id, concat(table_name, " (", min_capacity, " - ", max_capacity, ")") AS display_name')
+            ->dropdown('display_name');
+    }
 
     /**
      * Scope a query to only include enabled location
@@ -44,26 +61,9 @@ class Tables_model extends Model
         return $query->where('table_status', 1);
     }
 
-    public function scopeWhereHasLocation($query, $locationId)
-    {
-        return $query->whereHas('locations',
-            function ($query) use ($locationId) {
-                $query->where('locations.location_id', $locationId);
-            });
-    }
-
     public function scopeWhereBetweenCapacity($query, $noOfGuests)
     {
         return $query->where('min_capacity', '<=', $noOfGuests)
-                     ->where('max_capacity', '>=', $noOfGuests);
-    }
-
-    public function scopeWhereHasReservationBetween($query, $start, $end)
-    {
-        $query->whereHas('reservations', function ($q) use ($start, $end) {
-            $q->whereRaw('ADDTIME(reserve_date, reserve_time) between ? and ?', [$start, $end]);
-        });
-
-        return $query;
+            ->where('max_capacity', '>=', $noOfGuests);
     }
 }

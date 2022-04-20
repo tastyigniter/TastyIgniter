@@ -1,38 +1,42 @@
-TastyIgniter :fire:
-============
+<p align="center"><a href="https://tastyigniter" target="_blank"><img src="https://tastyigniter.com/assets/ui/images/logos/logo-padded.png" width="400"></a></p>
 
-[![Packagist](https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Packagist&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
-[![Packagist](https://img.shields.io/packagist/php-v/tastyigniter/TastyIgniter.svg?label=PHP&style=flat-square)](https://packagist.org/packages/tastyigniter/TastyIgniter)
-[![Build Status](https://img.shields.io/travis/tastyigniter/TastyIgniter.svg?label=TravisCI&style=flat-square)](https://travis-ci.org/tastyigniter/TastyIgniter)
-[![License](https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square)](https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt)
-[![Twitter](https://img.shields.io/twitter/follow/TastyIgniter.svg?label=Follow)](https://twitter.com/TastyIgniter)
+<p align="center">
+<a href="https://packagist.org/packages/tastyigniter/TastyIgniter"><img src="https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Stable&style=flat-square" alt="Stable"></a>
+<a href="https://packagist.org/packages/tastyigniter/TastyIgniter"><img src="https://poser.pugx.org/tastyigniter/flame/downloads" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/tastyigniter/TastyIgniter"><img src="https://img.shields.io/github/workflow/status/tastyigniter/TastyIgniter/Tests?label=Tests" alt="GitHub Workflow Status"></a>
+<a href="https://github.styleci.io/repos/16455664"><img src="https://github.styleci.io/repos/7548986/shield?style=flat" alt="Build Status"></a>
+<a href="https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square" alt="License"></a>
+<a href="https://crowdin.com/project/tastyigniter"><img src="https://badges.crowdin.net/tastyigniter/localized.svg" alt="Crowdin"></a>
+<a href="https://twitter.com/TastyIgniter"><img src="https://img.shields.io/twitter/follow/TastyIgniter.svg?label=Follow" alt="Twitter"></a>
+</p>
 
-[TastyIgniter](https://tastyigniter.com/) is a food ordering and restaurant management system. TastyIgniter provides a professional and reliable platform for restaurants wanting to offer online ordering to their customers.
+[TastyIgniter](https://tastyigniter.com/) provides a professional and reliable platform for restaurants wanting to offer
+online food ordering and table reservation to their customers.
 
-> **TastyIgniter v3 (uses [Laravel](https://laravel.com/) PHP framework) is currently in beta and should not be used in production.** Join the [Dev Team](http://slack.tastyigniter.com/) to follow along with our progress. See branch [2.1.x](https://github.com/tastyigniter/TastyIgniter/tree/2.1.x) for a stable version.
+![screenshot](https://tastyigniter.com/assets/ui/images/mockups/Menus-v2.png)
 
 ### Documentation
-The best place to learn TastyIgniter is by reading the [documentation](https://docs.tastyigniter.com)
+The best place to learn TastyIgniter is by reading the [documentation](https://tastyigniter.com/docs)
 
 ### Installation
-Please read the [Installation Guide](https://docs.tastyigniter.com/3.0/installation) for more information.
+Please read the [Installation Guide](https://tastyigniter.com/docs/installation) for more information.
 
 ### Questions
-For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Slack](http://slack.tastyigniter.com/). 
+For questions and support please use the [Community Forum](https://forum.tastyigniter.com) or [Join us on Discord](https://tastyigniter.com/discord). 
 
 ### Issues
 Please report bugs using the [GitHub issue tracker](https://github.com/tastyigniter/TastyIgniter/issues)
 
 ### Stay in touch
 - [Follow us on Twitter](https://twitter.com/tastyigniter/) for announcements and updates.
-- [Blog](https://tastyigniter.com/blog/) for tips and latest developments in the food industry.
+- [Blog](https://tastyigniter.com/blog) for tips and latest developments in the food industry.
 
 ## Contributing
-We would love your help building TastyIgniter! Please read the [Contributing Guidelines](CONTRIBUTING.md) to learn how you can help.
+We would love your help building TastyIgniter! Please read the [Contributing Guidelines](.github/CONTRIBUTING.md) to learn how you can help.
 
 Thank you to all the people who already contributed to TastyIgniter!
 
-<a href="https://github.com/tastyigniter/TastyIgniter/graphs/contributors"><img src="https://opencollective.com/tastyigniter/contributors.svg?width=890" /></a>
+<a href="https://github.com/tastyigniter/TastyIgniter/graphs/contributors"><img src="https://opencollective.com/tastyigniter/contributors.svg?width=890&button=false" /></a>
 
 ## Supporting TastyIgniter
 TastyIgniter is an MIT-licensed community-driven project with its continuous development made possible by the support of these awesome [backers](#contributing). If you'd like to help support the future of the project, please consider:
@@ -44,14 +48,15 @@ TastyIgniter is an MIT-licensed community-driven project with its continuous dev
 Become a sponsor and get your logo on our README on Github with a link to your site. 
 
 ### via Open Collective
-<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/tiers/bronze-sponsor.svg"></a>
+<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/sponsors.svg"></a>
+
+<a href="https://opencollective.com/tastyigniter" target="_blank" rel="noopener noreferrer"><img src="https://opencollective.com/tastyigniter/backers.svg"></a>
 
 ### via Patreon
 [[Become a Patreon sponsor](https://www.patreon.com/sampoyigi)]
 
 ## Built With :heart:
 - Laravel full-stack PHP framework
-- OctoberCMS foundation library
 - Bootstrap 4 front-end framework
 
 ## Author

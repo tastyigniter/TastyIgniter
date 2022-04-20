@@ -2,8 +2,9 @@
 
 namespace Main\Template;
 
-use Config;
 use Igniter\Flame\Pagic\Contracts\TemplateSource;
+use Igniter\Flame\Support\Facades\File;
+use Illuminate\Support\Facades\Config;
 use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 
@@ -18,12 +19,19 @@ use Main\Classes\ThemeManager;
  */
 class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 {
+    use Concerns\HasComponents;
+    use Concerns\HasViewBag;
+
     /**
      * @var \Main\Classes\Theme The theme object.
      */
     protected $themeCache;
 
     protected $fillable = [];
+
+    public $settings = [
+        'components' => [],
+    ];
 
     /**
      * The "booting" method of the model.
@@ -46,10 +54,9 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
             return;
         }
 
-        $manager = ThemeManager::instance();
-        $defaultTheme = $manager->getActiveThemeCode();
+        $activeTheme = ThemeManager::instance()->getActiveThemeCode();
 
-        $resolver->setDefaultSourceName($defaultTheme);
+        $resolver->setDefaultSourceName($activeTheme);
     }
 
     /**
@@ -79,8 +86,8 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     public static function loadCached($theme, $fileName)
     {
         return static::on($theme->getDirName())
-                     ->remember(Config::get('system.parsedTemplateCacheTTL', 1440))
-                     ->find($fileName);
+            ->remember(Config::get('system.parsedTemplateCacheTTL', now()->addDay()))
+            ->find($fileName);
     }
 
     /**
@@ -88,7 +95,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      * This method is used internally by the system.
      *
      * @param \Main\Classes\Theme $theme Specifies a parent theme.
-     * @param boolean $skipCache Indicates if objects should be reloaded from the disk bypassing the cache.
+     * @param bool $skipCache Indicates if objects should be reloaded from the disk bypassing the cache.
      *
      * @return array|\Illuminate\Support\Collection
      */
@@ -110,33 +117,51 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
         return $instance->newCollection($result);
     }
 
-    public static function inTheme($theme)
+    public static function inTheme(Theme $theme)
     {
-        if (is_string($theme)) {
-            $theme = Theme::load($theme);
-        }
-
         return static::on($theme->getDirName());
     }
 
+    public static function getDropdownOptions(Theme $theme = null, $skipCache = FALSE)
+    {
+        $result = [];
+
+        $pages = is_null($theme) ? self::get() : self::listInTheme($theme, $skipCache);
+        foreach ($pages as $page) {
+            $fileName = str_before($page->getBaseFileName(), '.blade');
+            $description = $page instanceof Page ? $page->title : $page->description;
+            $description = strlen($description) ? lang($description) : $fileName;
+            $result[$fileName] = $description.' ['.$fileName.']';
+        }
+
+        return collect($result)->sort()->all();
+    }
+
+    //
+    //
+    //
+
     /**
      * Returns the unique id of this object.
-     * ex. account/login.php => account-login
-     * @return \Main\Classes\Theme
+     * ex. account/login.blade.php => account-login
+     * @return string
      */
     public function getId()
     {
         $fileName = $this->getBaseFileName();
 
-        return str_replace('/', '-', $fileName);
+        return str_replace('/', '-', str_before($fileName, '.blade'));
     }
 
     /**
      * Returns the theme this object belongs to.
      * @return \Main\Classes\Theme
      */
-    public function getThemeAttribute()
+    public function getThemeAttribute($value = null)
     {
+        if (!is_null($value))
+            return $value;
+
         if ($this->themeCache !== null) {
             return $this->themeCache;
         }
@@ -150,7 +175,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Returns the local file path to the template.
      *
-     * @param  string $fileName
+     * @param string $fileName
      *
      * @return string
      */
@@ -160,7 +185,12 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
             $fileName = $this->fileName;
         }
 
-        return $this->theme->getPath().'/'.$this->getTypeDirName().'/'.$fileName;
+        $fileName = $this->getTypeDirName().'/'.$fileName;
+
+        if ($this->theme->hasParent() && File::exists($this->theme->getParentPath().'/'.$fileName))
+            return $this->theme->getParentPath().'/'.$fileName;
+
+        return $this->theme->getPath().'/'.$fileName;
     }
 
     /**
@@ -215,5 +245,55 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     public function getTemplateCacheKey()
     {
         return $this->getFilePath();
+    }
+
+    //
+    // Magic
+    //
+
+    /**
+     * Implements getter functionality for visible properties defined in
+     * the settings section or view bag array.
+     * @param $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (is_array($this->settings) && array_key_exists($name, $this->settings)) {
+            return $this->settings[$name];
+        }
+
+        return parent::__get($name);
+    }
+
+    /**
+     * Dynamically set attributes on the model.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function __set($key, $value)
+    {
+        parent::__set($key, $value);
+
+        if (array_key_exists($key, $this->settings)) {
+            $this->settings[$key] = $this->attributes[$key];
+        }
+    }
+
+    /**
+     * Determine if an attribute exists on the object.
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        if (parent::__isset($key) === TRUE) {
+            return TRUE;
+        }
+
+        return isset($this->settings[$key]);
     }
 }

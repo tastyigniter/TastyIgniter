@@ -1,4 +1,6 @@
-<?php namespace System\Console\Commands;
+<?php
+
+namespace System\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -30,7 +32,7 @@ class IgniterUpdate extends Command
         $forceUpdate = $this->option('force');
 
         // update system
-        $updateManager = UpdateManager::instance()->resetLogs();
+        $updateManager = UpdateManager::instance()->setLogsOutput($this->output);
         $this->output->writeln('<info>Updating TastyIgniter...</info>');
 
         $updates = $updateManager->requestUpdateList($forceUpdate);
@@ -44,19 +46,19 @@ class IgniterUpdate extends Command
 
         $updatesCollection = collect($itemsToUpdate)->groupBy('type');
 
-        $coreUpdate = $updatesCollection->pull('core')->first();
+        $coreUpdate = optional($updatesCollection->pull('core'))->first();
         $coreCode = array_get($coreUpdate, 'code');
         $coreVersion = array_get($coreUpdate, 'version');
         $coreHash = array_get($coreUpdate, 'hash');
 
         $addonUpdates = $updatesCollection->flatten(1);
 
-        if ($coreCode AND $coreHash) {
+        if ($coreCode && $coreHash) {
             $this->output->writeln('<info>Downloading application files</info>');
             $updateManager->downloadFile($coreCode, $coreHash, [
                 'name' => $coreCode,
                 'type' => 'core',
-                'ver'  => $coreVersion,
+                'ver' => $coreVersion,
             ]);
         }
 
@@ -72,11 +74,11 @@ class IgniterUpdate extends Command
             $updateManager->downloadFile($addonCode, $addonHash, [
                 'name' => $addonCode,
                 'type' => $addonType,
-                'ver'  => $addonVersion,
+                'ver' => $addonVersion,
             ]);
         });
 
-        if ($coreCode AND $coreHash) {
+        if ($coreCode && $coreHash) {
             $this->output->writeln('<info>Extracting application files</info>');
             $updateManager->extractCore($coreCode);
             $updateManager->setCoreVersion($coreVersion, $coreHash);
@@ -89,19 +91,12 @@ class IgniterUpdate extends Command
 
             $this->output->writeln(sprintf('<info>Extracting %s files</info>', $addonName));
 
-            $updateManager->extractFile($addonCode, $addonType.'s/');
+            $extractTo = $addonType === 'theme' ? theme_path('/') : extension_path('/');
+            $updateManager->extractFile($addonCode, $extractTo);
         });
 
         // Run migrations
         $this->call('igniter:up');
-    }
-
-    /**
-     * Get the console command arguments.
-     */
-    protected function getArguments()
-    {
-        return [];
     }
 
     /**

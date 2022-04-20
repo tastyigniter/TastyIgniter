@@ -1,20 +1,22 @@
-<?php namespace System\Models;
+<?php
+
+namespace System\Models;
 
 use Carbon\Carbon;
-use Config;
 use DateTime;
 use DateTimeZone;
 use Exception;
-use Model;
-use Session;
-use Setting;
+use Igniter\Flame\Database\Model;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Session;
+use Main\Classes\ThemeManager;
+use Main\Template\Page;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 use System\Traits\ConfigMaker;
 
 /**
  * Settings Model Class
- * @package System
  */
 class Settings_model extends Model
 {
@@ -38,16 +40,19 @@ class Settings_model extends Model
 
     protected $allItems;
 
-    protected $items;
+    protected $items = [];
+
+    /**
+     * @var array Cache of registration callbacks.
+     */
+    protected static $callbacks = [];
 
     public static function listMenuSettingItems($menu, $item, $user)
     {
-        $fieldConfig = (new static)->getFieldConfig();
-        $settingsConfig = array_except($fieldConfig, 'toolbar');
-
         $options = [];
-        foreach ($settingsConfig as $settingItem) {
-            $options[$settingItem['label']] = [$settingItem['icon'], $settingItem['url']];
+        $settingItems = (new static)->listSettingItems();
+        foreach (array_get($settingItems, 'core', []) as $settingItem) {
+            $options[$settingItem->label] = [$settingItem->icon, $settingItem->url];
         }
 
         return $options;
@@ -94,10 +99,24 @@ class Settings_model extends Model
         ];
     }
 
+    public static function getMenusPageOptions()
+    {
+        $theme = ThemeManager::instance()->getActiveTheme();
+
+        return Page::getDropdownOptions($theme, true);
+    }
+
+    public static function getReservationPageOptions()
+    {
+        $theme = ThemeManager::instance()->getActiveTheme();
+
+        return Page::getDropdownOptions($theme, true);
+    }
+
     public static function onboardingIsComplete()
     {
         if (!Session::has('settings.errors'))
-            return FALSE;
+            return false;
 
         return count(array_filter((array)Session::get('settings.errors'))) === 0;
     }
@@ -124,16 +143,17 @@ class Settings_model extends Model
     // Registration
     //
 
-    public function getFieldConfig()
+    public function getFieldConfig($code)
     {
         if ($this->fieldConfig !== null) {
             return $this->fieldConfig;
         }
 
-        $this->configPath = '~/app/system/models/config';
-        $config = $this->makeConfig($this->settingsFields, ['form']);
+        $settingItem = $this->getSettingItem('core.'.$code);
+        if ($settingItem && !is_array($settingItem->form))
+            $settingItem->form = array_get($this->makeConfig($settingItem->form, ['form']), 'form', []);
 
-        return $this->fieldConfig = $config['form'] ?? [];
+        return $this->fieldConfig = $settingItem->form ?? [];
     }
 
     public function getFieldValues()
@@ -152,9 +172,7 @@ class Settings_model extends Model
 
     public function getSettingDefinitions($code)
     {
-        $fieldConfig = $this->getFieldConfig();
-
-        return $fieldConfig[$code] ?? [];
+        return $this->getSettingItem('core.'.$code);
     }
 
     public function getSettingItem($code)
@@ -165,19 +183,30 @@ class Settings_model extends Model
         return $this->allItems[$code] ?? null;
     }
 
+    public function removeSettingItem($code)
+    {
+        unset($this->allItems[$code]);
+    }
+
     public function listSettingItems()
     {
-        if (!$this->items)
+        if (!$this->allItems)
             $this->loadSettingItems();
 
-        return $this->items;
+        $allItems = ['core' => [], 'other' => []];
+        foreach ($this->allItems as $item) {
+            $group = ($item->owner != 'core') ? 'other' : $item->owner;
+            $allItems[$group][] = $item;
+        }
+
+        return $allItems;
     }
 
     public function loadSettingItems()
     {
-        $fieldConfig = $this->getFieldConfig();
-        $settingsConfig = array_except($fieldConfig, 'toolbar');
-        $this->registerSettingItems('core', $settingsConfig);
+        foreach (self::$callbacks as $callback) {
+            $callback($this);
+        }
 
         // Load extension items
         $extensions = ExtensionManager::instance()->getExtensions();
@@ -196,35 +225,29 @@ class Settings_model extends Model
         });
 
         $allItems = [];
-        $catItems = ['core' => [], 'other' => []];
         foreach ($this->items as $item) {
-            $category = ($item->owner != 'core') ? 'other' : $item->owner;
-            $catItems[$category][] = $item;
-
             $allItems[$item->owner.'.'.$item->code] = $item;
         }
 
         $this->allItems = $allItems;
-        $this->items = $catItems;
+
+        $this->fireSystemEvent('system.setting.extendSettingItems', [$this->allItems]);
     }
 
     public function registerSettingItems($owner, array $definitions)
     {
-        if (!$this->items) {
-            $this->items = [];
-        }
-
         $defaultDefinitions = [
             'code' => null,
             'label' => null,
             'description' => null,
             'icon' => null,
             'url' => null,
-            'priority' => null,
+            'priority' => 99,
             'permissions' => [],
             'context' => 'settings',
             'model' => null,
             'form' => null,
+            'request' => null,
         ];
 
         foreach ($definitions as $code => $definition) {
@@ -243,19 +266,9 @@ class Settings_model extends Model
         }
     }
 
-    //
-    // Mailer Config
-    //
-
-    public static function applyMailerConfigValues()
+    public static function registerCallback(callable $callback)
     {
-        Config::set('mail.driver', Setting::get('protocol', Config::get('mail.driver')));
-        Config::set('mail.host', Setting::get('smtp_host', Config::get('mail.host')));
-        Config::set('mail.port', Setting::get('smtp_port', Config::get('mail.port')));
-        Config::set('mail.from.address', Setting::get('sender_email', Config::get('mail.from.address')));
-        Config::set('mail.from.name', Setting::get('sender_name', Config::get('mail.from.name')));
-        Config::set('mail.username', Setting::get('smtp_user', Config::get('mail.username')));
-        Config::set('mail.password', Setting::get('smtp_pass', Config::get('mail.password')));
+        self::$callbacks[] = $callback;
     }
 
     //
@@ -289,5 +302,60 @@ class Settings_model extends Model
         }
 
         return $timezone_list;
+    }
+
+    //
+    // File Definitions
+    //
+
+    /**
+     * Extensions typically used as images.
+     * This list can be customized with config:
+     * - system.assets.media.defaultExtensions
+     */
+    public static function defaultExtensions()
+    {
+        return Config::get('system.assets.media.defaultExtensions', [
+            'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'ico', 'webp',
+            'doc', 'docx', 'ppt', 'pptx', 'pdf', 'txt', 'xls', 'xlsx',
+            'mp4', 'avi', 'mov', 'mpg', 'mpeg', 'mkv', 'webm', 'ogg',
+            'mp3', 'wav', 'wma', 'm4a',
+        ]);
+    }
+
+    /**
+     * Extensions typically used as images.
+     * This list can be customized with config:
+     * - system.assets.media.imageExtensions
+     */
+    public static function imageExtensions()
+    {
+        return Config::get('system.assets.media.imageExtensions', [
+            'jpg', 'jpeg', 'bmp', 'png', 'webp', 'gif', 'svg',
+        ]);
+    }
+
+    /**
+     * Extensions typically used as video files.
+     * This list can be customized with config:
+     * - system.assets.media.videoExtensions
+     */
+    public static function videoExtensions()
+    {
+        return Config::get('system.assets.media.videoExtensions', [
+            'mp4', 'avi', 'mov', 'mpg', 'mpeg', 'mkv', 'webm', 'ogv',
+        ]);
+    }
+
+    /**
+     * Extensions typically used as audio files.
+     * This list can be customized with config:
+     * - system.assets.media.audioExtensions
+     */
+    public static function audioExtensions()
+    {
+        return Config::get('system.assets.media.audioExtensions', [
+            'mp3', 'wav', 'wma', 'm4a', 'ogg', 'oga',
+        ]);
     }
 }
