@@ -10,6 +10,8 @@ class Location extends Manager
 
     protected $locationModel = 'Admin\Models\Locations_model';
 
+    protected $listLocationsCache = [];
+
     public function check()
     {
         return (bool)$this->current();
@@ -49,7 +51,7 @@ class Location extends Manager
     public function hasAccess($location)
     {
         if ($this->getAuth()->isSuperUser())
-            return TRUE;
+            return true;
 
         return $this->getAuth()->user()->hasLocationAccess($location);
     }
@@ -57,7 +59,7 @@ class Location extends Manager
     public function hasRestriction()
     {
         if ($this->getAuth()->isSuperUser())
-            return FALSE;
+            return false;
 
         return $this->getAuth()->locations()->isNotEmpty();
     }
@@ -97,9 +99,14 @@ class Location extends Manager
 
     public function listLocations()
     {
-        return $this->getAuth()->isSuperUser()
+        if ($this->listLocationsCache)
+            return $this->listLocationsCache;
+
+        $locations = $this->getAuth()->isSuperUser()
             ? $this->createLocationModel()->isEnabled()->get()
             : $this->getLocations();
+
+        return $this->listLocationsCache = $locations;
     }
 
     public function getDefaultLocation()
@@ -113,7 +120,7 @@ class Location extends Manager
     public function hasOneLocation()
     {
         if ($this->isSingleMode())
-            return TRUE;
+            return true;
 
         return $this->getLocations()->count() === 1;
     }
@@ -121,10 +128,10 @@ class Location extends Manager
     public function hasLocations()
     {
         if ($this->isSingleMode())
-            return FALSE;
+            return false;
 
         if ($this->getAuth()->isSuperUser())
-            return TRUE;
+            return true;
 
         return $this->getLocations()->count() > 1;
     }
@@ -133,7 +140,7 @@ class Location extends Manager
     {
         return $this->getAuth()
             ->locations()
-            ->where('location_status', TRUE);
+            ->where('location_status', true);
     }
 
     /**
@@ -146,10 +153,7 @@ class Location extends Manager
 
     protected function isAttachedToAuth($id)
     {
-        if ($this->getAuth()->isSuperUser())
-            return TRUE;
-
-        return $this->getLocations()->contains(function ($model) use ($id) {
+        return $this->listLocations()->contains(function ($model) use ($id) {
             return $model->location_id === $id;
         });
     }
