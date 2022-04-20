@@ -23,9 +23,15 @@
     "docs": "https://tastyigniter.com/docs",
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://satis.tastyigniter.com"
+    }
+  ],
   "require": {
     "php": ">=7.4",
-    "composer/installers": "dev-main as 2.0",
+    "composer/installers": "dev-main#6a30b1c1f0e71faeeeae0ed90f74f4fe6b6f6525 as 2.0",
     "tastyigniter/flame": "~1.2",
     "tastyigniter/ti-module-system": "~3.0",
     "tastyigniter/ti-module-admin": "~3.0",
@@ -46,7 +52,7 @@
   },
   "scripts": {
     "post-create-project-cmd": [
-      "php artisan key:generate"
+      "@php artisan key:generate --ansi"
     ]
   },
   "minimum-stability": "dev",
