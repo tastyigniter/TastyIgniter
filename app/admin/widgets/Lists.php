@@ -279,6 +279,7 @@ class Lists extends BaseWidget
                 // Relation
                 if ($this->isColumnRelated($column)) {
                     $table = $this->model->makeRelation($column->relation)->getTable();
+                    $table = DB::getTablePrefix() . $table;
                     $columnName = isset($column->sqlSelect)
                         ? DB::raw($this->parseTableName($column->sqlSelect, $table))
                         : $table.'.'.$column->valueFrom;
