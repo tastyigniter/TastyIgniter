@@ -105,7 +105,9 @@ $config['list']['columns'] = [
     'stock_qty' => [
         'label' => 'lang:admin::lang.menus.column_stock_qty',
         'type' => 'number',
-        'sortable' => false,
+        'relation' => 'stocks',
+        'select' => 'quantity',
+        'sortable' => TRUE
     ],
     'special_status' => [
         'label' => 'lang:admin::lang.menus.label_special_status',
