@@ -52,8 +52,8 @@ class RichEditor extends BaseFormWidget
 
     public function loadAssets()
     {
-        $this->addCss('vendor/summernote/summernote-bs4.css', 'summernote-css');
-        $this->addJs('vendor/summernote/summernote-bs4.min.js', 'summernote-js');
+        $this->addCss('vendor/summernote/summernote-bs5.min.css', 'summernote-css');
+        $this->addJs('vendor/summernote/summernote-bs5.min.js', 'summernote-js');
         $this->addCss('css/richeditor.css', 'richeditor-css');
         $this->addJs('js/richeditor.js', 'richeditor-js');
     }

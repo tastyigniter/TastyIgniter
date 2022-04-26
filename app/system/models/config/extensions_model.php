@@ -71,7 +71,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'partial',
         'path' => 'lists/extension_card',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
 ];
 

@@ -5,6 +5,7 @@
         $.ti.mediaManager = {}
 
     var MediaManagerModal = function (options) {
+        this.modal = null
         this.$modalRootElement = null
 
         this.options = $.extend({}, MediaManagerModal.DEFAULTS, options)
@@ -14,7 +15,7 @@
     }
 
     MediaManagerModal.prototype.dispose = function () {
-        this.$modalElement.modal('hide')
+        this.modal.hide()
         this.$modalRootElement.remove()
         this.$modalElement = null
         this.$modalRootElement = null
@@ -26,7 +27,7 @@
 
         this.$modalRootElement = $('<div/>', {
             id: 'media-manager',
-            class: 'media-modal modal',
+            class: 'media-modal modal fade',
             role: 'dialog',
             tabindex: -1,
             ariaLabelled: '#media-manager',
@@ -52,7 +53,10 @@
         $.request(handler, {data: data})
             .done(function (json) {
                 self.$modalRootElement.html(json.result);
-                self.$modalRootElement.modal()
+                $('body').append(self.$modalRootElement)
+                self.modal = new bootstrap.Modal(self.$modalRootElement)
+                self.modal.show()
+
             })
             .always(function () {
                 $.ti.loadingIndicator.hide()
@@ -61,7 +65,7 @@
 
     MediaManagerModal.prototype.hide = function () {
         if (this.$modalElement)
-            this.$modalElement.trigger('hide.bs.modal')
+            this.modal.hide()
     }
 
     MediaManagerModal.prototype.getMediaManagerElement = function () {
@@ -78,10 +82,10 @@
     MediaManagerModal.prototype.onModalHidden = function (event) {
         var mediaManager = this.$modalElement.find('[data-control="media-manager"]')
 
+        this.dispose()
+
         mediaManager.mediaManager('dispose')
         mediaManager.remove()
-
-        this.dispose()
 
         if (this.options.onClose !== undefined)
             this.options.onClose.call(this)

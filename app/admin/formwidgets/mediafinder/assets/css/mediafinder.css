@@ -1,17 +1,17 @@
 .media-finder .grid {
-	background-color: var(--gray-100);
-	border-radius: 3px;
-	border: 1px solid var(--gray-300);
-	width: 124px;
-	height: 124px;
-	position: relative;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  background-color: var(--bs-gray-100);
+  border-radius: 3px;
+  border: 1px solid var(--bs-gray-300);
+  width: 124px;
+  height: 124px;
+  position: relative;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
 .media-finder .grid:focus,
 .media-finder .grid:hover {
-	border-color: var(--primary);
-	box-shadow: 0 1px 0px var(--primary);
+  border-color: var(--bs-primary);
+  box-shadow: 0 1px 0px var(--bs-primary);
 }
 .media-finder .grid .img-cover {
 	transform: translate(50%, 50%);
@@ -69,9 +69,9 @@
 	z-index: 9;
 }
 .grid:hover .icon-container span {
-	background-color: var(--gray-100);
-	padding: 3px 5px;
-	word-wrap: break-word;
+  background-color: var(--bs-gray-100);
+  padding: 3px 5px;
+  word-wrap: break-word;
 }
 .grid .find-button {
 	display: block;

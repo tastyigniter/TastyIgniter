@@ -25,7 +25,7 @@
                 <button
                     type="button"
                     class="btn btn-secondary"
-                    data-dismiss="modal"
+                    data-bs-dismiss="modal"
                 >@lang('admin::lang.button_close')</button>
                 <button
                     type="button"

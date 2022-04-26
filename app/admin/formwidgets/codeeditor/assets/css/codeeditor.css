@@ -2,6 +2,6 @@
 	line-height: 1.2;
 }
 .field-codeeditor .CodeMirror {
-	font-family: var(--font-family-monospace);
-	font-size: 14px;
+  font-family: var(--bs-font-monospace);
+  font-size: 14px;
 }

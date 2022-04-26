@@ -3,7 +3,7 @@
         <select
             id="{{ $field->getId('type') }}"
             name="{{ $field->getName() }}[type]"
-            class="form-control"
+            class="form-select"
             data-template-control="choose-type"
             data-request="{{ $this->getEventHandler('onChooseFile') }}"
             data-progress-indicator="@lang('admin::lang.text_loading')"
@@ -23,7 +23,7 @@
             <select
                 id="{{ $field->getId('file') }}"
                 name="{{ $field->getName() }}[file]"
-                class="form-control"
+                class="form-select"
                 data-template-control="choose-file"
                 data-request="{{ $this->getEventHandler('onChooseFile') }}"
                 data-progress-indicator="@lang('admin::lang.text_loading')"
@@ -46,8 +46,8 @@
                 <button
                     type="button"
                     class="btn btn-outline-default"
-                    data-toggle="modal"
-                    data-target="#{{ $this->getId('modal') }}"
+                    data-bs-toggle="modal"
+                    data-bs-target="#{{ $this->getId('modal') }}"
                     data-modal-title="{{ sprintf(lang($this->addLabel), $selectedTypeLabel) }}"
                     data-modal-source-action="new"
                     data-modal-source-name=""
@@ -57,8 +57,8 @@
                     <button
                         type="button"
                         class="btn btn-outline-default"
-                        data-toggle="modal"
-                        data-target="#{{ $this->getId('modal') }}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#{{ $this->getId('modal') }}"
                         data-modal-title="{{ sprintf(lang($this->editLabel), $selectedTypeLabel) }}"
                         data-modal-source-action="rename"
                         data-modal-source-name="{{ $selectedTemplateFile }}"

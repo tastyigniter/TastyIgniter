@@ -13,19 +13,20 @@
 />
 
 <div class="field-custom-container">
-    <div class="custom-control custom-switch">
+    <div class="form-check form-switch">
         <input
             type="checkbox"
             name="{{ $field->getName() }}"
             id="{{ $field->getId() }}"
-            class="custom-control-input"
+            class="form-check-input"
             value="1"
+            role="switch"
             {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
             {!! $field->value == 1 ? 'checked="checked"' : '' !!}
             {!! $field->getAttributes() !!}
         />
         <label
-            class="custom-control-label"
+            class="form-check-label"
             for="{{ $field->getId() }}"
         >@lang($off)/@lang($on)</label>
     </div>

@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <label
                             for="input-user"
-                            class="control-label"
+                            class="form-label"
                         >@lang('admin::lang.label_email')</label>
                         <div class="">
                             <input name="email" type="text" id="input-user" class="form-control"/>

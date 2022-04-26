@@ -18,60 +18,51 @@ mix.setPublicPath('./').options({
 //
 //  Build Admin SCSS
 //
-// mix.sass('scss/admin.scss', 'css')
+mix.sass('src/scss/admin.scss', 'css')
 
 //
-//  Combine UI JS
+//  Combine Admin UI JS
 //
-// mix.scripts(
-//     [
-//         'node_modules/jquery/dist/jquery.min.js',
-//         'node_modules/popper.js/dist/umd/popper.min.js',
-//         'node_modules/bootstrap/dist/js/bootstrap.min.js',
-//         'node_modules/sweetalert/dist/sweetalert.min.js',
-//         '../../system/assets/ui/js/vendor/waterfall.min.js',
-//         '../../system/assets/ui/js/vendor/transition.js',
-//         '../../system/assets/ui/js/app.js',
-//         '../../system/assets/ui/js/loader.bar.js',
-//         '../../system/assets/ui/js/loader.progress.js',
-//         '../../system/assets/ui/js/flashmessage.js',
-//         '../../system/assets/ui/js/toggler.js',
-//         '../../system/assets/ui/js/trigger.js',
-//     ],
-//     '../../system/assets/ui/flame.js'
-// )
+mix.scripts(
+    [
+        'node_modules/jquery/dist/jquery.min.js',
+        'node_modules/@popperjs/core/dist/umd/popper.min.js',
+        'node_modules/bootstrap/dist/js/bootstrap.min.js',
+        'node_modules/sweetalert2/dist/sweetalert2.min.js',
+        'node_modules/js-cookie/src/js.cookie.js',
+        'node_modules/metismenu/dist/metisMenu.min.js',
+        'src/js/vendor/waterfall.min.js',
+        'src/js/request.js',
+        'src/js/loader.bar.js',
+        'src/js/loader.progress.js',
+        'src/js/flashmessage.js',
+        'src/js/toggler.js',
+        'src/js/trigger.js',
+        'src/js/app.js',
+    ],
+    'js/admin.js'
+)
 
-//
-//  Combine Admin Vendor JS
-//
-// mix.scripts(
-//     [
-//         '../../system/assets/ui/flame.js',
-//         'node_modules/js-cookie/src/js.cookie.js',
-//         'node_modules/select2/dist/js/select2.min.js',
-//         'node_modules/metismenu/dist/metisMenu.min.js',
-//         'js/src/app.js',
-//     ],
-//     'js/admin.js'
-// )
+// We only want to copy these files when building for production
+if (process.env.NODE_ENV !== 'productiion') return
 
 //
 // Copy fonts from node_modules
 //
 mix.copyDirectory(
     'node_modules/@fortawesome/fontawesome-free/webfonts',
-    '../../system/assets/ui/fonts/FontAwesome'
+    '../../admin/assets/fonts/FontAwesome'
 ).copy(
-    'node_modules/animate.css/animate.min.css',
-    '../../admin/assets/scss/vendor/_animate.scss'
-).copy(
-    'node_modules/metismenu/dist/metisMenu.min.js.map',
-    'js/metisMenu.min.js.map'
+    'node_modules/animate.css/animate.compat.css',
+    '../../admin/assets/src/scss/vendor/_animate.scss'
 );
 
 mix.copy(
     'node_modules/chart.js/dist/chart.min.js',
     '../dashboardwidgets/charts/assets/vendor/chartjs/Chart.min.js'
+).copy(
+    'node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.min.js',
+    '../dashboardwidgets/charts/assets/vendor/chartjs/chartjs-adapter-moment.min.js'
 ).copy(
     'node_modules/daterangepicker/daterangepicker.js',
     '../dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js'
@@ -164,14 +155,14 @@ mix.copy(
 );
 
 mix.copy(
-    'node_modules/summernote/dist/summernote-bs4.min.css',
-    '../formwidgets/richeditor/assets/vendor/summernote/summernote-bs4.min.css'
+    'node_modules/summernote/dist/summernote-bs5.min.css',
+    '../formwidgets/richeditor/assets/vendor/summernote/summernote-bs5.min.css'
 ).copy(
-    'node_modules/summernote/dist/summernote-bs4.min.js',
-    '../formwidgets/richeditor/assets/vendor/summernote/summernote-bs4.min.js'
+    'node_modules/summernote/dist/summernote-bs5.min.js',
+    '../formwidgets/richeditor/assets/vendor/summernote/summernote-bs5.min.js'
 ).copy(
-    'node_modules/summernote/dist/summernote-bs4.js.map',
-    '../formwidgets/richeditor/assets/vendor/summernote/summernote-bs4.js.map'
+    'node_modules/summernote/dist/summernote-bs5.js.map',
+    '../formwidgets/richeditor/assets/vendor/summernote/summernote-bs5.js.map'
 ).copyDirectory(
     'node_modules/summernote/dist/font',
     '../formwidgets/richeditor/assets/vendor/summernote/font'
@@ -210,11 +201,6 @@ mix.copy(
 ).copy(
     'node_modules/bootstrap-table/dist/bootstrap-table.min.js',
     '../widgets/table/assets/vendor/bootstrap-table/bootstrap-table.min.js'
-);
-
-mix.copy(
-    'node_modules/bootbox/dist/bootbox.min.js',
-    '../../main/widgets/mediamanager/assets/vendor/bootbox/bootbox.min.js'
 );
 
 mix.copy(

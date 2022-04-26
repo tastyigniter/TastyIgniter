@@ -9,7 +9,7 @@
                     <button
                         type="button"
                         class="btn btn-default dropdown-toggle"
-                        data-toggle="dropdown"
+                        data-bs-toggle="dropdown"
                     ><i class="fa fa-ellipsis-h"></i></button>
                     <div
                         id="{{ $this->getId('folder-tree') }}"
@@ -38,57 +38,57 @@
             <div class="btn-group">
                 @if ($this->getSetting('new_folder'))
                     <button
-                        class="btn btn-default" title="@lang('main::lang.media_manager.text_new_folder')"
-                        data-media-control="new-folder">
-                        <i class="fa fa-folder"></i>
-                    </button>
+                        class="btn btn-default"
+                        title="@lang('main::lang.media_manager.text_new_folder')"
+                        data-media-control="new-folder"
+                        data-swal-title="@lang('main::lang.media_manager.text_folder_name')"
+                    ><i class="fa fa-folder"></i></button>
                 @endif
                 @if ($this->getSetting('rename'))
                     <button
                         class="btn btn-default" title="@lang('main::lang.media_manager.text_rename_folder')"
-                        data-media-control="rename-folder">
-                        <i class="fa fa-pencil"></i>
-                    </button>
+                        data-media-control="rename-folder"
+                        data-swal-title="@lang('main::lang.media_manager.text_folder_name')"
+                    ><i class="fa fa-pencil"></i></button>
                 @endif
                 @if ($this->getSetting('delete'))
                     <button
-                        class="btn btn-danger" title="@lang('main::lang.media_manager.text_delete_folder')"
-                        data-media-control="delete-folder">
-                        <i class="fa fa-trash"></i>
-                    </button>
+                        class="btn btn-danger"
+                        title="@lang('main::lang.media_manager.text_delete_folder')"
+                        data-media-control="delete-folder"
+                        data-swal-confirm="@lang('admin::lang.alert_warning_confirm')"
+                    ><i class="fa fa-trash"></i></button>
                 @endif
             </div>
         </div>
 
         <div class="toolbar-item">
             <div class="input-group">
-                <div class="input-group-prepend">
-                    <div class="dropdown mr-2">
-                        <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Filter">
-                            <i class="fa fa-filter"></i> <i class="caret"></i>
-                        </a>
-                        {!! $this->makePartial('mediamanager/filters', ['filterBy', $filterBy]) !!}
-                    </div>
-
-                    <div class="dropdown mr-2">
-                        <a class="btn btn-default dropdown-toggle" role="button" data-toggle="dropdown" title="Sort">
-                            @if (isset($sortBy[1]) && $sortBy[1] === 'ascending')
-                                <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>
-                            @else
-                                <i class="fa fa-sort-amount-desc"></i> <i class="caret"></i>
-                            @endif
-                        </a>
-                        {!! $this->makePartial('mediamanager/sorting', ['sortBy', $sortBy]) !!}
-                    </div>
-
-                    @unless ($isPopup)
-                        <a
-                            class="btn btn-default btn-options mr-2"
-                            href="{{ admin_url('settings/edit/media') }}">
-                            <i class="fa fa-gears"></i>
-                        </a>
-                    @endunless
+                <div class="dropdown mr-2">
+                    <a class="btn btn-default dropdown-toggle" role="button" data-bs-toggle="dropdown" title="Filter">
+                        <i class="fa fa-filter"></i> <i class="caret"></i>
+                    </a>
+                    {!! $this->makePartial('mediamanager/filters', ['filterBy', $filterBy]) !!}
                 </div>
+
+                <div class="dropdown mr-2">
+                    <a class="btn btn-default dropdown-toggle" role="button" data-bs-toggle="dropdown" title="Sort">
+                        @if (isset($sortBy[1]) && $sortBy[1] === 'ascending')
+                            <i class="fa fa-sort-amount-asc"></i> <i class="caret"></i>
+                        @else
+                            <i class="fa fa-sort-amount-desc"></i> <i class="caret"></i>
+                        @endif
+                    </a>
+                    {!! $this->makePartial('mediamanager/sorting', ['sortBy', $sortBy]) !!}
+                </div>
+
+                @unless ($isPopup)
+                    <a
+                        class="btn btn-default btn-options mr-2"
+                        href="{{ admin_url('settings/edit/media') }}">
+                        <i class="fa fa-gear"></i>
+                    </a>
+                @endunless
                 {!! $this->makePartial('mediamanager/search') !!}
             </div>
         </div>

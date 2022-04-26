@@ -6,7 +6,7 @@
         @lang('system::lang.mail_templates.text_variables')
     </label>
     <select
-        class="form-control"
+        class="form-select"
         autocomplete="off"
         onchange="$('#email-variables > div').hide();$('#'+this.value).show()"
     >

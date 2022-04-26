@@ -27,16 +27,13 @@
         this.$container = $(container);
 
         this.$container.find('.multiselect').removeClass('text-center')
-        this.$container.find('.multiselect').tooltip('dispose')
     }
 
     SelectList.prototype.onDropdownShown = function (event) {
-        $(event.relatedTarget).tooltip('dispose')
         this.$el.parents('.form-group').css({ zIndex: 1000 });
     }
 
     SelectList.prototype.onDropdownHidden = function (event) {
-        $(event.relatedTarget).tooltip('dispose')
         this.$el.parents('.form-group').css({ zIndex: '' });
     }
 
@@ -54,7 +51,7 @@
             return 'dropdown-item multiselect-item'
         },
         templates: {
-            button: '<button type="button" class="multiselect dropdown-toggle btn btn-light btn-block" data-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
+            button: '<button type="button" class="multiselect dropdown-toggle form-select" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
         }
     }
 

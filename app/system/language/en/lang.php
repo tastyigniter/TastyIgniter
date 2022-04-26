@@ -349,15 +349,16 @@ return [
         'text_title' => 'Settings',
         'text_edit_title' => 'Settings: %s',
         'text_tab_general' => 'General',
+        'text_tab_site' => 'Localization',
         'text_tab_restaurant' => 'Restaurant',
         'text_tab_mail' => 'Mail',
         'text_tab_server' => 'Advanced',
 
-        'text_tab_desc_general' => 'Change your restaurant name, email, default language, currency...',
+        'text_tab_desc_general' => 'Configure your restaurant name, email, logo and geolocation settings',
+        'text_tab_desc_site' => 'Configure your site default language, currency and timezone settings.',
         'text_tab_desc_mail' => 'Settings for sending out emails',
         'text_tab_desc_server' => 'Manage advanced system settings such as enabling/disabling maintenance.',
 
-        'text_tab_site' => 'Site',
         'text_tab_title_maps' => 'Geolocation',
         'text_tab_title_date_time' => 'Date/Time',
         'text_tab_title_currency' => 'Currency',

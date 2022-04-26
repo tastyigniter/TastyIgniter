@@ -7,9 +7,7 @@
     data-locale='{"format": "{{ $pickerFormat = array_get($scope->config, 'pickerFormat', $showTimePicker ? 'MMM D, YYYY hh:mm A' : 'MMM D, YYYY') }}"}'
 >
     <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-icon"><i class="fa fa-calendar"></i></span>
-        </div>
+        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
         <input
             type="text"
             id="{{ $this->getScopeName($scope) }}-daterangepicker"

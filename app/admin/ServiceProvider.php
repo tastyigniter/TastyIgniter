@@ -88,13 +88,6 @@ class ServiceProvider extends AppServiceProvider
 
             // Admin asset bundles
             $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
-            $manager->registerBundle('js', [
-                '~/app/system/assets/ui/flame.js',
-                '~/app/admin/assets/node_modules/js-cookie/src/js.cookie.js',
-                '~/app/admin/assets/node_modules/select2/dist/js/select2.min.js',
-                '~/app/admin/assets/node_modules/metismenu/dist/metisMenu.min.js',
-                '~/app/admin/assets/js/src/app.js',
-            ], '~/app/admin/assets/js/admin.js', 'admin');
         });
     }
 
@@ -272,7 +265,8 @@ class ServiceProvider extends AppServiceProvider
                     'attributes' => [
                         'class' => 'nav-link',
                         'href' => '',
-                        'data-toggle' => 'dropdown',
+                        'data-bs-toggle' => 'dropdown',
+                        'data-bs-auto-close' => 'outside',
                     ],
                 ],
                 'settings' => [
@@ -281,6 +275,11 @@ class ServiceProvider extends AppServiceProvider
                     'badgeCount' => ['System\Models\Settings_model', 'updatesCount'],
                     'options' => ['System\Models\Settings_model', 'listMenuSettingItems'],
                     'permission' => 'Site.Settings',
+                ],
+                'locations' => [
+                    'type' => 'partial',
+                    'options' => ['Admin\Models\Locations_model', 'getDropdownOptions'],
+                    'path' => '~/app/admin/views/locations/picker',
                 ],
                 'user' => [
                     'type' => 'partial',
@@ -296,8 +295,8 @@ class ServiceProvider extends AppServiceProvider
                 'label' => 'admin::lang.text_set_status',
                 'iconCssClass' => 'fa fa-circle fa-fw text-'.UserState::forUser()->getStatusColorName(),
                 'attributes' => [
-                    'data-toggle' => 'modal',
-                    'data-target' => '#editStaffStatusModal',
+                    'data-bs-toggle' => 'modal',
+                    'data-bs-target' => '#editStaffStatusModal',
                     'role' => 'button',
                 ],
             ]);
@@ -321,7 +320,7 @@ class ServiceProvider extends AppServiceProvider
                 'restaurant' => [
                     'priority' => 10,
                     'class' => 'restaurant',
-                    'icon' => 'fa-store',
+                    'icon' => 'fa-gem',
                     'title' => lang('admin::lang.side_menu.restaurant'),
                     'child' => [
                         'locations' => [
@@ -364,7 +363,7 @@ class ServiceProvider extends AppServiceProvider
                 'sales' => [
                     'priority' => 30,
                     'class' => 'sales',
-                    'icon' => 'fa-chart-bar',
+                    'icon' => 'fa-file-invoice',
                     'title' => lang('admin::lang.side_menu.sale'),
                     'child' => [
                         'orders' => [
@@ -400,7 +399,7 @@ class ServiceProvider extends AppServiceProvider
                 'marketing' => [
                     'priority' => 40,
                     'class' => 'marketing',
-                    'icon' => 'fa-chart-line',
+                    'icon' => 'fa-bullseye',
                     'title' => lang('admin::lang.side_menu.marketing'),
                     'child' => [],
                 ],
@@ -495,7 +494,7 @@ class ServiceProvider extends AppServiceProvider
                 'system' => [
                     'priority' => 999,
                     'class' => 'system',
-                    'icon' => 'fa-cogs',
+                    'icon' => 'fa-cog',
                     'title' => lang('admin::lang.side_menu.system'),
                     'child' => [
                         'settings' => [
@@ -748,12 +747,22 @@ class ServiceProvider extends AppServiceProvider
                 'setup' => [
                     'label' => 'lang:admin::lang.settings.text_tab_setup',
                     'description' => 'lang:admin::lang.settings.text_tab_desc_setup',
-                    'icon' => 'fa fa-toggle-on',
+                    'icon' => 'fa fa-file-invoice',
                     'priority' => 1,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
                     'form' => '~/app/admin/models/config/setup_settings',
                     'request' => 'Admin\Requests\SetupSettings',
+                ],
+                'tax' => [
+                    'label' => 'lang:admin::lang.settings.text_tab_tax',
+                    'description' => 'lang:admin::lang.settings.text_tab_desc_tax',
+                    'icon' => 'fa fa-file',
+                    'priority' => 6,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/tax'),
+                    'form' => '~/app/admin/models/config/tax_settings',
+                    'request' => 'Admin\Requests\TaxSettings',
                 ],
                 'user' => [
                     'label' => 'lang:admin::lang.settings.text_tab_user',

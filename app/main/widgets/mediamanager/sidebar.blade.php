@@ -19,6 +19,7 @@
                     class="btn btn-outline-default"
                     title="@lang('main::lang.media_manager.button_rename')"
                     data-media-control="rename-item"
+                    data-swal-title="@lang('main::lang.media_manager.text_file_name')"
                     {{ !$this->getSetting('rename') ? 'disabled' : '' }}>
                     <i class="fa fa-pencil"></i>
                 </button>
@@ -28,6 +29,7 @@
                     class="btn btn-outline-default"
                     title="@lang('main::lang.media_manager.button_move')"
                     data-media-control="move-item"
+                    data-swal-title="@lang('main::lang.media_manager.text_move_destination_folder')"
                     {{ !$this->getSetting('move') ? 'disabled' : '' }}>
                     <i class="fa fa-folder-open"></i>
                 </button>
@@ -37,6 +39,7 @@
                     class="btn btn-outline-default"
                     title="@lang('main::lang.media_manager.button_copy')"
                     data-media-control="copy-item"
+                    data-swal-title="@lang('main::lang.media_manager.text_copy_destination_folder')"
                     {{ !$this->getSetting('copy') ? 'disabled' : '' }}>
                     <i class="fa fa-clipboard"></i>
                 </button>
@@ -46,6 +49,7 @@
                     class="btn btn-outline-danger"
                     title="@lang('main::lang.media_manager.button_delete')"
                     data-media-control="delete-item"
+                    data-swal-confirm="@lang('admin::lang.alert_warning_confirm')"
                     {{ !$this->getSetting('delete') ? 'disabled' : '' }}>
                     <i class="fa fa-trash"></i>
                 </button>

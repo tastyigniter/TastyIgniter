@@ -32,8 +32,9 @@
     </p>
     @if ($extensionData)
         <div class="form-group span-full">
-            <label for="input-delete-data"
-                   class="control-label"
+            <label
+                for="input-delete-data"
+                class="form-label"
             >@lang('system::lang.extensions.label_delete_data')</label>
             <div
                 id="input-delete-data"
@@ -43,16 +44,16 @@
                     name="delete_data"
                     value="0"
                 >
-                <div class="custom-control custom-switch">
+                <div class="form-check form-switch">
                     <input
                         type="checkbox"
                         name="delete_data"
                         id="delete-data"
-                        class="custom-control-input"
+                        class="form-check-input"
                         value="1"
                     />
                     <label
-                        class="custom-control-label"
+                        class="form-check-label"
                         for="delete-data"
                     >@lang('admin::lang.text_no')/@lang('admin::lang.text_yes')</label>
                 </div>

@@ -1,7 +1,7 @@
 <div class="filter-scope switch form-group">
     <select
         name="{!! $this->getScopeName($scope) !!}"
-        class="form-control"
+        class="form-select"
         {!! $scope->disabled ? 'disabled="disabled"' : '' !!}
     >
         <option value="">@lang($scope->label)</option>

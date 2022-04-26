@@ -63,7 +63,7 @@ class Filter extends BaseWidget
 
     public function loadAssets()
     {
-        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+        $this->addJs('~/app/admin/assets/src/js/vendor/moment.min.js', 'moment-js');
 
         // daterange picker
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');

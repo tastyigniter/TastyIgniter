@@ -14,11 +14,12 @@ trait HasChartDatasets
 
     public function loadAssets()
     {
-        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+        $this->addJs('~/app/admin/assets/src/js/vendor/moment.min.js', 'moment-js');
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');
         $this->addCss('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.css', 'daterangepicker-css');
 
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/Chart.min.js', 'chartsjs-js');
+        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/chartjs-adapter-moment.min.js', 'chartsjs-adapter-js');
         $this->addCss('~/app/admin/dashboardwidgets/charts/assets/css/charts.css', 'charts-css');
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/js/charts.js', 'charts-js');
     }
@@ -73,7 +74,7 @@ trait HasChartDatasets
         $dateRanges = $this->getDatePeriod($start, $end);
         $this->locationApplyScope($query);
 
-        return $this->getPointsArray($dateRanges, $query->get());
+        return $this->getPointsArray($dateRanges, $query->pluck('y', 'x'));
     }
 
     protected function getDatePeriod($start, $end)

@@ -1,14 +1,14 @@
 @php
-$currencyModel = \System\Models\Currencies_model::getDefault();
-$symbolAfter = $currencyModel->getSymbolPosition();
-$symbol = $currencyModel->getSymbol();
+    $currencyModel = \System\Models\Currencies_model::getDefault();
+    $symbolAfter = $currencyModel->getSymbolPosition();
+    $symbol = $currencyModel->getSymbol();
 @endphp
 @if ($this->previewMode)
     <p class="form-control-static">{{ $field->value ? currency_format($field->value) : '0' }}</p>
 @else
     <div class="input-group">
         @unless ($symbolAfter)
-            <span class="input-group-prepend"><span class="input-group-text"><b>{{$symbol}}</b></span></span>
+            <span class="input-group-text"><b>{{$symbol}}</b></span>
         @endunless
         <input
             name="{{ $field->getName() }}"
@@ -23,7 +23,7 @@ $symbol = $currencyModel->getSymbol();
             {!! $field->getAttributes() !!}
         />
         @if ($symbolAfter)
-            <span class="input-group-append"><span class="input-group-text"><b>{{$symbol}}</b></span></span>
+            <span class="input-group-text"><b>{{$symbol}}</b></span>
         @endif
     </div>
 @endif
