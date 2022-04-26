@@ -43,15 +43,15 @@ trait ViewMaker
     /**
      * @var bool Prevents the use of a layout.
      */
-    public $suppressLayout = FALSE;
+    public $suppressLayout = false;
 
-    protected $viewFileExtension = ['.blade.php'];
+    protected $viewFileExtension = '.blade.php';
 
     public function getViewPath($view, $viewPath = null)
     {
         $view = File::symbolizePath($view);
 
-        if (File::isLocalPath($view, FALSE)) {
+        if (File::isLocalPath($view, false)) {
             return $this->guessViewFileExtension($view) ?? $view;
         }
 
@@ -82,10 +82,8 @@ trait ViewMaker
 
         $path = preg_replace('#/+#', '/', $path);
 
-        foreach ($this->viewFileExtension as $viewFileExtension) {
-            if (File::isFile($path.$viewFileExtension)) {
-                return $path.$viewFileExtension;
-            }
+        if (File::isFile($path.$this->viewFileExtension)) {
+            return $path.$this->viewFileExtension;
         }
     }
 
@@ -97,7 +95,7 @@ trait ViewMaker
      *
      * @return string
      */
-    public function guessViewPath($suffix = '', $isPublic = FALSE)
+    public function guessViewPath($suffix = '', $isPublic = false)
     {
         $classFolder = strtolower(class_basename($class = get_called_class()));
         $classFile = realpath(dirname(File::fromClass(strtolower($class))));
@@ -118,7 +116,7 @@ trait ViewMaker
      * @return mixed The layout contents, or false.
      * @throws \Igniter\Flame\Exception\SystemException
      */
-    public function makeLayout($name = null, $vars = [], $throwException = TRUE)
+    public function makeLayout($name = null, $vars = [], $throwException = true)
     {
         $layout = $name === null ? $this->layout : $name;
         if ($layout == '') {
@@ -131,7 +129,7 @@ trait ViewMaker
             if ($throwException)
                 throw new SystemException(Lang::get('system::lang.not_found.layout', ['name' => $layoutPath]));
 
-            return FALSE;
+            return false;
         }
 
         return $this->makeFileContent($layoutPath, $vars);
@@ -170,7 +168,7 @@ trait ViewMaker
      * @return mixed Partial contents or false if not throwing an exception.
      * @throws \Igniter\Flame\Exception\SystemException
      */
-    public function makePartial($partial, $vars = [], $throwException = TRUE)
+    public function makePartial($partial, $vars = [], $throwException = true)
     {
         $partial = strtolower($partial);
 
@@ -180,7 +178,7 @@ trait ViewMaker
             if ($throwException)
                 throw new SystemException(Lang::get('system::lang.not_found.partial', ['name' => $partialPath]));
 
-            return FALSE;
+            return false;
         }
 
         if (isset($this->controller))

@@ -109,7 +109,7 @@ class StockEditor extends BaseFormWidget
     {
         $locations = $this->model->getStockableLocations();
 
-        return $locations->isNotEmpty() ? $locations : AdminLocation::listLocations();
+        return $locations && $locations->isNotEmpty() ? $locations : AdminLocation::listLocations();
     }
 
     protected function makeStockFormWidget($location)

@@ -48,7 +48,8 @@ trait Stockable
         if (!is_null($location))
             return $this->stocks->where('location_id', is_numeric($location) ? $location : $location->getKey());
 
-        if ($ids = $this->getStockableLocations()->pluck('location_id')->all())
+        $locations = $this->getStockableLocations();
+        if ($locations && $ids = $locations->pluck('location_id')->all())
             return $this->stocks->whereIn('location_id', $ids);
 
         return $this->stocks;
