@@ -51,6 +51,8 @@ class ThemeManager
 
     protected $booted = FALSE;
 
+    protected static $directories = [];
+
     public function initialize()
     {
         // This prevents reading settings from the database before its been created
@@ -58,6 +60,11 @@ class ThemeManager
             $this->loadInstalled();
             $this->loadThemes();
         }
+    }
+
+    public static function addDirectory($directory)
+    {
+        self::$directories[] = $directory;
     }
 
     public static function addAssetsFromActiveThemeManifest(Assets $manager)
@@ -155,7 +162,6 @@ class ThemeManager
         $themeObject->active = $this->isActive($themeCode);
 
         $this->themes[$themeCode] = $themeObject;
-        $this->paths[$themeCode] = $path;
 
         return $themeObject;
     }
@@ -254,13 +260,20 @@ class ThemeManager
      */
     public function paths()
     {
-        $themes = [];
-        foreach (File::directories(App::themesPath()) as $path) {
-            $themeDir = basename($path);
-            $themes[$themeDir] = $path;
+        if ($this->paths)
+            return $this->paths;
+
+        $paths = [];
+
+        $directories = array_merge([App::themesPath()], self::$directories);
+        foreach ($directories as $directory) {
+            foreach (File::directories($directory) as $path) {
+                $themeDir = basename($path);
+                $paths[$themeDir] = $path;
+            }
         }
 
-        return $themes;
+        return $this->paths = $paths;
     }
 
     /**
@@ -591,7 +604,7 @@ class ThemeManager
 
         $model->name = $themeObj->label ?? title_case($code);
         $model->code = $code;
-        $model->version = $version ?? $this->getComposerInstalledVersion($code) ?? $model->version;
+        $model->version = $version ?? ComposerManager::instance()->getPackageVersion($code) ?? $model->version;
         $model->description = $themeObj->description ?? '';
         $model->save();
 
@@ -702,7 +715,7 @@ class ThemeManager
     {
         $config = array_merge($parentTheme->config, $themeConfig);
         $config['parent'] = $parentTheme->name;
-        unset($config['author'], $config['locked'], $config['require']);
+        unset($config['locked'], $config['require']);
 
         if (File::isDirectory($path))
             throw new ApplicationException('Child theme path already exists.');
@@ -722,20 +735,5 @@ class ThemeManager
 
             File::put($path.'/composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
         }
-    }
-
-    protected function getComposerInstalledVersion($themeCode)
-    {
-        if (!File::exists(sprintf('%s/composer.json', $this->path($themeCode))))
-            return null;
-
-        return collect(ComposerManager::instance()->listInstalledPackages(base_path('vendor')))
-            ->filter(function ($package) use ($themeCode) {
-                if (array_get($package, 'type') !== 'tastyigniter-theme')
-                    return FALSE;
-
-                return array_get($package, 'extra.tastyigniter-theme.code') === $themeCode;
-            })
-            ->get('version');
     }
 }

@@ -4,7 +4,7 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.themes.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'https://tastyigniter.com/marketplace',
+            'href' => 'https://tastyigniter.com/marketplace/themes',
             'target' => '_blank',
         ],
         'check' => [

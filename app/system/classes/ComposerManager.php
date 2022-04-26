@@ -24,10 +24,13 @@ class ComposerManager
 
     protected $includeFilesPool = [];
 
+    protected $installedPackages = [];
+
     public function initialize()
     {
         $this->loader = require base_path('/vendor/autoload.php');
         $this->preloadPools();
+        $this->loadInstalledPackages();
     }
 
     /**
@@ -46,7 +49,7 @@ class ComposerManager
             foreach ($map as $namespace => $path) {
                 if (isset($this->namespacePool[$namespace])) continue;
                 $this->loader->set($namespace, $path);
-                $this->namespacePool[$namespace] = TRUE;
+                $this->namespacePool[$namespace] = true;
             }
         }
 
@@ -55,7 +58,7 @@ class ComposerManager
             foreach ($map as $namespace => $path) {
                 if (isset($this->psr4Pool[$namespace])) continue;
                 $this->loader->setPsr4($namespace, $path);
-                $this->psr4Pool[$namespace] = TRUE;
+                $this->psr4Pool[$namespace] = true;
             }
         }
 
@@ -64,7 +67,7 @@ class ComposerManager
             if ($classMap) {
                 $classMapDiff = array_diff_key($classMap, $this->classMapPool);
                 $this->loader->addClassMap($classMapDiff);
-                $this->classMapPool += array_fill_keys(array_keys($classMapDiff), TRUE);
+                $this->classMapPool += array_fill_keys(array_keys($classMapDiff), true);
             }
         }
 
@@ -74,25 +77,24 @@ class ComposerManager
                 $relativeFile = $this->stripVendorDir($includeFile, $vendorPath);
                 if (isset($this->includeFilesPool[$relativeFile])) continue;
                 require $includeFile;
-                $this->includeFilesPool[$relativeFile] = TRUE;
+                $this->includeFilesPool[$relativeFile] = true;
             }
         }
     }
 
+    public function getPackageVersion($name)
+    {
+        return array_get($this->installedPackages->get($name, []), 'version');
+    }
+
     public function listInstalledPackages($vendorPath)
     {
-        if (!file_exists($path = $vendorPath.'/composer/installed.json'))
-            return [];
-
-        $installed = json_decode(File::get($path), TRUE);
-
-        // Structure of the installed.json manifest in different in Composer 2.0
-        return $installed['packages'] ?? $installed;
+        return $this->installedPackages;
     }
 
     public function getConfig($path, $type = 'extension')
     {
-        $composer = json_decode(File::get($path.'/composer.json'), TRUE) ?? [];
+        $composer = json_decode(File::get($path.'/composer.json'), true) ?? [];
 
         if (!$config = array_get($composer, 'extra.tastyigniter-'.$type, []))
             return $config;
@@ -111,9 +113,9 @@ class ComposerManager
 
     protected function preloadPools()
     {
-        $this->classMapPool = array_fill_keys(array_keys($this->loader->getClassMap()), TRUE);
-        $this->namespacePool = array_fill_keys(array_keys($this->loader->getPrefixes()), TRUE);
-        $this->psr4Pool = array_fill_keys(array_keys($this->loader->getPrefixesPsr4()), TRUE);
+        $this->classMapPool = array_fill_keys(array_keys($this->loader->getClassMap()), true);
+        $this->namespacePool = array_fill_keys(array_keys($this->loader->getPrefixes()), true);
+        $this->psr4Pool = array_fill_keys(array_keys($this->loader->getPrefixesPsr4()), true);
         $this->includeFilesPool = $this->preloadIncludeFilesPool();
     }
 
@@ -126,7 +128,7 @@ class ComposerManager
             $includeFiles = require $file;
             foreach ($includeFiles as $includeFile) {
                 $relativeFile = $this->stripVendorDir($includeFile, $vendorPath);
-                $result[$relativeFile] = TRUE;
+                $result[$relativeFile] = true;
             }
         }
 
@@ -150,5 +152,26 @@ class ComposerManager
         }
 
         return $path;
+    }
+
+    protected function loadInstalledPackages()
+    {
+        $path = base_path('/vendor/composer/installed.json');
+
+        $installed = File::exists($path) ? json_decode(File::get($path), true) : [];
+
+        // Structure of the installed.json manifest in different in Composer 2.0
+        $installedPackages = $installed['packages'] ?? $installed;
+
+        $this->installedPackages = collect($installedPackages)
+            ->whereIn('type', ['tastyigniter-extension', 'tastyigniter-theme'])
+            ->mapWithKeys(function ($package) {
+                $code = array_get($package, 'extra.tastyigniter-extension.code',
+                    array_get($package, 'extra.tastyigniter-theme.code'),
+                    array_get($package, 'name')
+                );
+
+                return [$code => $package];
+            });
     }
 }

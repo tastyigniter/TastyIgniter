@@ -183,7 +183,9 @@ class PaymentGateways
     public static function createPartials()
     {
         $themeManager = ThemeManager::instance();
-        $theme = $themeManager->getActiveTheme();
+        if (!$theme = $themeManager->getActiveTheme())
+            return;
+
         $partials = $theme->listPartials()->pluck('baseFileName', 'baseFileName')->all();
         $paymentMethods = Payments_model::isEnabled()->get();
 

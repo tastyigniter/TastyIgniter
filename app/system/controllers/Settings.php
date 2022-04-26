@@ -52,7 +52,7 @@ class Settings extends \Admin\Classes\AdminController
     {
         Mail_templates_model::syncAll();
 
-        $this->validateSettingItems(TRUE);
+        $this->validateSettingItems(true);
 
         // For security reasons, delete setup files if still exists.
         if (File::isFile(base_path('setup.php')) || File::isDirectory(base_path('setup'))) {
@@ -72,7 +72,7 @@ class Settings extends \Admin\Classes\AdminController
             $this->settingCode = $settingCode;
             [$model, $definition] = $this->findSettingDefinitions($settingCode);
             if (!$definition) {
-                throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
+                throw new Exception(sprintf(lang('system::lang.settings.alert_settings_not_found'), $settingCode));
             }
 
             if ($definition->permission && !AdminAuth::user()->hasPermission($definition->permission))
@@ -107,8 +107,8 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->validateFormRequest($model, $definition);
 
-        if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        if ($this->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         $this->formBeforeSave($model);
 
@@ -137,8 +137,8 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->validateFormRequest($model, $definition);
 
-        if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        if ($this->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         setting()->set($this->formWidget->getSaveData());
 
@@ -205,10 +205,10 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function formAfterSave($model)
     {
-        $this->validateSettingItems(TRUE);
+        $this->validateSettingItems(true);
     }
 
-    protected function validateSettingItems($skipSession = FALSE)
+    protected function validateSettingItems($skipSession = false)
     {
         $settingItemErrors = Session::get('settings.errors', []);
 

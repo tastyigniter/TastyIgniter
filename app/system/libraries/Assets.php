@@ -66,7 +66,7 @@ class Assets
         if (!File::exists($assetsConfigPath))
             return;
 
-        $content = json_decode(File::get($assetsConfigPath), TRUE);
+        $content = json_decode(File::get($assetsConfigPath), TRUE) ?: [];
         if ($bundles = array_get($content, 'bundles')) {
             foreach ($bundles as $bundle) {
                 $this->registerBundle(
