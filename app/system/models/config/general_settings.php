@@ -91,12 +91,13 @@ return [
                     'span' => 'left',
                     'options' => ['System\Models\Languages_model', 'getDropdownOptions'],
                     'placeholder' => 'lang:admin::lang.text_please_select',
+                    'comment' => 'lang:system::lang.settings.help_default_language',
                 ],
                 'detect_language' => [
                     'label' => 'lang:system::lang.settings.label_detect_language',
                     'tab' => 'lang:system::lang.settings.text_tab_site',
                     'type' => 'switch',
-                    'default' => FALSE,
+                    'default' => false,
                     'comment' => 'lang:system::lang.settings.help_detect_language',
                 ],
                 'currency' => [

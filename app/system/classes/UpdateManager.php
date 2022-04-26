@@ -56,11 +56,6 @@ class UpdateManager
     protected $extensionManager;
 
     /**
-     * @var \System\Classes\LanguageManager
-     */
-    protected $languageManager;
-
-    /**
      * @var \Igniter\Flame\Database\Migrations\Migrator
      */
     protected $migrator;
@@ -77,7 +72,6 @@ class UpdateManager
         $this->hubManager = HubManager::instance();
         $this->themeManager = ThemeManager::instance();
         $this->extensionManager = ExtensionManager::instance();
-        $this->languageManager = LanguageManager::instance();
 
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
@@ -443,16 +437,6 @@ class UpdateManager
                 'ver' => $version,
                 'type' => 'theme',
             ];
-        }
-
-        foreach ($this->languageManager->listLanguages() as $languageCode) {
-            if ($language = $this->languageManager->findLanguage($languageCode)) {
-                $installedItems['languages'][] = [
-                    'name' => $language->code,
-                    'ver' => $language->version ?? null,
-                    'type' => 'language',
-                ];
-            }
         }
 
         if (!is_null($type))

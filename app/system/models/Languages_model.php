@@ -65,11 +65,6 @@ class Languages_model extends Language
         return self::isEnabled()->dropdown('name', 'code');
     }
 
-    public static function listCloneableLanguages()
-    {
-        return self::isEnabled()->whereNull('original_id')->dropdown('name', 'idiom');
-    }
-
     //
     // Events
     //
