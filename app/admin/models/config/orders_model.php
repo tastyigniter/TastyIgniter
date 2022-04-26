@@ -81,6 +81,7 @@ $config['list']['columns'] = [
     'location_name' => [
         'label' => 'lang:admin::lang.orders.column_location',
         'relation' => 'location',
+        'select' => 'location_name',
         'searchable' => TRUE,
         'locationAware' => TRUE,
     ],
