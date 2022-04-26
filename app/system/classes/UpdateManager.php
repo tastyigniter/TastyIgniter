@@ -539,7 +539,7 @@ class UpdateManager
             $extractTo = base_path();
 
         if (!file_exists($extractTo))
-            mkdir($extractTo, 0777, TRUE);
+            mkdir($extractTo, 0755, TRUE);
 
         $zip = new ZipArchive();
         if ($zip->open($filePath) === TRUE) {

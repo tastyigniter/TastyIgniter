@@ -128,7 +128,7 @@
             installedItems = this.options.installedItems
 
         this.$itemModal.find('.panel .item-details').html(bodyHtml)
-        if (context.require && context.require.data.length) {
+        if (context.require.length && context.require.data.length) {
             context.require = context.require.data.map(function (require) {
                 return $.extend(require, {installed: ($.inArray(require.code, installedItems) > -1)})
             })
