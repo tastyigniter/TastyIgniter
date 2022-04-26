@@ -278,7 +278,7 @@ class Lists extends BaseWidget
             foreach ($searchableColumns as $column) {
                 // Relation
                 if ($this->isColumnRelated($column)) {
-                    $table = $this->model->makeRelation($column->relation)->getTable();
+                    $table = DB::getTablePrefix().$this->model->makeRelation($column->relation)->getTable();
                     $columnName = isset($column->sqlSelect)
                         ? DB::raw($this->parseTableName($column->sqlSelect, $table))
                         : $table.'.'.$column->valueFrom;
