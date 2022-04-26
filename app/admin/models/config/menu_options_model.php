@@ -15,7 +15,7 @@ $config['form']['fields'] = [
         'type' => 'radiotoggle',
         'default' => 'radio',
     ],
-    'option_values' => [
+    'values' => [
         'label' => 'lang:admin::lang.menu_options.text_tab_values',
         'type' => 'repeater',
         'form' => 'menu_option_values_model',

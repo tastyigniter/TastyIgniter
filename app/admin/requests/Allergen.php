@@ -18,7 +18,7 @@ class Allergen extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'between:2,128'],
+            'name' => ['required', 'between:2,128', 'unique:allergens'],
             'description' => ['min:2'],
             'status' => ['boolean'],
         ];

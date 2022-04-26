@@ -747,7 +747,7 @@ return [
 
         'help_image' => 'Select a file to update menu image, otherwise leave blank.',
         'help_mealtime' => 'Set what time of day your customers can order this menu. Mealtimes can be managed under Kitchen > Mealtimes',
-        'help_stock_qty' => 'Total stock available for this menu at all locations.',
+        'help_stock_qty' => 'Total stock available for this menu at all selected locations.',
         'help_minimum_qty' => 'Enter the minimum quantity that can be ordered by customers.',
         'help_menu_option' => 'Choose from the dropdown to add an option to this menu item.',
         'help_order_restriction' => 'Whether to restrict the menu to a specific order type.',

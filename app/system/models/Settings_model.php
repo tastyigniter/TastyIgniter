@@ -40,7 +40,7 @@ class Settings_model extends Model
 
     protected $allItems;
 
-    protected $items;
+    protected $items = [];
 
     /**
      * @var array Cache of registration callbacks.
@@ -103,20 +103,20 @@ class Settings_model extends Model
     {
         $theme = ThemeManager::instance()->getActiveTheme();
 
-        return Page::getDropdownOptions($theme, TRUE);
+        return Page::getDropdownOptions($theme, true);
     }
 
     public static function getReservationPageOptions()
     {
         $theme = ThemeManager::instance()->getActiveTheme();
 
-        return Page::getDropdownOptions($theme, TRUE);
+        return Page::getDropdownOptions($theme, true);
     }
 
     public static function onboardingIsComplete()
     {
         if (!Session::has('settings.errors'))
-            return FALSE;
+            return false;
 
         return count(array_filter((array)Session::get('settings.errors'))) === 0;
     }
@@ -150,7 +150,7 @@ class Settings_model extends Model
         }
 
         $settingItem = $this->getSettingItem('core.'.$code);
-        if (!is_array($settingItem->form))
+        if ($settingItem && !is_array($settingItem->form))
             $settingItem->form = array_get($this->makeConfig($settingItem->form, ['form']), 'form', []);
 
         return $this->fieldConfig = $settingItem->form ?? [];
@@ -183,12 +183,23 @@ class Settings_model extends Model
         return $this->allItems[$code] ?? null;
     }
 
+    public function removeSettingItem($code)
+    {
+        unset($this->allItems[$code]);
+    }
+
     public function listSettingItems()
     {
-        if (!$this->items)
+        if (!$this->allItems)
             $this->loadSettingItems();
 
-        return $this->items;
+        $allItems = ['core' => [], 'other' => []];
+        foreach ($this->allItems as $item) {
+            $group = ($item->owner != 'core') ? 'other' : $item->owner;
+            $allItems[$group][] = $item;
+        }
+
+        return $allItems;
     }
 
     public function loadSettingItems()
@@ -214,24 +225,17 @@ class Settings_model extends Model
         });
 
         $allItems = [];
-        $catItems = ['core' => [], 'other' => []];
         foreach ($this->items as $item) {
-            $category = ($item->owner != 'core') ? 'other' : $item->owner;
-            $catItems[$category][] = $item;
-
             $allItems[$item->owner.'.'.$item->code] = $item;
         }
 
         $this->allItems = $allItems;
-        $this->items = $catItems;
+
+        $this->fireSystemEvent('system.setting.extendSettingItems', [$this->allItems]);
     }
 
     public function registerSettingItems($owner, array $definitions)
     {
-        if (!$this->items) {
-            $this->items = [];
-        }
-
         $defaultDefinitions = [
             'code' => null,
             'label' => null,

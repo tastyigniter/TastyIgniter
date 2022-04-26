@@ -1,7 +1,8 @@
 <div class="row mb-3">
-    <div class="media bg-light p-4 w-100 border border-danger text-danger">
-        <a class="media-left align-self-center mr-4 preview-thumb"
-           style="width:200px;">
+    <div class="media bg-light p-4 w-100 border border-danger border-left-0 border-right-0 text-danger">
+        <a
+            class="media-left align-self-center mr-4 preview-thumb"
+            style="width:200px;">
         </a>
         <div class="media-body">
             <h4 class="media-heading">{{ $theme->name }}</h4>

@@ -18,12 +18,6 @@ class BaseExtension extends ServiceProvider
     protected $config;
 
     /**
-     * @todo: link with controller autoload property
-     * @var array Autoload libraries, models, helpers, and languages
-     */
-    public $autoload = [];
-
-    /**
      * @var bool Determine if this extension should be loaded (false) or not (true).
      */
     public $disabled = FALSE;

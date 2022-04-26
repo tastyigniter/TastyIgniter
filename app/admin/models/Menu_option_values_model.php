@@ -60,6 +60,16 @@ class Menu_option_values_model extends Model
         return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
     }
 
+    public function getStockableName()
+    {
+        return $this->value;
+    }
+
+    public function getStockableLocations()
+    {
+        return $this->option->locations;
+    }
+
     //
     // Events
     //
