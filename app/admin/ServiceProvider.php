@@ -411,27 +411,13 @@ class ServiceProvider extends AppServiceProvider
                         ],
                     ],
                 ],
-                'users' => [
+                'customers' => [
                     'priority' => 100,
-                    'class' => 'users',
+                    'class' => 'customers',
                     'icon' => 'fa-user',
-                    'title' => lang('admin::lang.side_menu.user'),
-                    'child' => [
-                        'customers' => [
-                            'priority' => 10,
-                            'class' => 'customers',
-                            'href' => admin_url('customers'),
-                            'title' => lang('admin::lang.side_menu.customer'),
-                            'permission' => 'Admin.Customers',
-                        ],
-                        'staffs' => [
-                            'priority' => 20,
-                            'class' => 'staffs',
-                            'href' => admin_url('staffs'),
-                            'title' => lang('admin::lang.side_menu.staff'),
-                            'permission' => 'Admin.Staffs',
-                        ],
-                    ],
+                    'href' => admin_url('customers'),
+                    'title' => lang('admin::lang.side_menu.customer'),
+                    'permission' => 'Admin.Customers',
                 ],
                 'localisation' => [
                     'priority' => 300,
@@ -489,6 +475,13 @@ class ServiceProvider extends AppServiceProvider
                             'href' => admin_url('settings'),
                             'title' => lang('admin::lang.side_menu.setting'),
                             'permission' => 'Site.Settings',
+                        ],
+                        'staffs' => [
+                            'priority' => 10,
+                            'class' => 'staffs',
+                            'title' => lang('admin::lang.side_menu.user'),
+                            'href' => admin_url('staffs'),
+                            'permission' => 'Admin.Staffs',
                         ],
                         'extensions' => [
                             'priority' => 20,

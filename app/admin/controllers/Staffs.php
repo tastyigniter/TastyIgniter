@@ -60,16 +60,20 @@ class Staffs extends \Admin\Classes\AdminController
             $this->requiredPermissions = null;
         }
 
-        AdminMenu::setContext('staffs', 'users');
+        AdminMenu::setContext('staffs', 'system');
     }
 
     public function account()
     {
+        $this->asExtension('LocationAwareController')->setConfig(['applyScopeOnFormQuery' => FALSE]);
+
         return $this->asExtension('FormController')->edit('account', $this->getUser()->getKey());
     }
 
     public function account_onSave()
     {
+        $this->asExtension('LocationAwareController')->setConfig(['applyScopeOnFormQuery' => FALSE]);
+
         $result = $this->asExtension('FormController')->edit_onSave('account', $this->currentUser->user_id);
 
         $usernameChanged = $this->currentUser->username != post('Staff[user][username]');
