@@ -5,7 +5,6 @@ namespace Admin;
 use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
-use Admin\Classes\UserState;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
@@ -13,8 +12,8 @@ use Admin\Middleware\LogUserLastSeen;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
@@ -35,8 +34,6 @@ class ServiceProvider extends AppServiceProvider
         if ($this->app->runningInAdmin()) {
             $this->resolveFlashSessionKey();
             $this->replaceNavMenuItem();
-
-            $this->app['router']->pushMiddlewareToGroup('web', LogUserLastSeen::class);
         }
     }
 
@@ -62,6 +59,8 @@ class ServiceProvider extends AppServiceProvider
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
             $this->registerOnboardingSteps();
+
+            $this->app[Kernel::class]->appendMiddlewareToGroup('web', LogUserLastSeen::class);
         }
     }
 
@@ -285,19 +284,6 @@ class ServiceProvider extends AppServiceProvider
                     'type' => 'partial',
                     'path' => 'top_nav_user_menu',
                     'options' => ['Admin\Classes\UserPanel', 'listMenuLinks'],
-                ],
-            ]);
-        });
-
-        Event::listen('admin.menu.extendUserMenuLinks', function (Collection $items) {
-            $items->put('userState', [
-                'priority' => 10,
-                'label' => 'admin::lang.text_set_status',
-                'iconCssClass' => 'fa fa-circle fa-fw text-'.UserState::forUser()->getStatusColorName(),
-                'attributes' => [
-                    'data-bs-toggle' => 'modal',
-                    'data-bs-target' => '#editStaffStatusModal',
-                    'role' => 'button',
                 ],
             ]);
         });
@@ -737,6 +723,10 @@ class ServiceProvider extends AppServiceProvider
                     Classes\Allocator::allocate();
                 })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
             }
+
+            $schedule->call(function () {
+                Classes\UserState::clearExpiredStatus();
+            })->name('Clear user custom away status')->withoutOverlapping(5)->runInBackground()->everyMinute();
         });
     }
 
