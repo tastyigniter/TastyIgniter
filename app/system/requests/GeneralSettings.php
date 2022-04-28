@@ -23,6 +23,8 @@ class GeneralSettings extends FormRequest
             'site_name' => ['required', 'min:2', 'max:128'],
             'site_email' => ['required', 'email:filter', 'max:96'],
             'site_logo' => ['required'],
+            'menus_page' => ['required', 'string'],
+            'reservation_page' => ['required', 'string'],
         ];
     }
 

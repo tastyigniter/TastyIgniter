@@ -19,22 +19,6 @@ return [
         ],
         'tabs' => [
             'fields' => [
-                'menus_page' => [
-                    'label' => 'lang:system::lang.settings.label_menus_page',
-                    'tab' => 'lang:system::lang.settings.text_tab_title_order',
-                    'type' => 'selectlist',
-                    'mode' => 'radio',
-                    'default' => 'local'.DIRECTORY_SEPARATOR.'menus',
-                    'comment' => 'lang:system::lang.settings.help_menus_page',
-                ],
-                'reservation_page' => [
-                    'label' => 'lang:system::lang.settings.label_reservation_page',
-                    'tab' => 'lang:system::lang.settings.text_tab_title_order',
-                    'type' => 'selectlist',
-                    'mode' => 'radio',
-                    'default' => 'reservation'.DIRECTORY_SEPARATOR.'reservation',
-                    'comment' => 'lang:system::lang.settings.help_reservation_page',
-                ],
                 'guest_order' => [
                     'label' => 'lang:system::lang.settings.label_guest_order',
                     'tab' => 'lang:system::lang.settings.text_tab_title_order',
