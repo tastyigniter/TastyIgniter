@@ -6,7 +6,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">{{ $formTitle ? lang($formTitle) : '' }}</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         {!! form_open([
             'id' => 'stock-editor-form',
@@ -26,8 +26,8 @@
                             class="card-header bg-transparent"
                             id="{{ $formWidget->getId('heading') }}"
                             role="button"
-                            data-toggle="collapse"
-                            data-target="#{{ $formWidget->getId('collapse') }}"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#{{ $formWidget->getId('collapse') }}"
                             aria-expanded="true"
                             aria-controls="{{ $formWidget->getId('collapse') }}"
                         >
@@ -56,7 +56,7 @@
             <button
                 type="button"
                 class="btn btn-link"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
             >@lang('admin::lang.button_close')</button>
             <button
                 type="submit"

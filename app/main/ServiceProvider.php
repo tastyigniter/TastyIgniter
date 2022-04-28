@@ -161,7 +161,7 @@ class ServiceProvider extends AppServiceProvider
                     'label' => 'main::lang.settings.text_tab_media_manager',
                     'description' => 'main::lang.settings.text_tab_desc_media_manager',
                     'icon' => 'fa fa-image',
-                    'priority' => 4,
+                    'priority' => 5,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/media'),
                     'form' => '~/app/main/models/config/media_settings',

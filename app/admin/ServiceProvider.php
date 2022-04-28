@@ -5,7 +5,6 @@ namespace Admin;
 use Admin\Classes\Navigation;
 use Admin\Classes\OnboardingSteps;
 use Admin\Classes\PermissionManager;
-use Admin\Classes\UserState;
 use Admin\Classes\Widgets;
 use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
@@ -13,8 +12,8 @@ use Admin\Middleware\LogUserLastSeen;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
 use System\Classes\MailManager;
 use System\Libraries\Assets;
@@ -35,8 +34,6 @@ class ServiceProvider extends AppServiceProvider
         if ($this->app->runningInAdmin()) {
             $this->resolveFlashSessionKey();
             $this->replaceNavMenuItem();
-
-            $this->app['router']->pushMiddlewareToGroup('web', LogUserLastSeen::class);
         }
     }
 
@@ -62,6 +59,8 @@ class ServiceProvider extends AppServiceProvider
             $this->registerMainMenuItems();
             $this->registerNavMenuItems();
             $this->registerOnboardingSteps();
+
+            $this->app[Kernel::class]->appendMiddlewareToGroup('web', LogUserLastSeen::class);
         }
     }
 
@@ -88,13 +87,6 @@ class ServiceProvider extends AppServiceProvider
 
             // Admin asset bundles
             $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
-            $manager->registerBundle('js', [
-                '~/app/system/assets/ui/flame.js',
-                '~/app/admin/assets/node_modules/js-cookie/src/js.cookie.js',
-                '~/app/admin/assets/node_modules/select2/dist/js/select2.min.js',
-                '~/app/admin/assets/node_modules/metismenu/dist/metisMenu.min.js',
-                '~/app/admin/assets/js/src/app.js',
-            ], '~/app/admin/assets/js/admin.js', 'admin');
         });
     }
 
@@ -272,7 +264,8 @@ class ServiceProvider extends AppServiceProvider
                     'attributes' => [
                         'class' => 'nav-link',
                         'href' => '',
-                        'data-toggle' => 'dropdown',
+                        'data-bs-toggle' => 'dropdown',
+                        'data-bs-auto-close' => 'outside',
                     ],
                 ],
                 'settings' => [
@@ -282,23 +275,15 @@ class ServiceProvider extends AppServiceProvider
                     'options' => ['System\Models\Settings_model', 'listMenuSettingItems'],
                     'permission' => 'Site.Settings',
                 ],
+                'locations' => [
+                    'type' => 'partial',
+                    'options' => ['Admin\Models\Locations_model', 'getDropdownOptions'],
+                    'path' => '~/app/admin/views/locations/picker',
+                ],
                 'user' => [
                     'type' => 'partial',
                     'path' => 'top_nav_user_menu',
                     'options' => ['Admin\Classes\UserPanel', 'listMenuLinks'],
-                ],
-            ]);
-        });
-
-        Event::listen('admin.menu.extendUserMenuLinks', function (Collection $items) {
-            $items->put('userState', [
-                'priority' => 10,
-                'label' => 'admin::lang.text_set_status',
-                'iconCssClass' => 'fa fa-circle fa-fw text-'.UserState::forUser()->getStatusColorName(),
-                'attributes' => [
-                    'data-toggle' => 'modal',
-                    'data-target' => '#editStaffStatusModal',
-                    'role' => 'button',
                 ],
             ]);
         });
@@ -321,7 +306,7 @@ class ServiceProvider extends AppServiceProvider
                 'restaurant' => [
                     'priority' => 10,
                     'class' => 'restaurant',
-                    'icon' => 'fa-store',
+                    'icon' => 'fa-gem',
                     'title' => lang('admin::lang.side_menu.restaurant'),
                     'child' => [
                         'locations' => [
@@ -364,7 +349,7 @@ class ServiceProvider extends AppServiceProvider
                 'sales' => [
                     'priority' => 30,
                     'class' => 'sales',
-                    'icon' => 'fa-chart-bar',
+                    'icon' => 'fa-file-invoice',
                     'title' => lang('admin::lang.side_menu.sale'),
                     'child' => [
                         'orders' => [
@@ -400,7 +385,7 @@ class ServiceProvider extends AppServiceProvider
                 'marketing' => [
                     'priority' => 40,
                     'class' => 'marketing',
-                    'icon' => 'fa-chart-line',
+                    'icon' => 'fa-bullseye',
                     'title' => lang('admin::lang.side_menu.marketing'),
                     'child' => [],
                 ],
@@ -426,27 +411,13 @@ class ServiceProvider extends AppServiceProvider
                         ],
                     ],
                 ],
-                'users' => [
+                'customers' => [
                     'priority' => 100,
-                    'class' => 'users',
+                    'class' => 'customers',
                     'icon' => 'fa-user',
-                    'title' => lang('admin::lang.side_menu.user'),
-                    'child' => [
-                        'customers' => [
-                            'priority' => 10,
-                            'class' => 'customers',
-                            'href' => admin_url('customers'),
-                            'title' => lang('admin::lang.side_menu.customer'),
-                            'permission' => 'Admin.Customers',
-                        ],
-                        'staffs' => [
-                            'priority' => 20,
-                            'class' => 'staffs',
-                            'href' => admin_url('staffs'),
-                            'title' => lang('admin::lang.side_menu.staff'),
-                            'permission' => 'Admin.Staffs',
-                        ],
-                    ],
+                    'href' => admin_url('customers'),
+                    'title' => lang('admin::lang.side_menu.customer'),
+                    'permission' => 'Admin.Customers',
                 ],
                 'localisation' => [
                     'priority' => 300,
@@ -495,7 +466,7 @@ class ServiceProvider extends AppServiceProvider
                 'system' => [
                     'priority' => 999,
                     'class' => 'system',
-                    'icon' => 'fa-cogs',
+                    'icon' => 'fa-cog',
                     'title' => lang('admin::lang.side_menu.system'),
                     'child' => [
                         'settings' => [
@@ -504,6 +475,13 @@ class ServiceProvider extends AppServiceProvider
                             'href' => admin_url('settings'),
                             'title' => lang('admin::lang.side_menu.setting'),
                             'permission' => 'Site.Settings',
+                        ],
+                        'staffs' => [
+                            'priority' => 10,
+                            'class' => 'staffs',
+                            'title' => lang('admin::lang.side_menu.user'),
+                            'href' => admin_url('staffs'),
+                            'permission' => 'Admin.Staffs',
                         ],
                         'extensions' => [
                             'priority' => 20,
@@ -738,6 +716,10 @@ class ServiceProvider extends AppServiceProvider
                     Classes\Allocator::allocate();
                 })->name('Assignables Allocator')->withoutOverlapping(5)->runInBackground()->everyMinute();
             }
+
+            $schedule->call(function () {
+                Classes\UserState::clearExpiredStatus();
+            })->name('Clear user custom away status')->withoutOverlapping(5)->runInBackground()->everyMinute();
         });
     }
 
@@ -748,12 +730,22 @@ class ServiceProvider extends AppServiceProvider
                 'setup' => [
                     'label' => 'lang:admin::lang.settings.text_tab_setup',
                     'description' => 'lang:admin::lang.settings.text_tab_desc_setup',
-                    'icon' => 'fa fa-toggle-on',
+                    'icon' => 'fa fa-file-invoice',
                     'priority' => 1,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/setup'),
                     'form' => '~/app/admin/models/config/setup_settings',
                     'request' => 'Admin\Requests\SetupSettings',
+                ],
+                'tax' => [
+                    'label' => 'lang:admin::lang.settings.text_tab_tax',
+                    'description' => 'lang:admin::lang.settings.text_tab_desc_tax',
+                    'icon' => 'fa fa-file',
+                    'priority' => 6,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/tax'),
+                    'form' => '~/app/admin/models/config/tax_settings',
+                    'request' => 'Admin\Requests\TaxSettings',
                 ],
                 'user' => [
                     'label' => 'lang:admin::lang.settings.text_tab_user',

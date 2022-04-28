@@ -45,8 +45,6 @@ class SetupSettings extends FormRequest
             'default_reservation_status' => ['required', 'integer'],
             'confirmed_reservation_status' => ['required', 'integer'],
             'canceled_reservation_status' => ['required', 'integer'],
-            'menus_page' => ['required', 'string'],
-            'reservation_page' => ['required', 'string'],
             'guest_order' => ['required', 'integer'],
             'location_order' => ['required', 'integer'],
             'invoice_logo' => ['string'],

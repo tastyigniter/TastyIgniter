@@ -46,11 +46,9 @@ class HubManager
 
     public function applyItems($itemNames = [])
     {
-        $response = $this->requestRemoteData('core/apply', [
+        return $this->requestRemoteData('core/apply', [
             'items' => $itemNames,
         ]);
-
-        return $response;
     }
 
     public function applyItemsToUpdate($itemNames, $force = FALSE)

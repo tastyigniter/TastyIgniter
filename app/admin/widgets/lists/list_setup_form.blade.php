@@ -3,11 +3,11 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">{{ sprintf(lang('admin::lang.list.setup_title'), lang($this->getConfig('title')))}}</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="control-label">
+                <label class="form-label">
                     @lang('admin::lang.list.label_visible_columns')
                     <span class="help-block">@lang('admin::lang.list.help_visible_columns')</span>
                 </label>
@@ -28,11 +28,11 @@
                                 <div class="btn btn-handle form-check-handle mr-2">
                                     <i class="fa fa-arrows-alt-v text-muted"></i>
                                 </div>
-                                <div class="custom-control custom-checkbox custom-control-inline">
+                                <div class="form-check form-check-inline">
                                     <input
                                         type="checkbox"
                                         id="list-setup-{{ $column->columnName }}"
-                                        class="custom-control-input"
+                                        class="form-check-input"
                                         name="visible_columns[]"
                                         value="{{ $column->columnName }}"
                                         {!! $column->invisible ? '' : 'checked="checked"' !!}
@@ -43,7 +43,7 @@
                                         value="{{ $column->columnName }}"
                                     />
                                     <label
-                                        class="custom-control-label"
+                                        class="form-check-label"
                                         for="list-setup-{{ $column->columnName }}"
                                     ><b>@lang($column->label)</b></label>
                                 </div>
@@ -54,7 +54,7 @@
             </div>
             @if ($this->showPagination)
                 <div class="form-group">
-                    <label class="control-label">
+                    <label class="form-label">
                         @lang('admin::lang.list.label_page_limit')
                         <span class="help-block">@lang('admin::lang.list.help_page_limit')</span>
                     </label>
@@ -87,7 +87,7 @@
             <button
                 type="button"
                 class="btn btn-link"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
             >@lang('admin::lang.list.button_cancel_setup')</button>
             <button
                 type="button"

@@ -18,8 +18,8 @@
 	width: 100%;
 }
 .media-container {
-	padding: 0;
-	background-color: var(--gray-200);
+  padding: 0;
+  background-color: var(--bs-gray-200);
 }
 .media-manager .navbar-media {
 	border: 0 none;
@@ -28,7 +28,7 @@
 Toolbar
 */
 .media-toolbar {
-	background-color: var(--gray-300);
+  background-color: var(--bs-gray-300);
   padding: 20px;
 }
 /*
@@ -43,17 +43,17 @@ Media list
   margin-right: 10px;
 }
 .media-list .media-thumb {
-	background-color: var(--gray-100);
-	border-radius: 3px;
-	border: 1px solid var(--gray-300);
-	box-shadow: 0px 0px 15px rgba(235, 240, 245, 0.9) inset, 0px 0px 0px 1px rgba(235, 240, 245, 0.5) inset;
-	cursor: pointer;
-	padding: 15% 10px;
-	margin: 0;
-	overflow: hidden;
+  background-color: var(--bs-gray-100);
+  border-radius: 3px;
+  border: 1px solid var(--bs-gray-300);
+  box-shadow: 0px 0px 15px rgba(235, 240, 245, 0.9) inset, 0px 0px 0px 1px rgba(235, 240, 245, 0.5) inset;
+  cursor: pointer;
+  padding: 15% 10px;
+  margin: 0;
+  overflow: hidden;
 }
 .media-list .selected .media-thumb {
-	box-shadow: 0px 0px 2px 3px rgb(241, 241, 241) inset, 0px 0px 2px 3px var(--primary);
+  box-shadow: 0px 0px 2px 3px rgb(241, 241, 241) inset, 0px 0px 2px 3px var(--bs-primary);
 }
 .media-list .media-thumb > a {
 	border: 0 none;
@@ -120,7 +120,7 @@ Sidebar
 	padding-right: 10px;
 }
 .sidebar-preview-placeholder .fa {
-	color: var(--gray-400);
+  color: var(--bs-gray-400);
 }
 /*
 Breadcrumb
@@ -135,8 +135,8 @@ Breadcrumb
 Statusbar
 */
 .media-statusbar {
-	border-top: 1px solid var(--gray-300);
-	padding: 10px 15px;
+  border-top: 1px solid var(--bs-gray-300);
+  padding: 10px 15px;
 }
 .media-statusbar .statusbar-text {
 	margin-bottom: 0;
@@ -165,14 +165,14 @@ Modal
 Uploader
 */
 .media-uploader {
-	background: none repeat scroll 0 0 var(--gray-200);
-	border: 0 none;
-	border-bottom: 1px solid var(--gray-300);
-	display: none;
-	margin: 0 auto;
-	overflow: hidden;
-	width: 100%;
-	z-index: 99;
+  background: none repeat scroll 0 0 var(--bs-gray-200);
+  border: 0 none;
+  border-bottom: 1px solid var(--bs-gray-300);
+  display: none;
+  margin: 0 auto;
+  overflow: hidden;
+  width: 100%;
+  z-index: 99;
 }
 .media-uploader .dz-preview .dz-image {
 	border-radius: 3px;

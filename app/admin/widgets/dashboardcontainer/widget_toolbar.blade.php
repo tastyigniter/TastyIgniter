@@ -22,8 +22,8 @@
         <button
             type="button"
             class="btn btn-outline-primary"
-            data-toggle="modal"
-            data-target="#newWidgetModal"
+            data-bs-toggle="modal"
+            data-bs-target="#newWidgetModal"
             data-request="{{ $this->getEventHandler('onLoadAddPopup') }}"
             tabindex="-1"
         ><i class="fa fa-plus"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_add_widget')</button>

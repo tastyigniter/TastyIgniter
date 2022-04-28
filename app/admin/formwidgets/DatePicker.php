@@ -79,7 +79,7 @@ class DatePicker extends BaseFormWidget
         }
 
         if ($mode == 'date') {
-            $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+            $this->addJs('~/app/admin/assets/src/js/vendor/moment.min.js', 'moment-js');
             $this->addCss('vendor/datepicker/bootstrap-datepicker.min.css', 'bootstrap-datepicker-css');
             $this->addJs('vendor/datepicker/bootstrap-datepicker.min.js', 'bootstrap-datepicker-js');
             if (setting('default_language') != 'en')
@@ -89,7 +89,7 @@ class DatePicker extends BaseFormWidget
         }
 
         if ($mode == 'datetime') {
-            $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+            $this->addJs('~/app/admin/assets/src/js/vendor/moment.min.js', 'moment-js');
             $this->addCss('vendor/datetimepicker/tempusdominus-bootstrap-4.min.css', 'tempusdominus-bootstrap-4-css');
             $this->addJs('vendor/datetimepicker/tempusdominus-bootstrap-4.min.js', 'tempusdominus-bootstrap-4-js');
             $this->addCss('css/datepicker.css', 'datepicker-css');

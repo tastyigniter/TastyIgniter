@@ -42,7 +42,7 @@ return [
     'text_resetting' => 'Resetting...',
     'text_loading' => 'Loading...',
     'text_deleting' => 'Deleting...',
-    'text_about_tastyigniter' => 'About TastyIgniter',
+    'text_support' => 'Help Center',
     'text_documentation' => 'Documentation',
     'text_community_support' => 'Community Support',
     'text_empty' => 'Empty',
@@ -157,9 +157,8 @@ return [
         'sale' => 'Sales',
         'order' => 'Orders',
         'reservation' => 'Reservations',
-        'user' => 'Users',
+        'user' => 'Staff',
         'customer' => 'Customers',
-        'staff' => 'Staff',
         'customer_group' => 'Groups',
         'staff_group' => 'Groups',
         'staff_role' => 'Roles',
@@ -944,11 +943,13 @@ return [
     ],
 
     'settings' => [
-        'text_tab_setup' => 'Setup',
-        'text_tab_user' => 'User',
+        'text_tab_setup' => 'Sales',
+        'text_tab_tax' => 'Tax',
+        'text_tab_user' => 'Customer registration',
 
-        'text_tab_desc_user' => 'Configure registration email confirmation, default customer group, ...',
-        'text_tab_desc_setup' => 'Configure order, reservation, invoicing and taxation settings',
+        'text_tab_desc_user' => 'Configure registration email confirmation ...',
+        'text_tab_desc_setup' => 'Configure order, reservation and invoicing settings',
+        'text_tab_desc_tax' => 'Configure tax settings',
     ],
 
     'staff_groups' => [

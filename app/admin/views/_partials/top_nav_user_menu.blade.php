@@ -2,7 +2,7 @@
     $userPanel = \Admin\Classes\UserPanel::forUser();
 @endphp
 <li class="nav-item dropdown">
-    <a href="#" class="nav-link" data-toggle="dropdown">
+    <a href="#" class="nav-link" data-bs-toggle="dropdown">
         <img
             class="rounded-circle"
             src="{{ $userPanel->getAvatarUrl().'&s=64' }}"
@@ -18,38 +18,6 @@
                 <div class="text-muted">{{ $userPanel->getRoleName() }}</div>
             </div>
         </div>
-        <div class="px-3 pb-3">
-            <form method="POST" accept-charset="UTF-8">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text{{ $userPanel->hasActiveLocation() ? ' text-info' : ' text-muted' }}">
-                            <i class="fa fa-map-marker fa-fw"></i>
-                        </div>
-                    </div>
-                    @if(count($userPanel->listLocations()) <= 1)
-                        <input
-                            type="text"
-                            class="form-control-static"
-                            value="{{ $userPanel->getLocationName() }}"
-                        />
-                    @else
-                        <select
-                            name="location"
-                            class="form-control"
-                            data-request="{{ $this->getEventHandler('onChooseLocation') }}"
-                        >
-                            <option value="0">@lang('admin::lang.text_all_locations')</option>
-                            @foreach($userPanel->listLocations() as $location)
-                                <option
-                                    value="{{ $location->id }}"
-                                    {{ $location->active ? 'selected="selected"' : '' }}
-                                >{{ $location->name }}</option>
-                            @endforeach
-                        </select>
-                    @endif
-                </div>
-            </form>
-        </div>
         <div role="separator" class="dropdown-divider"></div>
         @foreach ($item->options() as $item)
             <a class="dropdown-item {{ $item->cssClass }}" {!! Html::attributes($item->attributes) !!}>
@@ -57,14 +25,14 @@
             </a>
         @endforeach
         <div role="separator" class="dropdown-divider"></div>
-        <a class="dropdown-item text-black-50" href="https://tastyigniter.com/about" target="_blank">
-            <i class="fa fa-info-circle fa-fw"></i>@lang('admin::lang.text_about_tastyigniter')
+        <a class="dropdown-item text-black-50" href="https://tastyigniter.com/support" target="_blank">
+            <i class="fa fa-circle-question fa-fw"></i>@lang('admin::lang.text_support')
         </a>
         <a class="dropdown-item text-black-50" href="https://tastyigniter.com/docs" target="_blank">
             <i class="fa fa-book fa-fw"></i>@lang('admin::lang.text_documentation')
         </a>
         <a class="dropdown-item text-black-50" href="https://forum.tastyigniter.com" target="_blank">
-            <i class="fa fa-users fa-fw"></i>@lang('admin::lang.text_community_support')
+            <i class="fa fa-comments fa-fw"></i>@lang('admin::lang.text_community_support')
         </a>
     </div>
 </li>

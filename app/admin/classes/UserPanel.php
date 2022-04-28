@@ -32,6 +32,16 @@ class UserPanel
             return self::$menuLinksCache;
 
         $items = collect([
+            'userState' => [
+                'priority' => 10,
+                'label' => 'admin::lang.text_set_status',
+                'iconCssClass' => 'fa fa-circle fa-fw text-'.UserState::forUser()->getStatusColorName(),
+                'attributes' => [
+                    'data-bs-toggle' => 'modal',
+                    'data-bs-target' => '#editStaffStatusModal',
+                    'role' => 'button',
+                ],
+            ],
             'account' => [
                 'label' => 'admin::lang.text_edit_details',
                 'iconCssClass' => 'fa fa-user fa-fw',

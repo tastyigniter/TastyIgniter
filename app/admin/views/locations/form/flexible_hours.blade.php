@@ -27,9 +27,7 @@
                     </td>
                     <td>
                         <div class="input-group" data-control="input-mask" data-autoclose="true">
-                            <div class="input-group-prepend">
-                                <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
-                            </div>
+                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
                             <input
                                 type="text"
                                 name="{{ $field->getName().'['.$loop->index.'][hours]' }}"
@@ -49,19 +47,19 @@
                             value="0"
                             {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
                         >
-                        <div class="custom-control custom-switch">
+                        <div class="form-check form-switch">
                             <input
                                 type="checkbox"
                                 name="{{ $field->getName().'['.$loop->index.'][status]' }}"
                                 id="{{ $field->getId($loop->index.'status') }}"
-                                class="custom-control-input"
+                                class="form-check-input"
                                 value="1"
                                 {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
                                 {!! $hour['status'] == 1 ? 'checked="checked"' : '' !!}
                                 {!! $field->getAttributes() !!}
                             />
                             <label
-                                class="custom-control-label"
+                                class="form-check-label"
                                 for="{{ $field->getId($loop->index.'status') }}"
                             ></label>
                         </div>
