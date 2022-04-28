@@ -128,6 +128,22 @@ class Locations extends \Admin\Classes\AdminController
             $query->whereIn('location_id', $ids);
     }
 
+    public function formExtendFields($form)
+    {
+        if ($form->model->exists && $form->context != 'create') {
+            $form->addTabFields($form->model->options()->getFieldsConfig());
+        }
+    }
+
+    public function getAccordionFields($fields)
+    {
+        return collect($fields)->mapToGroups(function ($field) {
+            $key = array_get($field->config, 'accordion');
+
+            return [$key => $field];
+        })->all();
+    }
+
     public function formAfterSave($model)
     {
         if (post('Location.options.auto_lat_lng')) {
