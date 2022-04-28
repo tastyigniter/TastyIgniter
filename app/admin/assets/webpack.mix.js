@@ -44,7 +44,7 @@ mix.scripts(
 )
 
 // We only want to copy these files when building for production
-if (process.env.NODE_ENV !== 'productiion') return
+if (process.env.NODE_ENV !== 'production') return
 
 //
 // Copy fonts from node_modules

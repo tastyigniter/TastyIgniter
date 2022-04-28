@@ -27,6 +27,7 @@
 //
 .control-label, .form-label {
   color: $gray-800;
+  font-weight: $font-weight-semibold;
 }
 
 // Custom input file type
@@ -65,71 +66,38 @@
   }
 }
 .form-fields {
-  display: -ms-flexbox;
+  --bs-gutter-x: 1.45rem;
+  --bs-gutter-y: 0;
   display: flex;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  padding: $form-fields-padding-y;
-  margin-bottom: $form-fields-padding-x;
-  border-radius: $input-border-radius;
+  padding: calc(var(--bs-gutter-x) * 1.2) calc(var(--bs-gutter-x) * 0.3);
+
+  > * {
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+  }
+
+  > .span-left,
+  > .span-right {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  > .span-full {
+    width: 100%;
+  }
+
+  @include media-breakpoint-up(sm) {
+    > .span-left,
+    > .span-right {
+      flex: 0 0 auto;
+      width: 50%;
+    }
+  }
 }
 .hidden-field {
   margin: 0;
-}
-// Form groups
-//
-.form-group {
-  &.span-full {
-    clear: both;
-    width: 100%;
-  }
-
-  &.span-left {
-    float: left;
-    padding-right: 10px;
-  }
-
-  &.span-right {
-    float: right;
-    padding-left: 10px;
-  }
-
-  &.span-left,
-  &.span-right {
-    width: 50%;
-
-    &.flex-width {
-      width: 25%;
-    }
-  }
-
-  &.flex-width {
-    width: auto;
-  }
-
-  &.flex-width .row > div {
-    width: 100%;
-  }
-}
-@include media-breakpoint-down(sm) {
-  .form-group {
-    &.span-left {
-      padding-right: 0;
-    }
-
-    &.span-right {
-      padding-left: 0;
-    }
-
-    &.span-left,
-    &.span-right {
-      width: 100%;
-
-      &.flex-width {
-        width: 100%;
-      }
-    }
-  }
 }
 // Tabs
 //
