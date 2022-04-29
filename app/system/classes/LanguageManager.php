@@ -174,7 +174,7 @@ class LanguageManager
 
     public function canUpdate(Languages_model $language)
     {
-        return (!in_array($language->code, ['en', 'en_US', 'en_GB']) && $language->can_update);
+        return !in_array($language->code, ['en', 'en_US', 'en_GB']) && $language->can_update;
     }
 
     //
