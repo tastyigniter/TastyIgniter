@@ -84,7 +84,7 @@
                 options = $.extend({}, $this.data(), $this.data('closeOnEsc') === true ? {
                 timer: (index + 1) * 3000
             } : {})
-            swal(options)
+            Swal.fire(options)
         })
     })
 

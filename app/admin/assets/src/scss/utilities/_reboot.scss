@@ -1,7 +1,7 @@
 a {
   text-decoration: none;
 }
-a:not([href]):not([tabindex]):not([data-request]):not([role="button"]) {
+a:not([href]):not([tabindex]):not([data-handler]):not([data-request]):not([role="button"]) {
   color: inherit;
   text-decoration: none;
 

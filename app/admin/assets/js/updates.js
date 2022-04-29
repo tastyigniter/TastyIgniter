@@ -83,8 +83,7 @@
             })
         })
 
-        $.waterfall.apply(this, requestChain).always(function () {
-        }).done(function (json) {
+        $.waterfall.apply(this, requestChain).done(function (json) {
             if (success) {
                 self.setProgressBar(null, 'success', 100)
                 self.completeStep()
@@ -107,7 +106,6 @@
         if (!itemToOpen || !context) return
 
         this.$container.after(this.$itemModal)
-
         this.$itemModal.find('.modal-title').html(itemToOpen.title)
 
         if (context !== null) {
@@ -115,8 +113,10 @@
             this.loadModal()
         }
 
-        this.$itemModal.modal({backdrop: 'static', keyboard: false, show: true})
-            .on('hidden.bs.modal', $.proxy(this.clearModal, this))
+        var modal = new bootstrap.Modal(this.$itemModal, {backdrop: 'static', keyboard: false})
+
+        modal.show()
+        this.$itemModal.on('hidden.bs.modal', $.proxy(this.clearModal, this))
     }
 
     Updates.prototype.loadModal = function () {
@@ -127,16 +127,16 @@
             footerHtml = Mustache.render(Updates.TEMPLATES.modalFooter, context),
             installedItems = this.options.installedItems
 
-        this.$itemModal.find('.panel .item-details').html(bodyHtml)
+        this.$itemModal.find('.item-details').html(bodyHtml)
         if (context.require.length && context.require.data.length) {
             context.require = context.require.data.map(function (require) {
                 return $.extend(require, {installed: ($.inArray(require.code, installedItems) > -1)})
             })
 
-            this.$itemModal.find('.panel-body').after(Mustache.render(Updates.TEMPLATES.modalRequire, context))
+            this.$itemModal.find('.item-details').after(Mustache.render(Updates.TEMPLATES.modalRequire, context))
         }
 
-        this.$itemModal.find('.panel-footer').html(footerHtml)
+        this.$itemModal.find('.modal-footer').html(footerHtml)
     }
 
     Updates.prototype.clearModal = function (event) {
@@ -175,16 +175,17 @@
     Updates.prototype.showProgressBar = function () {
         if (!this.$itemModal) {
             this.$itemModal = $(Updates.TEMPLATES.modal)
-
             this.$container.after(this.$itemModal)
-            this.$itemModal.modal({backdrop: 'static', keyboard: false, show: true})
+            var modal = new bootstrap.Modal(this.$itemModal, {backdrop: 'static', keyboard: false})
+
+            modal.show()
+            this.$itemModal.on('hidden.bs.modal', $.proxy(this.clearModal, this))
         }
 
         var $modalContent = this.$itemModal.find('.modal-content')
 
         $('> div', $modalContent).slideUp()
         $('.modal-header', this.$itemModal).slideUp()
-        // this.$itemModal.find('.item-details').slideUp()
         $modalContent.html(Updates.TEMPLATES.progressBar)
     }
 
@@ -389,7 +390,6 @@
             $('.fa-icon', $container).show()
             $('.fa-icon.loading', $container).hide()
         }).on('typeahead:select', function (object, context) {
-
             self.openModal({
                 title: 'Add ' + context.name,
                 code: context.code,
@@ -423,19 +423,19 @@
             '<h4 class="modal-title"></h4>',
             '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>',
             '</div><div class="modal-body wrap-none">',
-            '<div class="panel panel-light panel-item-modal"><div class="item-details"></div>',
-            '<div class="panel-footer border-top">',
-            '</div></div></div></div></div></div>',
+            '<div class="item-details bg-light"></div>',
+            '</div><div class="modal-footer">',
+            '</div></div></div></div></div>',
         ].join(''),
 
         modalBody: [
-            '<div class="media p-3"><a class="media-left media-middle">',
+            '<div class="text-center py-4 px-3"><a>',
             '{{#thumb}}',
             '<img src="{{thumb}}" class="img-rounded" alt="No Image" style="width: 68px; height: 68px;">',
             '{{/thumb}}{{^thumb}}',
             '<span class="extension-icon icon-lg rounded" style="{{icon.styles}};"><i class="{{icon.class}}"></i></span>',
             '{{/thumb}}',
-            '</a><div class="media-body pl-3">',
+            '</a><div class="pt-4">',
             '<p>{{{description}}}</p><span class="text-muted">Version:</span> <strong>{{version}}</strong>, ',
             '<span class="text-muted">Author:</span> <strong>{{author}}</strong>',
             '</div></div>',
