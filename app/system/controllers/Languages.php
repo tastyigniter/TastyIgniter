@@ -93,9 +93,12 @@ class Languages extends \Admin\Classes\AdminController
 
     public function edit($context = null, $recordId = null)
     {
+        $this->addJs('~/app/admin/formwidgets/recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
         $this->addJs('~/app/admin/assets/js/translationseditor.js', 'translationseditor-js');
 
-        Template::setButton(lang('system::lang.languages.button_check'), ['class' => 'btn btn-success pull-right', 'data-request' => 'onCheckUpdates']);
+        $this->prepareAssets();
+
+        Template::setButton(lang('system::lang.languages.button_check'), ['class' => 'btn btn-success pull-right', 'data-toggle' => 'record-editor', 'data-handler' => 'onCheckUpdates']);
 
         $this->asExtension('FormController')->edit($context, $recordId);
     }
@@ -107,7 +110,7 @@ class Languages extends \Admin\Classes\AdminController
         $this->asExtension('FormController')->initForm($model, $context);
 
         $file = post('Language._file');
-        $this->setFilterValue('file', (!strlen($file) || strpos($file, '::') == false) ? null : $file);
+        $this->setFilterValue('file', (!strlen($file) || strpos($file, '::') == FALSE) ? null : $file);
 
         $term = post('Language._search');
         $this->setFilterValue('search', (!strlen($term) || !is_string($term)) ? null : $term);
@@ -124,17 +127,18 @@ class Languages extends \Admin\Classes\AdminController
 
         $response = LanguageManager::instance()->applyLanguagePack($model->code, $model->version);
 
-        $overlayTitle = $response
+        $title = $response
             ? lang('system::lang.languages.text_title_update_available')
             : lang('system::lang.languages.text_title_no_update_available');
 
-        $overlayMessage = $response
+        $message = $response
             ? lang('system::lang.languages.text_update_available')
             : lang('system::lang.languages.text_no_update_available');
 
-        flash()->overlay(sprintf($overlayMessage, $model->code), $overlayTitle, [
-            'confirmButtonText' => 'Apply Update',
-            'confirmHandler' => 'onUpdate',
+        return $this->makePartial('updates', [
+            'language' => (object)$response,
+            'title' => $title,
+            'message' => sprintf($message, $model->name),
         ]);
     }
 
@@ -153,19 +157,17 @@ class Languages extends \Admin\Classes\AdminController
         ];
     }
 
-    public function onApplyUpdate()
+    public function edit_onApplyUpdate($context = null, $recordId = null)
     {
-        $items = post('items') ?? [];
-        if (!count($items))
-            throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
+        $model = $this->formFindModelObject($recordId);
 
-        $this->validateItems();
-
-        $updates = LanguageManager::instance()->requestUpdateList(input('check') == 'force');
-        $response = array_get($updates, 'items');
+        $response = LanguageManager::instance()->applyLanguagePack($model->code);
 
         return [
-            'steps' => $this->buildProcessSteps($response, $items),
+            'steps' => $this->buildProcessSteps([$response], [[
+                'name' => $model->code,
+                'action' => 'update',
+            ]]),
         ];
     }
 
@@ -249,7 +251,7 @@ class Languages extends \Admin\Classes\AdminController
         foreach ($this->localeFiles as $file) {
             $name = sprintf('%s::%s', $file['namespace'], $file['group']);
 
-            if (!array_get($file, 'system', false)
+            if (!array_get($file, 'system', FALSE)
                 && ($extension = $extensionManager->findExtension($file['namespace']))) {
                 $result[$name] = array_get($extension->extensionMeta(), 'name').' - '.$name;
             }

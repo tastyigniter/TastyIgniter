@@ -181,6 +181,7 @@ return [
 
         'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more languages&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
         'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check for updates',
+        'button_apply_update' => 'Apply updates',
 
         'help_language' => 'Use a full locale code (e.g. “fr_FR”) instead of just a generic language code (e.g. “fr”), must be same as the locale directory.',
 
@@ -626,7 +627,7 @@ return [
         'text_tab_title_themes' => 'Themes',
         'text_tab_title_languages' => 'Languages',
         'text_ignore' => 'Ignore',
-        'text_search' => 'Search the TastyIgniter marketplace for %s to install',
+        'text_search' => 'Search to install %s from the TastyIgniter marketplace',
         'text_popular_title' => 'Recommended %s',
         'text_last_checked' => '<b>Last checked:</b> %s',
 

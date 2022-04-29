@@ -5,7 +5,7 @@
                 @if ($item['type'] === 'core')
                     <i class="extension-icon logo-svg">
                         <svg
-                            version="1.1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 500 500" width="100%" style="height:42px;width:42px;">
                             <g>
                                 <defs>
