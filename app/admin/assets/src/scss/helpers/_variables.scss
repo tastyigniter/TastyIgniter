@@ -146,10 +146,6 @@ $dropdown-link-disabled-color: $gray-600 !default;
 
 $dropdown-header-color: $gray-600 !default;
 
-// Modal
-$modal-content-bg: $gray-200 !default;
-$modal-header-border-color: $gray-300 !default;
-
 // Alert
 $alert-bg-scale: -20% !default;
 $alert-border-scale: -20% !default;
@@ -161,10 +157,13 @@ $list-group-action-color: $body-color !default;
 $list-group-border-color: $input-border-color !default;
 
 // Modals
+$modal-content-bg: $gray-200 !default;
+$modal-header-border-color: $gray-300 !default;
 $modal-xl: 1140px !default;
 $modal-lg: 800px !default;
 $modal-md: 600px !default;
 $modal-sm: 400px !default;
+$modal-backdrop-opacity: .7 !default;
 
 // Badges
 $badge-color: inherit !default;

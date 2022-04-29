@@ -319,9 +319,7 @@ class UpdateManager
 
         $installedItems = array_column($installedItems, 'name');
         if (isset($items['data'])) foreach ($items['data'] as &$item) {
-            if ($item['type'] !== 'theme')
-                $item['icon'] = generate_extension_icon($item['icon'] ?? []);
-
+            $item['icon'] = generate_extension_icon($item['icon'] ?? []);
             $item['installed'] = in_array($item['code'], $installedItems);
         }
 
@@ -387,6 +385,7 @@ class UpdateManager
             $update['installedVer'] = array_get(array_get($installedItems, $update['code'], []), 'ver');
 
             $update = $this->parseTagDescription($update);
+            $update['icon'] = generate_extension_icon($update['icon'] ?? []);
 
             if (array_get($update, 'type') == 'core') {
                 $update['installedVer'] = params('ti_version');
@@ -402,7 +401,6 @@ class UpdateManager
                 }
             }
 
-            $update['icon'] = generate_extension_icon($update['icon'] ?? []);
             $items[] = $update;
         }
 
