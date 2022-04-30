@@ -37,6 +37,7 @@ $theme-colors: map-merge((
 // Options
 //
 $enable-shadows: true !default;
+$enable-negative-margins: true !default;
 $images-path: '../../../admin/assets/images/';
 $icon-font-path: '../../../admin/assets/fonts/';
 $fa-font-path: $icon-font-path+'FontAwesome';

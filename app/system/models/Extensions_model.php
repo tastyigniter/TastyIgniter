@@ -171,7 +171,7 @@ class Extensions_model extends Model
 
             $enableExtension = ($model->exists && !$extension->disabled);
 
-            $model->version = $model->attributes['version'] ?? ComposerManager::instance()->getExtensionVersion($model->name) ?? $model->version;
+            $model->version = ComposerManager::instance()->getPackageVersion($model->name) ?? $model->version;
             $model->save();
 
             $extensionManager->updateInstalledExtensions($code, $enableExtension);

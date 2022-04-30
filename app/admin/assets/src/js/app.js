@@ -13,7 +13,7 @@
     })
 
     $(document).render(function () {
-        $('a, span, button', document).not('[data-bs-toggle]').tooltip({placement: 'bottom'});
+        $('a[title], span[title], button[title]', document).not('[data-bs-toggle]').tooltip({placement: 'bottom'});
         $('.alert', document).alert();
     });
 

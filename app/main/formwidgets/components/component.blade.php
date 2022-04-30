@@ -9,7 +9,7 @@
             data-component-control="load"
             data-component-context="edit"
         >
-            <span class="d-block mb-1"><b>@lang($component->name)</b></span>
+            <span class="d-block mb-1">@lang($component->name)</span>
             <p class="text-muted text-sm mb-0">{{ $component->description ? lang($component->description) : '' }}</p>
             @if ($component->fatalError)
                 <p class="text-danger text-sm mb-0">{{ $component->fatalError }}</p>

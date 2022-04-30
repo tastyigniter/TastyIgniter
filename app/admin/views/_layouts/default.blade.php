@@ -8,25 +8,24 @@
     {!! get_style_tags() !!}
 </head>
 <body class="page {{ $this->bodyClass }}">
-    @if(AdminAuth::isLogged())
+@if(AdminAuth::isLogged())
+    {!! $this->makePartial('top_nav') !!}
+    {!! AdminMenu::render('side_nav') !!}
+@endif
 
-        {!! $this->makePartial('top_nav') !!}
-
-        {!! AdminMenu::render('side_nav') !!}
-
-    @endif
-
-    <div class="page-wrapper">
-        <div class="page-content">
-            {!! Template::getBlock('body') !!}
-        </div>
+<div class="page-wrapper">
+    <div class="page-content">
+        {!! Template::getBlock('body') !!}
     </div>
+</div>
 
-    <div id="notification">
-        {!! $this->makePartial('flash') !!}
-    </div>
+<div id="notification">
+    {!! $this->makePartial('flash') !!}
+</div>
+@if(AdminAuth::isLogged())
     {!! $this->makePartial('set_status_form') !!}
-    {!! Assets::getJsVars() !!}
-    {!! get_script_tags() !!}
+@endif
+{!! Assets::getJsVars() !!}
+{!! get_script_tags() !!}
 </body>
 </html>
