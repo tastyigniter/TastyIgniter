@@ -70,7 +70,7 @@ return [
     'text_filter_status' => 'View all status',
     'text_filter_date' => 'View all dates',
     'text_back_link' => 'Go back to the previous page',
-    'text_admin_link' => 'Return to the admin panel',
+    'text_admin_link' => 'Return to the admin dashboard',
 
     'button_new' => '<i class="fa fa-plus"></i>&nbsp;&nbsp;New',
     'button_delete' => '<i class="fa fa-trash-o"></i>&nbsp;&nbsp;Delete',
@@ -109,6 +109,11 @@ return [
     'alert_user_not_logged' => 'User is not logged in',
     'alert_access_denied' => 'Access denied.',
     'alert_invalid_csrf_token' => 'Invalid security token, please reload the page and try again.',
+
+    'title_access_denied' => 'Access denied',
+    'title_page_not_found' => 'No page found',
+    'alert_page_not_found' => 'There\'s no page at this address, check the URL and try again.',
+
     'text_settings_title' => 'Settings',
     'text_message_title' => 'Your messages',
     'text_activity_title' => 'Recent activities',
