@@ -88,6 +88,19 @@ class UserPanel
             ->sortBy('priority');
     }
 
+    public static function listLocations($menu, $item, $user)
+    {
+        $instance = self::forUser();
+
+        return AdminLocation::listLocations()->map(function ($location) use ($instance) {
+            return (object)[
+                'id' => $location->location_id,
+                'name' => $location->location_name,
+                'active' => $location->location_id === optional($instance->location)->location_id,
+            ];
+        });
+    }
+
     public function getUserName()
     {
         return $this->user->staff->staff_name;
@@ -116,16 +129,5 @@ class UserPanel
     public function getRoleName()
     {
         return optional($this->user->staff->role)->name;
-    }
-
-    public function listLocations()
-    {
-        return AdminLocation::listLocations()->map(function ($location) {
-            return (object)[
-                'id' => $location->location_id,
-                'name' => $location->location_name,
-                'active' => $location->location_id === optional($this->location)->location_id,
-            ];
-        });
     }
 }
