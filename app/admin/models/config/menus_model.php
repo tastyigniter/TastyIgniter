@@ -7,7 +7,7 @@ $config['list']['filter'] = [
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
-            'type' => 'select',
+            'type' => 'selectlist',
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
@@ -15,7 +15,7 @@ $config['list']['filter'] = [
         ],
         'category' => [
             'label' => 'lang:admin::lang.menus.text_filter_category',
-            'type' => 'select',
+            'type' => 'selectlist',
             'scope' => 'whereHasCategory',
             'modelClass' => 'Admin\Models\Categories_model',
             'nameFrom' => 'name',
@@ -105,7 +105,7 @@ $config['list']['columns'] = [
     'stock_qty' => [
         'label' => 'lang:admin::lang.menus.column_stock_qty',
         'type' => 'number',
-        'sortable' => false,
+        'sortable' => FALSE,
     ],
     'special_status' => [
         'label' => 'lang:admin::lang.menus.label_special_status',

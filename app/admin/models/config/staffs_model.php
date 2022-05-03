@@ -7,7 +7,7 @@ $config['list']['filter'] = [
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
-            'type' => 'select',
+            'type' => 'selectlist',
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
@@ -15,7 +15,7 @@ $config['list']['filter'] = [
         ],
         'role' => [
             'label' => 'lang:admin::lang.staff.text_filter_role',
-            'type' => 'select',
+            'type' => 'selectlist',
             'conditions' => 'staff_role_id = :filtered',
             'modelClass' => 'Admin\Models\Staff_roles_model',
         ],
