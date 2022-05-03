@@ -4,7 +4,11 @@
     {!! get_metas() !!}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {!! get_favicon() !!}
-    <title>{{ sprintf(lang('admin::lang.site_title'), Template::getTitle(), setting('site_name')) }}</title>
+    @empty($pageTitle = Template::getTitle())
+        <title>{{setting('site_name')}}</title>
+    @else
+        <title>{{ $pageTitle }}@lang('admin::lang.site_title_separator'){{setting('site_name')}}</title>
+    @endempty
     {!! get_style_tags() !!}
 </head>
 <body class="page {{ $this->bodyClass }}">

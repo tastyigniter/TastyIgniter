@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'site_title' => '%s - Administrator Panel - %s',
+    'site_title_separator' => ' - ',
     'text_edit' => 'Edit',
     'text_filter' => 'Filter',
     'text_clear' => 'Clear',
