@@ -27,8 +27,6 @@ class Locations_model extends AbstractLocation
 
     protected $appends = ['location_thumb'];
 
-    protected $hidden = ['options'];
-
     protected $casts = [
         'location_country_id' => 'integer',
         'location_lat' => 'double',

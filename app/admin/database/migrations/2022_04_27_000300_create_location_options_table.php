@@ -20,6 +20,8 @@ class CreateLocationOptionsTable extends Migration
         });
 
         $this->copyOptionsToLocationOptionsTable();
+
+        Schema::dropColumns('locations', ['options']);
     }
 
     public function down()

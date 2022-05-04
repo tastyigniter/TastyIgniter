@@ -92,6 +92,9 @@ class LocationOption extends Model
 
     public function setAll($items)
     {
+        if (!is_array($items))
+            $items = [];
+
         foreach ($items as $item => $value) {
             $this->set($item, $value);
         }
