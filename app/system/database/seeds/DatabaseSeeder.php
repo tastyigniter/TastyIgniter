@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
 
     public static $staffName = 'Chef Admin';
 
-    public static $seedDemo = TRUE;
+    public static $seedDemo = true;
 
     /**
      * Run the database seeds.

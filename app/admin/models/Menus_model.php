@@ -44,10 +44,10 @@ class Menus_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'menu_options' => ['Admin\Models\Menu_item_options_model', 'delete' => TRUE],
+            'menu_options' => ['Admin\Models\Menu_item_options_model', 'delete' => true],
         ],
         'hasOne' => [
-            'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
+            'special' => ['Admin\Models\Menus_specials_model', 'delete' => true],
         ],
         'belongsToMany' => [
             'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
@@ -65,7 +65,7 @@ class Menus_model extends Model
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     //
     // Scopes
@@ -96,7 +96,7 @@ class Menus_model extends Model
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
-            'enabled' => TRUE,
+            'enabled' => true,
             'sort' => 'menu_priority asc',
             'group' => null,
             'location' => null,
@@ -207,7 +207,7 @@ class Menus_model extends Model
      * @param bool $subtract
      * @return bool TRUE on success, or FALSE on failure
      */
-    public function updateStock($quantity = 0, $subtract = TRUE)
+    public function updateStock($quantity = 0, $subtract = true)
     {
         traceLog('Menus_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
     }
@@ -222,7 +222,7 @@ class Menus_model extends Model
     public function addMenuAllergens(array $allergenIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->allergens()->sync($allergenIds);
     }
@@ -237,7 +237,7 @@ class Menus_model extends Model
     public function addMenuCategories(array $categoryIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->categories()->sync($categoryIds);
     }
@@ -252,7 +252,7 @@ class Menus_model extends Model
     public function addMenuMealtimes(array $mealtimeIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->mealtimes()->sync($mealtimeIds);
     }
@@ -268,7 +268,7 @@ class Menus_model extends Model
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))
-            return FALSE;
+            return false;
 
         $idsToKeep = [];
         foreach ($menuOptions as $option) {
@@ -298,7 +298,7 @@ class Menus_model extends Model
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))
-            return FALSE;
+            return false;
 
         $menuSpecial['menu_id'] = $menuId;
         $this->special()->updateOrCreate([
@@ -322,10 +322,10 @@ class Menus_model extends Model
             $datetime = Carbon::parse($datetime);
         }
 
-        $isAvailable = TRUE;
+        $isAvailable = true;
 
         if (count($this->mealtimes) > 0) {
-            $isAvailable = FALSE;
+            $isAvailable = false;
             foreach ($this->mealtimes as $mealtime) {
                 if ($mealtime->mealtime_status) {
                     $isAvailable = $isAvailable || $mealtime->isAvailable($datetime);
@@ -333,7 +333,7 @@ class Menus_model extends Model
             }
         }
 
-        if (is_bool($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], TRUE)))
+        if (is_bool($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], true)))
             $isAvailable = $eventResults;
 
         return $isAvailable;

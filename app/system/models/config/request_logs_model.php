@@ -50,12 +50,12 @@ $config['list']['columns'] = [
     'status_code' => [
         'label' => 'lang:system::lang.request_logs.column_status_code',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'url' => [
         'label' => 'lang:system::lang.request_logs.column_url',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'count' => [
         'label' => 'lang:system::lang.request_logs.column_count',

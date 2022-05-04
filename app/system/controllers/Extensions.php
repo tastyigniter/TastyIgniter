@@ -30,7 +30,7 @@ class Extensions extends \Admin\Classes\AdminController
             'emptyMessage' => 'lang:system::lang.extensions.text_empty',
             'pageLimit' => 50,
             'defaultSort' => ['name', 'ASC'],
-            'showCheckboxes' => FALSE,
+            'showCheckboxes' => false,
             'configFile' => 'extensions_model',
         ],
     ];
@@ -199,8 +199,8 @@ class Extensions extends \Admin\Classes\AdminController
 
         $this->initFormWidget($model, $action);
 
-        if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        if ($this->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         $saved = $model->set($this->formWidget->getSaveData());
         if ($saved) {
@@ -335,7 +335,7 @@ class Extensions extends \Admin\Classes\AdminController
             return count($extensionManager->files($extension, 'database/migrations')) > 0;
         }
         catch (Exception $ex) {
-            return FALSE;
+            return false;
         }
     }
 }

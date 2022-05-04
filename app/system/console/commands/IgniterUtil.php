@@ -110,7 +110,7 @@ class IgniterUtil extends Command
     {
         $this->comment('Compiling registered asset bundles...');
 
-        config()->set('system.enableAssetMinify', (bool)$this->option('minify', TRUE));
+        config()->set('system.enableAssetMinify', (bool)$this->option('minify', true));
         $appContext = $this->option('admin') ? 'admin' : 'main';
         $bundles = Assets::getBundles($type, $appContext);
 
@@ -165,7 +165,7 @@ class IgniterUtil extends Command
 
     protected function setItemsVersion()
     {
-        $updates = UpdateManager::instance()->requestUpdateList(TRUE);
+        $updates = UpdateManager::instance()->requestUpdateList(true);
 
         collect(array_get($updates, 'items', []))
             ->filter(function ($update) {

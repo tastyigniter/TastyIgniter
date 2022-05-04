@@ -43,7 +43,7 @@ class Coupons_history_model extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public function getCustomerNameAttribute($value)
     {
@@ -72,7 +72,7 @@ class Coupons_history_model extends Model
     public static function createHistory($couponCondition, $order, $customer)
     {
         if (!$coupon = $couponCondition->getModel())
-            return FALSE;
+            return false;
 
         $model = new static;
         $model->order_id = $order->getKey();
@@ -82,8 +82,8 @@ class Coupons_history_model extends Model
         $model->amount = $couponCondition->getValue();
         $model->min_total = $coupon->min_total;
 
-        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$couponCondition, $customer, $coupon], TRUE) === FALSE)
-            return FALSE;
+        if ($model->fireSystemEvent('couponHistory.beforeAddHistory', [$couponCondition, $customer, $coupon], true) === false)
+            return false;
 
         $model->save();
 

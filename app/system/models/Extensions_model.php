@@ -45,16 +45,16 @@ class Extensions_model extends Model
     {
         $activeTheme = ThemeManager::instance()->getActiveTheme();
         if (!$activeTheme)
-            return FALSE;
+            return false;
 
         $requiredExtensions = (array)$activeTheme->requires;
         foreach ($requiredExtensions as $name => $constraint) {
             $extension = ExtensionManager::instance()->findExtension($name);
             if (!$extension || $extension->disabled)
-                return FALSE;
+                return false;
         }
 
-        return TRUE;
+        return true;
     }
 
     //
@@ -145,15 +145,15 @@ class Extensions_model extends Model
         $code = $this->name;
 
         if (!$code)
-            return FALSE;
+            return false;
 
         if (!$extensionClass = ExtensionManager::instance()->findExtension($code)) {
-            return FALSE;
+            return false;
         }
 
         $this->class = $extensionClass;
 
-        return TRUE;
+        return true;
     }
 
     /**

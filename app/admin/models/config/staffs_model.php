@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => TRUE,
+            'locationAware' => true,
         ],
         'role' => [
             'label' => 'lang:admin::lang.staff.text_filter_role',
@@ -101,13 +101,13 @@ $config['list']['columns'] = [
     'staff_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'staff_email' => [
         'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
-        'searchable' => TRUE,
-        'invisible' => TRUE,
+        'searchable' => true,
+        'invisible' => true,
     ],
     'staff_group_name' => [
         'label' => 'lang:admin::lang.staff.column_group',
@@ -123,8 +123,8 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.staff.column_location',
         'relation' => 'locations',
         'select' => 'location_name',
-        'searchable' => TRUE,
-        'locationAware' => TRUE,
+        'searchable' => true,
+        'locationAware' => true,
     ],
     'last_login' => [
         'label' => 'lang:admin::lang.staff.column_last_login',
@@ -135,11 +135,11 @@ $config['list']['columns'] = [
     'staff_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'staff_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
@@ -147,7 +147,7 @@ $config['list']['columns'] = [
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -221,7 +221,7 @@ $config['form']['fields'] = [
     'user[send_invite]' => [
         'label' => 'lang:admin::lang.staff.label_send_invite',
         'type' => 'checkbox',
-        'default' => TRUE,
+        'default' => true,
         'context' => 'create',
         'options' => [],
         'placeholder' => 'lang:admin::lang.staff.help_send_invite',

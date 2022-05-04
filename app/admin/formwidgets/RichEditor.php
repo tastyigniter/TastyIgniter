@@ -19,7 +19,7 @@ class RichEditor extends BaseFormWidget
     /**
      * @var bool Determines whether content has HEAD and HTML tags.
      */
-    public $fullPage = FALSE;
+    public $fullPage = false;
 
     public $stretch;
 

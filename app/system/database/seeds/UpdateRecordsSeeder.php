@@ -41,7 +41,7 @@ class UpdateRecordsSeeder extends Seeder
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {
             $status = DB::table('statuses')->where('status_id', $model->status_id)->first();
             if (!$status || !isset($morphs[$status->status_for]))
-                return FALSE;
+                return false;
 
             DB::table('status_history')->where('status_history_id', $model->status_history_id)->update([
                 'object_type' => $morphs[$status->status_for],
@@ -66,10 +66,10 @@ class UpdateRecordsSeeder extends Seeder
             return;
 
         collect(DB::table('locations')->pluck('options', 'location_id'))->each(function ($options, $id) {
-            $options = is_string($options) ? json_decode($options, TRUE) : [];
+            $options = is_string($options) ? json_decode($options, true) : [];
 
             if (!isset($options['delivery_areas']))
-                return TRUE;
+                return true;
 
             foreach ($options['delivery_areas'] as $option) {
                 $boundaries = array_except($option, ['type', 'name', 'charge', 'conditions']);

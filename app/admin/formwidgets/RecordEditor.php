@@ -30,11 +30,11 @@ class RecordEditor extends BaseFormWidget
 
     public $formName = 'Record';
 
-    public $hideEditButton = FALSE;
+    public $hideEditButton = false;
 
-    public $hideDeleteButton = FALSE;
+    public $hideDeleteButton = false;
 
-    public $hideCreateButton = FALSE;
+    public $hideCreateButton = false;
 
     public $addLabel = 'New';
 
@@ -137,7 +137,7 @@ class RecordEditor extends BaseFormWidget
         return [
             '#notification' => $this->makePartial('flash'),
             '#'.$this->formField->getId() => $form->renderField($this->formField, [
-                'useContainer' => FALSE,
+                'useContainer' => false,
             ]),
         ];
     }
@@ -155,7 +155,7 @@ class RecordEditor extends BaseFormWidget
         return [
             '#notification' => $this->makePartial('flash'),
             '#'.$this->formField->getId() => $form->renderField($this->formField, [
-                'useContainer' => FALSE,
+                'useContainer' => false,
             ]),
         ];
     }
@@ -223,7 +223,7 @@ class RecordEditor extends BaseFormWidget
         if (!strlen($requestData = request()->header('X-IGNITER-RECORD-EDITOR-REQUEST-DATA')))
             return;
 
-        if (!strlen($recordId = array_get(json_decode($requestData, TRUE), $this->alias.'.recordId')))
+        if (!strlen($recordId = array_get(json_decode($requestData, true), $this->alias.'.recordId')))
             return;
 
         $model = $this->findFormModel($recordId);

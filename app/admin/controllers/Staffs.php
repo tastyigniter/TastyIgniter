@@ -65,14 +65,14 @@ class Staffs extends \Admin\Classes\AdminController
 
     public function account()
     {
-        $this->asExtension('LocationAwareController')->setConfig(['applyScopeOnFormQuery' => FALSE]);
+        $this->asExtension('LocationAwareController')->setConfig(['applyScopeOnFormQuery' => false]);
 
         return $this->asExtension('FormController')->edit('account', $this->getUser()->getKey());
     }
 
     public function account_onSave()
     {
-        $this->asExtension('LocationAwareController')->setConfig(['applyScopeOnFormQuery' => FALSE]);
+        $this->asExtension('LocationAwareController')->setConfig(['applyScopeOnFormQuery' => false]);
 
         $result = $this->asExtension('FormController')->edit_onSave('account', $this->currentUser->user_id);
 
@@ -81,7 +81,7 @@ class Staffs extends \Admin\Classes\AdminController
         $languageChanged = $this->currentUser->language != post('Staff[language_id]');
         if ($usernameChanged || $passwordChanged || $languageChanged) {
             $this->currentUser->reload()->reloadRelations();
-            AdminAuth::login($this->currentUser, TRUE);
+            AdminAuth::login($this->currentUser, true);
         }
 
         return $result;

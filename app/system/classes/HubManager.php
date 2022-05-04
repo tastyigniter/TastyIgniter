@@ -51,7 +51,7 @@ class HubManager
         ]);
     }
 
-    public function applyItemsToUpdate($itemNames, $force = FALSE)
+    public function applyItemsToUpdate($itemNames, $force = false)
     {
         $cacheKey = $this->getCacheKey('updates', $itemNames);
 
@@ -151,14 +151,14 @@ class HubManager
 
         $response = null;
         try {
-            $response = @json_decode($result, TRUE);
+            $response = @json_decode($result, true);
         }
         catch (Exception $ex) {
         }
 
         if (isset($response['message']) && !in_array($httpCode, [200, 201])) {
             if (isset($response['errors']))
-                Log::debug('Server validation errors: '.print_r($response['errors'], TRUE));
+                Log::debug('Server validation errors: '.print_r($response['errors'], true));
 
             throw new ApplicationException($response['message']);
         }
@@ -196,7 +196,7 @@ class HubManager
         $fileSha = sha1_file($filePath);
 
         if ($fileHash != $fileSha) {
-            $error = @json_decode(file_get_contents($filePath), TRUE);
+            $error = @json_decode(file_get_contents($filePath), true);
             @unlink($filePath);
 
             Log::info(
@@ -208,7 +208,7 @@ class HubManager
             throw new ApplicationException(sprintf('Downloading %s failed, check system logs.', array_get($params, 'item.name')));
         }
 
-        return TRUE;
+        return true;
     }
 
     protected function prepareRequest($uri, $params)
@@ -218,10 +218,10 @@ class HubManager
         curl_setopt($curl, CURLOPT_URL, Config::get('system.hubEndpoint', static::ENDPOINT).'/'.$uri);
         curl_setopt($curl, CURLOPT_USERAGENT, Request::userAgent());
         curl_setopt($curl, CURLOPT_TIMEOUT, 3600);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_REFERER, url()->current());
-        curl_setopt($curl, CURLOPT_AUTOREFERER, TRUE);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($curl, CURLOPT_AUTOREFERER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 
         $params['client'] = 'tastyigniter';
         $params['server'] = base64_encode(serialize([
@@ -230,7 +230,7 @@ class HubManager
             'version' => params('ti_version', 'v3.0.0'),
         ]));
 
-        if (Config::get('system.edgeUpdates', FALSE)) {
+        if (Config::get('system.edgeUpdates', false)) {
             $params['edge'] = 1;
         }
 

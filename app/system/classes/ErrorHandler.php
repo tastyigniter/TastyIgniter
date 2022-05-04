@@ -34,8 +34,8 @@ class ErrorHandler extends BaseErrorHandler
      */
     public function handleCustomError()
     {
-        if (Config::get('app.debug', FALSE)) {
-            return FALSE;
+        if (Config::get('app.debug', false)) {
+            return false;
         }
 
         if (!App::hasDatabase())

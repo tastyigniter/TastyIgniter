@@ -35,7 +35,7 @@ abstract class BaseComponent extends Extendable
     /**
      * @var bool Determines whether the component is hidden from the admin UI.
      */
-    public $isHidden = FALSE;
+    public $isHidden = false;
 
     /**
      * @var string Icon of the extension that defines the component.

@@ -81,7 +81,7 @@ class UserPanel
             })
             ->filter(function ($item) use ($instance) {
                 if (!$permission = array_get($item, 'permission'))
-                    return TRUE;
+                    return true;
 
                 return $instance->user->hasPermission($permission);
             })

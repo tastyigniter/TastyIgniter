@@ -67,7 +67,7 @@ class Categories_model extends Model
 
     public static $allowedSortingColumns = ['priority asc', 'priority desc'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function getDropdownOptions()
     {
@@ -115,7 +115,7 @@ class Categories_model extends Model
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
-            'enabled' => TRUE,
+            'enabled' => true,
             'sort' => 'id asc',
             'location' => null,
             'search' => '',

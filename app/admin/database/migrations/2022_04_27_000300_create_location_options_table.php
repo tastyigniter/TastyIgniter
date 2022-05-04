@@ -31,9 +31,9 @@ class CreateLocationOptionsTable extends Migration
     {
         DB::table('locations')->get()->each(function ($location) {
             if (empty($location->options))
-                return TRUE;
+                return true;
 
-            $options = json_decode($location->options, TRUE);
+            $options = json_decode($location->options, true);
 
             foreach ($options as $item => $value) {
                 DB::table('location_options')->insert([

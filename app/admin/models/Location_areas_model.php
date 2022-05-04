@@ -42,7 +42,7 @@ class Location_areas_model extends AbstractArea
     public function getConditionsAttribute($value)
     {
         // backward compatibility v2.0
-        if (!is_array($conditions = json_decode($value, TRUE)))
+        if (!is_array($conditions = json_decode($value, true)))
             $conditions = [];
 
         foreach ($conditions as $key => &$item) {

@@ -21,7 +21,7 @@ return [
                 'label' => 'lang:admin::lang.stocks.label_quantity',
                 'type' => 'number',
                 'default' => 0,
-                'disabled' => TRUE,
+                'disabled' => true,
             ],
             'stock_action[state]' => [
                 'label' => 'lang:admin::lang.stocks.label_stock_action',

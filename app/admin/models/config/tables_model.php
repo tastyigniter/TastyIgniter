@@ -11,7 +11,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => TRUE,
+            'locationAware' => true,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -69,12 +69,12 @@ $config['list']['columns'] = [
     'table_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'min_capacity' => [
         'label' => 'lang:admin::lang.tables.column_min_capacity',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'max_capacity' => [
         'label' => 'lang:admin::lang.tables.column_capacity',
@@ -83,19 +83,19 @@ $config['list']['columns'] = [
     'extra_capacity' => [
         'label' => 'lang:admin::lang.tables.column_extra_capacity',
         'type' => 'number',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'priority' => [
         'label' => 'lang:admin::lang.tables.column_priority',
         'type' => 'number',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'locations' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'locationAware' => TRUE,
+        'locationAware' => true,
     ],
     'is_joinable' => [
         'label' => 'lang:admin::lang.tables.label_joinable',
@@ -109,16 +109,16 @@ $config['list']['columns'] = [
     ],
     'table_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];

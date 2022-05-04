@@ -194,7 +194,7 @@ class Controller extends IlluminateController
             return $controllerObj;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -206,7 +206,7 @@ class Controller extends IlluminateController
      */
     protected function processAction($actionName)
     {
-        if (strpos($actionName, '-') !== FALSE) {
+        if (strpos($actionName, '-') !== false) {
             return camel_case($actionName);
         }
 

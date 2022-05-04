@@ -223,7 +223,7 @@ class TemplateEditor extends BaseFormWidget
         /** @var \Main\Template\Model $templateClass */
         $templateClass = $themeObject->getTemplateClass($type);
 
-        return $templateClass::getDropdownOptions($themeObject, TRUE);
+        return $templateClass::getDropdownOptions($themeObject, true);
     }
 
     protected function getTemplateTypes()

@@ -65,7 +65,7 @@ class LocationOption extends Model
     public function set($key, $value)
     {
         if (!$location = $this->locationContext)
-            return FALSE;
+            return false;
 
         if (!$record = static::findRecord($key, $location)) {
             $record = new static;
@@ -79,7 +79,7 @@ class LocationOption extends Model
         $cacheKey = $this->getCacheKey($key, $location);
         static::$cache[$cacheKey] = $value;
 
-        return TRUE;
+        return true;
     }
 
     public function getAll()
@@ -100,17 +100,17 @@ class LocationOption extends Model
     public function reset($key)
     {
         if (!$location = $this->locationContext)
-            return FALSE;
+            return false;
 
         if (!$record = static::findRecord($key, $location))
-            return FALSE;
+            return false;
 
         $record->delete();
 
         $cacheKey = $this->getCacheKey($key, $location);
         unset(static::$cache[$cacheKey]);
 
-        return TRUE;
+        return true;
     }
 
     public function scopeApplyItemAndLocation($query, $key, $location = null)

@@ -28,7 +28,7 @@ class Country
 
     protected $countriesCollection = [];
 
-    public function addressFormat($address, $useLineBreaks = TRUE)
+    public function addressFormat($address, $useLineBreaks = true)
     {
         $format = $this->getDefaultFormat();
 

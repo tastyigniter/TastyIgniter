@@ -139,9 +139,9 @@ class LanguageManager
         $term = strtolower($term);
         foreach ($translations as $key => $value) {
             if (strlen($term)) {
-                if (stripos(strtolower(array_get($value, 'source')), $term) !== FALSE
-                    || stripos(strtolower(array_get($value, 'translation')), $term) !== FALSE
-                    || stripos(strtolower($key), $term) !== FALSE) {
+                if (stripos(strtolower(array_get($value, 'source')), $term) !== false
+                    || stripos(strtolower(array_get($value, 'translation')), $term) !== false
+                    || stripos(strtolower($key), $term) !== false) {
                     $result[$key] = $value;
                 }
             }
@@ -208,7 +208,7 @@ class LanguageManager
 
         $filePath = $this->getFilePath($packCode);
         if (!is_dir($fileDir = dirname($filePath)))
-            mkdir($fileDir, 0777, TRUE);
+            mkdir($fileDir, 0777, true);
 
         return $this->getHubManager()->downloadLanguagePack($filePath, $packHash, [
             'locale' => $packCode,
@@ -223,15 +223,15 @@ class LanguageManager
         $filePath = $this->getFilePath($packCode);
         $extractTo = app()->langPath().'/'.$packCode;
         if (!file_exists($extractTo))
-            mkdir($extractTo, 0755, TRUE);
+            mkdir($extractTo, 0755, true);
 
         $zip = new ZipArchive();
-        if ($zip->open($filePath) === TRUE) {
+        if ($zip->open($filePath) === true) {
             $zip->extractTo($extractTo);
             $zip->close();
             @unlink($filePath);
 
-            return TRUE;
+            return true;
         }
 
         throw new ApplicationException('Failed to extract '.$packCode.' archive file');
@@ -244,7 +244,7 @@ class LanguageManager
         $model->version = $item['version'];
         $model->save();
 
-        return TRUE;
+        return true;
     }
 
     public function getFilePath($packCode)

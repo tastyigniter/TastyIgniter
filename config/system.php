@@ -115,7 +115,7 @@ return [
     |
     */
 
-    'enableRoutesCache' => FALSE,
+    'enableRoutesCache' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -210,7 +210,7 @@ return [
     |
     */
 
-    'enableAssetCombiner' => TRUE,
+    'enableAssetCombiner' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -245,5 +245,5 @@ return [
     |
     */
 
-    'enableCsrfProtection' => TRUE,
+    'enableCsrfProtection' => true,
 ];

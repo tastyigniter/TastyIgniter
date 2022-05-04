@@ -54,7 +54,7 @@ class AdminController extends BaseController
     /**
      * @var bool Prevents the automatic view display.
      */
-    public $suppressView = FALSE;
+    public $suppressView = false;
 
     /**
      * @var string Page method name being called.
@@ -220,7 +220,7 @@ class AdminController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if (($handlerResponse = $this->processHandlers()) && $handlerResponse !== TRUE) {
+        if (($handlerResponse = $this->processHandlers()) && $handlerResponse !== true) {
             return $handlerResponse;
         }
 
@@ -237,10 +237,10 @@ class AdminController extends BaseController
     public function checkAction($action)
     {
         if (!$methodExists = $this->methodExists($action))
-            return FALSE;
+            return false;
 
         if (in_array(strtolower($action), array_map('strtolower', $this->hiddenActions)))
-            return FALSE;
+            return false;
 
         if (method_exists($this, $action)) {
             $methodInfo = new \ReflectionMethod($this, $action);
@@ -257,7 +257,7 @@ class AdminController extends BaseController
             return;
         }
 
-        $this->suppressView = TRUE;
+        $this->suppressView = true;
         $this->execPageAction($this->action, $this->params);
     }
 
@@ -330,7 +330,7 @@ class AdminController extends BaseController
     protected function processHandlers()
     {
         if (!$handler = $this->getHandler())
-            return FALSE;
+            return false;
 
         try {
             $this->validateHandler($handler);
@@ -447,7 +447,7 @@ class AdminController extends BaseController
         return Admin::redirectIntended($path, $status, $headers, $secure);
     }
 
-    public function redirectBack($status = 302, $headers = [], $fallback = FALSE)
+    public function redirectBack($status = 302, $headers = [], $fallback = false)
     {
         return Redirect::back($status, $headers, Admin::url($fallback ?: 'dashboard'));
     }
@@ -473,7 +473,7 @@ class AdminController extends BaseController
             if (($widget = $this->widgets[$widgetName]) && $widget->methodExists($handlerName)) {
                 $result = call_user_func_array([$widget, $handlerName], array_values($params));
 
-                return $result ?: TRUE;
+                return $result ?: true;
             }
         }
         // Process page specific handler (index_onSomething)
@@ -483,17 +483,17 @@ class AdminController extends BaseController
             if ($this->methodExists($pageHandler)) {
                 $result = call_user_func_array([$this, $pageHandler], array_values($params));
 
-                return $result ?: TRUE;
+                return $result ?: true;
             }
 
             // Process page global handler (onSomething)
             if ($this->methodExists($handler)) {
                 $result = call_user_func_array([$this, $handler], array_values($params));
 
-                return $result ?: TRUE;
+                return $result ?: true;
             }
 
-            $this->suppressView = TRUE;
+            $this->suppressView = true;
 
             $this->execPageAction($this->action, $this->params);
 
@@ -501,12 +501,12 @@ class AdminController extends BaseController
                 if ($widget->methodExists($handler)) {
                     $result = call_user_func_array([$widget, $handler], array_values($params));
 
-                    return $result ?: TRUE;
+                    return $result ?: true;
                 }
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

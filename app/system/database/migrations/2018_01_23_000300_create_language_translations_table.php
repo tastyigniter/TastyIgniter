@@ -21,8 +21,8 @@ class CreateLanguageTranslationsTable extends Migration
             $table->string('group')->index();
             $table->string('item');
             $table->text('text');
-            $table->boolean('unstable')->default(FALSE);
-            $table->boolean('locked')->default(FALSE);
+            $table->boolean('unstable')->default(false);
+            $table->boolean('locked')->default(false);
             $table->timestamps();
             $table->unique(['locale', 'namespace', 'group', 'item']);
         });

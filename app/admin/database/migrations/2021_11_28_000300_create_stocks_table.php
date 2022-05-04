@@ -64,7 +64,7 @@ class CreateStocksTable extends Migration
     {
         DB::table('menus')->get()->each(function ($menuItem) {
             if ($menuItem->stock_qty == 0)
-                return TRUE;
+                return true;
 
             $locationIds = DB::table('locationables')
                 ->where('locationable_type', 'menus')
@@ -97,7 +97,7 @@ class CreateStocksTable extends Migration
     {
         DB::table('menu_item_option_values')->get()->each(function ($optionValue) {
             if ($optionValue->quantity == 0)
-                return TRUE;
+                return true;
 
             $menuOption = DB::table('menu_item_options')
                 ->where('menu_option_id', $optionValue->menu_option_id)

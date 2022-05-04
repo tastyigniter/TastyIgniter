@@ -110,7 +110,7 @@ class Languages extends \Admin\Classes\AdminController
         $this->asExtension('FormController')->initForm($model, $context);
 
         $file = post('Language._file');
-        $this->setFilterValue('file', (!strlen($file) || strpos($file, '::') == FALSE) ? null : $file);
+        $this->setFilterValue('file', (!strlen($file) || strpos($file, '::') == false) ? null : $file);
 
         $term = post('Language._search');
         $this->setFilterValue('search', (!strlen($term) || !is_string($term)) ? null : $term);
@@ -251,7 +251,7 @@ class Languages extends \Admin\Classes\AdminController
         foreach ($this->localeFiles as $file) {
             $name = sprintf('%s::%s', $file['namespace'], $file['group']);
 
-            if (!array_get($file, 'system', FALSE)
+            if (!array_get($file, 'system', false)
                 && ($extension = $extensionManager->findExtension($file['namespace']))) {
                 $result[$name] = array_get($extension->extensionMeta(), 'name').' - '.$name;
             }

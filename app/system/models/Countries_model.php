@@ -38,7 +38,7 @@ class Countries_model extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     /**
      * @var self Default country cache.

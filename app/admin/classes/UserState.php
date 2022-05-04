@@ -26,7 +26,7 @@ class UserState
 
     protected $defaultStateConfig = [
         'status' => 1,
-        'isAway' => FALSE,
+        'isAway' => false,
         'awayMessage' => null,
         'updatedAt' => null,
         'clearAfterMinutes' => 0,
@@ -111,13 +111,13 @@ class UserState
             ->each(function ($preference) {
                 $state = json_decode($preference->value);
                 if (!$state->clearAfterMinutes)
-                    return TRUE;
+                    return true;
 
                 $clearAfterAt = make_carbon($state->updatedAt)
                     ->addMinutes($state->clearAfterMinutes);
 
                 if (Carbon::now()->lessThan($clearAfterAt))
-                    return TRUE;
+                    return true;
 
                 DB::table(User_preferences_model::make()->getTable())
                     ->where('id', $preference->id)

@@ -106,7 +106,7 @@ class Orders extends \Admin\Classes\AdminController
 
         $this->vars['model'] = $model;
 
-        $this->suppressLayout = TRUE;
+        $this->suppressLayout = true;
     }
 
     public function formExtendQuery($query)

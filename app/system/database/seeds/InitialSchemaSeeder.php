@@ -41,7 +41,7 @@ class InitialSchemaSeeder extends Seeder
         if (DB::table('countries')->count())
             return;
 
-        DB::table('countries')->insert($this->getSeedRecords('countries', TRUE));
+        DB::table('countries')->insert($this->getSeedRecords('countries', true));
 
         DB::table('countries')->update(['updated_at' => now(), 'created_at' => now()]);
 
@@ -76,7 +76,7 @@ class InitialSchemaSeeder extends Seeder
 
         DB::table('customer_groups')->insert([
             'group_name' => 'Default group',
-            'approval' => FALSE,
+            'approval' => false,
         ]);
 
         DB::table('customer_groups')->update(['updated_at' => now(), 'created_at' => now()]);
@@ -91,8 +91,8 @@ class InitialSchemaSeeder extends Seeder
             'code' => 'en',
             'name' => 'English',
             'idiom' => 'english',
-            'status' => TRUE,
-            'can_delete' => FALSE,
+            'status' => true,
+            'can_delete' => false,
         ]);
 
         DB::table('languages')->update(['updated_at' => now(), 'created_at' => now()]);
@@ -102,7 +102,7 @@ class InitialSchemaSeeder extends Seeder
     {
         // Abort: a location already exists
         if (DB::table('locations')->count())
-            return TRUE;
+            return true;
 
         $location = $this->getSeedRecords('location');
         $location['location_email'] = DatabaseSeeder::$siteEmail;
@@ -150,19 +150,19 @@ class InitialSchemaSeeder extends Seeder
                 'mealtime_name' => 'Breakfast',
                 'start_time' => '07:00:00',
                 'end_time' => '10:00:00',
-                'mealtime_status' => TRUE,
+                'mealtime_status' => true,
             ],
             [
                 'mealtime_name' => 'Lunch',
                 'start_time' => '12:00:00',
                 'end_time' => '14:30:00',
-                'mealtime_status' => TRUE,
+                'mealtime_status' => true,
             ],
             [
                 'mealtime_name' => 'Dinner',
                 'start_time' => '18:00:00',
                 'end_time' => '20:00:00',
-                'mealtime_status' => TRUE,
+                'mealtime_status' => true,
             ],
         ]);
 
@@ -252,6 +252,6 @@ class InitialSchemaSeeder extends Seeder
 
     protected function getSeedRecords($name)
     {
-        return json_decode(file_get_contents($this->recordsPath.'/'.$name.'.json'), TRUE);
+        return json_decode(file_get_contents($this->recordsPath.'/'.$name.'.json'), true);
     }
 }

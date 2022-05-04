@@ -23,7 +23,7 @@ class Charts extends BaseDashboardWidget
     protected $datasetOptions = [
         'label' => null,
         'data' => [],
-        'fill' => TRUE,
+        'fill' => true,
         'backgroundColor' => null,
         'borderColor' => null,
     ];

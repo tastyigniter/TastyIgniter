@@ -99,7 +99,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      *
      * @return array|\Illuminate\Support\Collection
      */
-    public static function listInTheme(Theme $theme, $skipCache = FALSE)
+    public static function listInTheme(Theme $theme, $skipCache = false)
     {
         $instance = static::inTheme($theme);
 
@@ -122,7 +122,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
         return static::on($theme->getDirName());
     }
 
-    public static function getDropdownOptions(Theme $theme = null, $skipCache = FALSE)
+    public static function getDropdownOptions(Theme $theme = null, $skipCache = false)
     {
         $result = [];
 
@@ -290,8 +290,8 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      */
     public function __isset($key)
     {
-        if (parent::__isset($key) === TRUE) {
-            return TRUE;
+        if (parent::__isset($key) === true) {
+            return true;
         }
 
         return isset($this->settings[$key]);
