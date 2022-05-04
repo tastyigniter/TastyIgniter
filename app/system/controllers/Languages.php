@@ -3,15 +3,19 @@
 namespace System\Controllers;
 
 use Admin\Facades\AdminMenu;
+use Admin\Facades\Template;
 use Admin\Widgets\Form;
+use Igniter\Flame\Exception\ApplicationException;
 use System\Classes\ExtensionManager;
 use System\Classes\LanguageManager;
 use System\Models\Languages_model;
+use System\Traits\ManagesUpdates;
 use System\Traits\SessionMaker;
 
 class Languages extends \Admin\Classes\AdminController
 {
     use SessionMaker;
+    use ManagesUpdates;
 
     public $implement = [
         'Admin\Actions\ListController',
@@ -73,12 +77,28 @@ class Languages extends \Admin\Classes\AdminController
     {
         Languages_model::applySupportedLanguages();
 
+        $this->initUpdate('language');
+
         $this->asExtension('ListController')->index();
+    }
+
+    public function search()
+    {
+        $filter = input('filter');
+        if (!$filter || !is_array($filter) || !isset($filter['search']) || !strlen($filter['search']))
+            return [];
+
+        return LanguageManager::instance()->searchLanguages($filter['search']);
     }
 
     public function edit($context = null, $recordId = null)
     {
+        $this->addJs('~/app/admin/formwidgets/recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
         $this->addJs('~/app/admin/assets/js/translationseditor.js', 'translationseditor-js');
+
+        $this->prepareAssets();
+
+        Template::setButton(lang('system::lang.languages.button_check'), ['class' => 'btn btn-success pull-right', 'data-toggle' => 'record-editor', 'data-handler' => 'onCheckUpdates']);
 
         $this->asExtension('FormController')->edit($context, $recordId);
     }
@@ -101,6 +121,85 @@ class Languages extends \Admin\Classes\AdminController
         return $this->asExtension('FormController')->makeRedirect('edit', $model);
     }
 
+    public function edit_onCheckUpdates($context = null, $recordId = null)
+    {
+        $model = $this->formFindModelObject($recordId);
+
+        $response = LanguageManager::instance()->applyLanguagePack($model->code, $model->version);
+
+        $title = $response
+            ? lang('system::lang.languages.text_title_update_available')
+            : lang('system::lang.languages.text_title_no_update_available');
+
+        $message = $response
+            ? lang('system::lang.languages.text_update_available')
+            : lang('system::lang.languages.text_no_update_available');
+
+        return $this->makePartial('updates', [
+            'language' => (object)$response,
+            'title' => $title,
+            'message' => sprintf($message, $model->name),
+        ]);
+    }
+
+    public function onApplyItems()
+    {
+        $items = post('items') ?? [];
+        if (!count($items))
+            throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
+
+        $this->validateItems();
+
+        $response = LanguageManager::instance()->applyLanguagePack($items[0]['name']);
+
+        return [
+            'steps' => $this->buildProcessSteps([$response], $items),
+        ];
+    }
+
+    public function edit_onApplyUpdate($context = null, $recordId = null)
+    {
+        $model = $this->formFindModelObject($recordId);
+
+        $response = LanguageManager::instance()->applyLanguagePack($model->code);
+
+        return [
+            'steps' => $this->buildProcessSteps([$response], [[
+                'name' => $model->code,
+                'action' => 'update',
+            ]]),
+        ];
+    }
+
+    public function onProcessItems()
+    {
+        $json = [];
+
+        $this->validateProcess();
+
+        $meta = post('meta');
+
+        $languageManager = LanguageManager::instance();
+
+        $processMeta = $meta['process'];
+        switch ($processMeta) {
+            case 'downloadLanguage':
+                $result = $languageManager->downloadPack($meta);
+                if ($result) $json['result'] = 'success';
+                break;
+            case 'extractLanguage':
+                $response = $languageManager->extractPack($meta);
+                if ($response) $json['result'] = 'success';
+                break;
+            case 'complete':
+                $response = $languageManager->installPack($meta['items'][0] ?? []);
+                if ($response) $json['result'] = 'success';
+                break;
+        }
+
+        return $json;
+    }
+
     public function formExtendFields(Form $form, $fields)
     {
         if ($form->getContext() !== 'edit')
@@ -121,6 +220,12 @@ class Languages extends \Admin\Classes\AdminController
 
         $fileField->options = $this->prepareNamespaces();
         $field->options = post($field->getName()) ?: $this->prepareTranslations($form->model);
+
+        if ($form->model->version) {
+            Template::setButton(sprintf(lang('system::lang.languages.text_current_build'), $form->model->version), [
+                'class' => 'btn disabled text-muted pull-right', 'role' => 'button',
+            ]);
+        }
 
         $this->vars['totalStrings'] = $this->totalStrings;
         $this->vars['totalTranslated'] = $this->totalTranslated;

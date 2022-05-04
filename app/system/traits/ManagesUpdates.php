@@ -168,7 +168,7 @@ trait ManagesUpdates
                 'core' => [],
                 'extensions' => [],
                 'themes' => [],
-                'translations' => [],
+                'languages' => [],
             ];
 
             if ($step == 'complete') {
@@ -301,7 +301,7 @@ trait ManagesUpdates
     {
         return $this->validate(post(), [
             'items.*.name' => ['required'],
-            'items.*.type' => ['required', 'in:core,extension,theme'],
+            'items.*.type' => ['required', 'in:core,extension,theme,language'],
             'items.*.ver' => ['required'],
             'items.*.action' => ['required', 'in:install,update'],
         ], [], [
@@ -317,7 +317,7 @@ trait ManagesUpdates
         if (post('step') != 'complete') {
             $rules = [
                 'meta.code' => ['required'],
-                'meta.type' => ['required', 'in:core,extension,theme'],
+                'meta.type' => ['required', 'in:core,extension,theme,language'],
                 'meta.version' => ['required'],
                 'meta.hash' => ['required'],
                 'meta.description' => ['sometimes'],

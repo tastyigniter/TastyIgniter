@@ -242,4 +242,26 @@ class HubManager
 
         return $curl;
     }
+
+    //
+    // Language Packs
+    //
+
+    public function listLanguages($filter = [])
+    {
+        return $this->requestRemoteData('languages', $filter);
+    }
+
+    public function applyLanguagePack($locale, $build = null)
+    {
+        return $this->requestRemoteData('language/apply', [
+            'locale' => $locale,
+            'build' => $build,
+        ]);
+    }
+
+    public function downloadLanguagePack($filePath, $fileHash, $params = [])
+    {
+        return $this->requestRemoteFile('language/download', $params, $filePath, $fileHash);
+    }
 }

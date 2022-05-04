@@ -70,8 +70,8 @@ class UpdateManager
     public function initialize()
     {
         $this->hubManager = HubManager::instance();
-        $this->extensionManager = ExtensionManager::instance();
         $this->themeManager = ThemeManager::instance();
+        $this->extensionManager = ExtensionManager::instance();
 
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
