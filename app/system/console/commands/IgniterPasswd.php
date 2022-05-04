@@ -29,7 +29,7 @@ class IgniterPasswd extends Command
     /**
      * @var bool Was the password automatically generated?
      */
-    protected $generatedPassword = FALSE;
+    protected $generatedPassword = false;
 
     /**
      * Execute the console command.
@@ -80,9 +80,9 @@ class IgniterPasswd extends Command
      */
     protected function optionalSecret($question)
     {
-        $question = new Question($question, FALSE);
+        $question = new Question($question, false);
 
-        $question->setHidden(TRUE)->setHiddenFallback(FALSE);
+        $question->setHidden(true)->setHiddenFallback(false);
 
         return $this->output->askQuestion($question);
     }
@@ -94,7 +94,7 @@ class IgniterPasswd extends Command
      */
     protected function generatePassword()
     {
-        $this->generatedPassword = TRUE;
+        $this->generatedPassword = true;
 
         return str_random(22);
     }

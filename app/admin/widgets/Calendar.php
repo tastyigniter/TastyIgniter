@@ -17,7 +17,7 @@ class Calendar extends BaseWidget
     /**
      * @var string Determines whether the events on the calendar can be modified.
      */
-    public $editable = TRUE;
+    public $editable = true;
 
     /**
      * @var string Defines the number of events displayed on a day

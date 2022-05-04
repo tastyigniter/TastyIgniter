@@ -24,7 +24,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
     /**
      * @var bool Flag on whether the cache should respect refresh requests
      */
-    protected $allowCacheRefreshes = TRUE;
+    protected $allowCacheRefreshes = true;
 
     /**
      * @var string The key for the source to perform CRUD operations on
@@ -53,7 +53,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
      * @param bool $refresh Default false, set to true to force the cache to be rebuilt
      * @return void
      */
-    protected function populateCache($refresh = FALSE)
+    protected function populateCache($refresh = false)
     {
         $pathCache = [];
         foreach ($this->sources as $source) {
@@ -178,7 +178,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
         $result = $this->getActiveSource()->insert($dirName, $fileName, $extension, $content);
 
         // Refresh the cache
-        $this->populateCache(TRUE);
+        $this->populateCache(true);
 
         return $result;
     }
@@ -203,9 +203,9 @@ class ChainFileSource extends AbstractSource implements SourceInterface
         // Ensure that files that are being renamed have their old names marked as deleted prior to inserting the renamed file
         // Also ensure that the cache only gets updated at the end of this operation instead of twice, once here and again at the end
         if ($searchFileName !== $fileName || $searchExt !== $extension) {
-            $this->allowCacheRefreshes = FALSE;
+            $this->allowCacheRefreshes = false;
             $this->delete($dirName, $searchFileName, $searchExt);
-            $this->allowCacheRefreshes = TRUE;
+            $this->allowCacheRefreshes = true;
         }
 
         $source = $this->getActiveSource();
@@ -218,7 +218,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
         }
 
         // Refresh the cache
-        $this->populateCache(TRUE);
+        $this->populateCache(true);
 
         return $result;
     }
@@ -238,7 +238,7 @@ class ChainFileSource extends AbstractSource implements SourceInterface
         $this->getActiveSource()->delete($dirName, $fileName, $extension);
 
         // Refresh the cache
-        $this->populateCache(TRUE);
+        $this->populateCache(true);
     }
 
     /**

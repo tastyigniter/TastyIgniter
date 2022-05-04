@@ -68,16 +68,16 @@ $config['list']['columns'] = [
     ],
     'allergen_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -131,7 +131,7 @@ $config['form']['fields'] = [
     'thumb' => [
         'label' => 'lang:admin::lang.allergens.label_image',
         'type' => 'mediafinder',
-        'useAttachment' => TRUE,
+        'useAttachment' => true,
         'span' => 'right',
         'comment' => 'lang:admin::lang.allergens.help_photo',
     ],

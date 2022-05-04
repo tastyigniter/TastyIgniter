@@ -42,7 +42,7 @@ class AddForeignKeyConstraintsToTables extends Migration
 
             $blueprint = $table->foreignId($foreignKey);
 
-            if (array_get($options, 'nullable', TRUE))
+            if (array_get($options, 'nullable', true))
                 $blueprint->nullable();
 
             $blueprint->change();
@@ -55,7 +55,7 @@ class AddForeignKeyConstraintsToTables extends Migration
             if (array_get($options, 'cascadeOnDelete'))
                 $blueprint->cascadeOnDelete();
 
-            if (array_get($options, 'cascadeOnUpdate', TRUE))
+            if (array_get($options, 'cascadeOnUpdate', true))
                 $blueprint->cascadeOnUpdate();
         });
     }
@@ -79,113 +79,113 @@ class AddForeignKeyConstraintsToTables extends Migration
     {
         return [
             'addresses' => [
-                ['customers', 'customer_id', 'nullOnDelete' => TRUE],
-                ['countries', 'country_id', 'nullOnDelete' => TRUE],
+                ['customers', 'customer_id', 'nullOnDelete' => true],
+                ['countries', 'country_id', 'nullOnDelete' => true],
             ],
             'allergenables' => [
-                ['allergens', 'allergen_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['allergens', 'allergen_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'assignable_logs' => [
-                ['staffs', ['assignee_id', 'staff_id'], 'nullable' => FALSE, 'nullOnDelete' => TRUE],
-                ['staff_groups', ['assignee_group_id', 'staff_group_id'], 'nullable' => FALSE, 'nullOnDelete' => TRUE],
-                ['statuses', ['status_id', 'status_id'], 'nullable' => FALSE, 'nullOnDelete' => TRUE],
+                ['staffs', ['assignee_id', 'staff_id'], 'nullable' => false, 'nullOnDelete' => true],
+                ['staff_groups', ['assignee_group_id', 'staff_group_id'], 'nullable' => false, 'nullOnDelete' => true],
+                ['statuses', ['status_id', 'status_id'], 'nullable' => false, 'nullOnDelete' => true],
             ],
             'categories' => [
-                ['categories', ['parent_id', 'category_id'], 'nullOnDelete' => TRUE],
+                ['categories', ['parent_id', 'category_id'], 'nullOnDelete' => true],
             ],
             'customers' => [
-                ['addresses', 'address_id', 'nullOnDelete' => TRUE],
-                ['customer_groups', 'customer_group_id', 'nullOnDelete' => TRUE],
+                ['addresses', 'address_id', 'nullOnDelete' => true],
+                ['customer_groups', 'customer_group_id', 'nullOnDelete' => true],
             ],
             'location_areas' => [
-                ['locations', 'location_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['locations', 'location_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'locationables' => [
-                ['locations', 'location_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['locations', 'location_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'locations' => [
-                ['countries', ['location_country_id', 'country_id'], 'cascadeOnDelete' => TRUE],
+                ['countries', ['location_country_id', 'country_id'], 'cascadeOnDelete' => true],
             ],
             'menu_categories' => [
-                ['menus', 'menu_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['categories', 'category_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['menus', 'menu_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['categories', 'category_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'menu_item_option_values' => [
-                ['menu_item_options', 'menu_option_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['menu_option_values', 'option_value_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['menu_item_options', 'menu_option_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['menu_option_values', 'option_value_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'menu_item_options' => [
-                ['menus', 'menu_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['menu_options', 'option_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['menus', 'menu_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['menu_options', 'option_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'menu_mealtimes' => [
-                ['menus', 'menu_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['mealtimes', 'mealtime_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['menus', 'menu_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['mealtimes', 'mealtime_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'menu_option_values' => [
-                ['menu_options', 'option_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['menu_options', 'option_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'menus_specials' => [
-                ['menus', 'menu_id', 'cascadeOnDelete' => TRUE],
+                ['menus', 'menu_id', 'cascadeOnDelete' => true],
             ],
             'order_menu_options' => [
-                ['orders', 'order_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['order_menus', 'order_menu_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['orders', 'order_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['order_menus', 'order_menu_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'order_menus' => [
-                ['orders', 'order_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['menus', 'menu_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['orders', 'order_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['menus', 'menu_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'order_totals' => [
-                ['orders', 'order_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['orders', 'order_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'orders' => [
-                ['customers', 'customer_id', 'nullOnDelete' => TRUE],
-                ['locations', 'location_id', 'nullOnDelete' => TRUE],
-                ['addresses', 'address_id', 'nullOnDelete' => TRUE],
-                ['statuses', 'status_id', 'nullOnDelete' => TRUE],
-                ['staffs', ['assignee_id', 'staff_id'], 'nullOnDelete' => TRUE],
-                ['staff_groups', ['assignee_group_id', 'staff_group_id'], 'nullOnDelete' => TRUE],
+                ['customers', 'customer_id', 'nullOnDelete' => true],
+                ['locations', 'location_id', 'nullOnDelete' => true],
+                ['addresses', 'address_id', 'nullOnDelete' => true],
+                ['statuses', 'status_id', 'nullOnDelete' => true],
+                ['staffs', ['assignee_id', 'staff_id'], 'nullOnDelete' => true],
+                ['staff_groups', ['assignee_group_id', 'staff_group_id'], 'nullOnDelete' => true],
             ],
             'payment_logs' => [
-                ['orders', 'order_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['orders', 'order_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'payment_profiles' => [
-                ['customers', 'customer_id', 'cascadeOnDelete' => TRUE],
-                ['payments', 'payment_id', 'cascadeOnDelete' => TRUE],
+                ['customers', 'customer_id', 'cascadeOnDelete' => true],
+                ['payments', 'payment_id', 'cascadeOnDelete' => true],
             ],
             'reservation_tables' => [
-                ['reservations', 'reservation_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['tables', 'table_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['reservations', 'reservation_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['tables', 'table_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'reservations' => [
-                ['tables', 'table_id', 'nullOnDelete' => TRUE],
-                ['customers', 'customer_id', 'nullOnDelete' => TRUE],
-                ['locations', 'location_id', 'nullOnDelete' => TRUE],
-                ['statuses', 'status_id', 'nullOnDelete' => TRUE],
-                ['staffs', ['assignee_id', 'staff_id'], 'nullOnDelete' => TRUE],
-                ['staff_groups', ['assignee_group_id', 'staff_group_id'], 'nullOnDelete' => TRUE],
+                ['tables', 'table_id', 'nullOnDelete' => true],
+                ['customers', 'customer_id', 'nullOnDelete' => true],
+                ['locations', 'location_id', 'nullOnDelete' => true],
+                ['statuses', 'status_id', 'nullOnDelete' => true],
+                ['staffs', ['assignee_id', 'staff_id'], 'nullOnDelete' => true],
+                ['staff_groups', ['assignee_group_id', 'staff_group_id'], 'nullOnDelete' => true],
             ],
             'staffs' => [
-                ['staff_roles', 'staff_role_id', 'nullOnDelete' => TRUE],
-                ['languages', 'language_id', 'nullOnDelete' => TRUE],
+                ['staff_roles', 'staff_role_id', 'nullOnDelete' => true],
+                ['languages', 'language_id', 'nullOnDelete' => true],
             ],
             'staffs_groups' => [
-                ['staffs', 'staff_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
-                ['staff_groups', 'staff_group_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['staffs', 'staff_id', 'nullable' => false, 'cascadeOnDelete' => true],
+                ['staff_groups', 'staff_group_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'status_history' => [
-                ['staffs', 'staff_id', 'nullOnDelete' => TRUE],
-                ['statuses', 'status_id', 'nullOnDelete' => TRUE],
+                ['staffs', 'staff_id', 'nullOnDelete' => true],
+                ['statuses', 'status_id', 'nullOnDelete' => true],
             ],
             'user_preferences' => [
-                ['users', 'user_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['users', 'user_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'users' => [
-                ['staffs', 'staff_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['staffs', 'staff_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
             'working_hours' => [
-                ['locations', 'location_id', 'nullable' => FALSE, 'cascadeOnDelete' => TRUE],
+                ['locations', 'location_id', 'nullable' => false, 'cascadeOnDelete' => true],
             ],
         ];
     }

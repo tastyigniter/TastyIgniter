@@ -7,7 +7,7 @@ $config['list']['filter'] = [
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => TRUE,
+            'locationAware' => true,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -80,24 +80,24 @@ $config['list']['columns'] = [
     ],
     'mealtime_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'locations' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'locationAware' => TRUE,
-        'invisible' => TRUE,
+        'locationAware' => true,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -157,7 +157,7 @@ $config['form']['fields'] = [
     'mealtime_status' => [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
-        'default' => TRUE,
+        'default' => true,
         'span' => 'left',
     ],
 ];

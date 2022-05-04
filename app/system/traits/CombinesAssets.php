@@ -36,17 +36,17 @@ trait CombinesAssets
     /**
      * @var bool Cache key prefix.
      */
-    public $cacheKeyPrefix = FALSE;
+    public $cacheKeyPrefix = false;
 
     /**
      * @var bool Cache combined asset files.
      */
-    public $useCache = FALSE;
+    public $useCache = false;
 
     /**
      * @var bool Compress (minify) asset files.
      */
-    public $useMinify = FALSE;
+    public $useMinify = false;
 
     protected $assetsCombinerUri;
 
@@ -55,9 +55,9 @@ trait CombinesAssets
     protected function initCombiner()
     {
         $this->cacheKeyPrefix = 'ti.combiner.';
-        $this->useCache = config('system.enableAssetCache', TRUE);
+        $this->useCache = config('system.enableAssetCache', true);
         $this->useMinify = config('system.enableAssetMinify', null);
-        $this->combineAssets = config('system.enableAssetCombiner', !config('app.debug', FALSE));
+        $this->combineAssets = config('system.enableAssetCombiner', !config('app.debug', false));
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 
@@ -65,7 +65,7 @@ trait CombinesAssets
             $this->assetsCombinerUri = config('system.adminUri', '/admin').$this->assetsCombinerUri;
 
         if ($this->useMinify === null)
-            $this->useMinify = !config('app.debug', FALSE);
+            $this->useMinify = !config('app.debug', false);
 
         $this->registerFilter('css', new \Igniter\Flame\Assetic\Filter\CssImportFilter);
         $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssRewriteFilter);
@@ -105,7 +105,7 @@ trait CombinesAssets
         $lastMod = $combiner->getLastModified();
 
         $cacheKey = $this->getCacheKey($assets);
-        $cacheData = $this->useCache ? $this->getCache($cacheKey.$lastMod) : FALSE;
+        $cacheData = $this->useCache ? $this->getCache($cacheKey.$lastMod) : false;
 
         if (!$cacheData) {
             $cacheData = [
@@ -410,7 +410,7 @@ trait CombinesAssets
     protected function getCache($cacheKey)
     {
         if (!Cache::has($this->cacheKeyPrefix.$cacheKey)) {
-            return FALSE;
+            return false;
         }
 
         return @unserialize(@base64_decode(Cache::get($this->cacheKeyPrefix.$cacheKey)));
@@ -419,10 +419,10 @@ trait CombinesAssets
     protected function putCache($cacheKey, $cacheData)
     {
         if (Cache::has($this->cacheKeyPrefix.$cacheKey))
-            return FALSE;
+            return false;
 
         Cache::forever($this->cacheKeyPrefix.$cacheKey, base64_encode(serialize($cacheData)));
 
-        return TRUE;
+        return true;
     }
 }

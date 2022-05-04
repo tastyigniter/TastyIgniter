@@ -43,17 +43,17 @@ $config['list']['columns'] = [
     'status_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text', // number, switch, date_time, time, date, timesince, select, relation, partial
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'status_comment' => [
         'label' => 'lang:admin::lang.statuses.column_comment',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'status_for_name' => [
         'label' => 'lang:admin::lang.label_type',
         'type' => 'text',
-        'sortable' => FALSE,
+        'sortable' => false,
     ],
     'notify_customer' => [
         'label' => 'lang:admin::lang.statuses.column_notify',
@@ -63,16 +63,16 @@ $config['list']['columns'] = [
     ],
     'status_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -131,7 +131,7 @@ $config['form']['fields'] = [
     'notify_customer' => [
         'label' => 'lang:admin::lang.statuses.label_notify',
         'type' => 'switch',
-        'default' => TRUE,
+        'default' => true,
         'onText' => 'lang:admin::lang.text_no',
         'offText' => 'lang:admin::lang.text_yes',
         'comment' => 'lang:admin::lang.statuses.help_notify',

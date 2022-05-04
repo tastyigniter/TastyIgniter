@@ -72,7 +72,7 @@ class Form extends BaseWidget
     /**
      * @var bool Determines if field definitions have been created.
      */
-    protected $fieldsDefined = FALSE;
+    protected $fieldsDefined = false;
 
     /**
      * @var array Collection of all fields used in this form.
@@ -103,7 +103,7 @@ class Form extends BaseWidget
     /**
      * @var bool Render this form with uneditable preview data.
      */
-    public $previewMode = FALSE;
+    public $previewMode = false;
 
     /**
      * @var \Admin\Classes\Widgets
@@ -182,7 +182,7 @@ class Form extends BaseWidget
             $this->previewMode = $options['preview'];
         }
         if (!isset($options['useContainer'])) {
-            $options['useContainer'] = TRUE;
+            $options['useContainer'] = true;
         }
         if (!isset($options['section'])) {
             $options['section'] = null;
@@ -243,7 +243,7 @@ class Form extends BaseWidget
         }
 
         if (!isset($options['useContainer'])) {
-            $options['useContainer'] = TRUE;
+            $options['useContainer'] = true;
         }
         $targetPartial = $options['useContainer'] ? 'form/field_container' : 'form/field';
 
@@ -347,7 +347,7 @@ class Form extends BaseWidget
         }
 
         // Extensibility
-        $eventResults = $this->fireSystemEvent('admin.form.refresh', [$result], FALSE);
+        $eventResults = $this->fireSystemEvent('admin.form.refresh', [$result], false);
 
         foreach ($eventResults as $eventResult) {
             $result = $eventResult + $result;
@@ -369,7 +369,7 @@ class Form extends BaseWidget
         foreach ($fields as $name => $config) {
             // Check if admin has permissions to show this field
             $permissions = array_get($config, 'permissions');
-            if (!empty($permissions) && !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+            if (!empty($permissions) && !AdminAuth::getUser()->hasPermission($permissions, false)) {
                 continue;
             }
 
@@ -417,7 +417,7 @@ class Form extends BaseWidget
     public function removeField($name)
     {
         if (!isset($this->allFields[$name])) {
-            return FALSE;
+            return false;
         }
 
         // Remove from tabs
@@ -427,7 +427,7 @@ class Form extends BaseWidget
         // Remove from main collection
         unset($this->allFields[$name]);
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -467,7 +467,7 @@ class Form extends BaseWidget
 
         // Simple field type
         if (is_string($config)) {
-            if ($this->isFormWidget($config) !== FALSE) {
+            if ($this->isFormWidget($config) !== false) {
                 $field->displayAs('widget', ['widget' => $config]);
             }
             else {
@@ -483,7 +483,7 @@ class Form extends BaseWidget
             }
 
             // Widget with configuration
-            if ($this->isFormWidget($fieldType) !== FALSE) {
+            if ($this->isFormWidget($fieldType) !== false) {
                 $config['widget'] = $fieldType;
                 $fieldType = 'widget';
             }
@@ -500,7 +500,7 @@ class Form extends BaseWidget
 //        }
 
         // Get field options from model
-        if (in_array($field->type, $this->optionModelTypes, FALSE)) {
+        if (in_array($field->type, $this->optionModelTypes, false)) {
             // Defer the execution of option data collection
             $field->options(function () use ($field, $config) {
                 $fieldOptions = $config['options'] ?? null;
@@ -551,7 +551,7 @@ class Form extends BaseWidget
         if (isset($field->config['options'])) {
             $field->options(function () use ($field) {
                 $fieldOptions = $field->config['options'];
-                if ($fieldOptions === TRUE) $fieldOptions = null;
+                if ($fieldOptions === true) $fieldOptions = null;
                 $fieldOptions = $this->getOptionsFromModel($field, $fieldOptions);
 
                 return $fieldOptions;
@@ -646,7 +646,7 @@ class Form extends BaseWidget
      */
     public function getFieldName($field)
     {
-        if (strpos($field, '@') === FALSE) {
+        if (strpos($field, '@') === false) {
             return [$field, null];
         }
 
@@ -713,14 +713,14 @@ class Form extends BaseWidget
     public function showFieldLabels($field)
     {
         if ($field->type == 'section') {
-            return FALSE;
+            return false;
         }
 
         if ($field->type == 'widget') {
             return $this->makeFormFieldWidget($field)->showLabels;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -783,7 +783,7 @@ class Form extends BaseWidget
 
     public function getActiveTab()
     {
-        $activeTabs = @json_decode(array_get($_COOKIE, 'ti_activeFormTabs'), TRUE);
+        $activeTabs = @json_decode(array_get($_COOKIE, 'ti_activeFormTabs'), true);
 
         $cookieKey = $this->getCookieKey();
 
@@ -885,7 +885,7 @@ class Form extends BaseWidget
         // Check that the form field matches the active location context
         foreach ($this->allFields as $field) {
             if ($this->isLocationAware($field->config))
-                $field->disabled = TRUE;
+                $field->disabled = true;
         }
 
         // Convert automatic spanned fields
@@ -903,10 +903,10 @@ class Form extends BaseWidget
             && $this->allTabs->outside->stretch === null
         ) {
             if ($this->allTabs->primary->hasFields()) {
-                $this->allTabs->primary->stretch = TRUE;
+                $this->allTabs->primary->stretch = true;
             }
             else {
-                $this->allTabs->outside->stretch = TRUE;
+                $this->allTabs->outside->stretch = true;
             }
         }
 
@@ -920,7 +920,7 @@ class Form extends BaseWidget
             $widget->bindToController();
         }
 
-        $this->fieldsDefined = TRUE;
+        $this->fieldsDefined = true;
     }
 
     /**
@@ -959,24 +959,24 @@ class Form extends BaseWidget
     protected function isFormWidget($fieldType)
     {
         if ($fieldType === null) {
-            return FALSE;
+            return false;
         }
 
         if (strpos($fieldType, '\\')) {
-            return TRUE;
+            return true;
         }
 
         $widgetClass = $this->widgetManager->resolveFormWidget($fieldType);
 
         if (!class_exists($widgetClass)) {
-            return FALSE;
+            return false;
         }
 
         if (is_subclass_of($widgetClass, 'Admin\Classes\BaseFormWidget')) {
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

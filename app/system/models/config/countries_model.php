@@ -61,35 +61,35 @@ $config['list']['columns'] = [
     'country_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'iso_code_2' => [
         'label' => 'lang:system::lang.countries.column_iso_code2',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'iso_code_3' => [
         'label' => 'lang:system::lang.countries.column_iso_code3',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'status' => [
         'label' => 'lang:system::lang.countries.column_status',
         'type' => 'switch',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'country_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];

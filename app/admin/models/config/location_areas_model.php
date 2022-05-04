@@ -26,7 +26,7 @@ return [
             'conditions' => [
                 'label' => 'lang:admin::lang.locations.label_delivery_condition',
                 'type' => 'repeater',
-                'sortable' => TRUE,
+                'sortable' => true,
                 'commentAbove' => 'lang:admin::lang.locations.help_delivery_condition',
                 'form' => [
                     'fields' => [
@@ -59,7 +59,7 @@ return [
             'boundaries[distance]' => [
                 'label' => 'lang:admin::lang.locations.label_delivery_distance',
                 'type' => 'repeater',
-                'sortable' => TRUE,
+                'sortable' => true,
                 'commentAbove' => 'lang:admin::lang.locations.help_delivery_distance',
                 'form' => [
                     'fields' => [
@@ -102,7 +102,7 @@ return [
             ],
             'boundaries[components]' => [
                 'type' => 'repeater',
-                'sortable' => TRUE,
+                'sortable' => true,
                 'commentAbove' => 'lang:admin::lang.locations.help_delivery_components',
                 'trigger' => [
                     'action' => 'show',

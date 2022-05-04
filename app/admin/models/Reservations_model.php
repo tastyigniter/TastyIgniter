@@ -36,7 +36,7 @@ class Reservations_model extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     /**
      * The storage format of the model's date columns.
@@ -165,8 +165,8 @@ class Reservations_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        $startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE);
-        $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE);
+        $startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', false);
+        $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', false);
         if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
 
@@ -390,7 +390,7 @@ class Reservations_model extends Model
     public function addReservationTables(array $tableIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->tables()->sync($tableIds);
     }

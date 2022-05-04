@@ -8,7 +8,7 @@ trait Stockable
     {
         self::extend(function (self $model) {
             $model->relation['morphMany']['stocks'] = [
-                'Admin\Models\Stocks_model', 'name' => 'stockable', 'delete' => TRUE,
+                'Admin\Models\Stocks_model', 'name' => 'stockable', 'delete' => true,
             ];
 
             $model->appends[] = 'stock_qty';
@@ -40,7 +40,7 @@ trait Stockable
 
     public function getTrackableStocks($location = null)
     {
-        return $this->getAvailableStocks($location)->where('is_tracked', TRUE);
+        return $this->getAvailableStocks($location)->where('is_tracked', true);
     }
 
     public function getAvailableStocks($location = null)
@@ -67,7 +67,7 @@ trait Stockable
         $stocks = $this->getTrackableStocks($location);
 
         if ($stocks->isEmpty())
-            return FALSE;
+            return false;
 
         return $stocks->filter(function ($stock) {
             return $stock->outOfStock();
@@ -79,7 +79,7 @@ trait Stockable
         $stocks = $this->getTrackableStocks($location);
 
         if ($stocks->isEmpty())
-            return TRUE;
+            return true;
 
         return $stocks->sum('quantity') >= $quantity;
     }

@@ -234,7 +234,7 @@ class Theme
 
     public function hasCustomData()
     {
-        return $this->getConfigValue('form', FALSE);
+        return $this->getConfigValue('form', false);
     }
 
     public function getCustomData()
@@ -406,7 +406,7 @@ class Theme
             return array_has($this->getCustomData(), $key);
         }
 
-        return FALSE;
+        return false;
     }
 
     protected function getFindInPaths()

@@ -32,7 +32,7 @@ class Payments_model extends Model
 
     protected $fillable = ['name', 'code', 'class_name', 'description', 'data', 'status', 'is_default', 'priority'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'data' => 'array',
@@ -190,10 +190,10 @@ class Payments_model extends Model
             )]);
         }
 
-        $this->timestamps = FALSE;
+        $this->timestamps = false;
         $this->newQuery()->where('is_default', '!=', 0)->update(['is_default' => 0]);
         $this->newQuery()->where('payment_id', $this->payment_id)->update(['is_default' => 1]);
-        $this->timestamps = TRUE;
+        $this->timestamps = true;
     }
 
     public static function getDefault()
@@ -202,7 +202,7 @@ class Payments_model extends Model
             return self::$defaultPayment;
         }
 
-        $defaultPayment = self::isEnabled()->where('is_default', TRUE)->first();
+        $defaultPayment = self::isEnabled()->where('is_default', true)->first();
 
         if (!$defaultPayment) {
             if ($defaultPayment = self::isEnabled()->first()) {

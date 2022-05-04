@@ -71,27 +71,27 @@ $config['list']['columns'] = [
     'location_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'location_city' => [
         'label' => 'lang:admin::lang.locations.column_city',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'location_state' => [
         'label' => 'lang:admin::lang.locations.column_state',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'location_postcode' => [
         'label' => 'lang:admin::lang.locations.column_postcode',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'location_telephone' => [
         'label' => 'lang:admin::lang.locations.column_telephone',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'location_status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -99,16 +99,16 @@ $config['list']['columns'] = [
     ],
     'location_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -203,13 +203,13 @@ $config['form']['tabs'] = [
             'type' => 'mediafinder',
             'span' => 'left',
             'mode' => 'inline',
-            'useAttachment' => TRUE,
+            'useAttachment' => true,
             'comment' => 'lang:admin::lang.locations.help_image',
         ],
         'options[auto_lat_lng]' => [
             'label' => 'lang:admin::lang.locations.label_auto_lat_lng',
             'type' => 'switch',
-            'default' => TRUE,
+            'default' => true,
             'onText' => 'lang:admin::lang.text_yes',
             'offText' => 'lang:admin::lang.text_no',
             'span' => 'right',
@@ -280,8 +280,8 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.locations.label_gallery_add_image',
             'tab' => 'lang:admin::lang.locations.text_tab_gallery',
             'type' => 'mediafinder',
-            'isMulti' => TRUE,
-            'useAttachment' => TRUE,
+            'isMulti' => true,
+            'useAttachment' => true,
         ],
     ],
 ];

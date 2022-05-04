@@ -39,16 +39,16 @@ $config['list']['columns'] = [
     'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'code' => [
         'label' => 'lang:system::lang.mail_templates.column_code',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'partial_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 ];
 

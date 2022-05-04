@@ -51,7 +51,7 @@ class MailManager
     /**
      * @var bool Internal marker for rendering mode
      */
-    protected $isRenderingHtml = FALSE;
+    protected $isRenderingHtml = false;
 
     /**
      * The partials being rendered.
@@ -67,7 +67,7 @@ class MailManager
      */
     protected $partialData = [];
 
-    public function addContentToMailer($message, $code, $data, $plainOnly = FALSE)
+    public function addContentToMailer($message, $code, $data, $plainOnly = false)
     {
         if (isset($this->templateCache[$code])) {
             $template = $this->templateCache[$code];
@@ -77,7 +77,7 @@ class MailManager
         }
 
         if (!$template)
-            return FALSE;
+            return false;
 
         return $this->addContentToMailerInternal($message, $template, $data, $plainOnly);
     }
@@ -138,7 +138,7 @@ class MailManager
      * @param bool $plainOnly
      * @return bool
      */
-    protected function addContentToMailerInternal($message, $template, $data, $plainOnly = FALSE)
+    protected function addContentToMailerInternal($message, $template, $data, $plainOnly = false)
     {
         $globalVars = ViewHelper::getGlobalVars();
         if (!empty($globalVars)) {
@@ -163,7 +163,7 @@ class MailManager
         $text = $this->renderTextTemplate($template, $data);
         $message->addPart($text, 'text/plain');
 
-        return TRUE;
+        return true;
     }
 
     //
@@ -210,7 +210,7 @@ class MailManager
 
     public function renderTemplate($template, $data = [])
     {
-        $this->isRenderingHtml = TRUE;
+        $this->isRenderingHtml = true;
 
         $html = $this->render($template->body, $data);
 
@@ -229,7 +229,7 @@ class MailManager
 
     public function renderTextTemplate($template, $data = [])
     {
-        $this->isRenderingHtml = FALSE;
+        $this->isRenderingHtml = false;
 
         $templateText = $template->plain_body;
         if (!strlen($template->plain_body))
@@ -269,7 +269,7 @@ class MailManager
 
     public function renderPartial()
     {
-        $this->isRenderingHtml = TRUE;
+        $this->isRenderingHtml = true;
 
         $code = array_pop($this->partialStack);
         if (!$partial = Mail_partials_model::findOrMakePartial($code))

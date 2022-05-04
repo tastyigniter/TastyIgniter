@@ -147,7 +147,7 @@ class Themes extends \Admin\Classes\AdminController
             // Theme not found in filesystem
             // so delete from database
             if (!$theme) {
-                Themes_model::deleteTheme($themeCode, TRUE);
+                Themes_model::deleteTheme($themeCode, true);
                 flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
 
                 return $this->redirectBack();
@@ -288,21 +288,21 @@ class Themes extends \Admin\Classes\AdminController
         if (!$model->getFieldsConfig())
             return;
 
-        if (!config('system.publishThemeAssetsBundle', TRUE))
+        if (!config('system.publishThemeAssetsBundle', true))
             return;
 
-        $loaded = FALSE;
+        $loaded = false;
         $theme = $model->getTheme();
         $file = '/_meta/assets.json';
 
         if (File::exists($path = $theme->path.$file)) {
             Assets::addFromManifest($theme->publicPath.$file);
-            $loaded = TRUE;
+            $loaded = true;
         }
 
         if ($theme->hasParent() && File::exists($path = $theme->getParent()->path.$file)) {
             Assets::addFromManifest($theme->getParent()->publicPath.$file);
-            $loaded = TRUE;
+            $loaded = true;
         }
 
         if (!$loaded)

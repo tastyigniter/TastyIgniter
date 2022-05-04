@@ -32,7 +32,7 @@ trait ManagesOrderItems
         $orderMenuOptions = $this->getOrderMenuOptions();
         $this->getOrderMenus()->each(function ($orderMenu) use ($orderMenuOptions) {
             if (!$menu = Menus_model::find($orderMenu->menu_id))
-                return TRUE;
+                return true;
 
             optional($menu->getStockByLocation($this->location))
                 ->updateStockSold($this->getKey(), $orderMenu->quantity);
@@ -42,10 +42,10 @@ trait ManagesOrderItems
                 ->each(function ($orderMenuOption) {
                     if (!$menuItemOptionValue = Menu_item_option_values_model::find(
                         $orderMenuOption->menu_option_value_id
-                    )) return TRUE;
+                    )) return true;
 
                     if (!$menuOptionValue = $menuItemOptionValue->option_value)
-                        return TRUE;
+                        return true;
 
                     optional($menuOptionValue->getStockByLocation($this->location))
                         ->updateStockSold($this->getKey(), $orderMenuOption->quantity);
@@ -126,7 +126,7 @@ trait ManagesOrderItems
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
-            return FALSE;
+            return false;
 
         $this->orderMenusQuery()->where('order_id', $orderId)->delete();
         $this->orderMenuOptionsQuery()->where('order_id', $orderId)->delete();
@@ -165,7 +165,7 @@ trait ManagesOrderItems
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
-            return FALSE;
+            return false;
 
         foreach ($options as $option) {
             foreach ($option->values as $value) {
@@ -194,7 +194,7 @@ trait ManagesOrderItems
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
-            return FALSE;
+            return false;
 
         foreach ($totals as $total) {
             $this->addOrUpdateOrderTotal($total);
@@ -219,7 +219,7 @@ trait ManagesOrderItems
 
         $total = $this->orderTotalsQuery()
             ->where('order_id', $this->getKey())
-            ->where('is_summable', TRUE)
+            ->where('is_summable', true)
             ->sum('value');
 
         $orderTotal = $subtotal + $total;

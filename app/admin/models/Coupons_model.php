@@ -29,7 +29,7 @@ class Coupons_model extends Model
 
     protected $timeFormat = 'H:i';
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'discount' => 'float',
@@ -120,7 +120,7 @@ class Coupons_model extends Model
 
         switch ($this->validity) {
             case 'forever':
-                return FALSE;
+                return false;
             case 'fixed':
                 $start = $this->fixed_date->copy()->setTimeFromTimeString($this->fixed_from_time);
                 $end = $this->fixed_date->copy()->setTimeFromTimeString($this->fixed_to_time);
@@ -130,7 +130,7 @@ class Coupons_model extends Model
                 return !$now->between($this->period_start_date, $this->period_end_date);
             case 'recurring':
                 if (!in_array($now->format('w'), $this->recurring_every))
-                    return TRUE;
+                    return true;
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from_time);
                 $end = $now->copy()->setTimeFromTimeString($this->recurring_to_time);
@@ -138,13 +138,13 @@ class Coupons_model extends Model
                 return !$now->between($start, $end);
         }
 
-        return FALSE;
+        return false;
     }
 
     public function hasRestriction($orderType)
     {
         if (empty($this->order_restriction))
-            return FALSE;
+            return false;
 
         $orderTypes = [AbstractLocation::DELIVERY => 1, AbstractLocation::COLLECTION => 2];
 
@@ -154,7 +154,7 @@ class Coupons_model extends Model
     public function hasLocationRestriction($locationId)
     {
         if (!$this->locations || $this->locations->isEmpty())
-            return FALSE;
+            return false;
 
         $locationKeyColumn = $this->locations()->getModel()->qualifyColumn('location_id');
 

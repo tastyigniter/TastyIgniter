@@ -110,7 +110,7 @@ class ComponentPartial extends Extendable implements TemplateSource
             return null;
         }
 
-        if (($content = @File::get($filePath)) === FALSE) {
+        if (($content = @File::get($filePath)) === false) {
             return null;
         }
 
@@ -206,7 +206,7 @@ class ComponentPartial extends Extendable implements TemplateSource
     public function getBaseFileName()
     {
         $pos = strrpos($this->fileName, '.');
-        if ($pos === FALSE) {
+        if ($pos === false) {
             return $this->fileName;
         }
 

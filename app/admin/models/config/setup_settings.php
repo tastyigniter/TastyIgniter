@@ -31,7 +31,7 @@ return [
                     'label' => 'lang:system::lang.settings.label_location_order',
                     'tab' => 'lang:system::lang.settings.text_tab_title_order',
                     'type' => 'switch',
-                    'default' => FALSE,
+                    'default' => false,
                     'on' => 'lang:admin::lang.text_yes',
                     'off' => 'lang:admin::lang.text_no',
                     'comment' => 'lang:system::lang.settings.help_location_order',

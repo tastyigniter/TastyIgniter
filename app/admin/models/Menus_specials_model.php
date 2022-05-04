@@ -62,9 +62,9 @@ class Menus_specials_model extends Model
     public function active()
     {
         if (!$this->special_status)
-            return FALSE;
+            return false;
 
-        return !($this->isExpired() === TRUE);
+        return !($this->isExpired() === true);
     }
 
     public function daysRemaining()
@@ -86,12 +86,12 @@ class Menus_specials_model extends Model
 
         switch ($this->validity) {
             case 'forever':
-                return FALSE;
+                return false;
             case 'period':
                 return !$now->between($this->start_date, $this->end_date);
             case 'recurring':
                 if (!in_array($now->format('w'), $this->recurring_every ?? []))
-                    return TRUE;
+                    return true;
 
                 $start = $now->copy()->setTimeFromTimeString($this->recurring_from);
                 $end = $now->copy()->setTimeFromTimeString($this->recurring_to);

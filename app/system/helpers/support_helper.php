@@ -238,7 +238,7 @@ if (!function_exists('day_elapsed')) {
      *
      * @return string
      */
-    function day_elapsed($datetime, $full = TRUE)
+    function day_elapsed($datetime, $full = true)
     {
         $datetime = make_carbon($datetime);
         $time = $datetime->isoFormat(lang('system::lang.moment.time_format'));
@@ -325,7 +325,7 @@ if (!function_exists('make_carbon')) {
      *
      * @return \Carbon\Carbon
      */
-    function make_carbon($value, $throwException = TRUE)
+    function make_carbon($value, $throwException = true)
     {
         if ($value instanceof Carbon) {
             // Do nothing
@@ -396,7 +396,7 @@ if (!function_exists('traceLog')) {
                 $level = 'error';
             }
             elseif (is_array($message) || is_object($message)) {
-                $message = print_r($message, TRUE);
+                $message = print_r($message, true);
             }
 
             Log::$level($message);
@@ -458,7 +458,7 @@ if (!function_exists('name_to_array')) {
     {
         $result = [$string];
 
-        if (strpbrk($string, '[]') === FALSE)
+        if (strpbrk($string, '[]') === false)
             return $result;
 
         if (preg_match('/^([^\]]+)(?:\[(.+)\])+$/', $string, $matches)) {
@@ -488,7 +488,7 @@ if (!function_exists('convert_camelcase_to_underscore')) {
      *
      * @return string CamelCase
      */
-    function convert_camelcase_to_underscore($string = '', $lowercase = FALSE)
+    function convert_camelcase_to_underscore($string = '', $lowercase = false)
     {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $string, $matches);
         $ret = $matches[0];
@@ -528,12 +528,12 @@ if (!function_exists('contains_substring')) {
     function contains_substring($haystack, $needles)
     {
         foreach ((array)$needles as $needle) {
-            if ($needle != '' && mb_strpos($haystack, $needle) !== FALSE) {
-                return TRUE;
+            if ($needle != '' && mb_strpos($haystack, $needle) !== false) {
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 }
 
@@ -548,18 +548,18 @@ if (!function_exists('is_lang_key')) {
     function is_lang_key($line)
     {
         if (!is_string($line)) {
-            return FALSE;
+            return false;
         }
 
-        if (strpos($line, '::') !== FALSE) {
-            return TRUE;
+        if (strpos($line, '::') !== false) {
+            return true;
         }
 
         if (starts_with($line, 'lang:')) {
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 }
 
@@ -598,7 +598,7 @@ if (!function_exists('array_replace_key')) {
     {
         $keys = array_keys($array);
 
-        if (($keyIndex = array_search($oldKey, $keys, TRUE)) !== FALSE) {
+        if (($keyIndex = array_search($oldKey, $keys, true)) !== false) {
             $keys[$keyIndex] = $newKey;
         }
 

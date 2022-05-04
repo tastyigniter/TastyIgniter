@@ -16,7 +16,7 @@ trait HasWorkingHours
     public static function bootHasWorkingHours()
     {
         static::fetched(function (self $model) {
-            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
+            $value = @json_decode($model->attributes['options'], true) ?: [];
 
             $model->parseHoursFromOptions($value);
 
@@ -24,7 +24,7 @@ trait HasWorkingHours
         });
 
         static::saving(function (self $model) {
-            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
+            $value = @json_decode($model->attributes['options'], true) ?: [];
 
             $model->parseHoursFromOptions($value);
 
@@ -197,7 +197,7 @@ trait HasWorkingHours
             }
         }
 
-        return TRUE;
+        return true;
     }
 
     protected function parseHoursFromOptions(&$value)

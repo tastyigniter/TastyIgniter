@@ -34,22 +34,22 @@ $config['list']['columns'] = [
     'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'description' => [
         'label' => 'lang:admin::lang.label_description',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'staff_count' => [
         'label' => 'lang:admin::lang.staff_groups.column_users',
         'type' => 'number',
-        'searchable' => TRUE,
-        'sortable' => FALSE,
+        'searchable' => true,
+        'sortable' => false,
     ],
     'staff_role_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 ];
 

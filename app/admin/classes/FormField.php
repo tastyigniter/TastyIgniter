@@ -92,27 +92,27 @@ class FormField
     /**
      * @var bool Specifies if this field is mandatory.
      */
-    public $required = FALSE;
+    public $required = false;
 
     /**
      * @var bool Specify if the field is read-only or not.
      */
-    public $readOnly = FALSE;
+    public $readOnly = false;
 
     /**
      * @var bool Specify if the field is disabled or not.
      */
-    public $disabled = FALSE;
+    public $disabled = false;
 
     /**
      * @var bool Specify if the field is hidden. Hiddens fields are not included in postbacks.
      */
-    public $hidden = FALSE;
+    public $hidden = false;
 
     /**
      * @var bool Specifies if this field stretch to fit the page height.
      */
-    public $stretch = FALSE;
+    public $stretch = false;
 
     /**
      * @var string Specifies a comment to accompany the field
@@ -127,7 +127,7 @@ class FormField
     /**
      * @var string Specifies if the comment is in HTML format.
      */
-    public $commentHtml = FALSE;
+    public $commentHtml = false;
 
     /**
      * @var string Specifies a message to display when there is no value supplied (placeholder).
@@ -418,7 +418,7 @@ class FormField
     public function hasAttribute($name, $position = 'field')
     {
         if (!isset($this->attributes[$position])) {
-            return FALSE;
+            return false;
         }
 
         return array_key_exists($name, $this->attributes[$position]);
@@ -433,7 +433,7 @@ class FormField
      *
      * @return string
      */
-    public function getAttributes($position = 'field', $htmlBuild = TRUE)
+    public function getAttributes($position = 'field', $htmlBuild = true)
     {
         $result = array_get($this->attributes, $position, []);
         $result = $this->filterAttributes($result, $position);

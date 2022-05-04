@@ -39,34 +39,34 @@ $config['list']['columns'] = [
     'title' => [
         'label' => 'lang:system::lang.mail_templates.column_title',
         'type' => 'text',
-        'searchable' => TRUE,
-        'sortable' => FALSE,
+        'searchable' => true,
+        'sortable' => false,
     ],
     'code' => [
         'label' => 'lang:system::lang.mail_templates.column_code',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'layout_id' => [
         'label' => 'lang:system::lang.mail_templates.column_layout',
         'relation' => 'layout',
         'valueFrom' => 'name',
-        'sortable' => FALSE,
+        'sortable' => false,
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'timetense',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timetense',
-        'searchable' => TRUE,
-        'invisible' => TRUE,
+        'searchable' => true,
+        'invisible' => true,
     ],
     'template_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 ];
 

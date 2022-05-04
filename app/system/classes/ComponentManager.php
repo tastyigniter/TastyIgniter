@@ -177,7 +177,7 @@ class ComponentManager
     {
         $class_path = $this->resolve($name);
         if (!$class_path) {
-            return FALSE;
+            return false;
         }
 
         return isset($this->classMap[$class_path]);
@@ -275,7 +275,7 @@ class ComponentManager
      */
     public function convertCodeToPath($alias)
     {
-        if (strpos($alias, '/') === FALSE) {
+        if (strpos($alias, '/') === false) {
             return $alias;
         }
 
@@ -294,7 +294,7 @@ class ComponentManager
      *
      * @return array
      */
-    public function getComponentPropertyConfig($component, $addAliasProperty = TRUE)
+    public function getComponentPropertyConfig($component, $addAliasProperty = true)
     {
         $result = [];
 
@@ -306,8 +306,8 @@ class ComponentManager
                 'comment' => '',
                 'validationRule' => ['required', 'regex:^[a-zA-Z]+$'],
                 'validationMessage' => '',
-                'required' => TRUE,
-                'showExternalParam' => FALSE,
+                'required' => true,
+                'showExternalParam' => false,
             ];
             $result['alias'] = $property;
         }
@@ -322,7 +322,7 @@ class ComponentManager
                 'property' => $name,
                 'label' => array_get($params, 'label', $name),
                 'type' => $propertyType,
-                'showExternalParam' => array_get($params, 'showExternalParam', FALSE),
+                'showExternalParam' => array_get($params, 'showExternalParam', false),
             ];
 
             if (!in_array($propertyType, ['text', 'number']) && !array_key_exists('options', $params)) {

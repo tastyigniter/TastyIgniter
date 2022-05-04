@@ -80,7 +80,7 @@ class Menus extends AdminController
         return [
             '#notification' => $this->makePartial('flash'),
             '#'.$formField->getId('group') => $this->widgets['form']->renderField($formField, [
-                'useContainer' => FALSE,
+                'useContainer' => false,
             ]),
         ];
     }

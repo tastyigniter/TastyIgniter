@@ -58,7 +58,7 @@ class FilterScope
     /**
      * @var bool Specify if the scope is disabled or not.
      */
-    public $disabled = FALSE;
+    public $disabled = false;
 
     /**
      * @var string Specifies a default value for supported scopes.

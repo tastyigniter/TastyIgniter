@@ -17,7 +17,7 @@ class Menu_categories_model extends Model
     /**
      * @var string The database table primary key
      */
-    public $incrementing = FALSE;
+    public $incrementing = false;
 
     protected $casts = [
         'menu_id' => 'integer',

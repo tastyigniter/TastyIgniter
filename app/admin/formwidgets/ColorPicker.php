@@ -31,17 +31,17 @@ class ColorPicker extends BaseFormWidget
     /**
      * @var bool Show opacity slider
      */
-    public $showAlpha = FALSE;
+    public $showAlpha = false;
 
     /**
      * @var bool If true, the color picker is set to read-only mode
      */
-    public $readOnly = FALSE;
+    public $readOnly = false;
 
     /**
      * @var bool If true, the color picker is set to disabled mode
      */
-    public $disabled = FALSE;
+    public $disabled = false;
 
     //
     // Object properties

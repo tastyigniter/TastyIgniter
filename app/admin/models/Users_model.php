@@ -122,14 +122,14 @@ class Users_model extends AuthUserModel
 
     public function hasAnyPermission($permissions)
     {
-        return $this->hasPermission($permissions, FALSE);
+        return $this->hasPermission($permissions, false);
     }
 
-    public function hasPermission($permissions, $checkAll = TRUE)
+    public function hasPermission($permissions, $checkAll = true)
     {
         // Bail out if the staff is a super user
         if ($this->isSuperUser())
-            return TRUE;
+            return true;
 
         $staffPermissions = $this->getPermissions();
 
@@ -138,9 +138,9 @@ class Users_model extends AuthUserModel
 
         if (PermissionManager::instance()->checkPermission(
             $staffPermissions, $permissions, $checkAll)
-        ) return TRUE;
+        ) return true;
 
-        return FALSE;
+        return false;
     }
 
     public function getPermissions()

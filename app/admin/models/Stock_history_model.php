@@ -35,7 +35,7 @@ class Stock_history_model extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function createHistory(Stocks_model $stock, int $quantity, $state, array $options = [])
     {

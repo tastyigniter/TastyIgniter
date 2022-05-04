@@ -13,7 +13,7 @@ trait HasAuthentication
      * @var bool If TRUE, this class requires the user to be logged in before
      * accessing any method.
      */
-    protected $requireAuthentication = TRUE;
+    protected $requireAuthentication = true;
 
     /**
      * @var \Admin\Models\Users_model Stores the logged in admin user model.

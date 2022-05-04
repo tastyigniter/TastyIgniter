@@ -15,7 +15,7 @@ trait HasDeliveryAreas
     public static function bootHasDeliveryAreas()
     {
         static::fetched(function (self $model) {
-            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
+            $value = @json_decode($model->attributes['options'], true) ?: [];
 
             $model->parseAreasFromOptions($value);
 
@@ -25,7 +25,7 @@ trait HasDeliveryAreas
         static::saving(function (self $model) {
             $model->geocodeAddressOnSave();
 
-            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
+            $value = @json_decode($model->attributes['options'], true) ?: [];
 
             $model->parseAreasFromOptions($value);
 
@@ -35,7 +35,7 @@ trait HasDeliveryAreas
 
     protected function geocodeAddressOnSave()
     {
-        if (!array_get($this->options, 'auto_lat_lng', TRUE))
+        if (!array_get($this->options, 'auto_lat_lng', true))
             return;
 
         if (!$this->isDirty([
@@ -47,7 +47,7 @@ trait HasDeliveryAreas
             'location_country_id',
         ])) return;
 
-        $address = format_address($this->getAddress(), FALSE);
+        $address = format_address($this->getAddress(), false);
 
         $geoLocation = Geocoder::geocode($address)->first();
         if ($geoLocation && $geoLocation->hasCoordinates()) {
@@ -131,10 +131,10 @@ trait HasDeliveryAreas
     {
         $locationId = $this->getKey();
         if (!is_numeric($locationId))
-            return FALSE;
+            return false;
 
         if (!is_array($deliveryAreas))
-            return FALSE;
+            return false;
 
         $idsToKeep = [];
         foreach ($deliveryAreas as $area) {

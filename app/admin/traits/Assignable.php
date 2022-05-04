@@ -15,7 +15,7 @@ trait Assignable
             $model->relation['belongsTo']['assignee'] = ['Admin\Models\Staffs_model'];
             $model->relation['belongsTo']['assignee_group'] = ['Admin\Models\Staff_groups_model'];
             $model->relation['morphMany']['assignable_logs'] = [
-                'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => TRUE,
+                'Admin\Models\Assignable_logs_model', 'name' => 'assignable', 'delete' => true,
             ];
 
             $model->addCasts([
@@ -49,7 +49,7 @@ trait Assignable
     public function assignTo($assignee)
     {
         if (is_null($this->assignee_group))
-            return FALSE;
+            return false;
 
         return $this->updateAssignTo($this->assignee_group, $assignee);
     }
@@ -79,7 +79,7 @@ trait Assignable
         $this->save();
 
         if (!$log = Assignable_logs_model::createLog($this))
-            return FALSE;
+            return false;
 
         $this->fireSystemEvent('admin.assignable.assigned', [$log]);
 

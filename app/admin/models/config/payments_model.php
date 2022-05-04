@@ -61,11 +61,11 @@ $config['list']['columns'] = [
     'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'description' => [
         'label' => 'lang:admin::lang.label_description',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'status' => [
         'label' => 'lang:admin::lang.label_status',
@@ -83,7 +83,7 @@ $config['list']['columns'] = [
     ],
     'payment_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 
 ];

@@ -11,7 +11,7 @@ class AddUpdateRelatedColumnToMenuOptionsTable extends Migration
     public function up()
     {
         Schema::table('menu_options', function (Blueprint $table) {
-            $table->boolean('update_related_menu_item')->default(FALSE);
+            $table->boolean('update_related_menu_item')->default(false);
         });
     }
 }

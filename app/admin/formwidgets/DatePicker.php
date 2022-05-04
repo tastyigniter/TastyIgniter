@@ -112,7 +112,7 @@ class DatePicker extends BaseFormWidget
         $this->vars['name'] = $this->formField->getName();
 
         if ($value = $this->getLoadValue()) {
-            $value = make_carbon($value, FALSE);
+            $value = make_carbon($value, false);
         }
 
         // Display alias, used by preview mode

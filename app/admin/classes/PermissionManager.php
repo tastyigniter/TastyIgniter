@@ -82,21 +82,21 @@ class PermissionManager
 
     public function checkPermission($permissions, $checkPermissions, $checkAll)
     {
-        $matched = FALSE;
+        $matched = false;
         foreach ($checkPermissions as $permission) {
             if ($this->checkPermissionStartsWith($permission, $permissions)
                 || $this->checkPermissionEndsWith($permission, $permissions)
                 || $this->checkPermissionMatches($permission, $permissions)
-            ) $matched = TRUE;
+            ) $matched = true;
 
-            if ($checkAll === FALSE && $matched === TRUE)
-                return TRUE;
+            if ($checkAll === false && $matched === true)
+                return true;
 
-            if ($checkAll === TRUE && $matched === FALSE)
-                return FALSE;
+            if ($checkAll === true && $matched === false)
+                return false;
         }
 
-        return !($checkAll === FALSE);
+        return !($checkAll === false);
     }
 
     protected function checkPermissionStartsWith($permission, $permissions)
@@ -109,7 +109,7 @@ class PermissionManager
                 if ($checkPermission != $groupPermission
                     && starts_with($groupPermission, $checkPermission)
                     && $permitted == 1
-                ) return TRUE;
+                ) return true;
             }
         }
     }
@@ -124,7 +124,7 @@ class PermissionManager
                 if ($checkPermission != $groupPermission
                     && ends_with($groupPermission, $checkPermission)
                     && $permitted == 1
-                ) return TRUE;
+                ) return true;
             }
         }
     }
@@ -139,11 +139,11 @@ class PermissionManager
                 if ($checkMergedPermission != $permission
                     && starts_with($permission, $checkMergedPermission)
                     && $permitted == 1
-                ) return TRUE;
+                ) return true;
             }
             // Match permissions explicitly.
             elseif ($permission == $groupPermission && $permitted == 1) {
-                return TRUE;
+                return true;
             }
         }
     }

@@ -21,7 +21,7 @@ $config['list']['filter'] = [
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => TRUE,
+            'locationAware' => true,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -77,24 +77,24 @@ $config['list']['columns'] = [
     ],
     'order_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'location_name' => [
         'label' => 'lang:admin::lang.orders.column_location',
         'relation' => 'location',
         'select' => 'location_name',
-        'searchable' => TRUE,
-        'locationAware' => TRUE,
+        'searchable' => true,
+        'locationAware' => true,
     ],
     'full_name' => [
         'label' => 'lang:admin::lang.orders.column_customer_name',
         'select' => "concat(first_name, ' ', last_name)",
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'order_type_name' => [
         'label' => 'lang:admin::lang.label_type',
         'type' => 'text',
-        'sortable' => FALSE,
+        'sortable' => false,
     ],
     'order_time_is_asap' => [
         'label' => 'lang:admin::lang.orders.label_time_is_asap',
@@ -110,7 +110,7 @@ $config['list']['columns'] = [
     'order_date' => [
         'label' => 'lang:admin::lang.orders.column_date',
         'type' => 'date',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'status_name' => [
         'label' => 'lang:admin::lang.label_status',
@@ -122,7 +122,7 @@ $config['list']['columns'] = [
     'payment' => [
         'label' => 'lang:admin::lang.orders.column_payment',
         'type' => 'text',
-        'sortable' => FALSE,
+        'sortable' => false,
         'relation' => 'payment_method',
         'select' => 'name',
     ],
@@ -131,16 +131,16 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'assignee',
         'select' => 'staff_name',
-        'searchable' => TRUE,
-        'invisible' => TRUE,
+        'searchable' => true,
+        'invisible' => true,
     ],
     'assignee_group_name' => [
         'label' => 'lang:admin::lang.orders.column_assignee_group',
         'type' => 'text',
         'relation' => 'assignee_group',
         'select' => 'staff_group_name',
-        'searchable' => TRUE,
-        'invisible' => TRUE,
+        'searchable' => true,
+        'invisible' => true,
     ],
     'order_total' => [
         'label' => 'lang:admin::lang.orders.column_total',
@@ -149,12 +149,12 @@ $config['list']['columns'] = [
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'datesince',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'timesince',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 ];
 
@@ -189,7 +189,7 @@ $config['form']['toolbar'] = [
 $config['form']['fields'] = [
     '_info' => [
         'type' => 'partial',
-        'disabled' => TRUE,
+        'disabled' => true,
         'path' => 'orders/form/info',
         'span' => 'left',
         'cssClass' => 'left',
@@ -228,7 +228,7 @@ $config['form']['tabs'] = [
         'status_history' => [
             'tab' => 'lang:admin::lang.orders.text_status_history',
             'type' => 'datatable',
-            'useAjax' => TRUE,
+            'useAjax' => true,
             'defaultSort' => ['status_history_id', 'desc'],
             'columns' => [
                 'date_added_since' => [
@@ -251,7 +251,7 @@ $config['form']['tabs'] = [
         'payment_logs' => [
             'tab' => 'lang:admin::lang.orders.text_payment_logs',
             'type' => 'datatable',
-            'useAjax' => TRUE,
+            'useAjax' => true,
             'defaultSort' => ['payment_log_id', 'desc'],
             'columns' => [
                 'date_added_since' => [
