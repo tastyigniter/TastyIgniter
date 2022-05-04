@@ -9,6 +9,7 @@ use Admin\Classes\Widgets;
 use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
 use Admin\Middleware\LogUserLastSeen;
+use Admin\Requests\Location;
 use Igniter\Flame\ActivityLog\Models\Activity;
 use Igniter\Flame\Foundation\Providers\AppServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
@@ -34,6 +35,7 @@ class ServiceProvider extends AppServiceProvider
         if ($this->app->runningInAdmin()) {
             $this->resolveFlashSessionKey();
             $this->replaceNavMenuItem();
+            $this->extendLocationOptionsFields();
         }
     }
 
@@ -522,7 +524,7 @@ class ServiceProvider extends AppServiceProvider
             if (AdminLocation::check()) {
                 $manager->mergeNavItem('locations', [
                     'href' => admin_url('locations/settings'),
-                    'title' => lang('admin::lang.side_menu.setting'),
+                    'title' => lang('admin::lang.locations.text_form_name'),
                 ], 'restaurant');
             }
         });
@@ -762,6 +764,39 @@ class ServiceProvider extends AppServiceProvider
                     'form' => '~/app/admin/models/config/user_settings',
                     'request' => 'Admin\Requests\UserSettings',
                 ],
+            ]);
+        });
+    }
+
+    protected function extendLocationOptionsFields()
+    {
+        Event::listen('admin.locations.defineOptionsFormFields', function () {
+            return [
+                'guest_order' => [
+                    'label' => 'lang:system::lang.settings.label_guest_order',
+                    'accordion' => 'lang:admin::lang.locations.text_tab_general_options',
+                    'type' => 'radiotoggle',
+                    'comment' => 'lang:admin::lang.locations.help_guest_order',
+                    'default' => -1,
+                    'options' => [
+                        -1 => 'lang:admin::lang.text_use_default',
+                        0 => 'lang:admin::lang.text_no',
+                        1 => 'lang:admin::lang.text_yes',
+                    ],
+                ],
+            ];
+        });
+
+        Event::listen('system.formRequest.extendValidator', function ($formRequest, $dataHolder) {
+            if (!$formRequest instanceof Location)
+                return;
+
+            $dataHolder->attributes = array_merge($dataHolder->attributes, [
+                'guest_order' => lang('admin::lang.locations.label_guest_order'),
+            ]);
+
+            $dataHolder->rules = array_merge($dataHolder->rules, [
+                'guest_order' => ['integer'],
             ]);
         });
     }

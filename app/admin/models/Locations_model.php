@@ -34,8 +34,6 @@ class Locations_model extends AbstractLocation
         'location_lat' => 'double',
         'location_lng' => 'double',
         'location_status' => 'boolean',
-        'options' => 'array',
-
     ];
 
     public $relation = [
@@ -224,10 +222,21 @@ class Locations_model extends AbstractLocation
 
     public function setOptionsAttribute($value)
     {
-        if (is_array($value)) {
-            $options = @json_decode($this->attributes['options'], TRUE) ?: [];
-            $this->attributes['options'] = @json_encode(array_merge($options ?? [], $value));
-        }
+        return $this->options()->setAll($value);
+    }
+
+    public function getOptionsAttribute($value)
+    {
+        return $this->options()->getAll();
+    }
+
+    //
+    // Options
+    //
+
+    public function options()
+    {
+        return LocationOption::onLocation($this);
     }
 
     //
