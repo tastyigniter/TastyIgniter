@@ -20,6 +20,12 @@ $config['list']['toolbar'] = [
             'class' => 'btn btn-primary',
             'href' => 'languages/create',
         ],
+        'browse' => [
+            'label' => 'lang:system::lang.languages.button_browse',
+            'class' => 'btn btn-default',
+            'href' => 'https://tastyigniter.com/translate',
+            'target' => '_blank',
+        ],
     ],
 ];
 
@@ -61,30 +67,30 @@ $config['list']['columns'] = [
     'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'code' => [
         'label' => 'lang:system::lang.languages.column_code',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'status' => [
         'label' => 'lang:system::lang.languages.column_status',
         'type' => 'switch',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'language_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -117,14 +123,14 @@ $config['form']['toolbar'] = [
 ];
 
 $config['form']['fields'] = [
-    'name' => [
-        'label' => 'lang:admin::lang.label_name',
+    'code' => [
+        'label' => 'lang:system::lang.languages.label_code',
         'type' => 'text',
         'span' => 'none',
         'cssClass' => 'pull-left flex-fill mr-3',
     ],
-    'code' => [
-        'label' => 'lang:system::lang.languages.label_code',
+    'name' => [
+        'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'none',
         'cssClass' => 'pull-left flex-fill mr-3',
@@ -134,7 +140,7 @@ $config['form']['fields'] = [
         'type' => 'switch',
         'span' => 'none',
         'cssClass' => 'pull-left flex-fill',
-        'default' => TRUE,
+        'default' => true,
     ],
     'section' => [
         'type' => 'section',

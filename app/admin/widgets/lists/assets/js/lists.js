@@ -10,7 +10,7 @@ $(function () {
         var $button = $(this)
 
         $listFilterTarget.slideToggle(function () {
-            $button.button('toggle')
+            $button.toggleClass('active')
             if (!listFilterStoreName || !listFilterStoreName.length)
                 return
 

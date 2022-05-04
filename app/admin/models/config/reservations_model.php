@@ -17,7 +17,7 @@ $config['list']['filter'] = [
         ],
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
-            'type' => 'select',
+            'type' => 'selectlist',
             'conditions' => 'location_id = :filtered',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
@@ -25,7 +25,7 @@ $config['list']['filter'] = [
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
-            'type' => 'select',
+            'type' => 'selectlist',
             'conditions' => 'status_id = :filtered',
             'modelClass' => 'Admin\Models\Statuses_model',
             'options' => 'getDropdownOptionsForReservation',

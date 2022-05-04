@@ -1,7 +1,7 @@
 @php
     $addonDefault = [
-        'tag'        => 'span',
-        'label'      => 'Label',
+        'tag' => 'span',
+        'label' => 'Label',
         'attributes' => [
             'class' => 'input-group-text',
         ],
@@ -11,10 +11,8 @@
 @endphp
 <div class="input-group">
     @if ($addonLeft)
-        <span class="input-group-text">
-            {!! '<'.$addonLeft->tag.Html::attributes($addonLeft->attributes).'>'
-            .lang($addonLeft->label).'</'.$addonLeft->tag.'>' !!}
-        </span>
+        {!! '<'.$addonLeft->tag.Html::attributes($addonLeft->attributes).'>'
+        .lang($addonLeft->label).'</'.$addonLeft->tag.'>' !!}
     @endif
 
     <input
@@ -32,9 +30,7 @@
     />
 
     @if ($addonRight)
-        <span class="input-group-text">
-            {!! '<'.$addonRight->tag.Html::attributes($addonRight->attributes).'>'
-            .lang($addonRight->label).'</'.$addonRight->tag.'>' !!}
-        </span>
+        {!! '<'.$addonRight->tag.Html::attributes($addonRight->attributes).'>'
+        .lang($addonRight->label).'</'.$addonRight->tag.'>' !!}
     @endif
 </div>

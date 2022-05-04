@@ -549,7 +549,7 @@ class ExtensionManager
 
     public function getExtensionPath($code)
     {
-        return $this->paths[$code];
+        return $this->paths[$code] ?? null;
     }
 
     /**
@@ -667,7 +667,8 @@ class ExtensionManager
      */
     public function removeExtension($extCode = null)
     {
-        $extensionPath = $this->getExtensionPath($extCode);
+        if (!$extensionPath = $this->getExtensionPath($extCode))
+            return FALSE;
 
         // Delete the specified extension folder.
         if (File::isDirectory($extensionPath))
