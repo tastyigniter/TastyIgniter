@@ -20,7 +20,6 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\View;
 use Main\Widgets\MediaManager;
 use System\Classes\Controller;
 use System\Classes\ErrorHandler;
@@ -175,8 +174,13 @@ class AdminController extends BaseController
             $manager->bindToController();
         }
 
+        // Top menu widget is available on all admin pages
+        $this->makeMainMenuWidget();
+
         // @deprecated This event will be deprecated soon, use controller.beforeRemap
         $this->fireEvent('controller.afterConstructor', [$this]);
+
+        return $this;
     }
 
     public function remap($action, $params)
@@ -202,16 +206,17 @@ class AdminController extends BaseController
             if ($this->requiredPermissions && !$this->getUser()->hasAnyPermission($this->requiredPermissions)) {
                 return Response::make(Request::ajax()
                     ? lang('admin::lang.alert_user_restricted')
-                    : View::make('admin::access_denied'), 403
+                    : $this->makeView('access_denied'), 403
                 );
             }
         }
 
-        // Top menu widget is available on all admin pages
-        $this->makeMainMenuWidget();
-
         if ($event = $this->fireSystemEvent('admin.controller.beforeResponse', [$action, $params])) {
             return $event;
+        }
+
+        if ($action === '404') {
+            return Response::make($this->makeView('404'), 404);
         }
 
         // Execute post handler and AJAX event
@@ -465,7 +470,7 @@ class AdminController extends BaseController
                 throw new Exception(sprintf(lang('admin::lang.alert_widget_not_bound_to_controller'), $widgetName));
             }
 
-            if (($widget = $this->widgets[$widgetName]) && method_exists($widget, $handlerName)) {
+            if (($widget = $this->widgets[$widgetName]) && $widget->methodExists($handlerName)) {
                 $result = call_user_func_array([$widget, $handlerName], array_values($params));
 
                 return $result ?: TRUE;

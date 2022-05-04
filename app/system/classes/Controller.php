@@ -112,12 +112,10 @@ class Controller extends IlluminateController
         }
 
         if ($result = $this->locateController($url)) {
-            $result['controller']->initialize();
-
-            return $result['controller']->remap($result['action'], $result['segments']);
+            return $result['controller']->initialize()->remap($result['action'], $result['segments']);
         }
 
-        return Response::make(View::make('main::404'), 404);
+        return App::make('Admin\Classes\AdminController')->initialize()->remap('404', []);
     }
 
     /**
@@ -196,7 +194,7 @@ class Controller extends IlluminateController
             return $controllerObj;
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -208,7 +206,7 @@ class Controller extends IlluminateController
      */
     protected function processAction($actionName)
     {
-        if (strpos($actionName, '-') !== false) {
+        if (strpos($actionName, '-') !== FALSE) {
             return camel_case($actionName);
         }
 

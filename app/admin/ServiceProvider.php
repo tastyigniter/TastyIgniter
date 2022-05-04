@@ -240,7 +240,7 @@ class ServiceProvider extends AppServiceProvider
     protected function registerMainMenuItems()
     {
         AdminMenu::registerCallback(function (Navigation $manager) {
-            $manager->registerMainItems([
+            $menuItems = [
                 'preview' => [
                     'icon' => 'fa-store',
                     'attributes' => [
@@ -277,15 +277,20 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'locations' => [
                     'type' => 'partial',
-                    'options' => ['Admin\Models\Locations_model', 'getDropdownOptions'],
-                    'path' => '~/app/admin/views/locations/picker',
+                    'path' => 'locations/picker',
+                    'options' => ['Admin\Classes\UserPanel', 'listLocations'],
                 ],
                 'user' => [
                     'type' => 'partial',
                     'path' => 'top_nav_user_menu',
                     'options' => ['Admin\Classes\UserPanel', 'listMenuLinks'],
                 ],
-            ]);
+            ];
+
+            if (AdminLocation::listLocations()->isEmpty())
+                unset($menuItems['locations']);
+
+            $manager->registerMainItems($menuItems);
         });
     }
 

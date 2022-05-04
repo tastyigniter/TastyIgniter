@@ -1,6 +1,3 @@
-@php
-    $userPanel = \Admin\Classes\UserPanel::forUser();
-@endphp
 <li
     class="nav-item dropdown"
     data-control="location-picker"
@@ -10,7 +7,7 @@
     </a>
 
     <ul class="dropdown-menu">
-        @foreach($userPanel->listLocations() as $location)
+        @foreach($item->options() as $location)
             <li>
                 <a
                     @class(['dropdown-item', 'active' => $location->active])

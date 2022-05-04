@@ -82,6 +82,18 @@
   > .span-right {
     flex: 0 0 auto;
     width: 100%;
+
+    &.flex-width {
+      width: 25%;
+    }
+  }
+
+  > .flex-width {
+    width: auto;
+  }
+
+  > .flex-width .row > div {
+    width: 100%;
   }
 
   > .span-full {

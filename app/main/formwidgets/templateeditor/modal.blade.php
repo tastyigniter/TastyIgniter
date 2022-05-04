@@ -1,6 +1,6 @@
 <div
     id="{{ $this->getId('modal') }}"
-    class="modal show"
+    class="modal fade"
     tabindex="-1"
     role="dialog"
     aria-labelledby="newSourceModal"
