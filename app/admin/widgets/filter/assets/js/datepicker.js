@@ -46,10 +46,10 @@
             }
             
             if (this.$el.find('[data-datepicker-range-start]').val() == '')
-                options.startDate = '';
+                options.startDate = moment().startOf('day');
                 
             if (this.$el.find('[data-datepicker-range-end]').val() == '')
-                options.endDate = '';
+                options.endDate = moment().endOf('day');
         }
 
         $el.daterangepicker(options, $.proxy(this.onDateSelected, this))
