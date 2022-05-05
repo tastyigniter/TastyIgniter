@@ -4,6 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
+use Admin\Models\LocationOption;
 use Admin\Models\Locations_model;
 use Exception;
 use Igniter\Flame\Geolite\Facades\Geocoder;
@@ -131,7 +132,7 @@ class Locations extends \Admin\Classes\AdminController
     public function formExtendFields($form)
     {
         if ($form->model->exists && $form->context != 'create') {
-            $form->addTabFields($form->model->options()->getFieldsConfig());
+            $form->addTabFields(LocationOption::getFieldsConfig());
         }
     }
 

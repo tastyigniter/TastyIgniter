@@ -14,22 +14,8 @@ trait HasDeliveryAreas
 
     public static function bootHasDeliveryAreas()
     {
-        static::fetched(function (self $model) {
-            $value = @json_decode($model->attributes['options'], true) ?: [];
-
-            $model->parseAreasFromOptions($value);
-
-            $model->attributes['options'] = @json_encode($value);
-        });
-
         static::saving(function (self $model) {
             $model->geocodeAddressOnSave();
-
-            $value = @json_decode($model->attributes['options'], true) ?: [];
-
-            $model->parseAreasFromOptions($value);
-
-            $model->attributes['options'] = @json_encode($value);
         });
     }
 

@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Admin\Traits\HasDeliveryAreas;
+use Admin\Traits\HasLocationOptions;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Traits\HasPermalink;
@@ -19,6 +20,7 @@ class Locations_model extends AbstractLocation
     use HasDeliveryAreas;
     use HasPermalink;
     use HasMedia;
+    use HasLocationOptions;
     use Purgeable;
 
     const LOCATION_CONTEXT_SINGLE = 'single';
@@ -48,7 +50,7 @@ class Locations_model extends AbstractLocation
         ],
     ];
 
-    protected $purgeable = ['delivery_areas'];
+    protected $purgeable = ['options', 'delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -216,25 +218,6 @@ class Locations_model extends AbstractLocation
     public function getReservationTimeIntervalAttribute($value)
     {
         return (int)$this->getOption('reservation_time_interval');
-    }
-
-    public function setOptionsAttribute($value)
-    {
-        return $this->options()->setAll($value);
-    }
-
-    public function getOptionsAttribute($value)
-    {
-        return $this->options()->getAll();
-    }
-
-    //
-    // Options
-    //
-
-    public function options()
-    {
-        return LocationOption::onLocation($this);
     }
 
     //
