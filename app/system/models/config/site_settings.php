@@ -6,7 +6,7 @@ return [
             'buttons' => [
                 'back' => [
                     'label' => 'lang:admin::lang.button_icon_back',
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-outline-secondary',
                     'href' => 'settings',
                 ],
                 'save' => [
@@ -18,6 +18,12 @@ return [
             ],
         ],
         'fields' => [
+            'country_id' => [
+                'label' => 'lang:system::lang.settings.label_country',
+                'tab' => 'lang:system::lang.settings.text_tab_restaurant',
+                'type' => 'select',
+                'options' => ['System\Models\Countries_model', 'getDropdownOptions'],
+            ],
             'language' => [
                 'label' => 'lang:system::lang.settings.text_tab_title_language',
                 'tab' => 'lang:system::lang.settings.text_tab_site',
