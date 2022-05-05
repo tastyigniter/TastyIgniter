@@ -6,6 +6,8 @@ use Admin\Models\LocationOption;
 
 trait HasLocationOptions
 {
+    protected $optionsCache;
+
     public static function bootHasLocationOptions()
     {
         static::deleted(function (self $model) {
@@ -15,16 +17,16 @@ trait HasLocationOptions
 
     public function getOptionsAttribute()
     {
-        if (!array_key_exists('options', $this->attributes))
-            $this->attributes['options'] = LocationOption::onLocation($this)->getAll();
+        if (is_null($this->optionsCache))
+            $this->optionsCache = LocationOption::onLocation($this)->getAll();
 
-        return $this->attributes['options'];
+        return $this->optionsCache;
     }
 
     public function setOptionsAttribute($value)
     {
         LocationOption::onLocation($this)->setAll($value);
-        $this->attributes['options'] = $value;
+        $this->optionsCache = null;
     }
 
     public function setOption($key, $value)

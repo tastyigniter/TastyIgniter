@@ -136,22 +136,4 @@ trait HasDeliveryAreas
 
         return count($idsToKeep);
     }
-
-    protected function parseAreasFromOptions(&$value)
-    {
-        // Rename options array index ['delivery_areas']['charge']
-        // to ['delivery_areas']['conditions']
-        if (isset($value['delivery_areas'])) {
-            foreach ($value['delivery_areas'] as &$area) {
-                if (!isset($charge['charge'])) continue;
-                $area['conditions'] = is_array($area['charge']) ? $area['charge'] : [];
-                foreach ($area['conditions'] as $id => &$charge) {
-                    if (!isset($charge['condition'])) continue;
-                    $charge['type'] = $charge['condition'];
-                    unset($charge['condition']);
-                }
-                unset($area['charge']);
-            }
-        }
-    }
 }
