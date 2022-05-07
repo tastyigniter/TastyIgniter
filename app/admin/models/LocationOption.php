@@ -14,6 +14,8 @@ class LocationOption extends Model
      */
     protected $table = 'location_options';
 
+    protected $guarded = [];
+
     protected $casts = [
         'location_id' => 'integer',
         'value' => 'json',
@@ -49,37 +51,12 @@ class LocationOption extends Model
 
     public function get($key, $default = null)
     {
-        if (!($location = $this->locationContext))
-            return $default;
-
-        $cacheKey = $this->getCacheKey($key, $location);
-
-        if (array_key_exists($cacheKey, static::$cache))
-            return static::$cache[$cacheKey];
-
-        $record = static::findRecord($key, $location);
-
-        return static::$cache[$cacheKey] = $record ? $record->value : $default;
+        return array_get($this->getAll(), $key, $default);
     }
 
     public function set($key, $value)
     {
-        if (!$location = $this->locationContext)
-            return false;
-
-        if (!$record = static::findRecord($key, $location)) {
-            $record = new static;
-            $record->item = $key;
-            $record->location_id = $location->location_id;
-        }
-
-        $record->value = $value;
-        $record->save();
-
-        $cacheKey = $this->getCacheKey($key, $location);
-        static::$cache[$cacheKey] = $value;
-
-        return true;
+        return $this->setAll([$key => $value]);
     }
 
     public function getAll()
@@ -87,17 +64,48 @@ class LocationOption extends Model
         if (!$location = $this->locationContext)
             return [];
 
-        return static::where('location_id', $location->location_id)->get()->pluck('value', 'item')->toArray();
+        $cacheKey = $location->location_id;
+        if (array_key_exists($cacheKey, static::$cache))
+            return static::$cache[$cacheKey];
+
+        $records = static::where('location_id', $location->location_id)
+            ->get()->pluck('value', 'item')->toArray();
+
+        return static::$cache[$cacheKey] = $records;
     }
 
     public function setAll($items)
     {
+        if (!$location = $this->locationContext)
+            return false;
+
         if (!is_array($items))
             $items = [];
 
-        foreach ($items as $item => $value) {
-            $this->set($item, $value);
-        }
+        $records = $this->getAll();
+
+        collect($items)
+            ->filter(function ($value, $key) use ($records) {
+                return $value != array_get($records, $key);
+            })
+            ->map(function ($value, $key) use ($location) {
+                self::updateOrCreate([
+                    'location_id' => $location->location_id,
+                    'item' => $key,
+                ], ['value' => $value]);
+            });
+
+        static::$cache[$location->location_id] = $items;
+
+        return true;
+    }
+
+    public function resetAll()
+    {
+        if (!$location = $this->locationContext)
+            return;
+
+        static::where('location_id', $location->location_id)->delete();
     }
 
     public function reset($key)
@@ -110,8 +118,7 @@ class LocationOption extends Model
 
         $record->delete();
 
-        $cacheKey = $this->getCacheKey($key, $location);
-        unset(static::$cache[$cacheKey]);
+        unset(static::$cache[$location->location_id][$key]);
 
         return true;
     }
@@ -124,15 +131,6 @@ class LocationOption extends Model
             $query = $query->where('location_id', $location->location_id);
 
         return $query;
-    }
-
-    /**
-     * Builds a cache key for the preferences record.
-     * @return string
-     */
-    protected function getCacheKey($key, $location)
-    {
-        return $location->location_id.'-'.$key;
     }
 
     public static function getFieldsConfig()
