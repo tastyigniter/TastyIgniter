@@ -3,10 +3,10 @@
         <a href="{{ admin_url('reservations/edit') }}/@{{id}}">#@{{id}}</a>
         &nbsp;&nbsp;&nbsp;&nbsp;
         @verbatim
-        <span
-            class="label label-default"
-            style="background-color: {{status.status_color}};"
-        >{{status.status_name}}</span>
+            <span
+                class="label label-secondary text-white"
+                style="background-color: {{status.status_color}};"
+            >{{status.status_name}}</span>
         @endverbatim
     </h5>
 

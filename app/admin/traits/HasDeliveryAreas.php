@@ -14,22 +14,8 @@ trait HasDeliveryAreas
 
     public static function bootHasDeliveryAreas()
     {
-        static::fetched(function (self $model) {
-            $value = @json_decode($model->attributes['options'], true) ?: [];
-
-            $model->parseAreasFromOptions($value);
-
-            $model->attributes['options'] = @json_encode($value);
-        });
-
         static::saving(function (self $model) {
             $model->geocodeAddressOnSave();
-
-            $value = @json_decode($model->attributes['options'], true) ?: [];
-
-            $model->parseAreasFromOptions($value);
-
-            $model->attributes['options'] = @json_encode($value);
         });
     }
 
@@ -149,23 +135,5 @@ trait HasDeliveryAreas
         $this->delivery_areas()->whereNotIn('area_id', $idsToKeep)->delete();
 
         return count($idsToKeep);
-    }
-
-    protected function parseAreasFromOptions(&$value)
-    {
-        // Rename options array index ['delivery_areas']['charge']
-        // to ['delivery_areas']['conditions']
-        if (isset($value['delivery_areas'])) {
-            foreach ($value['delivery_areas'] as &$area) {
-                if (!isset($charge['charge'])) continue;
-                $area['conditions'] = is_array($area['charge']) ? $area['charge'] : [];
-                foreach ($area['conditions'] as $id => &$charge) {
-                    if (!isset($charge['condition'])) continue;
-                    $charge['type'] = $charge['condition'];
-                    unset($charge['condition']);
-                }
-                unset($area['charge']);
-            }
-        }
     }
 }

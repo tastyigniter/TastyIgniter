@@ -92,7 +92,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'payments',
         ],
         'save' => [

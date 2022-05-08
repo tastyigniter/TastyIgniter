@@ -106,12 +106,7 @@ class InitialSchemaSeeder extends Seeder
 
         $location = $this->getSeedRecords('location');
         $location['location_email'] = DatabaseSeeder::$siteEmail;
-        $location['options'] = json_encode($location['options']);
-        $location['delivery_areas'][0]['boundaries']['circle'] = json_encode(
-            $location['delivery_areas'][0]['boundaries']['circle']
-        );
-
-        $locationId = DB::table('locations')->insertGetId(array_except($location, ['delivery_areas']));
+        $locationId = DB::table('locations')->insertGetId($location);
         DB::table('locations')->update(['updated_at' => now(), 'created_at' => now()]);
 
         $this->seedLocationTables($locationId);

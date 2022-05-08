@@ -3,7 +3,7 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'staffs',
         ],
         'create' => [
@@ -66,7 +66,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'staff_groups',
         ],
         'save' => [
