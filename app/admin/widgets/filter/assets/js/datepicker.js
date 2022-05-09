@@ -70,15 +70,21 @@
     }
 
     DatePickerControl.prototype.onShowCalendar = function (event, daterangepicker) {
+        var valueChanged = false;
+
         if (! daterangepicker.startDate.isValid()) {
             daterangepicker.setStartDate(moment().startOf('day'));
+            valueChanged = true;
         }
 
         if (! daterangepicker.endDate.isValid()) {
             daterangepicker.setEndDate(moment().endOf('day'));
+            valueChanged = true;
         }
 
-        daterangepicker.updateCalendars();
+        if (valueChanged) {
+            daterangepicker.updateCalendars();
+        }
     }
 
     DatePickerControl.prototype.unbind = function () {
