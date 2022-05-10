@@ -11,12 +11,14 @@
         <i class="fa fa-envelope fa-fw text-muted"></i>&nbsp;&nbsp;
         {{ $formModel->email }}
     </div>
-    <div class="py-2">
-        <i class="fa fa-phone fa-fw text-muted"></i>&nbsp;&nbsp;
-        {{ $formModel->telephone }}
-    </div>
+    @if ($formModel->telephone)
+        <div class="py-2">
+            <i class="fa fa-phone fa-fw text-muted"></i>&nbsp;&nbsp;
+            {{ $formModel->telephone }}
+        </div>
+    @endif
 </div>
-@if ($formModel->isDeliveryType())
+@if ($formModel->isDeliveryType() && $formModel->address)
     <div class="card-body border-top">
         <h5 class="card-title">@lang('admin::lang.orders.label_delivery_address')</h5>
         <div class="py-2">

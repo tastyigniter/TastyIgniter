@@ -162,10 +162,15 @@ class LocationOption extends Model
 
     protected function wrapFieldName($name)
     {
+        if (starts_with($name, 'options['))
+            return $name;
+
         $parts = name_to_array($name);
 
-        return 'options'.implode('', array_map(function ($part) {
-                return '['.$part.']';
-            }, $parts));
+        $wrappedName = implode('', array_map(function ($part) {
+            return '['.$part.']';
+        }, $parts));
+
+        return 'options'.$wrappedName;
     }
 }
