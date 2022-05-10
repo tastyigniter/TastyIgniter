@@ -186,6 +186,16 @@ class Theme
             require $path;
     }
 
+    public function getRequires()
+    {
+        $requires = $this->requires;
+
+        if ($parentTheme = $this->getParent())
+            $requires = array_merge($requires, $parentTheme->requires);
+
+        return $requires;
+    }
+
     //
     //
     //
