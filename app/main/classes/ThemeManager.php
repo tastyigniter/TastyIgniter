@@ -729,7 +729,7 @@ class ThemeManager
             $composer = json_decode(File::get($metaPath), true) ?? [];
 
             $composer['extra']['tastyigniter-theme'] = array_merge(
-                $composer['extra']['tastyigniter-theme'],
+                array_except($composer['extra']['tastyigniter-theme'], ['locked']),
                 array_except($config, ['description'])
             );
 
