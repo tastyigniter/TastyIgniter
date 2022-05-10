@@ -315,7 +315,7 @@ class Themes_model extends Model
         $extensionManager = ExtensionManager::instance();
 
         $notFound = [];
-        foreach ($theme->getTheme()->getRequires() as $require => $version) {
+        foreach ($theme->getTheme()->requires as $require => $version) {
             if (!$extensionManager->hasExtension($require)) {
                 $notFound[] = $require;
             }
