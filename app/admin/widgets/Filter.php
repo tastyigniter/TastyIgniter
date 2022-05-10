@@ -388,7 +388,7 @@ class Filter extends BaseWidget
         $scope->displayAs($scopeType, $config);
 
         // Set scope value
-        $scope->value = $this->getScopeValue($scope);
+        $scope->value = $this->getScopeValue($scope, $config['default'] ?? null);
 
         return $scope;
     }
