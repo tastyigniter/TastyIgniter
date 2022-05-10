@@ -6,22 +6,22 @@
     @endif
 
     @if ($showCheckboxes)
-        <th class="list-action">
-            <div class="custom-control custom-checkbox">
+        <th class="list-action text-nowrap">
+            <div class="form-check">
                 <input
                     type="checkbox" id="{{ 'checkboxAll-'.$listId }}"
-                    class="custom-control-input" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
-                <label class="custom-control-label" for="{{ 'checkboxAll-'.$listId }}">&nbsp;</label>
+                    class="form-check-input" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
+                <label class="form-check-label" for="{{ 'checkboxAll-'.$listId }}">&nbsp;</label>
             </div>
         </th>
     @endif
 
     @foreach ($columns as $key => $column)
         @if ($column->type == 'button')
-            <th class="list-action {{ $column->cssClass }}"></th>
+            <th class="list-action {{ $column->cssClass }} text-nowrap"></th>
         @elseif ($showSorting && $column->sortable)
             <th
-                class="list-cell-name-{{ $column->getName() }} list-cell-type-{{ $column->type }} {{ $column->cssClass }}"
+                class="list-cell-name-{{ $column->getName() }} list-cell-type-{{ $column->type }} {{ $column->cssClass }} text-nowrap"
                 @if ($column->width) style="width: {{ $column->width }}" @endif>
                 <a
                     class="sort-col"
@@ -34,7 +34,7 @@
             </th>
         @else
             <th
-                class="list-cell-name-{{ $column->getName() }} list-cell-type-{{ $column->type }}"
+                class="list-cell-name-{{ $column->getName() }} list-cell-type-{{ $column->type }} text-nowrap"
                 @if ($column->width) style="width: {{ $column->width }}" @endif
             >
                 <span>{{ $this->getHeaderValue($column) }}</span>
@@ -59,8 +59,8 @@
                 type="button"
                 class="btn btn-outline-default btn-sm border-none"
                 title="@lang('admin::lang.list.text_setup')"
-                data-toggle="modal"
-                data-target="#{{ $listId }}-setup-modal"
+                data-bs-toggle="modal"
+                data-bs-target="#{{ $listId }}-setup-modal"
                 data-request="{{ $this->getEventHandler('onLoadSetup') }}"
             ><i class="fa fa-sliders"></i></button>
         </th>

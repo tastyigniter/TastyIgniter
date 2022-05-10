@@ -28,22 +28,22 @@ class ListColumn
     /**
      * @var bool Specifies if this column can be searched.
      */
-    public $searchable = FALSE;
+    public $searchable = false;
 
     /**
      * @var bool Specifies if this column is hidden by default.
      */
-    public $invisible = FALSE;
+    public $invisible = false;
 
     /**
      * @var bool Specifies if this column can be sorted.
      */
-    public $sortable = TRUE;
+    public $sortable = true;
 
     /**
      * @var bool Specifies if this column can be edited.
      */
-    public $editable = FALSE;
+    public $editable = false;
 
     /**
      * @var string Model attribute to use for the display value, this will

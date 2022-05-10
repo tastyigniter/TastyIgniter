@@ -251,8 +251,8 @@ class FormController extends ControllerAction
 
         $this->validateFormRequest($model);
 
-        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        if ($this->controller->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
@@ -301,8 +301,8 @@ class FormController extends ControllerAction
 
         $this->validateFormRequest($model);
 
-        if ($this->controller->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        if ($this->controller->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
@@ -411,7 +411,7 @@ class FormController extends ControllerAction
         $title = lang($this->getConfig('name'));
         $lang = lang($this->getConfig($this->context.'[title]', $default));
 
-        $pageTitle = (strpos($lang, ':name') !== FALSE)
+        $pageTitle = (strpos($lang, ':name') !== false)
             ? str_replace(':name', $title, $lang) : $lang;
 
         Template::setTitle($pageTitle);
@@ -448,7 +448,7 @@ class FormController extends ControllerAction
             $context .= '-close';
         }
 
-        if (post('refresh', FALSE)) {
+        if (post('refresh', false)) {
             return $this->controller->refresh();
         }
 
@@ -527,9 +527,9 @@ class FormController extends ControllerAction
 
     protected function validateFormRequest($model)
     {
-        $requestClass = $this->getConfig('request', FALSE);
+        $requestClass = $this->getConfig('request', false);
 
-        if ($requestClass === FALSE)
+        if ($requestClass === false)
             return;
 
         if (!class_exists($requestClass))

@@ -28,7 +28,7 @@ class Menu extends BaseWidget
     /**
      * @var bool Determines if item definitions have been created.
      */
-    protected $itemsDefined = FALSE;
+    protected $itemsDefined = false;
 
     /**
      * @var array Collection of all items used in this menu.
@@ -95,7 +95,7 @@ class Menu extends BaseWidget
 
         $this->addItems($this->items);
 
-        $this->itemsDefined = TRUE;
+        $this->itemsDefined = true;
     }
 
     /**
@@ -146,7 +146,7 @@ class Menu extends BaseWidget
 
         // Get menu item options from model
         $optionModelTypes = ['dropdown', 'partial'];
-        if (in_array($item->type, $optionModelTypes, FALSE)) {
+        if (in_array($item->type, $optionModelTypes, false)) {
 
             // Defer the execution of option data collection
             $item->options(function () use ($item, $config) {
@@ -189,7 +189,7 @@ class Menu extends BaseWidget
     public function getLoggedUser()
     {
         if (!$this->getController()->checkUser())
-            return FALSE;
+            return false;
 
         return $this->getController()->getUser();
     }

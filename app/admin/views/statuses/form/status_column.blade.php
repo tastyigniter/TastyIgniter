@@ -8,7 +8,7 @@
         <button
             class="btn font-weight-bold p-0 dropdown-toggle"
             type="button"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
             style="border-bottom: 1px dashed;color: {{ $record->status_color }};"

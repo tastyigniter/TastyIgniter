@@ -35,9 +35,9 @@ class DataTable extends BaseFormWidget
 
     public $searchableFields = [];
 
-    public $showRefreshButton = FALSE;
+    public $showRefreshButton = false;
 
-    public $useAjax = FALSE;
+    public $useAjax = false;
 
     //
     // Object properties

@@ -9,7 +9,7 @@ trait LocationAwareWidget
 {
     protected function isLocationAware($config)
     {
-        $locationAware = $config['locationAware'] ?? FALSE;
+        $locationAware = $config['locationAware'] ?? false;
 
         return $locationAware && $this->controller->getUserLocation();
     }

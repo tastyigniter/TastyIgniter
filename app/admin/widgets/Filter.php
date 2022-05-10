@@ -44,7 +44,7 @@ class Filter extends BaseWidget
     /**
      * @var bool Determines if scope definitions have been created.
      */
-    protected $scopesDefined = FALSE;
+    protected $scopesDefined = false;
 
     /**
      * @var array Collection of all scopes used in this filter.
@@ -63,7 +63,7 @@ class Filter extends BaseWidget
 
     public function loadAssets()
     {
-        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+        $this->addJs('~/app/admin/assets/src/js/vendor/moment.min.js', 'moment-js');
 
         // daterange picker
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');
@@ -159,7 +159,7 @@ class Filter extends BaseWidget
                     break;
 
                 case 'checkbox':
-                    $checked = $value == '1' ? TRUE : FALSE;
+                    $checked = $value == '1' ? true : false;
                     $this->setScopeValue($scope, $checked);
                     break;
 
@@ -173,7 +173,7 @@ class Filter extends BaseWidget
                     break;
 
                 case 'daterange':
-                    $format = array_get($scope->config, 'showTimePicker', FALSE) ? 'Y-m-d H:i:s' : 'Y-m-d';
+                    $format = array_get($scope->config, 'showTimePicker', false) ? 'Y-m-d H:i:s' : 'Y-m-d';
                     $dateRange = (is_array($value) && count($value) === 2 && $value[0] != '') ? [
                         make_carbon($value[0])->format($format),
                         make_carbon($value[1])->format($format),
@@ -324,7 +324,7 @@ class Filter extends BaseWidget
 
         $this->fireSystemEvent('admin.filter.extendScopes', [$this->scopes]);
 
-        $this->scopesDefined = TRUE;
+        $this->scopesDefined = true;
     }
 
     /**
@@ -339,7 +339,7 @@ class Filter extends BaseWidget
 
             // Check if admin has permissions to show this column
             $permissions = array_get($config, 'permissions');
-            if (!empty($permissions) && !AdminAuth::getUser()->hasPermission($permissions, FALSE)) {
+            if (!empty($permissions) && !AdminAuth::getUser()->hasPermission($permissions, false)) {
                 continue;
             }
 
@@ -388,7 +388,7 @@ class Filter extends BaseWidget
         $scope->displayAs($scopeType, $config);
 
         // Set scope value
-        $scope->value = $this->getScopeValue($scope);
+        $scope->value = $this->getScopeValue($scope, $config['default'] ?? null);
 
         return $scope;
     }

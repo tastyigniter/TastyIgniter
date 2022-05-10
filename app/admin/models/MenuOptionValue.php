@@ -46,7 +46,7 @@ class MenuOptionValue extends Model
 
     public $sortable = [
         'sortOrderColumn' => 'priority',
-        'sortWhenCreating' => TRUE,
+        'sortWhenCreating' => true,
     ];
 
     public static function getDropDownOptions()
@@ -96,7 +96,7 @@ class MenuOptionValue extends Model
     public function addMenuAllergens(array $allergenIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->allergens()->sync($allergenIds);
     }

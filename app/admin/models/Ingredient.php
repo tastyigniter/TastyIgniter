@@ -41,7 +41,7 @@ class Ingredient extends Model
 
     public $mediable = ['thumb'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     //
     // Accessors & Mutators

@@ -91,14 +91,14 @@ class ScheduleItem
     protected function timesheet($timesheet)
     {
         if (is_string($timesheet))
-            $timesheet = @json_decode($timesheet, TRUE) ?: [];
+            $timesheet = @json_decode($timesheet, true) ?: [];
 
         $result = [];
         foreach (WorkingHour::$weekDays as $key => $weekDay) {
             $result[$key] = array_get($timesheet, $key, [
                 'day' => $key,
                 'hours' => [['open' => '00:00', 'close' => '23:59']],
-                'status' => TRUE,
+                'status' => true,
             ]);
         }
 

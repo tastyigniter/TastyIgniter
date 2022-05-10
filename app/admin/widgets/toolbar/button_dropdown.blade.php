@@ -8,7 +8,7 @@
         <button
             type="button"
             class="{{ $button->cssClass }} dropdown-toggle dropdown-toggle-split"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
         ><span class="sr-only">Toggle Dropdown</span></button>

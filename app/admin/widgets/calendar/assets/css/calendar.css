@@ -1,6 +1,6 @@
 .calendar-widget {
-	padding: 15px;
-	background-color: var(--light);
+  padding: 15px;
+  background-color: var(--bs-light);
 }
 .calendar-widget .popover-title {
 	padding: 15px;
@@ -12,16 +12,16 @@
 }
 
 .fc .fc-button-primary {
-	background-color: var(--secondary);
-	border: 0;
+  background-color: var(--bs-secondary);
+  border: 0;
 }
 
 .fc .fc-today-button {
-	background-color: var(--secondary);
+  background-color: var(--bs-secondary);
 }
 
 .fc .fc-button-primary:not(:disabled):hover,
 .fc .fc-button-primary:not(:disabled).fc-button-active,
 .fc .fc-button-primary:not(:disabled):active {
-	background-color: var(--gray-700);
+  background-color: var(--bs-gray-700);
 }

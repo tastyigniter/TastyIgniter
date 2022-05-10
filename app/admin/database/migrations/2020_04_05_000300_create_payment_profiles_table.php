@@ -18,7 +18,7 @@ class CreatePaymentProfilesTable extends Migration
             $table->string('card_brand')->nullable();
             $table->string('card_last4')->nullable();
             $table->text('profile_data')->nullable();
-            $table->boolean('is_primary')->default(FALSE);
+            $table->boolean('is_primary')->default(false);
             $table->timestamps();
         });
     }

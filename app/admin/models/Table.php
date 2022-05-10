@@ -45,7 +45,7 @@ class Table extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function getDropdownOptions()
     {

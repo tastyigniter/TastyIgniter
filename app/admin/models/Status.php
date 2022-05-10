@@ -32,7 +32,7 @@ class Status extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     /**
      * Return status_for attribute as lang text, used by

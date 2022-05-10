@@ -17,7 +17,7 @@ trait Locationable
     /**
      * @var bool Flag for arbitrarily enabling location scope.
      */
-    public $locationScopeEnabled = FALSE;
+    public $locationScopeEnabled = false;
 
     /**
      * Boot the locationable trait for a model.
@@ -34,7 +34,7 @@ trait Locationable
     public function locationableScopeEnabled()
     {
         if ($this->locationScopeEnabled)
-            return TRUE;
+            return true;
 
         return AdminLocation::check();
     }

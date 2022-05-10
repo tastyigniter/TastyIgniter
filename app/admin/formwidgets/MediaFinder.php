@@ -45,7 +45,7 @@ class MediaFinder extends BaseFormWidget
      */
     public $mode = 'grid';
 
-    public $isMulti = FALSE;
+    public $isMulti = false;
 
     /**
      * @var array Options used for generating thumbnails.
@@ -59,7 +59,7 @@ class MediaFinder extends BaseFormWidget
     /**
      * @var bool Automatically attaches the chosen file if the parent record exists. Defaults to false.
      */
-    public $useAttachment = FALSE;
+    public $useAttachment = false;
 
     //
     // Object properties
@@ -250,7 +250,7 @@ class MediaFinder extends BaseFormWidget
         foreach ($items as &$item) {
             $media = $model->newMediaInstance();
             $media->addFromRaw(
-                $manager->get(array_get($item, 'path'), TRUE),
+                $manager->get(array_get($item, 'path'), true),
                 array_get($item, 'name'),
                 $this->fieldName
             );
@@ -315,7 +315,7 @@ class MediaFinder extends BaseFormWidget
                 'custom_properties[extras]' => [
                     'label' => 'lang:main::lang.media_manager.label_attachment_properties',
                     'type' => 'repeater',
-                    'sortable' => FALSE,
+                    'sortable' => false,
                     'form' => [
                         'fields' => [
                             'key' => [

@@ -37,7 +37,7 @@ class MailTemplate extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function getVariableOptions()
     {

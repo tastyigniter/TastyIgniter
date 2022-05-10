@@ -12,7 +12,7 @@
                 <div class="form-group mb-0">
                     <label
                         for="input-username"
-                        class="control-label"
+                        class="form-label"
                     >@lang('admin::lang.login.label_username')</label>
                     <input name="username" type="text" id="input-username" class="form-control"/>
                     {!! form_error('username', '<span class="text-danger">', '</span>') !!}
@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label
                         for="input-password"
-                        class="control-label"
+                        class="form-label"
                     >@lang('admin::lang.login.label_password')</label>
                     <input name="password" type="password" id="input-password" class="form-control"/>
                     {!! form_error('password', '<span class="text-danger">', '</span>') !!}

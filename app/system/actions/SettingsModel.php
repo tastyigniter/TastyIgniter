@@ -42,7 +42,7 @@ class SettingsModel extends ModelAction
         $this->model->setKeyName('id');
         $this->model->addCasts(['data' => 'array']);
         $this->model->guard([]);
-        $this->model->timestamps = FALSE;
+        $this->model->timestamps = false;
 
         $relativePath = dirname(dirname(File::fromClass($model)));
         $this->configPath = $relativePath.'/models/config';
@@ -209,15 +209,15 @@ class SettingsModel extends ModelAction
     {
         // core columns
         if ($key == 'id' || $key == 'item' || $key == 'data') {
-            return TRUE;
+            return true;
         }
 
         // relations
         if ($this->model->hasRelation($key)) {
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

@@ -61,12 +61,12 @@ $config['list']['columns'] = [
     'currency_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'currency_code' => [
         'label' => 'lang:system::lang.currencies.column_code',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'currency_symbol' => [
         'label' => 'lang:system::lang.currencies.column_symbol',
@@ -76,12 +76,12 @@ $config['list']['columns'] = [
         'label' => 'lang:system::lang.currencies.column_country',
         'relation' => 'country',
         'select' => 'country_name',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'currency_rate' => [
         'label' => 'lang:system::lang.currencies.column_rate',
         'type' => 'number',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'currency_status' => [
         'label' => 'lang:system::lang.currencies.column_status',
@@ -89,16 +89,16 @@ $config['list']['columns'] = [
     ],
     'currency_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -107,7 +107,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'currencies',
         ],
         'save' => [
@@ -188,7 +188,7 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.label_status',
         'type' => 'switch',
         'span' => 'right',
-        'default' => TRUE,
+        'default' => true,
     ],
 ];
 

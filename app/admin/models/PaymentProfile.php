@@ -6,7 +6,7 @@ use Igniter\Flame\Database\Model;
 
 class PaymentProfile extends Model
 {
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public $table = 'payment_profiles';
 
@@ -50,19 +50,19 @@ class PaymentProfile extends Model
      */
     public function makePrimary()
     {
-        $this->timestamps = FALSE;
+        $this->timestamps = false;
 
         $this->newQuery()
-            ->where('is_primary', '!=', FALSE)
+            ->where('is_primary', '!=', false)
             ->where('customer_id', $this->customer_id)
-            ->update(['is_primary' => FALSE]);
+            ->update(['is_primary' => false]);
 
         $this->newQuery()
             ->where('payment_profile_id', $this->payment_profile_id)
             ->where('customer_id', $this->customer_id)
-            ->update(['is_primary' => TRUE]);
+            ->update(['is_primary' => true]);
 
-        $this->timestamps = TRUE;
+        $this->timestamps = true;
     }
 
     public static function getPrimary($customer)

@@ -6,7 +6,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">{{ $formTitle ? lang($formTitle) : '' }}</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         {!! form_open(
             [
@@ -26,7 +26,7 @@
             <button
                 type="button"
                 class="btn btn-link"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
             >@lang('admin::lang.button_close')</button>
             <button
                 type="submit"

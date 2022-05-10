@@ -69,7 +69,7 @@ class Category extends Model
 
     public static $allowedSortingColumns = ['priority asc', 'priority desc'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function getDropdownOptions()
     {
@@ -117,7 +117,7 @@ class Category extends Model
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
-            'enabled' => TRUE,
+            'enabled' => true,
             'sort' => 'id asc',
             'location' => null,
             'search' => '',

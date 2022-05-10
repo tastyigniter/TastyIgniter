@@ -1,0 +1,16 @@
+.input-group {
+  > .form-control,
+  > .form-select {
+    &:not(:last-child) { @include border-end-radius($input-border-radius); }
+
+    &:not(:first-child) { @include border-start-radius($input-border-radius); }
+  }
+
+  .btn {
+    border-radius: $input-border-radius !important;
+  }
+
+  > .btn {
+    margin-left: $input-spacer !important;
+  }
+}

@@ -44,7 +44,7 @@ trait LogsStatusHistory
     public function addStatusHistory($status, array $statusData = [])
     {
         if (!$this->exists || !$status)
-            return FALSE;
+            return false;
 
         $this->status()->associate($status);
 

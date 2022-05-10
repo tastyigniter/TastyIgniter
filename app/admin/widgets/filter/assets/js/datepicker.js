@@ -44,15 +44,16 @@
                 'Last Month': [moment().subtract(1, 'month').startOf('month').startOf('day'), moment().subtract(1, 'month').endOf('month').endOf('day')],
                 'Lifetime': ['', ''],
             }
-            
+
             if (this.$el.find('[data-datepicker-range-start]').val() == '')
                 options.startDate = '';
-                
+
             if (this.$el.find('[data-datepicker-range-end]').val() == '')
                 options.endDate = '';
         }
 
         $el.daterangepicker(options, $.proxy(this.onDateSelected, this))
+        $el.on('showCalendar.daterangepicker', $.proxy(this.onShowCalendar, this));
     }
 
     DatePickerControl.prototype.onDateSelected = function (start, end, label, initialize) {
@@ -66,6 +67,24 @@
         }
 
         if (!initialize) this.$el.closest('form').submit();
+    }
+
+    DatePickerControl.prototype.onShowCalendar = function (event, daterangepicker) {
+        var valueChanged = false;
+
+        if (! daterangepicker.startDate.isValid()) {
+            daterangepicker.setStartDate(moment().startOf('day'));
+            valueChanged = true;
+        }
+
+        if (! daterangepicker.endDate.isValid()) {
+            daterangepicker.setEndDate(moment().endOf('day'));
+            valueChanged = true;
+        }
+
+        if (valueChanged) {
+            daterangepicker.updateCalendars();
+        }
     }
 
     DatePickerControl.prototype.unbind = function () {

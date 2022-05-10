@@ -44,7 +44,7 @@ class Theme extends Model
 
     protected $purgeable = ['template', 'settings', 'markup', 'codeSection'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     /**
      * @var ThemeManager
@@ -75,17 +75,17 @@ class Theme extends Model
     public static function onboardingIsComplete()
     {
         if (!$code = params('default_themes.main'))
-            return FALSE;
+            return false;
 
         if (!$model = self::where('code', $code)->first())
-            return FALSE;
+            return false;
 
         return !is_null($model->data);
     }
 
     public function getLayoutOptions()
     {
-        return Layout::getDropdownOptions($this->getTheme(), TRUE);
+        return Layout::getDropdownOptions($this->getTheme(), true);
     }
 
     public static function getComponentOptions()
@@ -189,17 +189,17 @@ class Theme extends Model
         $code = $this->code;
 
         if (!$code)
-            return FALSE;
+            return false;
 
         $themeManager = ThemeManager::instance();
         if (!$themeClass = $themeManager->findTheme($code)) {
-            return FALSE;
+            return false;
         }
 
         $this->manager = $themeManager;
         $this->themeClass = $themeClass;
 
-        return TRUE;
+        return true;
     }
 
     public function getManager()
@@ -275,8 +275,8 @@ class Theme extends Model
 
         // Disable themes not found in file system
         // This allows admin to remove an enabled theme from admin UI after deleting files
-        self::whereNotIn('code', $installedThemes)->update(['status' => FALSE]);
-        self::whereIn('code', $installedThemes)->update(['status' => TRUE]);
+        self::whereNotIn('code', $installedThemes)->update(['status' => false]);
+        self::whereIn('code', $installedThemes)->update(['status' => true]);
 
         self::updateInstalledThemes();
     }
@@ -309,7 +309,7 @@ class Theme extends Model
     public static function activateTheme($code)
     {
         if (empty($code) || !$theme = self::whereCode($code)->first())
-            return FALSE;
+            return false;
 
         $extensionManager = ExtensionManager::instance();
 
@@ -344,7 +344,7 @@ class Theme extends Model
      *
      * @return bool
      */
-    public static function deleteTheme($themeCode, $deleteData = TRUE)
+    public static function deleteTheme($themeCode, $deleteData = true)
     {
         $themeModel = self::where('code', $themeCode)->first();
 

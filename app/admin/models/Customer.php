@@ -32,11 +32,11 @@ class Customer extends AuthUserModel
 
     protected $hidden = ['password'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public $relation = [
         'hasMany' => [
-            'addresses' => [\Admin\Models\Address::class, 'delete' => TRUE],
+            'addresses' => [\Admin\Models\Address::class, 'delete' => true],
             'orders' => [\Admin\Models\Order::class],
             'reservations' => [\Admin\Models\Reservation::class],
         ],
@@ -170,7 +170,7 @@ class Customer extends AuthUserModel
     public function resetPassword()
     {
         if (!$this->enabled())
-            return FALSE;
+            return false;
 
         $this->reset_code = $resetCode = $this->generateResetCode();
         $this->reset_time = Carbon::now();
@@ -183,7 +183,7 @@ class Customer extends AuthUserModel
     {
         $customerId = $this->getKey();
         if (!is_numeric($customerId))
-            return FALSE;
+            return false;
 
         $idsToKeep = [];
         foreach ($addresses as $address) {
@@ -206,7 +206,7 @@ class Customer extends AuthUserModel
      */
     public function saveCustomerGuestOrder()
     {
-        $query = FALSE;
+        $query = false;
 
         if (is_numeric($this->customer_id) && !empty($this->email)) {
             $customer_id = $this->customer_id;
@@ -226,7 +226,7 @@ class Customer extends AuthUserModel
 
             Reservation::where('email', $customer_email)->update($update);
 
-            $query = TRUE;
+            $query = true;
         }
 
         return $query;

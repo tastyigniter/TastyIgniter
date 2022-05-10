@@ -8,7 +8,7 @@ $symbol = $currencyModel->getSymbol();
 @else
     <div class="input-group">
         @unless ($symbolAfter)
-            <span class="input-group-prepend"><span class="input-group-text"><b>{{$symbol}}</b></span></span>
+            <span class="input-group-text"><b>{{$symbol}}</b></span>
         @endunless
         <input
             name="{{ $field->getName() }}"
@@ -23,7 +23,7 @@ $symbol = $currencyModel->getSymbol();
             {!! $field->getAttributes() !!}
         />
         @if ($symbolAfter)
-            <span class="input-group-append"><span class="input-group-text"><b>{{$symbol}}</b></span></span>
+            <span class="input-group-text"><b>{{$symbol}}</b></span>
         @endif
     </div>
 @endif

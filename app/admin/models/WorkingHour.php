@@ -9,6 +9,8 @@ use Igniter\Flame\Location\Models\AbstractWorkingHour;
  */
 class WorkingHour extends AbstractWorkingHour
 {
+    protected $primaryKey = 'id';
+
     public $fillable = ['location_id', 'weekday', 'opening_time', 'closing_time', 'status', 'type'];
 
     protected $casts = [

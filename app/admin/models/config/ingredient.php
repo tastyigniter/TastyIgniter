@@ -77,16 +77,16 @@ $config['list']['columns'] = [
     ],
     'ingredient_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -95,7 +95,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'ingredients',
         ],
         'save' => [
@@ -140,7 +140,7 @@ $config['form']['fields'] = [
     'thumb' => [
         'label' => 'lang:admin::lang.ingredients.label_image',
         'type' => 'mediafinder',
-        'useAttachment' => TRUE,
+        'useAttachment' => true,
         'span' => 'right',
         'comment' => 'lang:admin::lang.ingredients.help_photo',
     ],

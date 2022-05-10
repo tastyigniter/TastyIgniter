@@ -162,6 +162,9 @@ class TemplateEditor extends BaseFormWidget
         if ($this->manager->isLocked($this->model->code))
             throw new ApplicationException(lang('system::lang.themes.alert_theme_locked'));
 
+        if (!$this->templateWidget)
+            return;
+
         $fileName = sprintf('%s/%s', $this->templateType, $this->templateFile);
         $data = post('Theme.source');
 
@@ -223,7 +226,7 @@ class TemplateEditor extends BaseFormWidget
         /** @var \Main\Template\Model $templateClass */
         $templateClass = $themeObject->getTemplateClass($type);
 
-        return $templateClass::getDropdownOptions($themeObject, TRUE);
+        return $templateClass::getDropdownOptions($themeObject, true);
     }
 
     protected function getTemplateTypes()
@@ -261,6 +264,9 @@ class TemplateEditor extends BaseFormWidget
 
     protected function getTemplateModifiedTime()
     {
+        if (!$this->templateWidget)
+            return null;
+
         return optional($this->templateWidget->data)->fileSource->mTime;
     }
 }

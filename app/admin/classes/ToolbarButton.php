@@ -75,7 +75,7 @@ class ToolbarButton
      *
      * @return array|string
      */
-    public function getAttributes($htmlBuild = TRUE)
+    public function getAttributes($htmlBuild = true)
     {
         $config = array_except($this->config, [
             'label', 'context', 'permission', 'partial',

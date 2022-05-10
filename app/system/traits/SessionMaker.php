@@ -121,7 +121,7 @@ trait SessionMaker
         if (is_null($data))
             return null;
 
-        if (!isset($this->encodeSession) || $this->encodeSession === TRUE)
+        if (!isset($this->encodeSession) || $this->encodeSession === true)
             $data = base64_encode(serialize($data));
 
         return $data;
@@ -132,7 +132,7 @@ trait SessionMaker
         if (!is_string($data))
             return null;
 
-        $encodeSession = (!isset($this->encodeSession) || $this->encodeSession === TRUE);
+        $encodeSession = (!isset($this->encodeSession) || $this->encodeSession === true);
 
         if ($encodeSession || (!$encodeSession && is_string($data)))
             $data = @unserialize(@base64_decode($data));

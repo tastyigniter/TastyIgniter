@@ -3,6 +3,7 @@
 namespace Admin\Models;
 
 use Admin\Traits\HasDeliveryAreas;
+use Admin\Traits\HasLocationOptions;
 use Admin\Traits\HasWorkingHours;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Factories\HasFactory;
@@ -21,6 +22,7 @@ class Location extends AbstractLocation
     use HasFactory;
     use HasPermalink;
     use HasMedia;
+    use HasLocationOptions;
     use Purgeable;
 
     const LOCATION_CONTEXT_SINGLE = 'single';
@@ -29,15 +31,11 @@ class Location extends AbstractLocation
 
     protected $appends = ['location_thumb'];
 
-    protected $hidden = ['options'];
-
     protected $casts = [
         'location_country_id' => 'integer',
         'location_lat' => 'double',
         'location_lng' => 'double',
         'location_status' => 'boolean',
-        'options' => 'array',
-
     ];
 
     public $relation = [
@@ -54,7 +52,7 @@ class Location extends AbstractLocation
         ],
     ];
 
-    protected $purgeable = ['delivery_areas'];
+    protected $purgeable = ['options', 'delivery_areas'];
 
     public $permalinkable = [
         'permalink_slug' => [
@@ -65,7 +63,7 @@ class Location extends AbstractLocation
 
     public $mediable = [
         'thumb',
-        'gallery' => ['multiple' => TRUE],
+        'gallery' => ['multiple' => true],
     ];
 
     protected static $allowedSortingColumns = [
@@ -76,7 +74,7 @@ class Location extends AbstractLocation
 
     public $url;
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected static $defaultLocation;
 
@@ -88,10 +86,10 @@ class Location extends AbstractLocation
     public static function onboardingIsComplete()
     {
         if (!$defaultId = params('default_location_id'))
-            return FALSE;
+            return false;
 
         if (!$model = self::isEnabled()->find($defaultId))
-            return FALSE;
+            return false;
 
         return isset($model->getAddress()['location_lat'])
             && isset($model->getAddress()['location_lng'])
@@ -142,7 +140,7 @@ class Location extends AbstractLocation
             'enabled' => null,
             'latitude' => null,
             'longitude' => null,
-            'paginate' => TRUE,
+            'paginate' => true,
             'hasDelivery' => null,
             'hasCollection' => null,
         ], $options));
@@ -222,14 +220,6 @@ class Location extends AbstractLocation
     public function getReservationTimeIntervalAttribute($value)
     {
         return (int)$this->getOption('reservation_time_interval');
-    }
-
-    public function setOptionsAttribute($value)
-    {
-        if (is_array($value)) {
-            $options = @json_decode($this->attributes['options'], TRUE) ?: [];
-            $this->attributes['options'] = @json_encode(array_merge($options ?? [], $value));
-        }
     }
 
     //
@@ -324,7 +314,7 @@ class Location extends AbstractLocation
         if ($model = self::find($locationId)) {
             $model->makeDefault();
 
-            return TRUE;
+            return true;
         }
     }
 

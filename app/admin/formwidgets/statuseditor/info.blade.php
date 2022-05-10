@@ -1,6 +1,6 @@
 <div class="d-flex">
     <div class="mr-3 flex-fill text-center">
-        <label class="control-label">
+        <label class="form-label">
             @lang('admin::lang.label_status')
         </label>
         <a
@@ -14,7 +14,7 @@
         </a>
     </div>
     <div class="mr-3 flex-fill text-center">
-        <label class="control-label">
+        <label class="form-label">
             {{ lang('admin::lang.orders.label_assign_staff') }}
         </label>
         <a

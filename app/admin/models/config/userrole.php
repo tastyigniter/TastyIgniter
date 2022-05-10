@@ -3,7 +3,7 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'users',
         ],
         'create' => [
@@ -34,22 +34,22 @@ $config['list']['columns'] = [
     'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'description' => [
         'label' => 'lang:admin::lang.label_description',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'staff_count' => [
         'label' => 'lang:admin::lang.user_groups.column_users',
         'type' => 'number',
-        'searchable' => TRUE,
-        'sortable' => FALSE,
+        'searchable' => true,
+        'sortable' => false,
     ],
     'user_role_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 ];
 
@@ -57,7 +57,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'user_roles',
         ],
         'save' => [

@@ -83,12 +83,12 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.customers.column_full_name',
         'type' => 'text',
         'select' => 'concat(first_name, " ", last_name)',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'email' => [
         'label' => 'lang:admin::lang.label_email',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'telephone' => [
         'label' => 'lang:admin::lang.customers.column_telephone',
@@ -100,16 +100,16 @@ $config['list']['columns'] = [
     ],
     'customer_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -118,7 +118,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'customers',
         ],
         'save' => [
@@ -176,7 +176,7 @@ $config['form']['tabs'] = [
             'label' => 'lang:admin::lang.customers.label_send_invite',
             'type' => 'checkbox',
             'context' => 'create',
-            'default' => TRUE,
+            'default' => true,
             'options' => [],
             'placeholder' => 'lang:admin::lang.customers.help_send_invite',
         ],
@@ -232,7 +232,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.customers.text_tab_orders',
             'type' => 'datatable',
             'context' => ['edit', 'preview'],
-            'useAjax' => TRUE,
+            'useAjax' => true,
             'defaultSort' => ['order_id', 'desc'],
             'columns' => [
                 'order_id' => [
@@ -262,7 +262,7 @@ $config['form']['tabs'] = [
             'tab' => 'lang:admin::lang.customers.text_tab_reservations',
             'type' => 'datatable',
             'context' => ['edit', 'preview'],
-            'useAjax' => TRUE,
+            'useAjax' => true,
             'defaultSort' => ['reservation_id', 'desc'],
             'columns' => [
                 'reservation_id' => [

@@ -280,7 +280,7 @@ class Components extends BaseFormWidget
     {
         $existingComponents = (array)$this->getLoadValue();
         while (isset($existingComponents[$alias])) {
-            if (strpos($alias, ' ') === FALSE)
+            if (strpos($alias, ' ') === false)
                 $alias .= ' '.$alias;
 
             $alias .= 'Copy';
@@ -368,7 +368,7 @@ class Components extends BaseFormWidget
             throw new ApplicationException('The selected component partial already exists in active theme partials directory.');
 
         if (!File::exists($themePartialPath))
-            File::makeDirectory($themePartialPath, 077, TRUE);
+            File::makeDirectory($themePartialPath, 077, true);
 
         File::copy($componentObj->getPath().'/'.$fileName, $themePartialPath.'/'.$fileName);
     }

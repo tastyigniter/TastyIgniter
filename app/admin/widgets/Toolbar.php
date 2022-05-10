@@ -13,7 +13,7 @@ class Toolbar extends BaseWidget
 
     protected $defaultAlias = 'toolbar';
 
-    protected $previewMode = FALSE;
+    protected $previewMode = false;
 
     /**
      * @var array List of CSS classes to apply to the toolbar container element
@@ -83,7 +83,7 @@ class Toolbar extends BaseWidget
 
         $this->fireSystemEvent('admin.toolbar.extendButtons', [$this->allButtons]);
 
-        $this->buttonsDefined = TRUE;
+        $this->buttonsDefined = true;
     }
 
     protected function prepareButtons()

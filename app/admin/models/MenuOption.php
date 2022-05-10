@@ -47,7 +47,7 @@ class MenuOption extends Model
 
     protected $purgeable = ['values'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function getRecordEditorOptions()
     {
@@ -109,7 +109,7 @@ class MenuOption extends Model
     {
         $query = self::orderBy('priority')->from('option_values');
 
-        if ($option_id !== FALSE) {
+        if ($option_id !== false) {
             $query->where('option_id', $option_id);
         }
 

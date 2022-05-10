@@ -25,7 +25,7 @@ class Currency extends \Igniter\Flame\Currency\Models\Currency
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'country_id' => 'integer',
@@ -52,7 +52,7 @@ class Currency extends \Igniter\Flame\Currency\Models\Currency
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
-            'enabled' => TRUE,
+            'enabled' => true,
             'sort' => 'currency_name asc',
             'search' => '',
         ], $options));

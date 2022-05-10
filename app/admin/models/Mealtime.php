@@ -39,7 +39,7 @@ class Mealtime extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public function getDropdownOptions()
     {

@@ -40,7 +40,7 @@ trait Stockable
 
     public function getTrackableStocks($location = null)
     {
-        return $this->getAvailableStocks($location)->where('is_tracked', TRUE);
+        return $this->getAvailableStocks($location)->where('is_tracked', true);
     }
 
     public function getAvailableStocks($location = null)
@@ -48,7 +48,8 @@ trait Stockable
         if (!is_null($location))
             return $this->stocks->where('location_id', is_numeric($location) ? $location : $location->getKey());
 
-        if ($ids = $this->getStockableLocations()->pluck('location_id')->all())
+        $locations = $this->getStockableLocations();
+        if ($locations && $ids = $locations->pluck('location_id')->all())
             return $this->stocks->whereIn('location_id', $ids);
 
         return $this->stocks;
@@ -66,7 +67,7 @@ trait Stockable
         $stocks = $this->getTrackableStocks($location);
 
         if ($stocks->isEmpty())
-            return FALSE;
+            return false;
 
         return $stocks->filter(function ($stock) {
             return $stock->outOfStock();
@@ -78,7 +79,7 @@ trait Stockable
         $stocks = $this->getTrackableStocks($location);
 
         if ($stocks->isEmpty())
-            return TRUE;
+            return true;
 
         return $stocks->sum('quantity') >= $quantity;
     }

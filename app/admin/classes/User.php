@@ -15,7 +15,7 @@ class User extends Manager
 
     protected $model = \Admin\Models\User::class;
 
-    protected $isSuperUser = FALSE;
+    protected $isSuperUser = false;
 
     public function isLogged()
     {
@@ -88,7 +88,7 @@ class User extends Manager
         return $this->user()->email;
     }
 
-    public function register(array $attributes, $activate = FALSE)
+    public function register(array $attributes, $activate = false)
     {
         $user = new UserModel;
         $user->name = array_get($attributes, 'name');

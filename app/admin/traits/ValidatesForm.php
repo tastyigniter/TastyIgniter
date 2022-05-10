@@ -33,7 +33,7 @@ trait ValidatesForm
         if ($validator->fails()) {
             $this->flashValidationErrors($validator->errors());
 
-            return FALSE;
+            return false;
         }
 
         return $this->extractInputFromRules($request, $rules);

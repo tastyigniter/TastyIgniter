@@ -1,25 +1,23 @@
 <div class="media-finder">
     <div class="input-group">
-        <div class="input-group-prepend">
-            <div class="input-group-icon" style="width: 50px;">
-                @if (!is_null($mediaItem))
-                    @if(($mediaFileType = $this->getMediaFileType($mediaItem)) === 'image')
-                        <img
-                            data-find-image
-                            src="{{ $this->getMediaThumb($mediaItem) }}"
-                            class="img-responsive"
-                            width="24px"
-                        >
-                    @else
-                        <div class="media-icon w-100">
-                            <i
-                                data-find-file
-                                class="fa fa-{{ $mediaFileType }} text-muted"
-                            ></i>
-                        </div>
-                    @endif
+        <div class="input-group-text" style="width: 50px;">
+            @if (!is_null($mediaItem))
+                @if(($mediaFileType = $this->getMediaFileType($mediaItem)) === 'image')
+                    <img
+                        data-find-image
+                        src="{{ $this->getMediaThumb($mediaItem) }}"
+                        class="img-responsive"
+                        width="24px"
+                    >
+                @else
+                    <div class="media-icon w-100">
+                        <i
+                            data-find-file
+                            class="fa fa-{{ $mediaFileType }} text-muted"
+                        ></i>
+                    </div>
                 @endif
-            </div>
+            @endif
         </div>
         <span
             class="form-control{{ (!is_null($mediaItem) && $useAttachment) ? ' find-config-button' : '' }}"
@@ -38,16 +36,14 @@
             data-find-identifier
         />
         @unless ($this->previewMode)
-            <div class="input-group-append">
-                <button class="btn btn-outline-primary find-button{{ !is_null($mediaItem) ? ' hide' : '' }}" type="button">
-                    <i class="fa fa-picture-o"></i>
-                </button>
-                <button
-                    class="btn btn-outline-danger find-remove-button{{ !is_null($mediaItem) ? '' : ' hide' }}"
-                    type="button">
-                    <i class="fa fa-times-circle"></i>
-                </button>
-            </div>
+            <button class="btn btn-outline-primary find-button{{ !is_null($mediaItem) ? ' hide' : '' }}" type="button">
+                <i class="fa fa-picture-o"></i>
+            </button>
+            <button
+                class="btn btn-outline-danger find-remove-button{{ !is_null($mediaItem) ? '' : ' hide' }}"
+                type="button">
+                <i class="fa fa-times-circle"></i>
+            </button>
         @endunless
     </div>
 </div>

@@ -3,7 +3,7 @@
         {!! $this->renderFieldElement($field) !!}
     @else
         @if ($field->label)
-            <label for="{{ $field->getId() }}" class="control-label">@lang($field->label)</label>
+            <label for="{{ $field->getId() }}" class="form-label">@lang($field->label)</label>
         @endif
 
         @if ($field->comment && $field->commentPosition == 'above')

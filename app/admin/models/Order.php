@@ -52,7 +52,7 @@ class Order extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public $appends = ['customer_name', 'order_type_name', 'order_date_time', 'formatted_address'];
 
@@ -170,8 +170,8 @@ class Order extends Model
             $query->search($search, $searchableFields);
         }
 
-        $startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', FALSE);
-        $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', FALSE);
+        $startDateTime = array_get($dateTimeFilter, 'orderDateTime.startAt', false);
+        $endDateTime = array_get($dateTimeFilter, 'orderDateTime.endAt', false);
         if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenOrderDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
 
@@ -228,7 +228,7 @@ class Order extends Model
     public function isCompleted()
     {
         if (!$this->isPaymentProcessed())
-            return FALSE;
+            return false;
 
         return $this->status_history()->where(
             'status_id', setting('completed_order_status')
@@ -283,7 +283,7 @@ class Order extends Model
         return $this->processed;
     }
 
-    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [], $isRefundable = FALSE)
+    public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [], $isRefundable = false)
     {
         PaymentLog::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
     }
@@ -415,7 +415,7 @@ class Order extends Model
 
         $data['order_address'] = lang('admin::lang.orders.text_collection_order_type');
         if ($model->address)
-            $data['order_address'] = format_address($model->address->toArray(), FALSE);
+            $data['order_address'] = format_address($model->address->toArray(), false);
 
         if ($model->location) {
             $data['location_name'] = $model->location->location_name;

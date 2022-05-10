@@ -115,7 +115,7 @@ return [
     |
     */
 
-    'enableRoutesCache' => FALSE,
+    'enableRoutesCache' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -228,5 +228,5 @@ return [
     |
     */
 
-    'enableCsrfProtection' => TRUE,
+    'enableCsrfProtection' => true,
 ];
