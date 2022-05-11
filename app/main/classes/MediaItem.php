@@ -1,6 +1,6 @@
 <?php
 
-namespace Main\classes;
+namespace Main\Classes;
 
 use Carbon\Carbon;
 use Igniter\Flame\Support\Facades\File;
