@@ -43,11 +43,6 @@ trait CombinesAssets
      */
     public $useCache = false;
 
-    /**
-     * @var bool Compress (minify) asset files.
-     */
-    public $useMinify = false;
-
     protected $assetsCombinerUri;
 
     protected $combineAssets;
@@ -56,7 +51,6 @@ trait CombinesAssets
     {
         $this->cacheKeyPrefix = 'ti.combiner.';
         $this->useCache = config('system.enableAssetCache', true);
-        $this->useMinify = config('system.enableAssetMinify', null);
         $this->combineAssets = config('system.enableAssetCombiner', !config('app.debug', false));
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
@@ -64,20 +58,12 @@ trait CombinesAssets
         if (app()->runningInAdmin())
             $this->assetsCombinerUri = config('system.adminUri', '/admin').$this->assetsCombinerUri;
 
-        if ($this->useMinify === null)
-            $this->useMinify = !config('app.debug', false);
-
         $this->registerFilter('css', new \Igniter\Flame\Assetic\Filter\CssImportFilter);
         $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssRewriteFilter);
 
         $scssPhpFilter = new \Igniter\Flame\Assetic\Filter\ScssphpFilter;
         $scssPhpFilter->addImportPath(base_path());
         $this->registerFilter('scss', $scssPhpFilter);
-
-        if ($this->useMinify) {
-            $this->registerFilter('js', new \Igniter\Flame\Assetic\Filter\JSMinFilter);
-            $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\StylesheetMinify);
-        }
     }
 
     /**
