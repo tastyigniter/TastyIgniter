@@ -29,7 +29,7 @@ class Customer_groups_model extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected static $defaultGroup;
 
@@ -71,7 +71,7 @@ class Customer_groups_model extends Model
         if ($model = self::find($groupId)) {
             $model->makeDefault();
 
-            return TRUE;
+            return true;
         }
     }
 

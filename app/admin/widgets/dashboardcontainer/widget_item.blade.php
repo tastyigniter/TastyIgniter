@@ -14,8 +14,8 @@
             <a
                 class="btn pull-right"
                 data-control="edit-widget"
-                data-toggle="modal"
-                data-target="#{{ $widgetAlias }}-modal"
+                data-bs-toggle="modal"
+                data-bs-target="#{{ $widgetAlias }}-modal"
                 data-handler="{{ $this->getEventHandler('onLoadUpdatePopup') }}"
             ><i class="fa fa-cog"></i></a>
         </div>

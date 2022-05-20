@@ -16,7 +16,7 @@
             <div class="align-self-center text-center m-auto">
                 <i class="d-block" style="width: 256px;height: 256px;">
                     <svg
-                        version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        version="1.1" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 500 500" width="100%" style="height:100%;">
                         <g>
                             <defs>
@@ -35,8 +35,8 @@
                         </g>
                     </svg>
                 </i>
-                <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
-                @lang('admin::lang.text_loading')
+                <br>
+                <span class="spinner-border"></span>&nbsp;&nbsp;@lang('admin::lang.text_loading')
             </div>
         </div>
     </div>

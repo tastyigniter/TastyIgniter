@@ -7,13 +7,11 @@
         placeholder="{{ $placeholder }}"
         autocomplete="off"
     />
-    <div class="input-group-append">
-        <button
-            class="btn btn-light"
-            type="submit"
-            data-request="{{ $searchBox->getEventHandler('onSubmit') }}"
-        >
-            <i class="fa fa-search"></i>
-        </button>
-    </div>
+    <button
+        class="btn btn-light"
+        type="submit"
+        data-request="{{ $searchBox->getEventHandler('onSubmit') }}"
+    >
+        <i class="fa fa-search"></i>
+    </button>
 </div>

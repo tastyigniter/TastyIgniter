@@ -13,9 +13,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">@lang('admin::lang.staff_status.text_set_status')</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
             </div>
             <form
                 method="POST"
@@ -25,7 +23,7 @@
             >
                 <div class="modal-body">
                     <div class="form-group">
-                        <select class="form-control" name="status">
+                        <select class="form-select" name="status">
                             @foreach($staffState::getStatusDropdownOptions() as $key => $column)
                                 <option
                                     value="{{ $key }}"
@@ -56,7 +54,7 @@
                         data-trigger-condition="value[4]"
                         data-trigger-closest-parent="form"
                     >
-                        <select class="form-control" name="clear_after" id="staffClearStatusAfter">
+                        <select class="form-select" name="clear_after" id="staffClearStatusAfter">
                             @foreach($staffState::getClearAfterMinutesDropdownOptions() as $key => $column)
                                 <option
                                     value="{{ $key }}"
@@ -73,7 +71,7 @@
                     <button
                         type="button"
                         class="btn btn-link"
-                        data-dismiss="modal"
+                        data-bs-dismiss="modal"
                     >@lang('admin::lang.button_close')</button>
                     <button
                         type="submit"

@@ -4,7 +4,7 @@
             type="button"
             tabindex="0"
             class="py-1 {{ $button->cssClass }} dropdown-toggle"
-            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
             {!! $button->getAttributes() !!}
         >{!! $button->label ?: $button->name !!}</button>
         @if ($buttonMenuItems = $button->menuItems())

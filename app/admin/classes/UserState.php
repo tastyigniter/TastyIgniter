@@ -5,6 +5,7 @@ namespace Admin\Classes;
 use Admin\Facades\AdminAuth;
 use Admin\Models\User_preferences_model;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Admin User State
@@ -25,7 +26,7 @@ class UserState
 
     protected $defaultStateConfig = [
         'status' => 1,
-        'isAway' => FALSE,
+        'isAway' => false,
         'awayMessage' => null,
         'updatedAt' => null,
         'clearAfterMinutes' => 0,
@@ -100,23 +101,33 @@ class UserState
         ];
     }
 
-    //
-    //
-    //
-
-    public function clearExpiredStatus()
+    public static function clearExpiredStatus()
     {
-        if (!$this->isAway())
-            return;
+        DB::table(User_preferences_model::make()->getTable())
+            ->where('item', static::USER_PREFERENCE_KEY)
+            ->where('value->status', static::CUSTOM_STATUS)
+            ->where('value->clearAfterMinutes', '!=', 0)
+            ->get()
+            ->each(function ($preference) {
+                $state = json_decode($preference->value);
+                if (!$state->clearAfterMinutes)
+                    return true;
 
-        if (!$clearAfterAt = $this->getClearAfterAt())
-            return;
+                $clearAfterAt = make_carbon($state->updatedAt)
+                    ->addMinutes($state->clearAfterMinutes);
 
-        if (Carbon::now()->lessThan($clearAfterAt))
-            return;
+                if (Carbon::now()->lessThan($clearAfterAt))
+                    return true;
 
-        $this->updateState();
+                DB::table(User_preferences_model::make()->getTable())
+                    ->where('id', $preference->id)
+                    ->update(['value' => json_encode((new static)->defaultStateConfig)]);
+            });
     }
+
+    //
+    //
+    //
 
     public function updateState(array $state = [])
     {

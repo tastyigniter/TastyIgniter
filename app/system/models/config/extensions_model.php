@@ -71,7 +71,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'partial',
         'path' => 'lists/extension_card',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
 ];
 
@@ -79,7 +79,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'settings',
         ],
         'save' => [

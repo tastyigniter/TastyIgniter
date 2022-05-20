@@ -34,8 +34,8 @@ class ErrorHandler extends BaseErrorHandler
      */
     public function handleCustomError()
     {
-        if (Config::get('app.debug', FALSE)) {
-            return FALSE;
+        if (Config::get('app.debug', false)) {
+            return false;
         }
 
         if (!App::hasDatabase())
@@ -59,20 +59,5 @@ class ErrorHandler extends BaseErrorHandler
         }
 
         return $result;
-    }
-
-    /**
-     * Displays the detailed system exception page.
-     *
-     * @param $exception
-     *
-     * @return \View Object containing the error page.
-     */
-    public function handleDetailedError($exception)
-    {
-        // Ensure System view path is registered
-        View::addNamespace('system', app_path('system/views'));
-
-        return View::make('system::exception', ['exception' => $exception]);
     }
 }

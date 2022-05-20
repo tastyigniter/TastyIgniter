@@ -156,7 +156,7 @@ class ComposerManager
 
     protected function loadInstalledPackages()
     {
-        $path = base_path('/vendor/composer/installed.json');
+        $path = base_path('vendor/composer/installed.json');
 
         $installed = File::exists($path) ? json_decode(File::get($path), true) : [];
 

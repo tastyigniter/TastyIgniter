@@ -4,7 +4,7 @@
             <div class="media-right media-middle">
                 <i class="fa fa-globe fa-3x"></i>
             </div>
-            <div class="media-body wrap-left">
+            <div class="flex-grow-1 wrap-left">
                 <a
                     class="btn border pull-right"
                     onclick="$('.carte-body').slideToggle()"

@@ -10,14 +10,14 @@
 
         @if ($showCheckboxes)
             <td class="list-action">
-                <div class="custom-control custom-checkbox">
+                <div class="form-check">
                     <input
                         type="checkbox"
                         id="{{ 'checkbox-'.$record->getKey() }}"
-                        class="custom-control-input"
+                        class="form-check-input"
                         value="{{ $record->getKey()}}" name="checked[]"
                     />
-                    <label class="custom-control-label" for="{{ 'checkbox-'.$record->getKey() }}">&nbsp;</label>
+                    <label class="form-check-label" for="{{ 'checkbox-'.$record->getKey() }}">&nbsp;</label>
                 </div>
             </td>
         @endif

@@ -61,12 +61,12 @@ class Connector extends BaseFormWidget
     /**
      * @var bool Items can be sorted.
      */
-    public $sortable = FALSE;
+    public $sortable = false;
 
     /**
      * @var bool Items can be edited.
      */
-    public $editable = TRUE;
+    public $editable = true;
 
     public $popupSize;
 
@@ -87,11 +87,11 @@ class Connector extends BaseFormWidget
             'popupSize',
         ]);
 
-        $fieldName = $this->formField->getName(FALSE);
+        $fieldName = $this->formField->getName(false);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
 
         if ($this->formField->disabled || $this->formField->readOnly) {
-            $this->previewMode = TRUE;
+            $this->previewMode = true;
         }
     }
 
@@ -201,7 +201,7 @@ class Connector extends BaseFormWidget
     public function onDeleteRecord()
     {
         if (!strlen($recordId = post('recordId')))
-            return FALSE;
+            return false;
 
         $model = $this->getRelationModel()->find($recordId);
         if (!$model)

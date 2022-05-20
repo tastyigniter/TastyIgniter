@@ -17,7 +17,7 @@ class Navigation
 
     protected $mainItems;
 
-    protected $navItemsLoaded = FALSE;
+    protected $navItemsLoaded = false;
 
     protected $navContextItemCode;
 
@@ -77,12 +77,12 @@ class Navigation
     public function isActiveNavItem($code)
     {
         if ($code == $this->navContextParentCode)
-            return TRUE;
+            return true;
 
         if ($code == $this->navContextItemCode)
-            return TRUE;
+            return true;
 
-        return FALSE;
+        return false;
     }
 
     public function getMainItems()
@@ -181,14 +181,14 @@ class Navigation
 
         $this->fireSystemEvent('admin.navigation.extendItems');
 
-        $this->navItemsLoaded = TRUE;
+        $this->navItemsLoaded = true;
     }
 
     public function filterPermittedNavItems($items)
     {
         return collect($items)->filter(function ($item) {
             if (!$permission = array_get($item, 'permission'))
-                return TRUE;
+                return true;
 
             return AdminAuth::user()->hasPermission($permission);
         })->toArray();

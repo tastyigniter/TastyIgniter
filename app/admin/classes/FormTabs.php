@@ -41,7 +41,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
     /**
      * @var bool If set to TRUE, fields will not be displayed in tabs.
      */
-    public $suppressTabs = FALSE;
+    public $suppressTabs = false;
 
     /**
      * @var string Specifies a CSS class to attach to the tab container.
@@ -64,7 +64,7 @@ class FormTabs implements IteratorAggregate, ArrayAccess
         $this->config = $this->evalConfig($config);
 
         if ($this->section == self::SECTION_OUTSIDE) {
-            $this->suppressTabs = TRUE;
+            $this->suppressTabs = true;
         }
     }
 
@@ -131,12 +131,12 @@ class FormTabs implements IteratorAggregate, ArrayAccess
                         unset($this->fields[$tab]);
                     }
 
-                    return TRUE;
+                    return true;
                 }
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

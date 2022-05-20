@@ -4,6 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
+use Admin\Models\LocationOption;
 use Admin\Models\Locations_model;
 use Exception;
 use Igniter\Flame\Geolite\Facades\Geocoder;
@@ -126,6 +127,22 @@ class Locations extends \Admin\Classes\AdminController
     {
         if (!is_null($ids = AdminLocation::getAll()))
             $query->whereIn('location_id', $ids);
+    }
+
+    public function formExtendFields($form)
+    {
+        if ($form->model->exists && $form->context != 'create') {
+            $form->addTabFields(LocationOption::getFieldsConfig());
+        }
+    }
+
+    public function getAccordionFields($fields)
+    {
+        return collect($fields)->mapToGroups(function ($field) {
+            $key = array_get($field->config, 'accordion');
+
+            return [$key => $field];
+        })->all();
     }
 
     public function formAfterSave($model)

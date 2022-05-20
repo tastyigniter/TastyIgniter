@@ -40,7 +40,7 @@ class Settings_model extends Model
 
     protected $allItems;
 
-    protected $items = [];
+    protected $items;
 
     /**
      * @var array Cache of registration callbacks.
@@ -150,7 +150,7 @@ class Settings_model extends Model
         }
 
         $settingItem = $this->getSettingItem('core.'.$code);
-        if ($settingItem && !is_array($settingItem->form))
+        if (!is_array($settingItem->form))
             $settingItem->form = array_get($this->makeConfig($settingItem->form, ['form']), 'form', []);
 
         return $this->fieldConfig = $settingItem->form ?? [];
@@ -183,23 +183,12 @@ class Settings_model extends Model
         return $this->allItems[$code] ?? null;
     }
 
-    public function removeSettingItem($code)
-    {
-        unset($this->allItems[$code]);
-    }
-
     public function listSettingItems()
     {
-        if (!$this->allItems)
+        if (!$this->items)
             $this->loadSettingItems();
 
-        $allItems = ['core' => [], 'other' => []];
-        foreach ($this->allItems as $item) {
-            $group = ($item->owner != 'core') ? 'other' : $item->owner;
-            $allItems[$group][] = $item;
-        }
-
-        return $allItems;
+        return $this->items;
     }
 
     public function loadSettingItems()
@@ -225,17 +214,24 @@ class Settings_model extends Model
         });
 
         $allItems = [];
+        $catItems = ['core' => [], 'extensions' => []];
         foreach ($this->items as $item) {
+            $category = ($item->owner != 'core') ? 'extensions' : $item->owner;
+            $catItems[$category][] = $item;
+
             $allItems[$item->owner.'.'.$item->code] = $item;
         }
 
         $this->allItems = $allItems;
-
-        $this->fireSystemEvent('system.setting.extendSettingItems', [$this->allItems]);
+        $this->items = $catItems;
     }
 
     public function registerSettingItems($owner, array $definitions)
     {
+        if (!$this->items) {
+            $this->items = [];
+        }
+
         $defaultDefinitions = [
             'code' => null,
             'label' => null,

@@ -42,7 +42,7 @@ class Menu_item_options_model extends Model
             'menu_option_values' => [
                 'Admin\Models\Menu_item_option_values_model',
                 'foreignKey' => 'menu_option_id',
-                'delete' => TRUE,
+                'delete' => true,
             ],
         ],
         'belongsTo' => [
@@ -66,7 +66,7 @@ class Menu_item_options_model extends Model
 
     public $with = ['option'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public function getOptionNameAttribute()
     {
@@ -117,7 +117,7 @@ class Menu_item_options_model extends Model
     {
         $menuOptionId = $this->getKey();
         if (!is_numeric($menuOptionId))
-            return FALSE;
+            return false;
 
         $idsToKeep = [];
         foreach ($optionValues as $value) {

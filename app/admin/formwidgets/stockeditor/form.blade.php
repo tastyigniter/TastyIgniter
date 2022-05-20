@@ -6,7 +6,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">{{ $formTitle ? lang($formTitle) : '' }}</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         {!! form_open([
             'id' => 'stock-editor-form',
@@ -21,26 +21,28 @@
             <p>{!! $formDescription !!}</p>
             <div class="accordion" id="{{ $this->getId('stock-locations') }}">
                 @foreach($formWidgets as $formWidget)
-                    <div class="card">
-                        <div
-                            class="card-header bg-transparent"
-                            id="{{ $formWidget->getId('heading') }}"
-                            role="button"
-                            data-toggle="collapse"
-                            data-target="#{{ $formWidget->getId('collapse') }}"
-                            aria-expanded="true"
-                            aria-controls="{{ $formWidget->getId('collapse') }}"
+                    <div class="accordion-item">
+                        <h5
+                            id="{{ $formWidget->getId('heading') }}-{{$loop->index}}"
+                            class="accordion-header"
                         >
-                            <h5 class="mb-0">{{ $formWidget->model->location->location_name }}</h5>
-                        </div>
+                            <button
+                                class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#{{ $formWidget->getId('collapse') }}-{{$loop->index}}"
+                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
+                                aria-controls="{{ $formWidget->getId('collapse') }}-{{$loop->index}}"
+                            >{{ $formWidget->model->location->location_name }}</button>
+                        </h5>
 
                         <div
-                            id="{{ $formWidget->getId('collapse') }}"
-                            class="collapse {{ $loop->first ? ' show' : '' }}"
-                            aria-labelledby="{{ $formWidget->getId('heading') }}"
-                            data-parent="#{{ $this->getId('stock-locations') }}"
+                            id="{{ $formWidget->getId('collapse') }}-{{$loop->index}}"
+                            class="accordion-collapse collapse {{ $loop->first ? ' show' : '' }}"
+                            aria-labelledby="{{ $formWidget->getId('heading') }}-{{$loop->index}}"
+                            data-bs-parent="#{{ $this->getId('stock-locations') }}"
                         >
-                            <div class="card-body">
+                            <div class="accordion-body">
                                 <div class="form-fields p-0">
                                     @foreach ($formWidget->getFields() as $field)
                                         {!! $formWidget->renderField($field) !!}
@@ -56,7 +58,7 @@
             <button
                 type="button"
                 class="btn btn-link"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
             >@lang('admin::lang.button_close')</button>
             <button
                 type="submit"

@@ -17,7 +17,7 @@ class Calendar extends BaseWidget
     /**
      * @var string Determines whether the events on the calendar can be modified.
      */
-    public $editable = TRUE;
+    public $editable = true;
 
     /**
      * @var string Defines the number of events displayed on a day
@@ -53,8 +53,8 @@ class Calendar extends BaseWidget
         $this->addCss('~/app/admin/formwidgets/datepicker/assets/css/datepicker.css', 'datepicker-css');
         $this->addJs('~/app/admin/formwidgets/datepicker/assets/js/datepicker.js', 'datepicker-js');
 
-        $this->addJs('~/app/system/assets/ui/js/vendor/mustache.js', 'mustache-js');
-        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+        $this->addJs('~/app/admin/assets/src/js/vendor/mustache.js', 'mustache-js');
+        $this->addJs('~/app/admin/assets/src/js/vendor/moment.min.js', 'moment-js');
 
         $this->addJs('vendor/fullcalendar/main.min.js', 'fullcalendar-js');
         $this->addJs('vendor/fullcalendar/locales-all.min.js', 'fullcalendar-js');

@@ -3,9 +3,7 @@
 @else
     <div class="field-permalink">
         <div class="input-group">
-            <span class="input-group-prepend">
-                <span class="input-group-text">{{  root_url() }}</span>
-            </span>
+            <span class="input-group-text">{{  root_url() }}</span>
             <input
                 type="text"
                 name="{{  $field->getName()  }}"

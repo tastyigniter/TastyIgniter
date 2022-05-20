@@ -2,9 +2,8 @@
     <div
         class="flex-grow-1"
         @if ($record->class && strlen($record->readme))
-        href="#"
-        data-toggle="modal"
-        data-target="#extension-modal-{{ $record->extension_id }}"
+        data-bs-toggle="modal"
+        data-bs-target="#extension-modal-{{ $record->extension_id }}"
         role="button"
         @endif
     >
@@ -22,7 +21,7 @@
 @if ($record->class && strlen($record->readme))
     <div
         id="extension-modal-{{ $record->extension_id }}"
-        class="modal show"
+        class="modal fade"
         tabindex="-1"
         role="dialog"
     >
@@ -31,9 +30,7 @@
                 <div class="modal-header">
                     <h4 class="modal-title">{{ $record->title }}</h4>
                     @isset($record->meta['homepage'])
-                        <button type="button" class="close">
-                            <a href="{{ $record->meta['homepage']}}"><i class="fa fa-external-link"></i></a>
-                        </button>
+                        <a href="{{ $record->meta['homepage']}}"><i class="fa fa-external-link fa-2x"></i></a>
                     @endisset
                 </div>
                 <div class="modal-body bg-light markdown">

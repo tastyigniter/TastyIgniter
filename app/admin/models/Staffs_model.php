@@ -30,7 +30,7 @@ class Staffs_model extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $guarded = [];
 
@@ -44,7 +44,7 @@ class Staffs_model extends Model
 
     public $relation = [
         'hasOne' => [
-            'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => TRUE],
+            'user' => ['Admin\Models\Users_model', 'foreignKey' => 'staff_id', 'otherKey' => 'staff_id', 'delete' => true],
         ],
         'hasMany' => [
             'assignable_logs' => ['Admin\Models\Assignable_logs_model', 'foreignKey' => 'assignee_id'],
@@ -153,12 +153,12 @@ class Staffs_model extends Model
         if ($password = array_get($user, 'password'))
             $userModel->password = $password;
 
-        if (array_get($user, 'activate', TRUE)) {
-            $userModel->is_activated = TRUE;
+        if (array_get($user, 'activate', true)) {
+            $userModel->is_activated = true;
             $userModel->date_activated = date('Y-m-d');
         }
 
-        if ($sendInvite = array_get($user, 'send_invite', FALSE))
+        if ($sendInvite = array_get($user, 'send_invite', false))
             $userModel->send_invite = $sendInvite;
 
         $userModel->save();

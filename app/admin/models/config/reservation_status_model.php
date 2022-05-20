@@ -25,7 +25,7 @@ return [
                 'context' => 'status',
                 'label' => 'lang:admin::lang.statuses.label_notify_customer',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'offText' => 'lang:admin::lang.text_no',
                 'onText' => 'lang:admin::lang.text_yes',
                 'comment' => 'lang:admin::lang.statuses.help_notify_customer',

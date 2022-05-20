@@ -20,7 +20,5 @@
         value="{{ $value ? $value->format($dateFormat) : null }}"
         data-datepicker-value
     />
-    <div class="input-group-append">
-        <span class="input-group-icon"><i class="fa fa-calendar-o"></i></span>
-    </div>
+    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
 </div>

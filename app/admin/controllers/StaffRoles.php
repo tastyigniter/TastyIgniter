@@ -53,6 +53,6 @@ class StaffRoles extends \Admin\Classes\AdminController
     {
         parent::__construct();
 
-        AdminMenu::setContext('staffs', 'users');
+        AdminMenu::setContext('staffs', 'system');
     }
 }

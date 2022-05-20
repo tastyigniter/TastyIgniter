@@ -8,7 +8,7 @@
                 <a
                     class="nav-link{{ (('#'.$tabs->section.'tab-'.$loop->iteration) == $activeTab) ? ' active' : '' }}"
                     href="{{ '#'.$tabs->section.'tab-'.$loop->iteration }}"
-                    data-toggle="tab"
+                    data-bs-toggle="tab"
                 >@lang($name)</a>
             </li>
         @endforeach

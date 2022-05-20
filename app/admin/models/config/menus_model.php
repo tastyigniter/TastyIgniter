@@ -7,15 +7,15 @@ $config['list']['filter'] = [
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
-            'type' => 'select',
+            'type' => 'selectlist',
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => TRUE,
+            'locationAware' => true,
         ],
         'category' => [
             'label' => 'lang:admin::lang.menus.text_filter_category',
-            'type' => 'select',
+            'type' => 'selectlist',
             'scope' => 'whereHasCategory',
             'modelClass' => 'Admin\Models\Categories_model',
             'nameFrom' => 'name',
@@ -82,7 +82,7 @@ $config['list']['columns'] = [
     'menu_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'category' => [
         'label' => 'lang:admin::lang.menus.column_category',
@@ -94,13 +94,13 @@ $config['list']['columns'] = [
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'invisible' => TRUE,
-        'locationAware' => TRUE,
+        'invisible' => true,
+        'locationAware' => true,
     ],
     'menu_price' => [
         'label' => 'lang:admin::lang.menus.column_price',
         'type' => 'currency',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'stock_qty' => [
         'label' => 'lang:admin::lang.menus.column_stock_qty',
@@ -121,16 +121,16 @@ $config['list']['columns'] = [
     ],
     'menu_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -139,7 +139,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'menus',
         ],
         'save' => [
@@ -249,7 +249,7 @@ $config['form']['tabs'] = [
             'type' => 'mediafinder',
             'comment' => 'lang:admin::lang.menus.help_image',
             'span' => 'right',
-            'useAttachment' => TRUE,
+            'useAttachment' => true,
         ],
 
         '_options' => [
@@ -281,7 +281,7 @@ $config['form']['tabs'] = [
             'formName' => 'lang:admin::lang.menu_options.text_form_name',
             'form' => 'menu_item_options_model',
             'popupSize' => 'modal-lg',
-            'sortable' => TRUE,
+            'sortable' => true,
             'context' => ['edit', 'preview'],
         ],
 

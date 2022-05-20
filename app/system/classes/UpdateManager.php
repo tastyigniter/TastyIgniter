@@ -70,12 +70,12 @@ class UpdateManager
     public function initialize()
     {
         $this->hubManager = HubManager::instance();
-        $this->extensionManager = ExtensionManager::instance();
         $this->themeManager = ThemeManager::instance();
+        $this->extensionManager = ExtensionManager::instance();
 
         $this->tempDirectory = temp_path();
         $this->baseDirectory = base_path();
-        $this->disableCoreUpdates = config('system.disableCoreUpdates', FALSE);
+        $this->disableCoreUpdates = config('system.disableCoreUpdates', false);
 
         $this->bindContainerObjects();
     }
@@ -193,7 +193,7 @@ class UpdateManager
         if ($hasColumn = Schema::hasColumns($migrationTable, ['group', 'batch'])) {
             $this->log('Migration table already exists');
 
-            return TRUE;
+            return true;
         }
 
         $this->repository->createRepository();
@@ -217,7 +217,7 @@ class UpdateManager
     {
         $className = '\\'.$name.'\Database\Seeds\DatabaseSeeder';
         if (!class_exists($className))
-            return FALSE;
+            return false;
 
         $seeder = App::make($className);
         $seeder->run();
@@ -232,7 +232,7 @@ class UpdateManager
         if (!$this->extensionManager->findExtension($name)) {
             $this->log('<error>Unable to find:</error> '.$name);
 
-            return FALSE;
+            return false;
         }
 
         $this->log("<info>Migrating extension $name</info>");
@@ -250,7 +250,7 @@ class UpdateManager
         if (!$this->extensionManager->findExtension($name)) {
             $this->log('<error>Unable to find:</error> '.$name);
 
-            return FALSE;
+            return false;
         }
 
         $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
@@ -266,7 +266,7 @@ class UpdateManager
         if (!$this->extensionManager->findExtension($name)) {
             $this->log('<error>Unable to find:</error> '.$name);
 
-            return FALSE;
+            return false;
         }
 
         $path = $this->getMigrationPath($this->extensionManager->getNamePath($name));
@@ -304,7 +304,7 @@ class UpdateManager
             return strtotime('-7 day') < strtotime($response['last_check']);
         }
 
-        return TRUE;
+        return true;
     }
 
     public function listItems($itemType)
@@ -319,9 +319,7 @@ class UpdateManager
 
         $installedItems = array_column($installedItems, 'name');
         if (isset($items['data'])) foreach ($items['data'] as &$item) {
-            if ($item['type'] !== 'theme')
-                $item['icon'] = generate_extension_icon($item['icon'] ?? []);
-
+            $item['icon'] = generate_extension_icon($item['icon'] ?? []);
             $item['installed'] = in_array($item['code'], $installedItems);
         }
 
@@ -366,7 +364,7 @@ class UpdateManager
         return $info;
     }
 
-    public function requestUpdateList($force = FALSE)
+    public function requestUpdateList($force = false)
     {
         $installedItems = $this->getInstalledItems();
 
@@ -381,19 +379,20 @@ class UpdateManager
         $installedItems = collect($installedItems)->keyBy('name')->all();
 
         $updateCount = 0;
-        $hasCoreUpdate = FALSE;
+        $hasCoreUpdate = false;
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
             $update['installedVer'] = array_get(array_get($installedItems, $update['code'], []), 'ver');
 
             $update = $this->parseTagDescription($update);
+            $update['icon'] = generate_extension_icon($update['icon'] ?? []);
 
             if (array_get($update, 'type') == 'core') {
                 $update['installedVer'] = params('ti_version');
                 if ($this->disableCoreUpdates)
                     continue;
 
-                $hasCoreUpdate = TRUE;
+                $hasCoreUpdate = true;
             }
             else {
                 if ($hasCoreUpdate || $this->isMarkedAsIgnored($update['code'])) {
@@ -402,7 +401,6 @@ class UpdateManager
                 }
             }
 
-            $update['icon'] = generate_extension_icon($update['icon'] ?? []);
             $items[] = $update;
         }
 
@@ -468,12 +466,12 @@ class UpdateManager
                 continue;
             }
 
-            $ignoredUpdates[$item['name']] = TRUE;
+            $ignoredUpdates[$item['name']] = true;
         }
 
         setting()->set('ignored_updates', $ignoredUpdates);
 
-        return TRUE;
+        return true;
     }
 
     public function getIgnoredUpdates()
@@ -484,9 +482,9 @@ class UpdateManager
     public function isMarkedAsIgnored($code)
     {
         if (!collect($this->getInstalledItems())->firstWhere('name', $code))
-            return FALSE;
+            return false;
 
-        return array_get($this->getIgnoredUpdates(), $code, FALSE);
+        return array_get($this->getIgnoredUpdates(), $code, false);
     }
 
     public function setSecurityKey($key, $info)
@@ -508,7 +506,7 @@ class UpdateManager
         $filePath = $this->getFilePath($fileCode);
 
         if (!is_dir($fileDir = dirname($filePath)))
-            mkdir($fileDir, 0777, TRUE);
+            mkdir($fileDir, 0777, true);
 
         return $this->getHubManager()->downloadFile($filePath, $fileHash, $params);
     }
@@ -539,15 +537,15 @@ class UpdateManager
             $extractTo = base_path();
 
         if (!file_exists($extractTo))
-            mkdir($extractTo, 0755, TRUE);
+            mkdir($extractTo, 0755, true);
 
         $zip = new ZipArchive();
-        if ($zip->open($filePath) === TRUE) {
+        if ($zip->open($filePath) === true) {
             $zip->extractTo($extractTo);
             $zip->close();
             @unlink($filePath);
 
-            return TRUE;
+            return true;
         }
 
         throw new ApplicationException('Failed to extract '.$fileCode.' archive file');

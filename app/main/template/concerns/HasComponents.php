@@ -90,19 +90,19 @@ trait HasComponents
                 return $result;
         }
 
-        return FALSE;
+        return false;
     }
 
     public function runComponents()
     {
         foreach ($this->components as $component) {
-            if ($event = $component->fireEvent('component.beforeRun', [], TRUE))
+            if ($event = $component->fireEvent('component.beforeRun', [], true))
                 return $event;
 
             if ($result = $component->onRun())
                 return $result;
 
-            if ($event = $component->fireEvent('component.run', [], TRUE))
+            if ($event = $component->fireEvent('component.run', [], true))
                 return $event;
         }
     }

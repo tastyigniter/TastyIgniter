@@ -6,7 +6,7 @@ return [
             'buttons' => [
                 'back' => [
                     'label' => 'lang:admin::lang.button_icon_back',
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-outline-secondary',
                     'href' => 'settings',
                 ],
                 'save' => [
@@ -25,7 +25,7 @@ return [
             'enable_request_log' => [
                 'label' => 'lang:system::lang.settings.label_enable_request_log',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'comment' => 'lang:system::lang.settings.help_enable_request_log',
             ],
             'maintenance' => [

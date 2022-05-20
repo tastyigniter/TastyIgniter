@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Cookie;
  */
 trait VerifiesCsrfToken
 {
-    public $enableCsrfProtection = TRUE;
+    public $enableCsrfProtection = true;
 
     protected function makeXsrfCookie()
     {
@@ -28,22 +28,22 @@ trait VerifiesCsrfToken
             $config['path'],
             $config['domain'],
             $config['secure'],
-            FALSE,
-            FALSE,
+            false,
+            false,
             $config['same_site'] ?? null
         );
     }
 
     protected function verifyCsrfToken()
     {
-        if (!config('system.enableCsrfProtection', TRUE) || !$this->enableCsrfProtection)
-            return TRUE;
+        if (!config('system.enableCsrfProtection', true) || !$this->enableCsrfProtection)
+            return true;
 
         if (in_array(Request::method(), ['HEAD', 'GET', 'OPTIONS']))
-            return TRUE;
+            return true;
 
         if (!strlen($token = $this->getCsrfTokenFromRequest()))
-            return FALSE;
+            return false;
 
         return is_string(Request::session()->token())
             && is_string($token)

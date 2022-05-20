@@ -16,7 +16,7 @@
                     <div class="modal-content">
                         <div class="modal-body text-center">
                             <div class="progress-indicator">
-                                <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
+                                <span class="ti-loading spinner-border fa-3x fa-fw"></span>
                                 @lang('admin::lang.text_loading')
                             </div>
                         </div>

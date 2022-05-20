@@ -10,7 +10,7 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'system_logs',
         ],
         'refresh' => [
@@ -50,12 +50,12 @@ $config['list']['columns'] = [
     'status_code' => [
         'label' => 'lang:system::lang.request_logs.column_status_code',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'url' => [
         'label' => 'lang:system::lang.request_logs.column_url',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'count' => [
         'label' => 'lang:system::lang.request_logs.column_count',
@@ -67,7 +67,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'request_logs',
         ],
     ],

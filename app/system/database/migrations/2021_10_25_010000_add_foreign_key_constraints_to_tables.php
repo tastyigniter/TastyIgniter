@@ -42,7 +42,7 @@ class AddForeignKeyConstraintsToTables extends Migration
 
             $blueprint = $table->foreignId($foreignKey);
 
-            if (array_get($options, 'nullable', TRUE))
+            if (array_get($options, 'nullable', true))
                 $blueprint->nullable();
 
             $blueprint->change();
@@ -74,13 +74,13 @@ class AddForeignKeyConstraintsToTables extends Migration
     {
         return [
             'currencies' => [
-                ['countries', 'country_id', 'nullOnDelete' => TRUE],
+                ['countries', 'country_id', 'nullOnDelete' => true],
             ],
             'mail_layouts' => [
-                ['languages', 'language_id', 'nullOnDelete' => TRUE],
+                ['languages', 'language_id', 'nullOnDelete' => true],
             ],
             'mail_templates' => [
-                ['mail_layouts', 'layout_id', 'nullOnDelete' => TRUE],
+                ['mail_layouts', 'layout_id', 'nullOnDelete' => true],
             ],
         ];
     }

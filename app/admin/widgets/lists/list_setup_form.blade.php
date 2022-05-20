@@ -3,14 +3,12 @@
     <div class="modal-content">
         <div class="modal-header">
             <h4 class="modal-title">{{ sprintf(lang('admin::lang.list.setup_title'), lang($this->getConfig('title')))}}</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         <div class="modal-body">
             <div class="form-group">
-                <label class="control-label">
-                    @lang('admin::lang.list.label_visible_columns')
-                    <span class="help-block">@lang('admin::lang.list.help_visible_columns')</span>
-                </label>
+                <label class="form-label">@lang('admin::lang.list.label_visible_columns')</label>
+                <div class="help-block">@lang('admin::lang.list.help_visible_columns')</div>
                 <div
                     id="lists-setup-sortable"
                     class="list-group"
@@ -28,11 +26,11 @@
                                 <div class="btn btn-handle form-check-handle mr-2">
                                     <i class="fa fa-arrows-alt-v text-muted"></i>
                                 </div>
-                                <div class="custom-control custom-checkbox custom-control-inline">
+                                <div class="form-check form-check-inline">
                                     <input
                                         type="checkbox"
                                         id="list-setup-{{ $column->columnName }}"
-                                        class="custom-control-input"
+                                        class="form-check-input"
                                         name="visible_columns[]"
                                         value="{{ $column->columnName }}"
                                         {!! $column->invisible ? '' : 'checked="checked"' !!}
@@ -43,7 +41,7 @@
                                         value="{{ $column->columnName }}"
                                     />
                                     <label
-                                        class="custom-control-label"
+                                        class="form-check-label"
                                         for="list-setup-{{ $column->columnName }}"
                                     ><b>@lang($column->label)</b></label>
                                 </div>
@@ -54,24 +52,22 @@
             </div>
             @if ($this->showPagination)
                 <div class="form-group">
-                    <label class="control-label">
-                        @lang('admin::lang.list.label_page_limit')
-                        <span class="help-block">@lang('admin::lang.list.help_page_limit')</span>
-                    </label>
-                    <div
-                        class="btn-group btn-group-toggle"
-                        data-toggle="buttons"
-                    >
+                    <label class="form-label">@lang('admin::lang.list.label_page_limit')</label>
+                    <div class="help-block">@lang('admin::lang.list.help_page_limit')</div>
+                    <div class="btn-group btn-group-toggle">
                         @foreach ($perPageOptions as $optionValue)
-                            <label class="btn btn-light {{ $optionValue == $pageLimit ? 'active' : '' }}">
-                                <input
-                                    type="radio"
-                                    id="checkbox_page_limit_{{ $optionValue }}"
-                                    name="page_limit"
-                                    value="{{ $optionValue }}"
-                                    {!! $optionValue == $pageLimit ? 'checked="checked"' : '' !!}>
-                                {{ $optionValue }}
-                            </label>
+                            <input
+                                type="radio"
+                                id="checkbox-page-limit-{{ $optionValue }}"
+                                class="btn-check"
+                                name="page_limit"
+                                value="{{ $optionValue }}"
+                                {!! $optionValue == $pageLimit ? 'checked="checked"' : '' !!}
+                            />
+                            <label
+                                for="checkbox-page-limit-{{ $optionValue }}"
+                                class="btn btn-light"
+                            >{{ $optionValue }}</label>
                         @endforeach
                     </div>
                 </div>
@@ -87,7 +83,7 @@
             <button
                 type="button"
                 class="btn btn-link"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
             >@lang('admin::lang.list.button_cancel_setup')</button>
             <button
                 type="button"

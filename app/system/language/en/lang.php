@@ -164,6 +164,11 @@ return [
         'text_empty_translations' => 'There are no translations available.',
         'text_files' => 'files',
         'text_locale_strings' => 'Locale Strings (%s%% translated, %s strings)',
+        'text_current_build' => 'Current build: %s',
+        'text_title_update_available' => 'Updates available',
+        'text_title_no_update_available' => 'No updates available',
+        'text_update_available' => 'New updates are available for (%s). Only unchanged translation strings will be updated.',
+        'text_no_update_available' => '(%s) is up to date',
 
         'column_code' => 'Code',
         'column_status' => 'Status',
@@ -172,9 +177,11 @@ return [
 
         'label_code' => 'Locale Code',
         'label_image' => 'Icon',
-        'label_idiom' => 'Idiom',
+        'label_check_updates' => 'Check for updates',
 
-        'button_new' => 'New Group',
+        'button_browse' => '<i class="fa fa-globe"></i>&nbsp;&nbsp;Browse more languages&nbsp;&nbsp;<i class="fa fa-external-link-alt"></i>',
+        'button_check' => '<i class="fa fa-refresh"></i>&nbsp;&nbsp;Check for updates',
+        'button_apply_update' => 'Apply updates',
 
         'help_language' => 'Use a full locale code (e.g. “fr_FR”) instead of just a generic language code (e.g. “fr”), must be same as the locale directory.',
 
@@ -349,15 +356,16 @@ return [
         'text_title' => 'Settings',
         'text_edit_title' => 'Settings: %s',
         'text_tab_general' => 'General',
+        'text_tab_site' => 'Localization',
         'text_tab_restaurant' => 'Restaurant',
         'text_tab_mail' => 'Mail',
         'text_tab_server' => 'Advanced',
 
-        'text_tab_desc_general' => 'Change your restaurant name, email, default language, currency...',
+        'text_tab_desc_general' => 'Configure your restaurant name, email, logo and geolocation settings',
+        'text_tab_desc_site' => 'Configure your site default country, language, currency and timezone settings.',
         'text_tab_desc_mail' => 'Settings for sending out emails',
         'text_tab_desc_server' => 'Manage advanced system settings such as enabling/disabling maintenance.',
 
-        'text_tab_site' => 'Site',
         'text_tab_title_maps' => 'Geolocation',
         'text_tab_title_date_time' => 'Date/Time',
         'text_tab_title_currency' => 'Currency',
@@ -489,6 +497,7 @@ return [
         'alert_delete_setup_files' => '<b>SECURITY WARNING!</b> Delete the setup files to stop someone else from overwriting your site.',
 
         'help_timezone' => 'The default timezone. Choose a city in the same timezone as your restaurant.',
+        'help_default_language' => 'This is the default language your customers will see. Staff can manually set the admin dashboard language under Users > Staff.',
         'help_detect_language' => 'Enable or disable user browser language detection. If enabled your site will be translated to the browser language.',
         'help_maps_api_key' => 'An API Key is required to use Google Maps and/or Geocoding. <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key#get-an-api-key">Where can I find my Google Maps API Key?</a> Enable Google Maps Geocoding API and Google Maps JavaScript API in your Google Developer account',
         'help_default_geocoder' => 'Tell the system which geocoder service to use when geocoding addresses. \'Chain\' is a special geocoder that runs both google and open street maps geocoder and stops once it gets a valid response.',
@@ -616,8 +625,9 @@ return [
 
         'text_tab_title_extensions' => 'Extensions',
         'text_tab_title_themes' => 'Themes',
+        'text_tab_title_languages' => 'Languages',
         'text_ignore' => 'Ignore',
-        'text_search' => 'Search the TastyIgniter marketplace for %s to install',
+        'text_search' => 'Search to install %s from the TastyIgniter marketplace',
         'text_popular_title' => 'Recommended %s',
         'text_last_checked' => '<b>Last checked:</b> %s',
 

@@ -115,7 +115,7 @@ class MainController extends BaseController
     /**
      * @var bool Prevents the automatic view display.
      */
-    public $suppressView = FALSE;
+    public $suppressView = false;
 
     /**
      * @var array Default actions which cannot be called as actions.
@@ -257,7 +257,7 @@ class MainController extends BaseController
         }
 
         // Execute post handler and AJAX event
-        if (($ajaxResponse = $this->processHandlers()) && $ajaxResponse !== TRUE) {
+        if (($ajaxResponse = $this->processHandlers()) && $ajaxResponse !== true) {
             return $ajaxResponse;
         }
 
@@ -356,10 +356,10 @@ class MainController extends BaseController
     protected function processHandlers()
     {
         if (!$handler = $this->getHandler())
-            return FALSE;
+            return false;
 
         if (!$this->verifyCsrfToken())
-            return FALSE;
+            return false;
 
         try {
             $this->validateHandler($handler);
@@ -418,7 +418,7 @@ class MainController extends BaseController
                 $this->componentContext = $componentObj;
                 $result = $componentObj->runEventHandler($handlerName);
 
-                return $result ?: TRUE;
+                return $result ?: true;
             }
         } // Process page specific handler (index_onSomething)
         else {
@@ -426,18 +426,18 @@ class MainController extends BaseController
             if ($this->methodExists($pageHandler)) {
                 $result = call_user_func_array([$this, $pageHandler], array_values($this->params));
 
-                return $result ?: TRUE;
+                return $result ?: true;
             }
 
             if (($componentObj = $this->findComponentByHandler($handler)) !== null) {
                 $this->componentContext = $componentObj;
                 $result = $componentObj->runEventHandler($handler);
 
-                return $result ?: TRUE;
+                return $result ?: true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     protected function validateHandler($handler)
@@ -528,13 +528,13 @@ class MainController extends BaseController
         $this->loader = new Loader;
 
         $options = [
-            'auto_reload' => TRUE,
-            'cache' => TRUE,
+            'auto_reload' => true,
+            'cache' => true,
             'templateClass' => 'Main\\Classes\\Template',
-            'debug' => Config::get('app.debug', FALSE),
+            'debug' => Config::get('app.debug', false),
         ];
 
-        $useCache = TRUE;
+        $useCache = true;
         if ($useCache) {
             $options['cache'] = new FileSystem(config('view.compiled'));
         }
@@ -560,7 +560,7 @@ class MainController extends BaseController
                 ? explode(' ', $component)
                 : [$component, $component];
 
-            $this->addComponent($name, $alias, $properties, TRUE);
+            $this->addComponent($name, $alias, $properties, true);
         }
 
         foreach ($this->page->settings['components'] as $component => $properties) {
@@ -594,7 +594,7 @@ class MainController extends BaseController
         return $contents;
     }
 
-    public function renderPartial($name, array $params = [], $throwException = TRUE)
+    public function renderPartial($name, array $params = [], $throwException = true)
     {
         // Cache variables
         $vars = $this->vars;
@@ -610,16 +610,16 @@ class MainController extends BaseController
             $partial = $event;
         }
         // Process Component partial
-        elseif (strpos($name, '::') !== FALSE) {
-            if (($partial = $this->loadComponentPartial($name, $throwException)) === FALSE)
-                return FALSE;
+        elseif (strpos($name, '::') !== false) {
+            if (($partial = $this->loadComponentPartial($name, $throwException)) === false)
+                return false;
 
             // Set context for self access
             $this->vars['__SELF__'] = $this->componentContext;
         }
         // Process theme partial
-        elseif (($partial = $this->loadPartial($name, $throwException)) === FALSE) {
-            return FALSE;
+        elseif (($partial = $this->loadPartial($name, $throwException)) === false) {
+            return false;
         }
 
         // Render the partial
@@ -691,13 +691,13 @@ class MainController extends BaseController
      * @return mixed Partial contents or false if not throwing an exception.
      * @throws \Igniter\Flame\Exception\ApplicationException
      */
-    public function renderComponent($name, array $params = [], $throwException = TRUE)
+    public function renderComponent($name, array $params = [], $throwException = true)
     {
         $previousContext = $this->componentContext;
         if (!$componentObj = $this->findComponentByAlias($name)) {
             $this->handleException(sprintf(lang('main::lang.not_found.component'), $name), $throwException);
 
-            return FALSE;
+            return false;
         }
 
         $componentObj->id = uniqid($name);
@@ -707,7 +707,7 @@ class MainController extends BaseController
             return $result;
         }
 
-        $result = $this->renderPartial($name.'::'.$componentObj->defaultPartial, [], FALSE);
+        $result = $this->renderPartial($name.'::'.$componentObj->defaultPartial, [], false);
         $this->componentContext = $previousContext;
 
         return $result;
@@ -728,7 +728,7 @@ class MainController extends BaseController
      * @return \System\Classes\BaseComponent Component object
      * @throws \Exception
      */
-    public function addComponent($name, $alias, $properties = [], $addToLayout = FALSE)
+    public function addComponent($name, $alias, $properties = [], $addToLayout = false)
     {
         $codeObj = $addToLayout ? $this->layoutObj : $this->pageObj;
         $templateObj = $addToLayout ? $this->layout : $this->page;
@@ -748,12 +748,12 @@ class MainController extends BaseController
     public function hasComponent($alias)
     {
         if (!$componentObj = $this->findComponentByAlias($alias))
-            return FALSE;
+            return false;
 
         if ($componentObj instanceof BlankComponent)
-            return FALSE;
+            return false;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -821,7 +821,7 @@ class MainController extends BaseController
         $this->componentContext = $component;
     }
 
-    protected function loadComponentPartial($name, $throwException = TRUE)
+    protected function loadComponentPartial($name, $throwException = true)
     {
         [$componentAlias, $partialName] = explode('::', $name);
 
@@ -833,20 +833,20 @@ class MainController extends BaseController
             elseif (($componentObj = $this->findComponentByPartial($partialName)) === null) {
                 $this->handleException(sprintf(lang('main::lang.not_found.partial'), $partialName), $throwException);
 
-                return FALSE;
+                return false;
             }
         }
         elseif (($componentObj = $this->findComponentByAlias($componentAlias)) === null) {
             $this->handleException(sprintf(lang('main::lang.not_found.component'), $componentAlias), $throwException);
 
-            return FALSE;
+            return false;
         }
 
         $partial = null;
         $this->componentContext = $componentObj;
 
         // Check if the theme has an override
-        if (strpos($partialName, '/') === FALSE) {
+        if (strpos($partialName, '/') === false) {
             $partial = ComponentPartial::loadOverrideCached($this->theme, $componentObj, $partialName);
         }
 
@@ -857,18 +857,18 @@ class MainController extends BaseController
         if ($partial === null) {
             $this->handleException(sprintf(lang('main::lang.not_found.partial'), $name), $throwException);
 
-            return FALSE;
+            return false;
         }
 
         return $partial;
     }
 
-    protected function loadPartial($name, $throwException = TRUE)
+    protected function loadPartial($name, $throwException = true)
     {
         if (($partial = Partial::loadCached($this->theme, $name)) === null) {
             $this->handleException(sprintf(lang('main::lang.not_found.partial'), $name), $throwException);
 
-            return FALSE;
+            return false;
         }
 
         return $partial;

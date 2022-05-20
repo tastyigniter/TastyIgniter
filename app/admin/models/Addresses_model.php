@@ -91,6 +91,6 @@ class Addresses_model extends Model
 
     public function getFormattedAddressAttribute($value)
     {
-        return format_address($this->toArray(), FALSE);
+        return format_address($this->toArray(), false);
     }
 }

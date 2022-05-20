@@ -55,7 +55,7 @@ class DropStaleUnusedColumns extends Migration
                 'version' => $model->version,
                 'data' => $model->data,
                 'status' => $model->status,
-                'is_default' => FALSE,
+                'is_default' => false,
             ]);
         });
     }
@@ -73,7 +73,7 @@ class DropStaleUnusedColumns extends Migration
                 'class_name' => 'Igniter\\PayRegister\\Payments\\'.studly_case($model->name),
                 'data' => $model->data,
                 'status' => $model->status,
-                'is_default' => FALSE,
+                'is_default' => false,
                 'date_added' => Carbon::now(),
                 'date_updated' => Carbon::now(),
             ]);
