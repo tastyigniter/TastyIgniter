@@ -2,7 +2,7 @@
 
 namespace Igniter\Demo;
 
-use System\Classes\BaseExtension;
+use Igniter\System\Classes\BaseExtension;
 
 class Extension extends BaseExtension
 {

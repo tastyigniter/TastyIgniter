@@ -1,6 +1,5 @@
 .DS_Store
 .idea
-.htaccess
 .env
 .env.testing
 .phpunit.result.cache
@@ -10,3 +9,5 @@ phpunit.dusk.xml
 /vendor
 composer.lock
 node_modules
+
+/public/vendor

@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
-    bootstrap="bootstrap/autoload.php"
-    colors="true"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
 >
     <testsuites>
-        <testsuite name="TastyIgniter Unit Test Suite">
-            <directory>./tests/Unit</directory>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
-        <testsuite name="TastyIgniter Feature Test Suite">
-            <directory>./tests/Feature</directory>
-        </testsuite>
-        <testsuite name="TastyIgniter Flame Test Suite">
-            <directory>./vendor/tastyigniter/flame/tests</directory>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
     </testsuites>
     <coverage processUncoveredFiles="true">
@@ -25,11 +21,11 @@
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <env name="SESSION_DRIVER" value="array"/>
-        <env name="MAIL_MAILER" value="array"/>
         <!-- <env name="DB_CONNECTION" value="sqlite"/> -->
         <!-- <env name="DB_DATABASE" value=":memory:"/> -->
+        <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
 </phpunit>
