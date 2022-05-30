@@ -50,6 +50,7 @@ class Menu_options_model extends Model
             ],
         ],
         'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
@@ -95,6 +96,7 @@ class Menu_options_model extends Model
 
     protected function beforeDelete()
     {
+        $this->allergens()->detach();
         $this->locations()->detach();
     }
 
