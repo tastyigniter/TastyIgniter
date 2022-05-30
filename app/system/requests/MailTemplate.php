@@ -25,7 +25,7 @@ class MailTemplate extends FormRequest
         ];
 
         if (optional($this->getForm())->context == 'create') {
-            $rules['code'] = ['required', 'min:2', 'max:32'];
+            $rules['code'] = ['required', 'min:2', 'max:128'];
         }
 
         return $rules;
