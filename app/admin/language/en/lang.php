@@ -551,8 +551,8 @@ return [
         'label_gallery_image_thumbnail' => 'Thumbnail',
         'label_gallery_image_name' => 'Filename',
         'label_gallery_image_alt' => 'Alt Text',
-        'label_delivery_condition' => 'Delivery Condition',
-        'label_delivery_distance' => 'Distance Based Delivery Condition',
+        'label_delivery_condition' => 'Delivery Charge Condition',
+        'label_delivery_distance' => 'Distance Based Delivery Charge Condition',
 
         'error_no_zero_total' => 'The %s can not be a value zero on conditions other than \'on all orders\'.',
         'alert_delivery_area' => 'Add at least one delivery area to allow your customers find this location.',
