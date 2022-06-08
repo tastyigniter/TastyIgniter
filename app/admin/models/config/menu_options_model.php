@@ -18,6 +18,7 @@ $config['form']['fields'] = [
     'values' => [
         'label' => 'lang:admin::lang.menu_options.text_tab_values',
         'type' => 'repeater',
+        'valueFrom' => 'option_values',
         'form' => 'menu_option_values_model',
         'sortable' => true,
     ],

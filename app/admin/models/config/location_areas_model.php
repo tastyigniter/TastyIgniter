@@ -23,6 +23,54 @@ return [
                     'data-toggle' => 'area-default',
                 ],
             ],
+            'type' => [
+                'label' => 'lang:admin::lang.locations.label_area_type',
+                'type' => 'radiotoggle',
+                'default' => 'address',
+                'options' => [
+                    'address' => 'lang:admin::lang.locations.text_custom',
+                    'polygon' => 'lang:admin::lang.locations.text_shape',
+                    'circle' => 'lang:admin::lang.locations.text_circle',
+                ],
+                'attributes' => [
+                    'data-toggle' => 'map-shape',
+                ],
+            ],
+            'boundaries[components]' => [
+                'label' => 'lang:admin::lang.locations.label_address_component',
+                'type' => 'repeater',
+                'sortable' => true,
+                'commentAbove' => 'lang:admin::lang.locations.help_delivery_components',
+                'trigger' => [
+                    'action' => 'show',
+                    'field' => 'type',
+                    'condition' => 'value[address]',
+                ],
+                'form' => [
+                    'fields' => [
+                        'priority' => [
+                            'type' => 'hidden',
+                        ],
+                        'type' => [
+                            'label' => 'lang:admin::lang.locations.label_address_component_type',
+                            'type' => 'select',
+                            'default' => 'region',
+                            'options' => [
+                                'street' => 'lang:admin::lang.locations.text_address_component_street',
+                                'sub_locality' => 'lang:admin::lang.locations.text_address_component_town',
+                                'locality' => 'lang:admin::lang.locations.text_address_component_city',
+                                'admin_level_2' => 'lang:admin::lang.locations.text_address_component_region',
+                                'admin_level_1' => 'lang:admin::lang.locations.text_address_component_state',
+                                'postal_code' => 'lang:admin::lang.locations.text_address_component_postal_code',
+                            ],
+                        ],
+                        'value' => [
+                            'label' => 'lang:admin::lang.locations.label_address_component_value',
+                            'type' => 'text',
+                        ],
+                    ],
+                ],
+            ],
             'conditions' => [
                 'label' => 'lang:admin::lang.locations.label_delivery_condition',
                 'type' => 'repeater',
@@ -82,53 +130,6 @@ return [
                         ],
                         'charge' => [
                             'label' => 'lang:admin::lang.locations.label_area_charge',
-                            'type' => 'text',
-                        ],
-                    ],
-                ],
-            ],
-            'type' => [
-                'label' => 'lang:admin::lang.locations.label_area_type',
-                'type' => 'radiotoggle',
-                'default' => 'address',
-                'options' => [
-                    'address' => 'lang:admin::lang.locations.text_custom',
-                    'polygon' => 'lang:admin::lang.locations.text_shape',
-                    'circle' => 'lang:admin::lang.locations.text_circle',
-                ],
-                'attributes' => [
-                    'data-toggle' => 'map-shape',
-                ],
-            ],
-            'boundaries[components]' => [
-                'type' => 'repeater',
-                'sortable' => true,
-                'commentAbove' => 'lang:admin::lang.locations.help_delivery_components',
-                'trigger' => [
-                    'action' => 'show',
-                    'field' => 'type',
-                    'condition' => 'value[address]',
-                ],
-                'form' => [
-                    'fields' => [
-                        'priority' => [
-                            'type' => 'hidden',
-                        ],
-                        'type' => [
-                            'label' => 'lang:admin::lang.locations.label_address_component_type',
-                            'type' => 'select',
-                            'default' => 'region',
-                            'options' => [
-                                'street' => 'lang:admin::lang.locations.text_address_component_street',
-                                'sub_locality' => 'lang:admin::lang.locations.text_address_component_town',
-                                'locality' => 'lang:admin::lang.locations.text_address_component_city',
-                                'admin_level_2' => 'lang:admin::lang.locations.text_address_component_region',
-                                'admin_level_1' => 'lang:admin::lang.locations.text_address_component_state',
-                                'postal_code' => 'lang:admin::lang.locations.text_address_component_postal_code',
-                            ],
-                        ],
-                        'value' => [
-                            'label' => 'lang:admin::lang.locations.label_address_component_value',
                             'type' => 'text',
                         ],
                     ],

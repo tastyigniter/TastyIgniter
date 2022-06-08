@@ -22,7 +22,7 @@ class Category extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'between:2,128', 'unique:categories'],
+            'name' => ['required', 'between:2,128'],
             'description' => ['min:2'],
             'permalink_slug' => ['alpha_dash', 'max:255'],
             'parent_id' => ['nullable', 'integer'],

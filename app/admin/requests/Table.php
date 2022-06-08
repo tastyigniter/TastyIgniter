@@ -24,7 +24,7 @@ class Table extends FormRequest
     public function rules()
     {
         return [
-            'table_name' => ['required', 'min:2', 'max:255', 'unique:tables'],
+            'table_name' => ['required', 'min:2', 'max:255'],
             'min_capacity' => ['required', 'integer', 'min:1', 'lte:max_capacity'],
             'max_capacity' => ['required', 'integer', 'min:1', 'gte:min_capacity'],
             'extra_capacity' => ['required', 'integer'],
