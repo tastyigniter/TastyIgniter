@@ -199,6 +199,10 @@ class ListController extends ControllerAction
             $this->controller->listExtendQuery($query, $alias);
         });
 
+        $widget->bindEvent('list.extendRecords', function ($records) use ($alias) {
+            return $this->controller->listExtendRecords($records, $alias);
+        });
+
         $widget->bindEvent('list.overrideColumnValue', function ($record, $column, $value) use ($alias) {
             return $this->controller->listOverrideColumnValue($record, $column, $alias);
         });
