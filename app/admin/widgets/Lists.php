@@ -410,6 +410,10 @@ class Lists extends BaseWidget
             $records = $model->get();
         }
 
+        if ($event = $this->fireSystemEvent('admin.list.extendRecords', [&$records])) {
+            $records = $event;
+        }
+
         return $this->records = $records;
     }
 
