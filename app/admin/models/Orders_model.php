@@ -411,6 +411,7 @@ class Orders_model extends Model
             $data['order_address'] = format_address($model->address->toArray(), false);
 
         if ($model->location) {
+            $data['location_logo'] = $model->location->thumb;
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
             $data['location_telephone'] = $model->location->location_telephone;
