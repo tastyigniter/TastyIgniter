@@ -15,6 +15,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use ReflectionClass;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\UpdateManager;
 use System\Database\Seeds\DatabaseSeeder;
@@ -145,8 +146,9 @@ class IgniterInstall extends Command
         DatabaseSeeder::$siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
         DatabaseSeeder::$siteLanguage = $this->ask('Site Language', DatabaseSeeder::$siteLanguage);
-
-        $availableTimezones = DateTimeZone;::listIdentifiers(DateTimeZone::ALL);
+        $dateTimeZoneReflection = new ReflectionClass('DateTimeZone');
+        $region = $this->choice('Site Region for timezone', $dateTimeZoneReflection->getConstants(), null);
+        $availableTimezones = DateTimeZone::listIdentifiers(constant( "DateTimeZone::$region" ));
         DatabaseSeeder::$siteTimezone = $this->choice('Site Timezone', $availableTimezones, $availableTimezones[DatabaseSeeder::$siteTimezone] ?? 0);
 
         DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
