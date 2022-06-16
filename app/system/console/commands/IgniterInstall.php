@@ -145,7 +145,9 @@ class IgniterInstall extends Command
 
         DatabaseSeeder::$siteName = $this->ask('Site Name', DatabaseSeeder::$siteName);
         DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
-        DatabaseSeeder::$siteLanguage = $this->ask('Site Language', DatabaseSeeder::$siteLanguage);
+        DatabaseSeeder::$siteLanguage = $this->choice('Site Language', app('translator.localization')->supportedLocales(), DatabaseSeeder::$siteLanguage);
+
+
         $dateTimeZoneReflection = new ReflectionClass('DateTimeZone');
         $region = $this->choice('Site Region for timezone', $dateTimeZoneReflection->getConstants(), null);
         $availableTimezones = DateTimeZone::listIdentifiers(constant( "DateTimeZone::$region" ));
