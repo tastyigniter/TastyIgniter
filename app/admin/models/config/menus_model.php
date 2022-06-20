@@ -261,7 +261,7 @@ $config['form']['tabs'] = [
             'modelClass' => 'Admin\Models\Menu_options_model',
             'placeholder' => 'lang:admin::lang.menus.help_menu_option',
             'formName' => 'lang:admin::lang.menu_options.text_option',
-            'popupSize' => 'modal-lg',
+            'popupSize' => 'modal-xl',
             'addonRight' => [
                 'label' => '<i class="fa fa-long-arrow-down"></i> Add to Menu',
                 'tag' => 'button',
