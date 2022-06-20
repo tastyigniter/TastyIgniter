@@ -1,6 +1,6 @@
 <div class="modal-dialog modal-dialog-scrollable {{ $this->popupSize }}">
     {!! form_open([
-        'id' => 'record-editor-form',
+        'id' => $this->getId('record-editor-form'),
         'role' => 'form',
         'method' => $formWidget->context == 'create' ? 'POST' : 'PATCH',
         'data-request' => $this->alias.'::onSaveRecord',

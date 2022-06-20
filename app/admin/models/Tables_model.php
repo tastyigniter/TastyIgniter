@@ -8,6 +8,7 @@ use Igniter\Flame\Database\Traits\Sortable;
 
 /**
  * Tables Model Class
+ * @deprecated remove after v4. Added for backward compatibility
  */
 class Tables_model extends Model
 {

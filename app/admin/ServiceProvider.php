@@ -344,13 +344,6 @@ class ServiceProvider extends AppServiceProvider
                             'title' => lang('admin::lang.side_menu.mealtimes'),
                             'permission' => 'Admin.Mealtimes',
                         ],
-                        'tables' => [
-                            'priority' => 50,
-                            'class' => 'tables',
-                            'href' => admin_url('tables'),
-                            'title' => lang('admin::lang.side_menu.table'),
-                            'permission' => 'Admin.Tables',
-                        ],
                     ],
                 ],
                 'sales' => [
@@ -664,9 +657,6 @@ class ServiceProvider extends AppServiceProvider
                 ],
                 'Admin.Locations' => [
                     'label' => 'admin::lang.permissions.locations', 'group' => 'admin::lang.permissions.name',
-                ],
-                'Admin.Tables' => [
-                    'label' => 'admin::lang.permissions.tables', 'group' => 'admin::lang.permissions.name',
                 ],
                 'Admin.Orders' => [
                     'label' => 'admin::lang.permissions.orders', 'group' => 'admin::lang.permissions.name',

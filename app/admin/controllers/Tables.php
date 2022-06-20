@@ -6,6 +6,7 @@ use Admin\Facades\AdminMenu;
 
 /**
  * Admin Controller Class Tables
+ * @deprecated remove after v4. Added for backward compatibility
  */
 class Tables extends \Admin\Classes\AdminController
 {

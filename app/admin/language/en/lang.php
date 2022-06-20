@@ -158,7 +158,7 @@ return [
         'dashboard' => 'Dashboard',
         'menu' => 'Menu Items',
         'category' => 'Categories',
-        'table' => 'Tables',
+        'floor_plan' => 'Floor Plan',
         'sale' => 'Sales',
         'order' => 'Orders',
         'reservation' => 'Reservations',
@@ -910,7 +910,7 @@ return [
         'text_round_robin' => 'Round Robin',
         'text_load_balanced' => 'Load Balanced',
 
-        'label_auto_assign' => 'Automatic Order Assignment',
+        'label_auto_assign' => 'Automatic Assignment',
         'label_assignment_mode' => 'Assignment Mode',
         'label_assignment_availability' => 'Assignment Availability',
         'label_load_balanced_limit' => 'Load Balanced Limit',
@@ -919,7 +919,7 @@ return [
 
         'alert_no_available_assignee' => 'No available assignee.',
 
-        'help_auto_assign' => 'Allocate and control the number of orders assigned to staff in this group.',
+        'help_auto_assign' => 'Allocate and control the number of orders or reservations assigned to staff in this group.',
         'help_round_robin' => 'Assign orders to the staff who are online in a circular fashion.',
         'help_load_balanced' => 'Limit the number of orders a staff can handle simultaneously.',
         'help_load_balanced_limit' => 'Maximum number of orders per staff.',
