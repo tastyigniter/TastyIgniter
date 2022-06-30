@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.menus.text_filter_search',
@@ -89,7 +90,7 @@ $config['list']['columns'] = [
         'relation' => 'categories',
         'select' => 'name',
     ],
-    'locations' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
         'relation' => 'locations',
@@ -261,7 +262,7 @@ $config['form']['tabs'] = [
             'modelClass' => 'Admin\Models\Menu_options_model',
             'placeholder' => 'lang:admin::lang.menus.help_menu_option',
             'formName' => 'lang:admin::lang.menu_options.text_option',
-            'popupSize' => 'modal-lg',
+            'popupSize' => 'modal-xl',
             'addonRight' => [
                 'label' => '<i class="fa fa-long-arrow-down"></i> Add to Menu',
                 'tag' => 'button',

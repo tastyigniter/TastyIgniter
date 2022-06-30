@@ -287,6 +287,7 @@ return [
         'text_invoice_date' => 'Customer telephone address',
         'text_order_menus' => 'Array of order menu items',
         'text_order_comment' => 'Order comment',
+        'text_location_logo' => 'Location logo',
         'text_location_name' => 'Location name',
         'text_location_email' => 'Location email',
         'text_location_address' => 'Location address',

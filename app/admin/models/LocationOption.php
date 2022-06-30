@@ -177,20 +177,16 @@ class LocationOption extends Model
         if (!$location = $this->locationContext)
             return false;
 
-        $records = $this->getAll();
-
-        collect($this->itemsToSaveCache)
-            ->filter(function ($value, $key) use ($records) {
-                return $value != array_get($records, $key);
-            })
-            ->each(function ($value, $key) use ($location) {
-                self::updateOrCreate([
+        self::upsert(collect($this->itemsToSaveCache)
+            ->map(function ($value, $key) use ($location) {
+                return [
                     'location_id' => $location->location_id,
                     'item' => $key,
-                ], ['value' => $value]);
-            });
+                    'value' => json_encode($value),
+                ];
+            })->values()->all(), ['location_id', 'item'], ['value']);
 
-        static::$cache[$location->location_id] = null;
+        unset(static::$cache[$location->location_id]);
 
         return true;
     }

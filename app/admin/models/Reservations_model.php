@@ -64,6 +64,7 @@ class Reservations_model extends Model
 
     public $relation = [
         'belongsTo' => [
+            'customer' => 'Admin\Models\Customers_model',
             'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location' => 'Admin\Models\Locations_model',
         ],
@@ -99,6 +100,10 @@ class Reservations_model extends Model
 
         if (array_key_exists('tables', $this->attributes)) {
             $this->addReservationTables((array)$this->attributes['tables']);
+        }
+
+        if ($this->location->getOption('auto_allocate_table', 1) && !$this->tables()->count()) {
+            $this->addReservationTables($this->getNextBookableTable()->pluck('table_id')->all());
         }
     }
 
@@ -395,6 +400,34 @@ class Reservations_model extends Model
         $this->tables()->sync($tableIds);
     }
 
+    /**
+     * @return \Illuminate\Support\Collection|null
+     */
+    public function getNextBookableTable()
+    {
+        $tables = $this->location->tables->where('table_status', 1);
+
+        $reserved = static::findReservedTables($this->location, $this->reservation_datetime);
+
+        $tables = $tables->diff($reserved)->sortBy('priority');
+
+        $result = collect();
+        $unseatedGuests = $this->guest_num;
+        foreach ($tables as $table) {
+            if ($table->min_capacity <= $this->guest_num && $table->max_capacity >= $this->guest_num)
+                return collect([$table]);
+
+            if ($table->is_joinable && $unseatedGuests >= $table->min_capacity) {
+                $result->push($table);
+                $unseatedGuests -= $table->max_capacity;
+                if ($unseatedGuests <= 0)
+                    break;
+            }
+        }
+
+        return $unseatedGuests > 0 ? collect() : $result;
+    }
+
     //
     // Mail
     //
@@ -435,8 +468,8 @@ class Reservations_model extends Model
         $data['reservation'] = $model;
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
-        $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('system::lang.php.time_format'));
-        $data['reservation_date'] = $model->reserve_date->format(lang('system::lang.php.date_format_long'));
+        $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->isoFormat(lang('system::lang.moment.time_format'));
+        $data['reservation_date'] = $model->reserve_date->isoFormat(lang('system::lang.moment.date_format_long'));
         $data['reservation_guest_no'] = $model->guest_num;
         $data['first_name'] = $model->first_name;
         $data['last_name'] = $model->last_name;
@@ -445,6 +478,7 @@ class Reservations_model extends Model
         $data['reservation_comment'] = $model->comment;
 
         if ($model->location) {
+            $data['location_logo'] = $model->location->thumb;
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
             $data['location_telephone'] = $model->location->location_telephone;

@@ -408,6 +408,10 @@ class UpdateManager
         $result['items'] = $items;
         $result['ignoredItems'] = $ignoredItems;
 
+        foreach ($ignoredItems as $item) {
+            $this->extensionManager->updateInstalledExtensions($item['code'], false);
+        }
+
         return $result;
     }
 

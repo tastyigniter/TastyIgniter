@@ -34,6 +34,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
+          branch: ${GITHUB_REF#refs/heads/}
+
           package-directory: 'app/${{ matrix.package.path }}'
           split-repository-organization: 'tastyigniter'
           split-repository-name: '${{ matrix.package.repository }}'

@@ -361,17 +361,15 @@ class Orders_model extends Model
         $data['order_comment'] = $model->comment;
 
         $data['order_type'] = $model->order_type_name;
-        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->format(lang('system::lang.php.time_format'));
-        $data['order_date'] = $model->order_date->format(lang('system::lang.php.date_format'));
-        $data['order_added'] = $model->created_at->format(lang('system::lang.php.date_time_format'));
+        $data['order_time'] = Carbon::createFromTimeString($model->order_time)->isoFormat(lang('system::lang.moment.time_format'));
+        $data['order_date'] = $model->order_date->isoFormat(lang('system::lang.moment.date_format'));
+        $data['order_added'] = $model->created_at->isoFormat(lang('system::lang.moment.date_time_format'));
 
         $data['invoice_id'] = $model->invoice_number;
         $data['invoice_number'] = $model->invoice_number;
-        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->format(lang('system::lang.php.date_format')) : null;
+        $data['invoice_date'] = $model->invoice_date ? $model->invoice_date->isoFormat(lang('system::lang.moment.date_format')) : null;
 
-        $data['order_payment'] = ($model->payment_method)
-            ? $model->payment_method->name
-            : lang('admin::lang.orders.text_no_payment');
+        $data['order_payment'] = $model->payment_method->name ?? lang('admin::lang.orders.text_no_payment');
 
         $data['order_menus'] = [];
         $menus = $model->getOrderMenusWithOptions();
@@ -413,6 +411,7 @@ class Orders_model extends Model
             $data['order_address'] = format_address($model->address->toArray(), false);
 
         if ($model->location) {
+            $data['location_logo'] = $model->location->thumb;
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
             $data['location_telephone'] = $model->location->location_telephone;
