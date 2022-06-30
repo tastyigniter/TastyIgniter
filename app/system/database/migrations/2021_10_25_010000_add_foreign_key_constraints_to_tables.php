@@ -13,22 +13,24 @@ class AddForeignKeyConstraintsToTables extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
-            foreach ($constraints as $options) {
-                $this->addForeignKey($tableName, $options);
-            }
-        }
+        // Commented out so foreign keys are not added on new installations.
+        // For existing installations, another migration has been added to drop all foreign keys.
+//        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
+//            foreach ($constraints as $options) {
+//                $this->addForeignKey($tableName, $options);
+//            }
+//        }
 
         Schema::enableForeignKeyConstraints();
     }
 
     public function down()
     {
-        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
-            foreach ($constraints as $options) {
-                $this->dropForeignKey($tableName, $options);
-            }
-        }
+//        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
+//            foreach ($constraints as $options) {
+//                $this->dropForeignKey($tableName, $options);
+//            }
+//        }
     }
 
     protected function addForeignKey($tableName, $options)
