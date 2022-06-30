@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.categories.text_filter_search',
@@ -70,13 +71,13 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
-    'parent_cat' => [
+    'parent' => [
         'label' => 'lang:admin::lang.categories.column_parent',
         'type' => 'text',
         'relation' => 'parent_cat',
         'select' => 'name',
     ],
-    'locations' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
         'relation' => 'locations',

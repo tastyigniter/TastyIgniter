@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['columns'] = [
     'created_at' => [
         'label' => 'lang:admin::lang.statuses.column_time_date',
@@ -9,7 +10,7 @@ $config['list']['columns'] = [
         'relation' => 'staff',
         'select' => 'staff_name',
     ],
-    'status' => [
+    'status_name' => [
         'label' => 'lang:admin::lang.label_status',
         'relation' => 'status',
         'select' => 'status_name',
