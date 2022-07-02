@@ -354,6 +354,40 @@ class ServiceProvider extends AppServiceProvider
         \Illuminate\Database\Eloquent\Builder::macro('toRawSql', function () {
             return $this->getQuery()->toRawSql();
         });
+
+        \Illuminate\Database\Schema\Blueprint::macro('dropForeignKeyIfExists', function ($key) {
+            $foreignKeys = array_map(function ($key) {
+                return $key->getName();
+            }, \Illuminate\Support\Facades\Schema::getConnection()
+                ->getDoctrineSchemaManager()
+                ->listTableForeignKeys($this->table)
+            );
+
+            if (!starts_with($key, $this->prefix))
+                $key = sprintf('%s%s_%s_foreign', $this->prefix, $this->table, $key);
+
+            if (!in_array($key, $foreignKeys))
+                return;
+
+            return $this->dropForeign($key);
+        });
+
+        \Illuminate\Database\Schema\Blueprint::macro('dropIndexIfExists', function ($key) {
+            $indexes = array_map(function ($key) {
+                return $key->getName();
+            }, \Illuminate\Support\Facades\Schema::getConnection()
+                ->getDoctrineSchemaManager()
+                ->listTableIndexes($this->table)
+            );
+
+            if (!starts_with($key, $this->prefix))
+                $key = sprintf('%s%s_%s_foreign', $this->prefix, $this->table, $key);
+
+            if (!in_array($key, $indexes))
+                return;
+
+            return $this->dropIndex($key);
+        });
     }
 
     protected function registerSchedule()
