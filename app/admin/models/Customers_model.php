@@ -248,7 +248,7 @@ class Customers_model extends AuthUserModel
     public function mailGetRecipients($type)
     {
         return [
-            [$this->email, $this->full_name],
+            [$this->email, $this->full_name, false],
         ];
     }
 

@@ -326,13 +326,13 @@ class Orders_model extends Model
         if (in_array($type, $emailSetting)) {
             switch ($type) {
                 case 'customer':
-                    $recipients[] = [$this->email, $this->customer_name];
+                    $recipients[] = [$this->email, $this->customer_name, false];
                     break;
                 case 'location':
-                    $recipients[] = [$this->location->location_email, $this->location->location_name];
+                    $recipients[] = [$this->location->location_email, $this->location->location_name, $this->email];
                     break;
                 case 'admin':
-                    $recipients[] = [setting('site_email'), setting('site_name')];
+                    $recipients[] = [setting('site_email'), setting('site_name'), $this->email];
                     break;
             }
         }

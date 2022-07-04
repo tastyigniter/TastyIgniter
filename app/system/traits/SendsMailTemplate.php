@@ -36,8 +36,11 @@ trait SendsMailTemplate
 
         return function ($message) use ($recipients) {
             foreach ($recipients as $recipient) {
-                [$email, $name] = $recipient;
+                [$email, $name, $replyTo] = $recipient;
                 $message->to($email, $name);
+                if ($replyTo) {
+                    $message->replyTo($replyTo);
+                }
             }
         };
     }

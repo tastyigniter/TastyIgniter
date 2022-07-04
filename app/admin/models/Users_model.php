@@ -169,7 +169,7 @@ class Users_model extends AuthUserModel
     public function mailGetRecipients($type)
     {
         return [
-            [$this->staff->staff_email, $this->staff_name],
+            [$this->staff->staff_email, $this->staff_name, false],
         ];
     }
 
