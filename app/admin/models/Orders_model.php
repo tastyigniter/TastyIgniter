@@ -326,18 +326,33 @@ class Orders_model extends Model
         if (in_array($type, $emailSetting)) {
             switch ($type) {
                 case 'customer':
-                    $recipients[] = [$this->email, $this->customer_name, false];
+                    $recipients[] = [$this->email, $this->customer_name];
                     break;
                 case 'location':
-                    $recipients[] = [$this->location->location_email, $this->location->location_name, $this->email];
+                    $recipients[] = [$this->location->location_email, $this->location->location_name];
                     break;
                 case 'admin':
-                    $recipients[] = [setting('site_email'), setting('site_name'), $this->email];
+                    $recipients[] = [setting('site_email'), setting('site_name')];
                     break;
             }
         }
 
         return $recipients;
+    }
+
+    public function mailGetReplyTo($type)
+    {
+        $replyTo = [];
+        if (in_array($type, (array)setting('order_email', []))) {
+            switch ($type) {
+                case 'location':
+                case 'admin':
+                    $replyTo = [$this->email, $this->customer_name];
+                    break;
+            }
+        }
+
+        return $replyTo;
     }
 
     /**
