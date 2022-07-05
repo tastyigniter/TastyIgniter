@@ -140,8 +140,6 @@ class Locations_model extends AbstractLocation
             'latitude' => null,
             'longitude' => null,
             'paginate' => true,
-            'hasDelivery' => null,
-            'hasCollection' => null,
         ], $options));
 
         if ($latitude && $longitude) {
@@ -177,12 +175,6 @@ class Locations_model extends AbstractLocation
 
         if (!is_null($enabled))
             $query->where('location_status', $enabled);
-
-        if (!is_null($hasDelivery))
-            $query->where('options->offer_delivery', $hasDelivery);
-
-        if (!is_null($hasCollection))
-            $query->where('options->offer_collection', $hasCollection);
 
         $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 

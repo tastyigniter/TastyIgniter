@@ -8,25 +8,14 @@ trait HasLocationOptions
 {
     protected $optionsCache;
 
-    public static function bootHasLocationOptions()
-    {
-        static::deleted(function (self $model) {
-            LocationOption::onLocation($model)->resetAll();
-        });
-    }
-
     public function getOptionsAttribute()
     {
-        if (is_null($this->optionsCache))
-            $this->optionsCache = LocationOption::onLocation($this)->getAll();
-
-        return $this->optionsCache;
+        return $this->all_options->pluck('value', 'item')->toArray();
     }
 
     public function setOptionsAttribute($value)
     {
         LocationOption::onLocation($this)->setAll($value);
-        $this->optionsCache = null;
     }
 
     public function setOption($key, $value)
