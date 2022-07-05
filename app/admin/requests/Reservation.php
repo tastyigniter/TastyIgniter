@@ -30,7 +30,8 @@ class Reservation extends FormRequest
             'telephone' => ['sometimes'],
             'reserve_date' => ['required', 'valid_date'],
             'reserve_time' => ['required', 'valid_time'],
-            'guest_num' => ['required', 'integer'],
+            'guest_num' => ['required', 'integer', 'min:1'],
+            'duration' => ['integer', 'min:1'],
         ];
     }
 }
