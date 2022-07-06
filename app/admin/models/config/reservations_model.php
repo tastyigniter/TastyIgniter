@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.reservations.text_filter_search',
@@ -120,6 +121,10 @@ $config['list']['columns'] = [
     'reserve_date' => [
         'label' => 'lang:admin::lang.reservations.column_date',
         'type' => 'date',
+    ],
+    'comment' => [
+        'label' => 'lang:admin::lang.statuses.label_comment',
+        'invisible' => true,
     ],
 ];
 
