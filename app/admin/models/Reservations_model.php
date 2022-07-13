@@ -64,6 +64,7 @@ class Reservations_model extends Model
 
     public $relation = [
         'belongsTo' => [
+            'customer' => 'Admin\Models\Customers_model',
             'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location' => 'Admin\Models\Locations_model',
         ],
@@ -99,6 +100,10 @@ class Reservations_model extends Model
 
         if (array_key_exists('tables', $this->attributes)) {
             $this->addReservationTables((array)$this->attributes['tables']);
+        }
+
+        if ($this->location->getOption('auto_allocate_table', 1) && !$this->tables()->count()) {
+            $this->addReservationTables($this->getNextBookableTable()->pluck('table_id')->all());
         }
     }
 
@@ -395,9 +400,52 @@ class Reservations_model extends Model
         $this->tables()->sync($tableIds);
     }
 
+    /**
+     * @return \Illuminate\Support\Collection|null
+     */
+    public function getNextBookableTable()
+    {
+        $tables = $this->location->tables->where('table_status', 1);
+
+        $reserved = static::findReservedTables($this->location, $this->reservation_datetime);
+
+        $tables = $tables->diff($reserved)->sortBy('priority');
+
+        $result = collect();
+        $unseatedGuests = $this->guest_num;
+        foreach ($tables as $table) {
+            if ($table->min_capacity <= $this->guest_num && $table->max_capacity >= $this->guest_num)
+                return collect([$table]);
+
+            if ($table->is_joinable && $unseatedGuests >= $table->min_capacity) {
+                $result->push($table);
+                $unseatedGuests -= $table->max_capacity;
+                if ($unseatedGuests <= 0)
+                    break;
+            }
+        }
+
+        return $unseatedGuests > 0 ? collect() : $result;
+    }
+
     //
     // Mail
     //
+
+    public function mailGetReplyTo($type)
+    {
+        $replyTo = [];
+        if (in_array($type, (array)setting('reservation_email', []))) {
+            switch ($type) {
+                case 'location':
+                case 'admin':
+                    $replyTo = [$this->email, $this->customer_name];
+                    break;
+            }
+        }
+
+        return $replyTo;
+    }
 
     public function mailGetRecipients($type)
     {

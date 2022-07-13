@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['filter'] = [
     'scopes' => [
         'location' => [
@@ -82,7 +83,7 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.column_id',
         'invisible' => true,
     ],
-    'locations' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
         'relation' => 'locations',

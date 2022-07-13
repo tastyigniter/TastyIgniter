@@ -67,6 +67,16 @@ class Menus_model extends Model
 
     public $timestamps = true;
 
+    public function getMenuPriceFromAttribute()
+    {
+        if ($this->menu_price > 0)
+            return $this->menu_price;
+
+        return $this->menu_options->mapWithKeys(function ($option) {
+            return $option->menu_option_values->keyBy('menu_option_value_id');
+        })->min('price');
+    }
+
     //
     // Scopes
     //
