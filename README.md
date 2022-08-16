@@ -1,4 +1,4 @@
-<p align="center"><a href="https://tastyigniter" target="_blank"><img src="https://tastyigniter.com/assets/ui/images/logos/logo-padded.png" width="400"></a></p>
+<p align="center"><a href="https://tastyigniter" target="_blank"><img src="https://tastyigniter.com/images/logos/logo-padded.png" width="400"></a></p>
 
 <p align="center">
 <a href="https://packagist.org/packages/tastyigniter/TastyIgniter"><img src="https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Stable&style=flat-square" alt="Stable"></a>
@@ -13,7 +13,7 @@
 [TastyIgniter](https://tastyigniter.com/) provides a professional and reliable platform for restaurants wanting to offer
 online food ordering and table reservation to their customers.
 
-![screenshot](https://tastyigniter.com/assets/ui/images/mockups/Menus-v2.png)
+![screenshot](https://tastyigniter.com/images/mockups/Menus-v2.png)
 
 ### Documentation
 The best place to learn TastyIgniter is by reading the [documentation](https://tastyigniter.com/docs)
