@@ -6,6 +6,11 @@ use Illuminate\Support\Facades\Mail;
 
 trait SendsMailTemplate
 {
+    public function mailGetReplyTo()
+    {
+        return [];
+    }
+
     public function mailGetRecipients($type)
     {
         return [];
@@ -32,12 +37,13 @@ trait SendsMailTemplate
         if (is_callable($recipientType))
             return $recipientType;
 
+        $replyTo = $this->mailGetReplyTo($recipientType);
         $recipients = $this->mailGetRecipients($recipientType);
 
-        return function ($message) use ($recipients) {
+        return function ($message) use ($recipients, $replyTo) {
             foreach ($recipients as $recipient) {
-                [$email, $name] = $recipient;
-                $message->to($email, $name);
+                $message->to(...$recipient);
+                if ($replyTo) $message->replyTo(...$replyTo);
             }
         };
     }

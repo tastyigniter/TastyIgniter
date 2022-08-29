@@ -379,7 +379,6 @@ class UpdateManager
         $installedItems = collect($installedItems)->keyBy('name')->all();
 
         $updateCount = 0;
-        $hasCoreUpdate = false;
         foreach (array_get($updates, 'data', []) as $update) {
             $updateCount++;
             $update['installedVer'] = array_get(array_get($installedItems, $update['code'], []), 'ver');
@@ -391,11 +390,9 @@ class UpdateManager
                 $update['installedVer'] = params('ti_version');
                 if ($this->disableCoreUpdates)
                     continue;
-
-                $hasCoreUpdate = true;
             }
             else {
-                if ($hasCoreUpdate || $this->isMarkedAsIgnored($update['code'])) {
+                if ($this->isMarkedAsIgnored($update['code'])) {
                     $ignoredItems[] = $update;
                     continue;
                 }
@@ -407,10 +404,6 @@ class UpdateManager
         $result['count'] = $updateCount;
         $result['items'] = $items;
         $result['ignoredItems'] = $ignoredItems;
-
-        foreach ($ignoredItems as $item) {
-            $this->extensionManager->updateInstalledExtensions($item['code'], false);
-        }
 
         return $result;
     }

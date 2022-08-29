@@ -10,7 +10,7 @@
                             <g>
                                 <defs>
                                     <clipPath id="clip-path-id-viewbox-item-0">
-                                        <rect x="0.0" y="0.0" width="2351.85" height="3016.6"/>
+                                        <rect x="0.0" y="0.0" width="2351.85" height="3016.6" />
                                     </clipPath>
                                 </defs>
                                 <g
@@ -80,7 +80,7 @@
             </div>
         </div>
         @if ($item['type'] === 'core')
-            <div class="px-3 pb-3 border-bottom">@lang('system::lang.updates.text_core_update')</div>
+            <div class="px-3 pb-3 border-bottom fw-bold">@lang('system::lang.updates.text_core_update')</div>
         @endif
     @endforeach
 </div>

@@ -340,6 +340,21 @@ class Orders_model extends Model
         return $recipients;
     }
 
+    public function mailGetReplyTo($type)
+    {
+        $replyTo = [];
+        if (in_array($type, (array)setting('order_email', []))) {
+            switch ($type) {
+                case 'location':
+                case 'admin':
+                    $replyTo = [$this->email, $this->customer_name];
+                    break;
+            }
+        }
+
+        return $replyTo;
+    }
+
     /**
      * Return the order data to build mail template
      *
@@ -382,7 +397,7 @@ class Orders_model extends Model
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
                         .$menuItemOption->order_option_name
                         .lang('admin::lang.text_equals')
-                        .currency_format($menuItemOption->order_option_price);
+                        .currency_format($menuItemOption->quantity * $menuItemOption->order_option_price);
                 }
             }
 

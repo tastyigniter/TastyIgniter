@@ -432,6 +432,21 @@ class Reservations_model extends Model
     // Mail
     //
 
+    public function mailGetReplyTo($type)
+    {
+        $replyTo = [];
+        if (in_array($type, (array)setting('reservation_email', []))) {
+            switch ($type) {
+                case 'location':
+                case 'admin':
+                    $replyTo = [$this->email, $this->customer_name];
+                    break;
+            }
+        }
+
+        return $replyTo;
+    }
+
     public function mailGetRecipients($type)
     {
         $emailSetting = setting('reservation_email', []);
