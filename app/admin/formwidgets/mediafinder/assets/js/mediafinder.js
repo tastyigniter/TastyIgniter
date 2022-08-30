@@ -68,7 +68,9 @@
         $modalElement.html(this.$configTemplate.innerHTML)
         $modalElement.modal({backdrop: 'static', keyboard: false})
 
-        $modalElement.one('shown.bs.modal', function (event) {
+        $modalElement.modal('show');
+
+        $modalElement.on('shown.bs.modal', function (event) {
             $.request(self.options.alias + '::onLoadAttachmentConfig', {
                 data: {media_id: $mediaIdentifier}
             }).done(function () {
@@ -78,7 +80,7 @@
             })
         })
 
-        $modalElement.one('hide.bs.modal', function (event) {
+        $modalElement.on('hide.bs.modal', function (event) {
             var $modalElement = $(event.target)
 
             $modalElement.remove()
