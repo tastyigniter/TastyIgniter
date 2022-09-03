@@ -190,19 +190,20 @@ trait ManagesUpdates
                         'label' => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
                         'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
-                }
-                else {
-                    $singularType = str_singular($item['type']);
-                    $pluralType = str_plural($item['type']);
 
-                    $action = $this->getActionFromItems($item['code'], $params);
-                    $applySteps[$pluralType][] = array_merge([
-                        'action' => $action ?? 'install',
-                        'process' => $step.ucfirst($singularType),
-                        'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
-                        'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
-                    ], $item);
+                    break;
                 }
+
+                $singularType = str_singular($item['type']);
+                $pluralType = str_plural($item['type']);
+
+                $action = $this->getActionFromItems($item['code'], $params);
+                $applySteps[$pluralType][] = array_merge([
+                    'action' => $action ?? 'install',
+                    'process' => $step.ucfirst($singularType),
+                    'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
+                    'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
+                ], $item);
             }
 
             $processSteps[$step] = array_collapse(array_values($applySteps));
@@ -269,12 +270,15 @@ trait ManagesUpdates
             return false;
 
         foreach ($items as $item) {
+            if ($item['type'] == 'core') {
+                $updateManager = UpdateManager::instance();
+                $updateManager->update();
+                $updateManager->setCoreVersion($item['version'], $item['hash']);
+
+                break;
+            }
+
             switch ($item['type']) {
-                case 'core':
-                    $updateManager = UpdateManager::instance();
-                    $updateManager->update();
-                    $updateManager->setCoreVersion($item['version'], $item['hash']);
-                    break;
                 case 'extension':
                     ExtensionManager::instance()->installExtension($item['code'], $item['version']);
                     break;
