@@ -14,7 +14,8 @@ class MakeLocationOptionsFieldsUnique extends Migration
         $idsToKeep = DB::table('location_options')
             ->groupBy('location_id', 'item')
             ->get()
-            ->pluck('id');
+            ->pluck('id')
+            ->all();
 
         DB::table('location_options')->whereNotIn('id', $idsToKeep)->delete();
 
