@@ -175,7 +175,7 @@ trait CombinesAssets
             return $this->getAssetPath($path);
         }, $assets);
 
-        return $assets;
+        return array_filter($assets);
     }
 
     protected function prepareCombiner(array $assets, $targetPath = null)
