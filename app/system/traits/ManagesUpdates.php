@@ -270,12 +270,15 @@ trait ManagesUpdates
             return false;
 
         foreach ($items as $item) {
+            if ($item['type'] == 'core') {
+                $updateManager = UpdateManager::instance();
+                $updateManager->update();
+                $updateManager->setCoreVersion($item['version'], $item['hash']);
+
+                break;
+            }
+
             switch ($item['type']) {
-                case 'core':
-                    $updateManager = UpdateManager::instance();
-                    $updateManager->update();
-                    $updateManager->setCoreVersion($item['version'], $item['hash']);
-                    break;
                 case 'extension':
                     ExtensionManager::instance()->installExtension($item['code'], $item['version']);
                     break;

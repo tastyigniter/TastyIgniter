@@ -10,7 +10,7 @@ trait HasLocationOptions
 
     public function getOptionsAttribute()
     {
-        return $this->all_options->pluck('value', 'item')->toArray();
+        return $this->optionsCache ??= $this->all_options->pluck('value', 'item')->toArray();
     }
 
     public function setOptionsAttribute($value)
