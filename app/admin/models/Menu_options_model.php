@@ -66,7 +66,7 @@ class Menu_options_model extends Model
         if (!is_null($ids = AdminLocation::getIdOrAll()))
             $query->whereHasLocation($ids);
 
-        return $query->dropdown('display_name');
+        return $query->orderBy('option_name')->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()

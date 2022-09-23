@@ -397,7 +397,7 @@ class Orders_model extends Model
                         .'&nbsp;'.lang('admin::lang.text_times').'&nbsp;'
                         .$menuItemOption->order_option_name
                         .lang('admin::lang.text_equals')
-                        .currency_format($menuItemOption->order_option_price);
+                        .currency_format($menuItemOption->quantity * $menuItemOption->order_option_price);
                 }
             }
 

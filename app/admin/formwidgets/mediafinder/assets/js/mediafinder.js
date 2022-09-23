@@ -53,7 +53,7 @@
     }
 
     MediaFinder.prototype.onClickConfigButton = function (event) {
-        var self = this,
+        var self = this, modal,
             $container = $(event.target).closest('.media-finder'),
             $mediaIdentifier = $('[data-find-identifier]', $container).val(),
             $modalElement = $('<div/>', {
@@ -66,10 +66,11 @@
             })
 
         $modalElement.html(this.$configTemplate.innerHTML)
-        $modalElement.modal({backdrop: 'static', keyboard: false})
+        modal = new bootstrap.Modal($modalElement, {backdrop: 'static', keyboard: false})
+        modal.show()
 
         $modalElement.one('shown.bs.modal', function (event) {
-            $.request(self.options.alias + '::onLoadAttachmentConfig', {
+            $.request(self.options.alias+'::onLoadAttachmentConfig', {
                 data: {media_id: $mediaIdentifier}
             }).done(function () {
                 $modalElement.find('form').on('ajaxDone', function () {
