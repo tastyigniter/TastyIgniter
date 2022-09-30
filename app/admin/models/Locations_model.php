@@ -41,6 +41,7 @@ class Locations_model extends AbstractLocation
             'all_options' => ['Admin\Models\LocationOption', 'delete' => true],
             'working_hours' => ['Admin\Models\Working_hours_model', 'delete' => true],
             'delivery_areas' => ['Admin\Models\Location_areas_model', 'delete' => true],
+            'dining_areas' => ['Admin\Models\DiningArea', 'delete' => true],
         ],
         'belongsTo' => [
             'country' => ['System\Models\Countries_model', 'otherKey' => 'country_id', 'foreignKey' => 'location_country_id'],

@@ -69,7 +69,7 @@ class Reservations_model extends Model
             'location' => 'Admin\Models\Locations_model',
         ],
         'belongsToMany' => [
-            'tables' => ['Admin\Models\Tables_model', 'table' => 'reservation_tables'],
+            'tables' => [DiningTable::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_table_id'],
         ],
     ];
 
@@ -103,7 +103,7 @@ class Reservations_model extends Model
         }
 
         if ($this->location->getOption('auto_allocate_table', 1) && !$this->tables()->count()) {
-            $this->addReservationTables($this->getNextBookableTable()->pluck('table_id')->all());
+            $this->addReservationTables($this->getNextBookableTable()->pluck('id')->all());
         }
     }
 
@@ -189,8 +189,23 @@ class Reservations_model extends Model
 
     public function scopeWhereBetweenDate($query, $dateTime)
     {
+        return $this->scopeWhereBetweenStayTime($query, $dateTime);
+    }
+
+    public function scopeWhereBetweenStayTime($query, $dateTime)
+    {
+        return $query
+            ->whereRaw(
+                '? between DATE_SUB(ADDTIME(reserve_date, reserve_time), INTERVAL 2 MINUTE)'.
+                ' and DATE_ADD(ADDTIME(reserve_date, reserve_time), INTERVAL duration MINUTE)',
+                [$dateTime]
+            );
+    }
+
+    public function scopeWhereNotBetweenStayTime($query, $dateTime)
+    {
         $query->whereRaw(
-            '? between DATE_SUB(ADDTIME(reserve_date, reserve_time), INTERVAL (duration - 2) MINUTE)'.
+            '? not between DATE_SUB(ADDTIME(reserve_date, reserve_time), INTERVAL (duration - 2) MINUTE)'.
             ' and DATE_ADD(ADDTIME(reserve_date, reserve_time), INTERVAL duration MINUTE)',
             [$dateTime]
         );
@@ -275,18 +290,19 @@ class Reservations_model extends Model
         )->exists();
     }
 
-    public static function findReservedTables($location, $dateTime)
+    public static function findReservedTables($locationId, $dateTime)
     {
-        $query = self::with('tables');
-        $query->whereHas('tables', function ($query) use ($location) {
-            $query->whereHasLocation($location->getKey());
-        });
-        $query->whereLocationId($location->getKey());
-        $query->whereBetweenDate($dateTime->toDateTimeString());
-        $query->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
-        $result = $query->get();
-
-        return $result->pluck('tables')->flatten()->keyBy('table_id');
+        return self::with('tables')
+            ->whereHas('tables', function ($query) use ($locationId) {
+                $query->whereHasLocation($locationId);
+            })
+            ->whereLocationId($locationId)
+            ->whereBetweenStayTime($dateTime)
+            ->whereNotIn('status_id', [0, setting('canceled_reservation_status')])
+            ->get()
+            ->pluck('tables')
+            ->flatten()
+            ->keyBy('table_id');
     }
 
     public static function listCalendarEvents($startAt, $endAt, $locationId = null)
@@ -405,27 +421,15 @@ class Reservations_model extends Model
      */
     public function getNextBookableTable()
     {
-        $tables = $this->location->tables->where('table_status', 1);
+        $diningTable = DiningTable::query()
+            ->select('dining_tables.*', 'dining_sections.priority')
+            ->reservable([
+                'locationId' => $this->location_id,
+                'dateTime' => $this->reservation_datetime,
+                'guestNum' => $this->guest_num,
+            ])->first();
 
-        $reserved = static::findReservedTables($this->location, $this->reservation_datetime);
-
-        $tables = $tables->diff($reserved)->sortBy('priority');
-
-        $result = collect();
-        $unseatedGuests = $this->guest_num;
-        foreach ($tables as $table) {
-            if ($table->min_capacity <= $this->guest_num && $table->max_capacity >= $this->guest_num)
-                return collect([$table]);
-
-            if ($table->is_joinable && $unseatedGuests >= $table->min_capacity) {
-                $result->push($table);
-                $unseatedGuests -= $table->max_capacity;
-                if ($unseatedGuests <= 0)
-                    break;
-            }
-        }
-
-        return $unseatedGuests > 0 ? collect() : $result;
+        return collect($diningTable ? [$diningTable] : []);
     }
 
     //

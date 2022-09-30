@@ -56,6 +56,11 @@ $config['list']['toolbar'] = [
 ];
 
 $config['list']['bulkActions'] = [
+    'assign_table' => [
+        'label' => 'lang:admin::lang.reservations.button_assign_table',
+        'class' => 'btn btn-light',
+        'permissions' => 'Admin.AssignTables',
+    ],
     'delete' => [
         'label' => 'lang:admin::lang.button_delete',
         'class' => 'btn btn-light text-danger',
