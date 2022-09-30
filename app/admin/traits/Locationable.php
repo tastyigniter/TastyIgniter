@@ -82,7 +82,10 @@ trait Locationable
             $builder->whereIn($locationModel->getKeyName(), $locationId);
         }
         else {
-            $qualifiedColumnName = $relationObject->getTable().'.'.$locationModel->getKeyName();
+            $qualifiedColumnName = $this->locationableIsMorphRelationType()
+                ? $relationObject->getTable().'.'.$locationModel->getKeyName()
+                : $relationObject->getParent()->getTable().'.'.$locationModel->getKeyName();
+
             $builder->whereHas($relationName, function ($query) use ($qualifiedColumnName, $locationId) {
                 $query->whereIn($qualifiedColumnName, $locationId);
             });
@@ -95,7 +98,7 @@ trait Locationable
 
     protected function detachLocationsOnDelete()
     {
-        if ($this->locationableIsSingleRelationType())
+        if ($this->locationableIsSingleRelationType() || !$this->locationableIsMorphRelationType())
             return;
 
         $locationable = $this->getLocationableRelationObject();
@@ -122,7 +125,14 @@ trait Locationable
     {
         $relationType = $this->getRelationType($this->locationableRelationName());
 
-        return in_array($relationType, ['hasOne', 'belongsTo']);
+        return in_array($relationType, ['hasOne', 'belongsTo', 'morphOne']);
+    }
+
+    public function locationableIsMorphRelationType()
+    {
+        $relationType = $this->getRelationType($this->locationableRelationName());
+
+        return in_array($relationType, ['morphToMany', 'belongsToMany']);
     }
 
     public function locationableRelationName()
