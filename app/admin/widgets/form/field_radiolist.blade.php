@@ -60,6 +60,7 @@
                                 name="{{ $field->getName() }}"
                                 value="{{ $value }}"
                                 {!! in_array($value, $checkedValues) ? 'checked="checked"' : '' !!}
+                                {!! $field->getAttributes() !!}
                             />
 
                             <label class="form-check-label" for="{{ $radioId }}">

@@ -13,4 +13,14 @@
         aria-multiselectable="true">
         {!! $this->makePartial('connector/connector_items') !!}
     </div>
+
+    @unless ($this->previewMode || $this->hideNewButton)
+        <div>
+            <button
+                type="button"
+                class="btn btn-outline-default"
+                data-control="load-item"
+            ><i class="fa fa-plus"></i>&nbsp;&nbsp;{{ $newRecordTitle }}</button>
+        </div>
+    @endunless
 </div>
