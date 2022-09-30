@@ -7,7 +7,7 @@
     >
         <div class="input-group">
             @if ($addonLeft)
-                <div class="input-group-text">{{ $addonLeft }}</div>
+                {{ $addonLeft }}
             @endif
             <select
                 id="{{ $field->getId() }}"
@@ -19,7 +19,7 @@
                 @if ($fieldPlaceholder = $field->placeholder ?: $this->emptyOption)
                     <option value="0">@lang($fieldPlaceholder)</option>
                 @endif
-                @foreach ($fieldOptions as $value => $option)
+                @foreach ($field->options() as $value => $option)
                     @php if (!is_array($option)) $option = [$option] @endphp
                     <option
                         {!! $value == $field->value ? 'selected="selected"' : '' !!}

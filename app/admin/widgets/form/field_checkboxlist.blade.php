@@ -50,7 +50,7 @@
                     <input
                         type="hidden"
                         name="{{ $field->getName() }}"
-                        value="0"/>
+                        value="0" />
 
                     @foreach ($fieldOptions as $value => $option)
                         @php
@@ -64,7 +64,8 @@
                                 class="form-check-input"
                                 name="{{ $field->getName() }}[]"
                                 value="{{ $value }}"
-                                {!! in_array($value, $checkedValues) ? 'checked="checked"' : '' !!}>
+                                {!! in_array($value, $checkedValues) ? 'checked="checked"' : '' !!}
+                                {!! $field->getAttributes() !!}>
 
                             <label class="form-check-label" for="{{ $checkboxId }}">
                                 {{ isset($option[0]) ? lang($option[0]) : '&nbsp;' }}

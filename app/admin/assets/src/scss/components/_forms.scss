@@ -65,9 +65,9 @@
     margin-top: 0;
   }
 }
-.modal .form-fields > * {
-  padding-left: 0;
-  padding-right: 0;
+.modal .form-fields {
+  margin-left: -#{$modal-inner-padding};
+  margin-right: -#{$modal-inner-padding};
 }
 .form-fields {
   --bs-gutter-x: 1.45rem;
