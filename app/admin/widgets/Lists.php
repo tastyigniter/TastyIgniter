@@ -1211,7 +1211,7 @@ class Lists extends BaseWidget
     {
         $this->fireSystemEvent('admin.list.extendBulkActions');
 
-        $allBulkActions = $this->makeBulkActionButtons($this->bulkActions);
+        $allBulkActions = $this->makeBulkActionButtons($this->bulkActions ?? []);
         $bulkActions = [];
 
         foreach ($allBulkActions as $actionCode => $buttonObj) {
