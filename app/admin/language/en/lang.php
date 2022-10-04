@@ -530,6 +530,7 @@ return [
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
         'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
         'error_table_widget_data_class_not_found' => 'The Table widget data source class "%s" could not be found.',
+        'error_cannot_delete_has_parent' => 'Cannot delete this table, it belongs to a combo',
     ],
 
     'locations' => [

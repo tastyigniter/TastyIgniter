@@ -22,7 +22,7 @@ class DiningAreas extends \Admin\Classes\AdminController
             'model' => \Admin\Models\DiningArea::class,
             'title' => 'lang:admin::lang.dining_areas.text_title',
             'emptyMessage' => 'lang:admin::lang.dining_areas.text_empty',
-            'defaultSort' => ['updated_at', 'DESC'],
+            'defaultSort' => ['created_at', 'DESC'],
             'configFile' => 'dining_area',
         ],
     ];

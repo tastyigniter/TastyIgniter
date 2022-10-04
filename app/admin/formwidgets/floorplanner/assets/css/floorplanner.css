@@ -1,6 +1,5 @@
-.floorplanner {
-  background-color: var(--bs-gray-200);
-  background-image: linear-gradient(var(--bs-gray-200), var(--bs-gray-200));
+.floorplan .list-table {
+  height: 600px;
 }
 
 .floorplanner-canvas {

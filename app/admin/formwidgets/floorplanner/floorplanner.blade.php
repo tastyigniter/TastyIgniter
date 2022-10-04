@@ -23,7 +23,7 @@
             ><i class="fa-solid fa-down-left-and-up-right-to-center"></i></button>
         </div>
         <div
-            class="floorplanner-canvas border-top overflow-auto pt-5 d-flex flex-wrap"
+            class="floorplanner-canvas border-top overflow-auto d-flex flex-wrap"
             data-floor-planner-canvas
         ></div>
     </div>

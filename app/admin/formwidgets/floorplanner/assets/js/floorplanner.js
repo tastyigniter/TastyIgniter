@@ -5,8 +5,8 @@
         this.options = options
         this.$container = $(element)
 
-        this.layer = null
         this.stage = null
+        this.layer = null
         this.transformer = null
         this.zoom = 1
 
@@ -16,12 +16,19 @@
 
     FloorPlanner.prototype.init = function () {
         this.$container.on('click', '[data-floor-planner-control]', $.proxy(this.onControlClick, this))
+        $('[data-control="form-tabs"] [data-bs-toggle="tab"]').on('shown.bs.tab', $.proxy(this.initKonva, this))
     }
 
     FloorPlanner.prototype.initKonva = function () {
+        var self = this,
+            $el = this.$container.find(this.options.canvasSelector)
+
+        if (this.stage || this.$container.is(':hidden'))
+            return
+
         this.stage = new Konva.Stage({
-            container: this.$container.find(this.options.canvasSelector)[0],
-            width: this.options.canvasWidth,
+            container: $el[0],
+            width: $el.width()-this.options.tableVerticalPadding,
             height: this.options.canvasHeight,
             draggable: true,
         })
@@ -41,7 +48,6 @@
 
         this.createTables()
 
-        var self = this
         this.stage.on('click', $.proxy(this.onClickStage, this))
             .on('mouseenter', function () {
                 self.stage.container().style.cursor = 'grab';
@@ -110,7 +116,7 @@
                     id: 'group-'+diningTable.id,
                     x: this.options.seatWidth * count,
                     y: this.options.seatWidth * count,
-                    draggable: true,
+                    draggable: !this.options.previewMode,
                 })
 
             if (diningTable.shape === 'round') {
@@ -198,7 +204,7 @@
     }
 
     FloorPlanner.prototype.createTableInfo = function (diningTable, group) {
-        var capacityOptions, options = {
+        var tableName, tableCapacity, options = {
             name: 'table-info',
             id: diningTable.id,
             x: this.options.tableLayoutPadding,
@@ -221,14 +227,15 @@
             options.y = -this.options.tableLayoutPadding
         }
 
-        var tableName = new Konva.Text(options),
-            tableCapacity = tableName.clone({
-                x: options.x,
-                y: options.y+20,
-                text: diningTable.min_capacity+'-'+diningTable.max_capacity,
-                fontSize: 12,
-                fontStyle: 'bold',
-            })
+        tableName = new Konva.Text(options)
+
+        tableCapacity = tableName.clone({
+            x: options.x,
+            y: options.y+20,
+            text: diningTable.min_capacity+'-'+diningTable.max_capacity,
+            fontSize: 12,
+            fill: '#9194a6',
+        })
 
         tableName.on('dblclick', $.proxy(this.onDoubleClickControl, this))
 
@@ -387,18 +394,17 @@
     FloorPlanner.prototype.onDoubleClickControl = function (event) {
         var className = event.target.getClassName(),
             connectorWidgetAlias = this.options.connectorWidgetAlias
-        if (className !== 'Text')
+
+        if (className !== 'Text' || !connectorWidgetAlias)
             return
 
-        if (typeof connectorWidgetAlias !== undefined) {
-            new $.ti.recordEditor.modal({
-                alias: connectorWidgetAlias,
-                recordId: event.target.getAttr('id'),
-                onSave: function () {
-                    this.hide()
-                }
-            })
-        }
+        new $.ti.recordEditor.modal({
+            alias: connectorWidgetAlias,
+            recordId: event.target.getAttr('id'),
+            onSave: function () {
+                this.hide()
+            }
+        })
     }
 
     FloorPlanner.prototype.onClickStage = function (event) {
@@ -407,13 +413,15 @@
     }
 
     FloorPlanner.prototype.onClickShape = function (event) {
-        this.transformer.nodes([event.target.getParent()])
+        if (!this.options.previewMode)
+            this.transformer.nodes([event.target.getParent()])
     }
 
     FloorPlanner.DEFAULTS = {
         canvasSelector: '[data-floor-planner-canvas]',
         dataInputSelector: '[data-floor-planner-input]',
         connectorWidgetAlias: undefined,
+        previewMode: false,
         diningTables: {},
         canvasWidth: 1200,
         canvasHeight: 600,

@@ -6,6 +6,7 @@ use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\NestedTree;
 use Igniter\Flame\Database\Traits\Sortable;
 use Igniter\Flame\Database\Traits\Validation;
+use Igniter\Flame\Exception\ApplicationException;
 
 class DiningTable extends \Igniter\Flame\Database\Model
 {
@@ -80,6 +81,12 @@ class DiningTable extends \Igniter\Flame\Database\Model
     {
         if (!$this->getRgt() || !$this->getLft())
             $this->fixTree();
+    }
+
+    public function beforeDelete()
+    {
+        if (!is_null($this->parent_id))
+            throw new ApplicationException(lang('admin::lang.dining_tables.error_cannot_delete_has_parent'));
     }
 
     //
