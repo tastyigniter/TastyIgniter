@@ -26,7 +26,7 @@ return [
                 'type' => 'number',
                 'span' => 'right',
             ],
-            'type' => [
+            'shape' => [
                 'label' => 'lang:admin::lang.dining_tables.label_table_shape',
                 'type' => 'radiotoggle',
                 'default' => 'rectangle',

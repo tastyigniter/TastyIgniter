@@ -65,11 +65,11 @@ class Reservations_model extends Model
     public $relation = [
         'belongsTo' => [
             'customer' => 'Admin\Models\Customers_model',
-            'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location' => 'Admin\Models\Locations_model',
         ],
         'belongsToMany' => [
             'tables' => [DiningTable::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_table_id'],
+            'dining_areas' => [DiningArea::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_area_id'],
         ],
     ];
 
@@ -103,7 +103,7 @@ class Reservations_model extends Model
         }
 
         if ($this->location->getOption('auto_allocate_table', 1) && !$this->tables()->count()) {
-            $this->addReservationTables($this->getNextBookableTable()->pluck('id')->all());
+            $this->assignTable();
         }
     }
 
@@ -424,7 +424,7 @@ class Reservations_model extends Model
     public function getNextBookableTable()
     {
         $diningTable = DiningTable::query()
-            ->select('dining_tables.*', 'dining_sections.priority')
+            ->select('dining_tables.*', 'dining_area_table.dining_area_id', 'dining_sections.priority')
             ->reservable([
                 'locationId' => $this->location_id,
                 'dateTime' => $this->reservation_datetime,
@@ -432,6 +432,22 @@ class Reservations_model extends Model
             ])->first();
 
         return collect($diningTable ? [$diningTable] : []);
+    }
+
+    public function assignTable()
+    {
+        $diningTables = $this->getNextBookableTable();
+        if ($diningTables->isEmpty())
+            return false;
+
+        $this->addReservationTables($diningTables->mapWithKeys(function ($diningTable) {
+            return [$diningTable->getKey() => [
+                'dining_area_id' => $diningTable->dining_area_id,
+                'dining_section_id' => $diningTable->dining_section_id,
+            ]];
+        })->all());
+
+        return true;
     }
 
     //

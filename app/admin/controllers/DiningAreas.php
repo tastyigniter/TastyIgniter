@@ -73,14 +73,20 @@ class DiningAreas extends \Admin\Classes\AdminController
 
         $model->createCombo($checkedTables);
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Table combo created'))->now();
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Table combo created'));
 
         return $this->redirectBack();
     }
 
     public function listExtendQuery($query)
     {
-        $query->with(['reservable_tables', 'dining_sections']);
+        $query->with(['available_tables', 'dining_sections']);
+    }
+
+    public function formExtendFields($form)
+    {
+        if ($form->context != 'create')
+            $form->getField('location_id')->disabled = true;
     }
 
     public function formBeforeSave($model)

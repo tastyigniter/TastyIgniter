@@ -57,7 +57,7 @@ class DiningTable extends \Igniter\Flame\Database\Model
 
     public $rules = [
         'name' => ['sometimes', 'required', 'string', 'between:2,255'],
-        'type' => ['sometimes', 'in:rectangle,round'],
+        'shape' => ['sometimes', 'in:rectangle,round'],
         'min_capacity' => ['sometimes', 'required', 'integer', 'min:1', 'lte:max_capacity'],
         'max_capacity' => ['sometimes', 'required', 'integer', 'min:1', 'gte:min_capacity'],
         'extra_capacity' => ['sometimes', 'required', 'integer'],
@@ -69,7 +69,7 @@ class DiningTable extends \Igniter\Flame\Database\Model
 
     public function getDiningSectionIdOptions()
     {
-        return $this->exists ? $this->dining_area->dining_sections()->dropdown('name') : [];
+        return $this->exists ? DiningSection::where('location_id', $this->dining_area->location_id)->dropdown('name') : [];
     }
 
     //
@@ -106,6 +106,8 @@ class DiningTable extends \Igniter\Flame\Database\Model
             ->orderBy('dining_sections.priority')
             ->orderBy('dining_tables.priority');
 
+        $this->fireEvent('model.extendDiningTableReservableQuery', [$query]);
+
         return $query;
     }
 
@@ -134,8 +136,7 @@ class DiningTable extends \Igniter\Flame\Database\Model
     {
         return $query->join('dining_areas', function ($join) use ($locationId) {
             $join->on('dining_areas.id', '=', 'dining_tables.dining_area_id')
-                ->where('dining_areas.location_id', $locationId)
-                ->where('dining_areas.is_active', 1);
+                ->where('dining_areas.location_id', $locationId);
         });
     }
 

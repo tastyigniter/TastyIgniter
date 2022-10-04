@@ -2,11 +2,13 @@
 
 namespace Admin\Models;
 
+use Admin\Traits\Locationable;
 use Igniter\Flame\Database\Traits\Validation;
 
 class DiningSection extends \Igniter\Flame\Database\Model
 {
     use Validation;
+    use Locationable;
 
     public $table = 'dining_sections';
 
@@ -16,13 +18,13 @@ class DiningSection extends \Igniter\Flame\Database\Model
      * @var array Relations
      */
     public $relation = [
-        'belongsTo' => [
-            'dining_area' => [DiningArea::class],
+        'hasMany' => [
+            'dining_areas' => [DiningArea::class, 'foreignKey' => 'location_id', 'otherKey' => 'location_id'],
         ],
     ];
 
     public $rules = [
-        'dining_area_id' => ['required', 'integer'],
+        'location_id' => ['required', 'integer'],
         'name' => ['required', 'string'],
         'description' => ['string'],
         'color' => ['nullable', 'string'],
@@ -30,7 +32,7 @@ class DiningSection extends \Igniter\Flame\Database\Model
 
     public function getRecordEditorOptions()
     {
-        return static::dropdown('name');
+        return self::dropdown('name');
     }
 
     public function scopeWhereIsReservable($query)

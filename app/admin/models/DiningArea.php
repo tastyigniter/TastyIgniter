@@ -21,11 +21,11 @@ class DiningArea extends \Igniter\Flame\Database\Model
      */
     public $relation = [
         'hasMany' => [
-            'dining_sections' => [DiningSection::class],
+            'dining_sections' => [DiningSection::class, 'foreignKey' => 'location_id', 'otherKey' => 'location_id'],
             'dining_tables' => [DiningTable::class],
             'dining_table_solos' => [DiningTable::class, 'scope' => 'whereIsNotCombo'],
             'dining_table_combos' => [DiningTable::class, 'scope' => 'whereIsCombo'],
-            'reservable_tables' => [DiningTable::class, 'scope' => 'whereIsRoot'],
+            'available_tables' => [DiningTable::class, 'scope' => 'whereIsRoot'],
         ],
         'belongsTo' => [
             'location' => [Locations_model::class],
@@ -37,6 +37,11 @@ class DiningArea extends \Igniter\Flame\Database\Model
     public static function getDropdownOptions()
     {
         return static::dropdown('name');
+    }
+
+    public function getTablesForFloorPlan()
+    {
+        return $this->available_tables;
     }
 
     //
@@ -57,7 +62,7 @@ class DiningArea extends \Igniter\Flame\Database\Model
 
     public function getDiningTableCountAttribute($value)
     {
-        return $this->reservable_tables->count();
+        return $this->available_tables->count();
     }
 
     public function scopeWhereIsActive($query)
@@ -82,7 +87,7 @@ class DiningArea extends \Igniter\Flame\Database\Model
 
         $comboTable = $this->dining_tables()->create([
             'name' => $tableNames,
-            'type' => $firstTable->type,
+            'shape' => $firstTable->shape,
             'dining_area_id' => $firstTable->dining_area_id,
             'dining_section_id' => $firstTable->dining_section_id,
             'min_capacity' => $tables->sum('min_capacity'),

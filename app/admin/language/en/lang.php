@@ -959,7 +959,7 @@ return [
         'activity_event_log_assigned' => 'assigned reservation (#:properties.reservation_id) to',
 
         'alert_no_reservation_found' => 'No matching reservation found.',
-        'alert_no_assignable_table' => 'No table available for the selected reservation [%s].',
+        'alert_no_assignable_table' => 'No table available for the reservation.',
         'alert_table_assigned' => 'Table(s) has been assigned to the selected reservation(s).',
     ],
 

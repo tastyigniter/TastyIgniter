@@ -12,12 +12,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         <input type="hidden" name="recordId" value="{{ $formRecordId }}">
-        <input type="hidden" name="dining_area_id" value="{{ $formRecordId }}">
         <div class="modal-body">
             <div class="form-fields p-0">
                 @foreach ($formWidget->getFields() as $field)
                     @if($field->fieldName == 'dining_area_id')
                         @php $field->value = $formModel->id; @endphp
+                    @endif
+                    @if($field->fieldName == 'location_id')
+                        @php $field->value = $formModel->location_id; @endphp
                     @endif
                     {!! $formWidget->renderField($field) !!}
                 @endforeach

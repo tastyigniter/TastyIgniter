@@ -14,13 +14,12 @@ class AssignTable extends \Admin\Classes\BaseBulkActionWidget
                 continue;
             }
 
-            if (!$diningTable = $record->getNextBookableTable()->pluck('id')->all()) {
-                $noTablesFound[] = $record->reservation_id;
-                continue;
+            if ($record->assignTable()) {
+                $tablesAssigned[] = $record->reservation_id;
             }
-
-            $tablesAssigned[] = $record->reservation_id;
-            $record->addReservationTables($diningTable);
+            else {
+                $noTablesFound[] = $record->reservation_id;
+            }
         }
 
         if ($noTablesFound) {

@@ -73,16 +73,15 @@ class FloorPlanner extends BaseFormWidget
      */
     public function prepareVars()
     {
-        $this->vars['fieldName'] = $this->formField->getName();
-        $this->vars['diningTables'] = $this->getAvailableTables();
+        $this->vars['field'] = $this->formField;
         $this->vars['sectionColors'] = $this->sectionColors();
+        $this->vars['diningTables'] = $this->formField->options();
         $this->vars['connectorWidgetAlias'] = $this->getConnectorWidgetAlias();
     }
 
     public function loadAssets()
     {
-        $this->addJs('https://unpkg.com/interactjs/dist/interact.min.js', 'interact-js');
-        $this->addJs('src/js/vendor/mustache.js', 'mustache-js');
+        $this->addJs('https://unpkg.com/konva@8.3.12/konva.min.js', 'konva-js');
         $this->addCss('css/floorplanner.css', 'floorplanner-css');
         $this->addJs('js/floorplanner.js', 'floorplanner-js');
     }
@@ -102,17 +101,5 @@ class FloorPlanner extends BaseFormWidget
         $form = $this->controller->widgets['form'];
 
         return $form->alias.studly_case(name_to_id($this->connectorField));
-    }
-
-    protected function getAvailableTables()
-    {
-        $relationObject = $this->getRelationObject();
-        $query = $relationObject->newQuery();
-
-        if ($scopeMethod = $this->scope) {
-            $query->$scopeMethod($this->model);
-        }
-
-        return $query->get();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Igniter\Reservation\Database\Migrations;
+namespace Admin\Database\Migrations;
 
 use Admin\Models\DiningTable;
 use Illuminate\Database\Migrations\Migration;
@@ -20,7 +20,19 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->string('name');
             $table->string('description')->nullable();
-            $table->boolean('is_active')->default(0);
+            $table->longText('floor_plan')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('dining_sections', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('location_id')->index();
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->string('color')->nullable();
+            $table->integer('priority')->default(0);
+            $table->boolean('is_enabled')->default(0);
             $table->timestamps();
         });
 
@@ -30,10 +42,10 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
             $table->unsignedBigInteger('dining_area_id')->index();
-            $table->unsignedBigInteger('dining_section_id')->index();
-            $table->unsignedBigInteger('parent_id')->index()->nullable();
+            $table->unsignedBigInteger('dining_section_id')->nullable()->index();
+            $table->unsignedBigInteger('parent_id')->nullable()->index();
             $table->string('name');
-            $table->string('type');
+            $table->string('shape')->nullable();
             $table->integer('min_capacity')->default(0);
             $table->integer('max_capacity')->default(0);
             $table->integer('extra_capacity')->default(0);
@@ -42,27 +54,16 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
             $table->integer('nest_left')->nullable();
             $table->integer('nest_right')->nullable();
             $table->integer('priority')->default(0);
-            $table->text('seat_layout')->nullable();
             $table->timestamps();
         });
 
         $this->copyTablesIntoDiningTables();
 
-        Schema::create('dining_sections', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('dining_area_id')->index();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('color')->nullable();
-            $table->integer('priority')->default(0);
-            $table->boolean('is_enabled')->default(0);
-            $table->timestamps();
-        });
-
         if (!Schema::hasColumn('reservation_tables', 'dining_table_id')) {
             Schema::table('reservation_tables', function (Blueprint $table) {
-                $table->unsignedBigInteger('dining_table_id')->nullable()->after('reservation_id');
+                $table->unsignedBigInteger('dining_section_id')->nullable()->after('reservation_id');
+                $table->unsignedBigInteger('dining_area_id')->nullable()->after('reservation_id');
+                $table->unsignedBigInteger('dining_table_id')->after('reservation_id');
             });
         }
 
@@ -87,7 +88,6 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
             DB::table('dining_areas')->insertGetId([
                 'name' => 'Default',
                 'location_id' => $location->location_id,
-                'is_active' => 1,
                 'created_at' => $location->created_at,
                 'updated_at' => $location->updated_at,
             ]);
@@ -107,9 +107,9 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
                 ->where('locationable_id', $table->table_id)
                 ->get()->each(function ($locationable) use ($diningAreas, $table) {
                     $diningTableId = DB::table('dining_tables')->insertGetId([
-                        'dining_area_id' => array_get($diningAreas, $locationable->location_id),
+                        'dining_area_id' => $diningAreaId = array_get($diningAreas, $locationable->location_id),
                         'name' => $table->table_name,
-                        'type' => 'rectangle',
+                        'shape' => 'rectangle',
                         'min_capacity' => $table->min_capacity,
                         'max_capacity' => $table->max_capacity,
                         'extra_capacity' => $table->extra_capacity,
@@ -123,6 +123,7 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
                         'table_id' => $table->table_id,
                         'location_id' => $locationable->location_id,
                         'dining_table_id' => $diningTableId,
+                        'dining_area_id' => $diningAreaId,
                     ];
                 });
         });
@@ -140,7 +141,10 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
                 DB::table('reservation_tables')
                     ->where('reservation_id', $reservationTable->reservation_id)
                     ->where('table_id', $reservationTable->table_id)
-                    ->update(['dining_table_id' => array_get($diningTable, 'dining_table_id', 0)]);
+                    ->update([
+                        'dining_table_id' => array_get($diningTable, 'dining_table_id'),
+                        'dining_area_id' => array_get($diningTable, 'dining_area_id'),
+                    ]);
             });
     }
 

@@ -7,7 +7,7 @@
     >
         <div class="field-radiolist">
             <input type="hidden" name="{{ $field->getName() }}" value="0" />
-            @foreach ($this->modelClass::where('dining_area_id', $formModel->id)->dropdown('name') as $value => $option)
+            @foreach ($this->modelClass::where('location_id', $formModel->location_id)->dropdown('name') as $value => $option)
                 @php
                     $checkboxId = 'radio_'.$field->getId().'_'.$loop->iteration;
                     if (is_string($option)) $option = [$option];

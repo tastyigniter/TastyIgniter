@@ -45,10 +45,6 @@ return [
                 'type' => 'number',
                 'sortable' => false,
             ],
-            'is_active' => [
-                'label' => 'admin::lang.dining_areas.label_is_enabled',
-                'type' => 'switch',
-            ],
             'updated_at' => [
                 'label' => 'lang:admin::lang.column_date_updated',
                 'type' => 'timetense',
@@ -94,14 +90,10 @@ return [
                 'type' => 'text',
                 'span' => 'left',
             ],
-            'is_active' => [
-                'label' => 'admin::lang.dining_areas.label_is_enabled',
-                'type' => 'switch',
-                'span' => 'right',
-            ],
             'location_id' => [
                 'label' => 'lang:admin::lang.label_location',
                 'type' => 'relation',
+                'span' => 'right',
                 'relationFrom' => 'location',
                 'nameFrom' => 'location_name',
                 'placeholder' => 'lang:admin::lang.text_please_select',
@@ -148,11 +140,11 @@ return [
                     'partial' => 'form/dining_table_info',
                 ],
 
-                'dining_table_layout' => [
+                'floor_plan' => [
                     'tab' => 'admin::lang.dining_areas.text_tab_table_layout',
                     'type' => 'floorplanner',
                     'context' => 'edit',
-                    'valueFrom' => 'reservable_tables',
+                    'options' => 'getTablesForFloorPlan',
                     'connectorField' => 'dining_table_solos',
                 ],
             ],

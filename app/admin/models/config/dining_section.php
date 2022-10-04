@@ -3,7 +3,7 @@
 return [
     'form' => [
         'fields' => [
-            'dining_area_id' => [
+            'location_id' => [
                 'type' => 'hidden',
             ],
             'name' => [
