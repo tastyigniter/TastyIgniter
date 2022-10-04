@@ -83,3 +83,13 @@
   visibility: hidden;
   position: absolute;
 }
+
+.multiselect.dropdown-toggle:disabled,
+.multiselect.dropdown-toggle[readonly] {
+  border-color: var(--bs-gray-300);
+}
+
+.multiselect.dropdown-toggle:disabled,
+.multiselect.dropdown-toggle[readonly] {
+  background-color: var(--bs-gray-300);
+}

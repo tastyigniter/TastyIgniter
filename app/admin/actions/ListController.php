@@ -45,7 +45,7 @@ class ListController extends ControllerAction
     /**
      * @var \Admin\Widgets\Toolbar[] Reference to the toolbar widget objects.
      */
-    protected $toolbarWidget;
+    protected $toolbarWidgets = [];
 
     /**
      * @var \Admin\Widgets\Filter[] Reference to the filter widget objects.
@@ -176,9 +176,9 @@ class ListController extends ControllerAction
         $model = $this->controller->listExtendModel($model, $alias);
 
         // Prep the list widget config
-        $requiredConfig = ['list'];
+        $requiredConfig = [$alias];
         $configFile = $listConfig['configFile'];
-        $modelConfig = $this->loadConfig($configFile, $requiredConfig, 'list');
+        $modelConfig = $this->loadConfig($configFile, $requiredConfig, $alias);
 
         $columnConfig['bulkActions'] = $modelConfig['bulkActions'] ?? [];
         $columnConfig['columns'] = $modelConfig['columns'];
@@ -215,9 +215,9 @@ class ListController extends ControllerAction
 
         // Prep the optional toolbar widget
         if (isset($this->controller->widgets['toolbar']) && (isset($listConfig['toolbar']) || isset($modelConfig['toolbar']))) {
-            $this->toolbarWidget = $this->controller->widgets['toolbar'];
-            if ($this->toolbarWidget instanceof \Admin\Widgets\Toolbar)
-                $this->toolbarWidget->reInitialize($listConfig['toolbar'] ?? $modelConfig['toolbar']);
+            $this->toolbarWidget[$alias] = clone $this->controller->widgets['toolbar'];
+            if ($this->toolbarWidget[$alias] instanceof \Admin\Widgets\Toolbar)
+                $this->toolbarWidget[$alias]->reInitialize($listConfig['toolbar'] ?? $modelConfig['toolbar']);
         }
 
         // Prep the optional filter widget
@@ -275,8 +275,8 @@ class ListController extends ControllerAction
 
         $list = [];
 
-        if (!is_null($this->toolbarWidget)) {
-            $list[] = $this->toolbarWidget->render();
+        if (isset($this->toolbarWidget[$alias])) {
+            $list[] = $this->toolbarWidget[$alias]->render();
         }
 
         if (isset($this->filterWidgets[$alias])) {
