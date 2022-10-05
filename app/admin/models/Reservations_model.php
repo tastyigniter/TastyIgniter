@@ -6,8 +6,11 @@ use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
+use DateInterval;
+use DatePeriod;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;
@@ -68,7 +71,7 @@ class Reservations_model extends Model
             'location' => 'Admin\Models\Locations_model',
         ],
         'belongsToMany' => [
-            'tables' => [DiningTable::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_table_id'],
+            'tables' => [DiningTable::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_table_id', 'scope' => 'whereIsRoot'],
             'dining_areas' => [DiningArea::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_area_id'],
         ],
     ];
@@ -99,7 +102,9 @@ class Reservations_model extends Model
         $this->restorePurgedValues();
 
         if (array_key_exists('tables', $this->attributes)) {
-            $this->addReservationTables((array)$this->attributes['tables']);
+            $this->addReservationTables(
+                $this->getReservationTablesAttributes((array)$this->attributes['tables'])
+            );
         }
 
         if ($this->location->getOption('auto_allocate_table', 1) && !$this->tables()->count()) {
@@ -209,6 +214,15 @@ class Reservations_model extends Model
             ' and DATE_ADD(ADDTIME(reserve_date, reserve_time), INTERVAL duration MINUTE)',
             [$dateTime]
         );
+
+        return $query;
+    }
+
+    public function scopeWhereHasDiningArea($query, $diningAreaId)
+    {
+        $query->whereHas('dining_areas', function ($q) use ($diningAreaId) {
+            $q->where('reservation_tables.dining_area_id', $diningAreaId);
+        })->orDoesntHave('dining_areas');
 
         return $query;
     }
@@ -372,6 +386,30 @@ class Reservations_model extends Model
         ];
     }
 
+    public function getDiningTableOptions()
+    {
+        if (!$location = $this->location)
+            return [];
+
+        return DiningTable::whereHasLocation($location)->pluck('name', 'id');
+    }
+
+    public static function getReserveTimeOptions()
+    {
+        $items = [];
+
+        $start = now()->startOfDay();
+        $end = now()->endOfDay();
+        $interval = new DateInterval('PT15M');
+
+        $datePeriod = new DatePeriod($start, $interval, $end);
+        foreach ($datePeriod as $dateTime) {
+            $items[$dateTime->toDateTimeString()] = $dateTime->isoFormat(lang('system::lang.moment.time_format'));
+        }
+
+        return $items;
+    }
+
     /**
      * Return the dates of all reservations
      *
@@ -424,7 +462,7 @@ class Reservations_model extends Model
     public function getNextBookableTable()
     {
         $diningTable = DiningTable::query()
-            ->select('dining_tables.*', 'dining_area_table.dining_area_id', 'dining_sections.priority')
+            ->select('dining_tables.*', 'dining_sections.priority')
             ->reservable([
                 'locationId' => $this->location_id,
                 'dateTime' => $this->reservation_datetime,
@@ -440,14 +478,24 @@ class Reservations_model extends Model
         if ($diningTables->isEmpty())
             return false;
 
-        $this->addReservationTables($diningTables->mapWithKeys(function ($diningTable) {
-            return [$diningTable->getKey() => [
-                'dining_area_id' => $diningTable->dining_area_id,
-                'dining_section_id' => $diningTable->dining_section_id,
-            ]];
-        })->all());
+        $this->addReservationTables(
+            $this->getReservationTablesAttributes($diningTables)
+        );
 
         return true;
+    }
+
+    protected function getReservationTablesAttributes($diningTables)
+    {
+        if (!$diningTables instanceof Collection)
+            $diningTables = DiningTable::whereIn('id', $diningTables)->get();
+
+        return $diningTables->mapWithKeys(function ($table) {
+            return [$table->id => [
+                'dining_area_id' => $table->dining_area_id,
+                'dining_section_id' => $table->dining_section_id,
+            ]];
+        })->all();
     }
 
     //

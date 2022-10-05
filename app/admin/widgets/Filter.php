@@ -198,7 +198,7 @@ class Filter extends BaseWidget
         $this->defineFilterScopes();
 
         $this->resetSession();
-        $this->searchWidget->resetSession();
+        optional($this->searchWidget)->resetSession();
 
         $params = func_get_args();
         $result = $this->fireEvent('filter.submit', [$params]);

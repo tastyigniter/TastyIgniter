@@ -16,11 +16,6 @@
                 class="btn btn-light"
                 data-floor-planner-control="zoom-in"
             ><i class="fas fa-magnifying-glass-plus"></i></button>
-            <button
-                type="button"
-                class="btn btn-light"
-                data-floor-planner-control="zoom-reset"
-            ><i class="fa-solid fa-down-left-and-up-right-to-center"></i></button>
         </div>
         <div
             class="floorplanner-canvas border-top overflow-auto d-flex flex-wrap"

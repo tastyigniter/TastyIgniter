@@ -4,6 +4,7 @@ namespace Admin\Controllers;
 
 use Admin\ActivityTypes\StatusUpdated;
 use Admin\Facades\AdminMenu;
+use Admin\Models\DiningArea;
 use Admin\Models\Reservations_model;
 use Admin\Models\Statuses_model;
 use Exception;
@@ -25,6 +26,15 @@ class Reservations extends \Admin\Classes\AdminController
             'title' => 'lang:admin::lang.reservations.text_title',
             'emptyMessage' => 'lang:admin::lang.reservations.text_empty',
             'defaultSort' => ['reservation_id', 'DESC'],
+            'configFile' => 'reservations_model',
+        ],
+        'floor_plan' => [
+            'model' => 'Admin\Models\Reservations_model',
+            'title' => 'lang:admin::lang.reservations.text_title',
+            'emptyMessage' => 'lang:admin::lang.reservations.text_empty',
+            'defaultSort' => ['reservation_id', 'DESC'],
+            'showCheckboxes' => false,
+            'showSetup' => false,
             'configFile' => 'reservations_model',
         ],
     ];
@@ -92,7 +102,7 @@ class Reservations extends \Admin\Classes\AdminController
         return $this->asExtension('Admin\Actions\ListController')->index_onDelete();
     }
 
-    public function index_onUpdateStatus()
+    public function onUpdateStatus()
     {
         $model = Reservations_model::find((int)post('recordId'));
         $status = Statuses_model::find((int)post('statusId'));
@@ -146,5 +156,25 @@ class Reservations extends \Admin\Classes\AdminController
             'status_history.staff',
             'status_history.status',
         ]);
+    }
+
+    public function listFilterExtendScopesBefore($filter)
+    {
+        if ($filter->alias !== 'floor_plan_filter')
+            return;
+
+        $filter->scopes['reserve_date']['default'] = now()->toDateString();
+        $filter->scopes['reserve_time']['default'] = now()->setTime(
+            now()->format('H'), round(now()->format('i') / 15) * 15
+        )->toTimeString();
+    }
+
+    public function listFilterExtendScopes($filter)
+    {
+        if ($filter->alias !== 'floor_plan_filter')
+            return;
+
+        if ($diningAreaId = $filter->getScopeValue('dining_area'))
+            $this->vars['diningArea'] = DiningArea::find($diningAreaId);
     }
 }

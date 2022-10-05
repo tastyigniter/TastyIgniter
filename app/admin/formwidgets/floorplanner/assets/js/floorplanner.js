@@ -144,31 +144,6 @@
         }
     }
 
-    FloorPlanner.prototype.applyRoundLayout = function (diningTable) {
-        var width, radius,
-            seatCapacity = diningTable.max_capacity,
-            seats = {round: seatCapacity},
-            remaining = seatCapacity-2
-
-        width = this.options.seatWidth
-
-        if (seatCapacity > 2) {
-            width = this.options.seatWidth * Math.round(remaining / 2)
-        }
-
-        width += (this.options.seatWidth / 2) * 2
-        radius = width / 2
-
-        diningTable.shapeLayout = {
-            id: 'table-'+diningTable.id,
-            seats: seats,
-            x: this.options.tableLayoutPadding,
-            y: this.options.tableLayoutPadding,
-            radius: radius,
-            width: width,
-        }
-    }
-
     FloorPlanner.prototype.applyRectLayout = function (diningTable) {
         var width, height, seats = {},
             seatCapacity = diningTable.max_capacity
@@ -200,17 +175,43 @@
             y: this.options.tableLayoutPadding,
             width: width+(this.options.tableHorizontalPadding * 2),
             height: height+(this.options.tableVerticalPadding * 2),
+            cornerRadius: 4
+        }
+    }
+
+    FloorPlanner.prototype.applyRoundLayout = function (diningTable) {
+        var width, radius,
+            seatCapacity = diningTable.max_capacity,
+            seats = {round: seatCapacity},
+            remaining = seatCapacity-2
+
+        width = this.options.seatWidth
+
+        if (seatCapacity > 2) {
+            width = this.options.seatWidth * Math.round(remaining / 2)
+        }
+
+        width += (this.options.seatWidth / 2) * 2
+        radius = width / 2
+
+        diningTable.shapeLayout = {
+            id: 'table-'+diningTable.id,
+            seats: seats,
+            x: this.options.tableLayoutPadding,
+            y: this.options.tableLayoutPadding,
+            radius: radius,
+            width: width,
         }
     }
 
     FloorPlanner.prototype.createTableInfo = function (diningTable, group) {
-        var tableName, tableCapacity, options = {
-            name: 'table-info',
+        var tableName, options = {
+            name: 'table-name',
             id: diningTable.id,
             x: this.options.tableLayoutPadding,
             y: (diningTable.shapeLayout.height / 2)-7,
             text: diningTable.name,
-            fontSize: 14,
+            fontSize: 15,
             fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif',
             fill: '#2E3B61',
             width: diningTable.shapeLayout.width,
@@ -228,31 +229,45 @@
         }
 
         tableName = new Konva.Text(options)
+        group.add(tableName)
 
-        tableCapacity = tableName.clone({
+        if (diningTable.customerName) {
+            group.add(tableName.clone({
+                name: 'table-guest',
+                x: options.x,
+                y: options.y = options.y+20,
+                text: diningTable.customerName,
+                fontSize: 12,
+            }))
+        }
+
+        group.add(tableName.clone({
+            name: 'table-description',
             x: options.x,
             y: options.y+20,
-            text: diningTable.min_capacity+'-'+diningTable.max_capacity,
+            text: diningTable.description ?? diningTable.min_capacity+'-'+diningTable.max_capacity,
             fontSize: 12,
-            fill: '#9194a6',
-        })
+        }))
 
         tableName.on('dblclick', $.proxy(this.onDoubleClickControl, this))
 
-        group.add(tableName)
-        group.add(tableCapacity)
         return tableName
     }
 
     FloorPlanner.prototype.createTable = function (diningTable, group) {
-        var table
+        var table, options = $.extend({}, diningTable.shapeLayout, {
+            name: 'table-top',
+            fill: this.options.tableColor,
+            stroke: this.options.seatColor,
+            strokeWidth: 1,
+        })
 
         if (diningTable.shape === 'round') {
-            table = this.createRoundTable(diningTable)
+            table = new Konva.Circle(options)
 
             this.createRoundSeats(diningTable, group)
         } else {
-            table = this.createRectTable(diningTable)
+            table = new Konva.Rect(options)
 
             this.createRectSeats(diningTable, group)
         }
@@ -260,29 +275,6 @@
         table.id(diningTable.id)
         group.add(table)
         return table
-    }
-
-    FloorPlanner.prototype.createRectTable = function (diningTable) {
-        var options
-
-        options = $.extend({}, diningTable.shapeLayout, {
-            name: 'table-top',
-            fill: this.options.tableColor,
-            cornerRadius: 4
-        })
-
-        return new Konva.Rect(options)
-    }
-
-    FloorPlanner.prototype.createRoundTable = function (diningTable) {
-        var options
-
-        options = $.extend({}, diningTable.shapeLayout, {
-            name: 'table-top',
-            fill: this.options.tableColor,
-        })
-
-        return new Konva.Circle(options)
     }
 
     FloorPlanner.prototype.createRectSeats = function (diningTable, group) {
@@ -297,7 +289,7 @@
                         y: 0,
                         width: this.options.seatWidth,
                         height: this.options.seatWidth,
-                        fill: this.options.seatColor,
+                        fill: diningTable.statusColor ?? this.options.seatColor,
                         cornerRadius: 4
                     }
 
@@ -342,7 +334,7 @@
                         x: ((diningTable.shapeLayout.radius-this.options.tableLayoutPadding) * Math.cos(radian))+this.options.tableLayoutPadding,
                         y: ((diningTable.shapeLayout.radius-this.options.tableLayoutPadding) * Math.sin(radian))+this.options.tableLayoutPadding,
                         radius: this.options.seatWidth / 2,
-                        fill: this.options.seatColor,
+                        fill: diningTable.statusColor ?? this.options.seatColor,
                         angle: angle,
                     }
 

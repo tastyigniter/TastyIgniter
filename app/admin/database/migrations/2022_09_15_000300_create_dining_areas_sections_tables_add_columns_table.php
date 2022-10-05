@@ -61,9 +61,14 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
 
         if (!Schema::hasColumn('reservation_tables', 'dining_table_id')) {
             Schema::table('reservation_tables', function (Blueprint $table) {
+                $table->dropUnique(['reservation_id', 'table_id']);
+            });
+
+            Schema::table('reservation_tables', function (Blueprint $table) {
                 $table->unsignedBigInteger('dining_section_id')->nullable()->after('reservation_id');
                 $table->unsignedBigInteger('dining_area_id')->nullable()->after('reservation_id');
                 $table->unsignedBigInteger('dining_table_id')->after('reservation_id');
+                $table->unique(['reservation_id', 'dining_table_id']);
             });
         }
 

@@ -3,13 +3,11 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
-use Igniter\Flame\Database\Traits\Purgeable;
 use Igniter\Flame\Exception\ApplicationException;
 use Illuminate\Support\Collection;
 
 class DiningArea extends \Igniter\Flame\Database\Model
 {
-    use Purgeable;
     use Locationable;
 
     public $table = 'dining_areas';
@@ -32,7 +30,7 @@ class DiningArea extends \Igniter\Flame\Database\Model
         ],
     ];
 
-    protected $purgeable = ['dining_table_solos', 'dining_table_combos', 'dining_table_layout'];
+    protected $purgeable = ['dining_table_solos', 'dining_table_combos'];
 
     public static function getDropdownOptions()
     {
@@ -47,14 +45,6 @@ class DiningArea extends \Igniter\Flame\Database\Model
     //
     // Events
     //
-
-    protected function afterSave()
-    {
-        $this->restorePurgedValues();
-
-        if (array_key_exists('dining_table_layout', $this->attributes))
-            $this->updateTableLayouts((array)$this->attributes['dining_table_layout']);
-    }
 
     //
     // Accessors & Mutators
@@ -103,13 +93,22 @@ class DiningArea extends \Igniter\Flame\Database\Model
         return $comboTable;
     }
 
-    protected function updateTableLayouts(array $layouts)
+    public function getDiningTablesWithReservation($reservations)
     {
-        collect($layouts)->each(function ($layout, $tableId) {
-            $diningTable = $this->dining_tables()->find($tableId);
+        return $this->available_tables
+            ->map(function ($diningTable) use ($reservations) {
+                $reservation = $reservations->first(function ($reservation) use ($diningTable) {
+                    return $reservation->tables->where('id', $diningTable->id)->count() > 0;
+                });
 
-            $diningTable->seat_layout = $layout;
-            $diningTable->saveOrFail();
-        });
+                $diningTable->statusColor = $reservation->status->status_color ?? null;
+                $diningTable->customerName = $reservation->customer_name ?? null;
+                $diningTable->description = $reservation
+                    ? $reservation->reservation_datetime->isoFormat(lang('system::lang.moment.time_format'))
+                    .' - '.$reservation->reservation_end_datetime->isoFormat(lang('system::lang.moment.time_format'))
+                    : null;
+
+                return $diningTable;
+            });
     }
 }

@@ -15,7 +15,7 @@
         @csrf
         <div class="d-sm-flex flex-sm-wrap w-100 no-gutters">
             @if ($search)
-                <div class="col col-sm-6 pb-sm-3 pr-sm-3">
+                <div class="col col-md-6 pb-sm-3 pr-sm-3">
                     <div class="d-flex no-gutters">
                         <div class="pr-3">
                             <button
@@ -29,6 +29,15 @@
                             <div class="filter-search">{!! $search !!}</div>
                         </div>
                     </div>
+                </div>
+            @elseif(!$search && count($scopes))
+                <div class="pr-3">
+                    <button
+                        class="btn btn-outline-danger"
+                        type="button"
+                        data-request="{{ $onClearHandler }}"
+                        data-attach-loading
+                    ><i class="fa fa-times"></i></button>
                 </div>
             @endif
 

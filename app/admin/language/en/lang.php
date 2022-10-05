@@ -905,6 +905,9 @@ return [
         'text_status_history' => 'Status History',
         'text_empty' => 'There are no reservations available.',
         'text_filter_assignee' => 'View all assignees',
+        'text_filter_dining_area' => 'View all dining areas',
+        'text_filter_date' => 'View all reservation dates',
+        'text_filter_time' => 'View all reservation times',
         'text_filter_search' => 'Search by id, location, guest number, status, customer or table name.',
         'text_switch_to_calendar' => 'Switch to calender view',
         'text_no_booking' => 'No Bookings',
@@ -913,6 +916,9 @@ return [
         'text_unassigned' => 'Yet to be Assigned',
         'text_assigned_to_self' => 'Assigned To Me',
         'text_assigned_to_others' => 'Assigned To Other Staff',
+        'text_view_calendar' => 'Calendar View',
+        'text_view_list' => 'List View',
+        'text_view_floor_plan' => 'Floor Plan View',
 
         'button_assign_table' => 'Assign Table',
 
@@ -961,6 +967,7 @@ return [
 
         'alert_no_reservation_found' => 'No matching reservation found.',
         'alert_no_assignable_table' => 'No table available for the reservation.',
+        'alert_no_selected_dining_area' => 'No dining area selected. Please select a dining area filter to view the tables.',
         'alert_table_assigned' => 'Table(s) has been assigned to the selected reservation(s).',
     ],
 

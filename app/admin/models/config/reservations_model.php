@@ -47,9 +47,9 @@ $config['list']['toolbar'] = [
             'href' => 'reservations/create',
         ],
         'calendar' => [
-            'label' => 'lang:admin::lang.reservations.text_switch_to_calendar',
+            'label' => 'lang:admin::lang.reservations.text_view_list',
+            'partial' => 'lists/switch_to_button',
             'class' => 'btn btn-default',
-            'href' => 'reservations/calendar',
             'context' => 'index',
         ],
     ],
@@ -140,11 +140,93 @@ $config['calendar']['toolbar'] = [
             'href' => 'reservations/create',
         ],
         'list' => [
-            'label' => 'lang:admin::lang.text_switch_to_list',
-            'class' => 'btn btn-default',
-            'href' => 'reservations',
+            'label' => 'lang:admin::lang.reservations.text_view_calendar',
             'context' => 'calendar',
+            'partial' => 'lists/switch_to_button',
+            'class' => 'btn btn-default',
         ],
+    ],
+];
+
+$config['floor_plan']['filter'] = [
+    'scopes' => [
+        'dining_area' => [
+            'label' => 'lang:admin::lang.reservations.text_filter_dining_area',
+            'type' => 'select',
+            'modelClass' => 'Admin\Models\DiningArea',
+            'nameFrom' => 'name',
+            'scope' => 'whereHasDiningArea',
+            'locationAware' => true,
+        ],
+        'reserve_date' => [
+            'label' => 'lang:admin::lang.reservations.text_filter_date',
+            'type' => 'date',
+            'conditions' => "reserve_date = DATE(':filtered')",
+        ],
+        'reserve_time' => [
+            'label' => 'lang:admin::lang.reservations.text_filter_time',
+            'type' => 'select',
+            'options' => [\Admin\Models\Reservations_model::class, 'getReserveTimeOptions'],
+            'scope' => 'whereBetweenStayTime',
+        ],
+        'assignee' => [
+            'label' => 'lang:admin::lang.reservations.text_filter_assignee',
+            'type' => 'select',
+            'scope' => 'filterAssignedTo',
+            'options' => [
+                1 => 'lang:admin::lang.statuses.text_unassigned',
+                2 => 'lang:admin::lang.statuses.text_assigned_to_self',
+                3 => 'lang:admin::lang.statuses.text_assigned_to_others',
+            ],
+        ],
+        'status' => [
+            'label' => 'lang:admin::lang.text_filter_status',
+            'type' => 'selectlist',
+            'conditions' => 'status_id IN(:filtered)',
+            'modelClass' => 'Admin\Models\Statuses_model',
+            'options' => 'getDropdownOptionsForReservation',
+        ],
+    ],
+];
+
+$config['floor_plan']['toolbar'] = [
+    'buttons' => [
+        'create' => [
+            'label' => 'lang:admin::lang.button_new',
+            'class' => 'btn btn-primary',
+            'href' => 'reservations/create',
+        ],
+        'list' => [
+            'label' => 'lang:admin::lang.reservations.text_view_floor_plan',
+            'context' => 'floor_plan',
+            'partial' => 'lists/switch_to_button',
+            'class' => 'btn btn-default',
+        ],
+    ],
+];
+
+$config['floor_plan']['columns'] = [
+    'edit' => [
+        'type' => 'button',
+        'iconCssClass' => 'fa fa-pencil',
+        'attributes' => [
+            'class' => 'btn btn-edit',
+            'href' => 'reservations/edit/{reservation_id}',
+        ],
+    ],
+    'reserve_time' => [
+        'label' => '',
+        'type' => 'partial',
+        'path' => 'reservations/lists/floor_plan_column',
+        'sortable' => false,
+    ],
+    'status_name' => [
+        'label' => 'lang:admin::lang.label_status',
+        'relation' => 'status',
+        'select' => 'status_name',
+        'type' => 'partial',
+        'path' => 'statuses/form/status_column',
+        'sortable' => false,
     ],
 ];
 
@@ -195,18 +277,20 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::lang.reservations.text_tab_general',
     'fields' => [
+        'tables' => [
+            'label' => 'lang:admin::lang.reservations.label_table_name',
+            'type' => 'relation',
+            'relationFrom' => 'tables',
+            'nameFrom' => 'name',
+            'scope' => 'whereHasReservationLocation',
+            'span' => 'left',
+            'cssClass' => 'flex-width',
+        ],
         'guest_num' => [
             'label' => 'lang:admin::lang.reservations.label_guest',
             'type' => 'number',
             'span' => 'left',
             'cssClass' => 'flex-width',
-        ],
-        'duration' => [
-            'label' => 'lang:admin::lang.reservations.label_reservation_duration',
-            'type' => 'number',
-            'span' => 'left',
-            'cssClass' => 'flex-width',
-            'comment' => 'lang:admin::lang.reservations.help_reservation_duration',
         ],
         'reserve_date' => [
             'label' => 'lang:admin::lang.reservations.label_reservation_date',
@@ -250,15 +334,21 @@ $config['form']['tabs'] = [
             'span' => 'left',
             'placeholder' => 'lang:admin::lang.text_please_select',
         ],
-        'notify' => [
-            'label' => 'lang:admin::lang.reservations.label_send_confirmation',
-            'type' => 'switch',
+        'duration' => [
+            'label' => 'lang:admin::lang.reservations.label_reservation_duration',
+            'type' => 'number',
             'span' => 'right',
-            'default' => 1,
+            'comment' => 'lang:admin::lang.reservations.help_reservation_duration',
         ],
         'comment' => [
             'label' => 'lang:admin::lang.statuses.label_comment',
             'type' => 'textarea',
+        ],
+        'notify' => [
+            'label' => 'lang:admin::lang.reservations.label_send_confirmation',
+            'type' => 'switch',
+            'span' => 'left',
+            'default' => 1,
         ],
         'created_at' => [
             'label' => 'lang:admin::lang.reservations.label_date_added',

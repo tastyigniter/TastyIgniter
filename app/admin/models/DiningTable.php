@@ -83,6 +83,14 @@ class DiningTable extends \Igniter\Flame\Database\Model
             $this->fixTree();
     }
 
+    public function afterSave()
+    {
+        if (!is_null($this->parent_id)) {
+            $this->parent->name = $this->parent->children->pluck('name')->join('/');
+            $this->parent->saveQuietly();
+        }
+    }
+
     public function beforeDelete()
     {
         if (!is_null($this->parent_id))
@@ -170,17 +178,14 @@ class DiningTable extends \Igniter\Flame\Database\Model
             ->where('max_capacity', '>=', $guestNumber);
     }
 
+    public function scopeWhereHasReservationLocation($query, $model)
+    {
+        return $query->whereHasLocation($model->location_id);
+    }
+
     //
     // Accessors & Mutators
     //
-
-    public function getNameAttribute($value)
-    {
-        if (!$this->is_combo || !$this->exists)
-            return $value;
-
-        return optional($this->children)->pluck('name')->join('/');
-    }
 
     public function getSectionNameAttribute()
     {
