@@ -94,6 +94,17 @@ class Reservations extends \Admin\Classes\AdminController
         $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForReservation();
     }
 
+    public function floor_plan()
+    {
+        $this->addJs('https://unpkg.com/konva@8.3.12/konva.min.js', 'konva-js');
+        $this->addCss('~/app/admin/formwidgets/floorplanner/assets/css/floorplanner.css', 'floorplanner-css');
+        $this->addJs('~/app/admin/formwidgets/floorplanner/assets/js/floorplanner.js', 'floorplanner-js');
+
+        $this->asExtension('ListController')->index();
+
+        $this->vars['statusesOptions'] = \Admin\Models\Statuses_model::getDropdownOptionsForReservation();
+    }
+
     public function index_onDelete()
     {
         if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
@@ -145,6 +156,11 @@ class Reservations extends \Admin\Classes\AdminController
         $reservation->reserve_time = $startAt->toTimeString();
 
         $reservation->save();
+    }
+
+    public function listExtendQuery($query, $alias)
+    {
+        $query->with(['tables', 'status']);
     }
 
     public function formExtendQuery($query)
