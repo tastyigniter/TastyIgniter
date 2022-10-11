@@ -5,9 +5,14 @@
         this.options = options
         this.$container = $(element)
 
+        this.computedStyle = window.getComputedStyle(document.documentElement)
+        this.options.textOptions.fontFamily = this.computedStyle.getPropertyValue('--bs-font-sans-serif')
+        this.options.textOptions.fill = this.computedStyle.getPropertyValue('--bs-body-color')
+
         this.stage = null
         this.layer = null
         this.transformer = null
+        this.transformerOptions = {}
         this.zoom = 1
 
         this.init()
@@ -35,16 +40,6 @@
 
         this.layer = new Konva.Layer()
         this.stage.add(this.layer)
-
-        this.transformer = new Konva.Transformer({
-            resizeEnabled: false,
-            rotateAnchorOffset: 20,
-            anchorStrokeWidth: 2,
-            borderStrokeWidth: 2,
-            padding: 3,
-        })
-
-        this.layer.add(this.transformer)
 
         this.createTables()
 
@@ -100,9 +95,11 @@
 
         state.groups.forEach(function (groupState) {
             var group = this.layer.findOne('#'+groupState.id)
-            group.x(groupState.x)
-            group.y(groupState.y)
-            group.rotation(groupState.rotation)
+            if (group) {
+                group.x(groupState.x)
+                group.y(groupState.y)
+                group.rotation(groupState.rotation)
+            }
         }, this)
     }
 
@@ -205,23 +202,14 @@
     }
 
     FloorPlanner.prototype.createTableInfo = function (diningTable, group) {
-        var tableName, options = {
+        var tableName, options = $.extend({
             name: 'table-name',
             id: diningTable.id,
             x: this.options.tableLayoutPadding,
             y: (diningTable.shapeLayout.height / 2)-7,
             text: diningTable.name,
-            fontSize: 15,
-            fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif',
-            fill: '#2E3B61',
             width: diningTable.shapeLayout.width,
-            height: 20,
-            padding: 10,
-            align: 'center',
-            verticalAlign: 'middle',
-            wrap: 'none',
-            ellipsis: true,
-        }
+        }, this.options.textOptions)
 
         if (diningTable.shape === 'round') {
             options.x = -diningTable.shapeLayout.radius
@@ -235,7 +223,7 @@
             group.add(tableName.clone({
                 name: 'table-guest',
                 x: options.x,
-                y: options.y = options.y+20,
+                y: options.y = options.y+this.options.textOptions.height,
                 text: diningTable.customerName,
                 fontSize: 12,
             }))
@@ -244,7 +232,7 @@
         group.add(tableName.clone({
             name: 'table-description',
             x: options.x,
-            y: options.y+20,
+            y: options.y+this.options.textOptions.height,
             text: diningTable.description ?? diningTable.min_capacity+'-'+diningTable.max_capacity,
             fontSize: 12,
         }))
@@ -400,13 +388,21 @@
     }
 
     FloorPlanner.prototype.onClickStage = function (event) {
-        if (event.target.getType() === 'Stage')
-            this.transformer.nodes([])
+        if (event.target.getType() === 'Stage' && this.transformer) {
+            this.transformer.detach()
+        }
     }
 
     FloorPlanner.prototype.onClickShape = function (event) {
-        if (!this.options.previewMode)
+        if (!this.options.previewMode) {
+            event.target.getParent().moveToTop()
+
+            if (this.transformer) this.transformer.detach()
+
+            this.transformer = new Konva.Transformer(this.options.transformerOptions)
             this.transformer.nodes([event.target.getParent()])
+            this.layer.add(this.transformer)
+        }
     }
 
     FloorPlanner.DEFAULTS = {
@@ -424,6 +420,24 @@
         tableHorizontalPadding: 30,
         tableVerticalPadding: 20,
         tableLayoutPadding: 10,
+        transformerOptions: {
+            resizeEnabled: false,
+            rotateAnchorOffset: 20,
+            anchorStrokeWidth: 2,
+            borderStrokeWidth: 2,
+            padding: 3,
+        },
+        textOptions: {
+            fontSize: 15,
+            fontFamily: undefined,
+            fill: undefined,
+            height: 20,
+            padding: 10,
+            align: 'center',
+            verticalAlign: 'middle',
+            wrap: 'none',
+            ellipsis: true,
+        }
     }
 
     // INITIALIZATION

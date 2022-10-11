@@ -87,7 +87,7 @@ class DiningArea extends \Igniter\Flame\Database\Model
         ]);
 
         $tables->each(function ($table) use ($comboTable) {
-            $table->parent()->associate($comboTable)->save();
+            $table->parent()->associate($comboTable)->saveQuietly();
         });
 
         return $comboTable;

@@ -64,7 +64,7 @@ class DiningTable extends \Igniter\Flame\Database\Model
         'extra_capacity' => ['sometimes', 'required', 'integer'],
         'priority' => ['sometimes', 'required', 'integer'],
         'is_enabled' => ['sometimes', 'required', 'boolean'],
-        'dining_area_id' => ['nullable', 'required', 'integer'],
+        'dining_area_id' => ['sometimes', 'required', 'integer'],
         'dining_section_id' => ['nullable', 'integer'],
     ];
 

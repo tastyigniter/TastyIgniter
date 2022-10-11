@@ -7,6 +7,8 @@ use Admin\Facades\AdminMenu;
 use Admin\Models\DiningArea;
 use Admin\Models\Reservations_model;
 use Admin\Models\Statuses_model;
+use DateInterval;
+use DatePeriod;
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
 
@@ -180,9 +182,6 @@ class Reservations extends \Admin\Classes\AdminController
             return;
 
         $filter->scopes['reserve_date']['default'] = now()->toDateString();
-        $filter->scopes['reserve_time']['default'] = now()->setTime(
-            now()->format('H'), round(now()->format('i') / 15) * 15
-        )->toTimeString();
     }
 
     public function listFilterExtendScopes($filter)
@@ -192,5 +191,29 @@ class Reservations extends \Admin\Classes\AdminController
 
         if ($diningAreaId = $filter->getScopeValue('dining_area'))
             $this->vars['diningArea'] = DiningArea::find($diningAreaId);
+
+        $reserveDateScope = $filter->getScope('reserve_date');
+        $reserveTimeScope = $filter->getScope('reserve_time');
+
+        $selectedDate = $filter->getScopeValue('reserve_date', $reserveDateScope->config['default']);
+
+        $reserveTimeScope->options = $this->getReserveTimeOptions($selectedDate) ?: ['No times available'];
+    }
+
+    protected function getReserveTimeOptions($date = null)
+    {
+        $items = [];
+
+        $date = make_carbon($date ?? now());
+        $start = $date->copy()->startOfDay();
+        $end = $date->copy()->endOfDay();
+        $interval = new DateInterval('PT15M');
+
+        $datePeriod = new DatePeriod($start, $interval, $end);
+        foreach ($datePeriod as $dateTime) {
+            $items[$dateTime->toDateTimeString()] = $dateTime->isoFormat(lang('system::lang.moment.time_format'));
+        }
+
+        return $items;
     }
 }

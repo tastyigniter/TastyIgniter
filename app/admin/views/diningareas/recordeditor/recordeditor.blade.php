@@ -5,7 +5,10 @@
         data-control="record-editor"
         data-alias="{{ $this->alias }}"
     >
-        <div class="field-radiolist">
+        <div
+            id="{{ $field->getId() }}"
+            class="field-radiolist"
+        >
             <input type="hidden" name="{{ $field->getName() }}" value="0" />
             @foreach ($this->modelClass::where('location_id', $formModel->location_id)->dropdown('name') as $value => $option)
                 @php

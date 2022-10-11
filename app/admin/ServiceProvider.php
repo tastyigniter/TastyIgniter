@@ -358,7 +358,7 @@ class ServiceProvider extends AppServiceProvider
                             'class' => 'dining_areas',
                             'href' => admin_url('dining_areas'),
                             'title' => lang('admin::lang.side_menu.tables'),
-                            'permission' => 'Admin.DiningAreas',
+                            'permission' => 'Admin.Tables',
                         ],
                     ],
                 ],

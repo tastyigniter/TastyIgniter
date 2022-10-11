@@ -6,8 +6,6 @@ use Admin\Traits\Assignable;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
-use DateInterval;
-use DatePeriod;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
 use Illuminate\Support\Collection;
@@ -392,22 +390,6 @@ class Reservations_model extends Model
             return [];
 
         return DiningTable::whereHasLocation($location)->pluck('name', 'id');
-    }
-
-    public static function getReserveTimeOptions()
-    {
-        $items = [];
-
-        $start = now()->startOfDay();
-        $end = now()->endOfDay();
-        $interval = new DateInterval('PT15M');
-
-        $datePeriod = new DatePeriod($start, $interval, $end);
-        foreach ($datePeriod as $dateTime) {
-            $items[$dateTime->toDateTimeString()] = $dateTime->isoFormat(lang('system::lang.moment.time_format'));
-        }
-
-        return $items;
     }
 
     /**
