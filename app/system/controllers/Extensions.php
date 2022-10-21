@@ -240,15 +240,12 @@ class Extensions extends \Admin\Classes\AdminController
         if ($column->type != 'button')
             return null;
 
-        $attributes = $column->attributes;
+        if (($column->columnName == 'delete' && $record->status) || ($column->columnName != 'delete' && !$record->class)) {
+            $attributes = $column->attributes;
+            $attributes['class'] .= ' disabled';
 
-        if ($column->columnName == 'delete' && $record->status)
-            $attributes['class'] = $attributes['class'].' disabled';
-
-        if ($column->columnName != 'delete' && !$record->class)
-            $attributes['class'] = $attributes['class'].' disabled';
-
-        return $attributes;
+            return $attributes;
+        }
     }
 
     protected function initFormWidget($model, $context = null)
