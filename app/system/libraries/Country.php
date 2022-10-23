@@ -49,7 +49,7 @@ class Country
         if (!$useLineBreaks)
             $formattedAddress = str_replace('<br />', ', ', $formattedAddress);
 
-        return $formattedAddress;
+        return strip_tags($formattedAddress);
     }
 
     public function getCountryNameById($id = null)

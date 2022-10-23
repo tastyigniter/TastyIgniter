@@ -32,10 +32,10 @@
         <div class="col-6">
             <strong>@lang('admin::lang.orders.text_restaurant')</strong><br>
             <span>{{ $model->location->getName() }}</span><br>
-            <address>{!! format_address($model->location->getAddress(), TRUE) !!}</address>
+            <address>{{ format_address($model->location->getAddress(), true) }}</address>
         </div>
         <div class="col-6 text-right">
-            <img class="img-responsive" src="{{ uploads_url(setting('invoice_logo') ?: setting('site_logo')) }}" alt="" style="max-height:120px;"/>
+            <img class="img-responsive" src="{{ uploads_url(setting('invoice_logo') ?: setting('site_logo')) }}" alt="" style="max-height:120px;" />
         </div>
     </div>
 
@@ -98,7 +98,7 @@
                     @foreach($model->getOrderMenusWithOptions() as $menuItem)
                         <tr>
                             <td>{{ $menuItem->quantity }}x</td>
-                            <td class="text-left"><b>{{ $menuItem->name }}</b><br/>
+                            <td class="text-left"><b>{{ $menuItem->name }}</b><br />
                                 @php $menuItemOptionGroup = $menuItem->menu_options->groupBy('order_option_category') @endphp
                                 @if($menuItemOptionGroup->isNotEmpty())
                                     <ul class="list-unstyled">
