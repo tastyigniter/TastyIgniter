@@ -6,6 +6,8 @@ use Igniter\Flame\Database\Model;
 
 class Payment_profiles_model extends Model
 {
+    protected static $unguarded = true;
+
     public $timestamps = true;
 
     public $table = 'payment_profiles';
