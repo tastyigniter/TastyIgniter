@@ -50,6 +50,11 @@ class Payments_model extends Model
         return $this->isEnabled()->dropdown('name', 'code');
     }
 
+    public function getMorphClass()
+    {
+        return 'payments';
+    }
+
     public static function listDropdownOptions()
     {
         $all = self::select('code', 'name', 'description')->isEnabled()->get();

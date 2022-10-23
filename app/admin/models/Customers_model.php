@@ -132,6 +132,13 @@ class Customers_model extends AuthUserModel
     // Helpers
     //
 
+    public function getMorphClass()
+    {
+        // parent doesn't work because whenever it's used it's before booting the service provider
+        // \System\ServiceProvider::defineEloquentMorphMaps
+        return 'customers';
+    }
+
     public function enabled()
     {
         return $this->status;
