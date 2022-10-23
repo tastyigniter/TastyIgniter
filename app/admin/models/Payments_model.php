@@ -41,6 +41,12 @@ class Payments_model extends Model
         'priority' => 'integer',
     ];
 
+    public $relation = [
+        'hasMany' => [
+            'payment_profiles' => Payment_profiles_model::class,
+        ],
+    ];
+
     protected $purgeable = ['payment'];
 
     protected static $defaultPayment;
@@ -265,14 +271,9 @@ class Payments_model extends Model
      */
     public function findPaymentProfile($customer)
     {
-        if (!$customer)
-            return null;
-
-        $query = Payment_profiles_model::query();
-
-        return $query->where('customer_id', $customer->customer_id)
-            ->where('payment_id', $this->payment_id)
-            ->first();
+        $profile = $this->payment_profiles()->whereCustomerId($customer->getKey())->first();
+        $this->fireSystemEvent('payments.customer.fetch_payment_profile', [$customer, &$profile]);
+        return $profile;
     }
 
     /**
@@ -283,16 +284,12 @@ class Payments_model extends Model
      */
     public function initPaymentProfile($customer)
     {
-        $profile = new Payment_profiles_model();
-        $profile->customer_id = $customer->customer_id;
-        $profile->payment_id = $this->payment_id;
-
-        return $profile;
+        return $this->payment_profiles()->make(['customer_id' => $customer->customer_id]);
     }
 
     public function paymentProfileExists($customer)
     {
-        return (bool)$this->findPaymentProfile($customer);
+        return (bool)$this->findPaymentProfile($customer);;
     }
 
     public function deletePaymentProfile($customer)
