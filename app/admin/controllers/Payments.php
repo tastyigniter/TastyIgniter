@@ -86,6 +86,7 @@ class Payments extends \Admin\Classes\AdminController
 
         // Prepare query and find model record
         $query = $model->newQuery();
+        $this->fireEvent('admin.controller.extendFormQuery', [$query]);
         $this->formExtendQuery($query);
         $result = $query->whereCode($paymentCode)->first();
 

@@ -267,6 +267,7 @@ class Themes extends \Admin\Classes\AdminController
 
         // Prepare query and find model record
         $query = $model->newQuery();
+        $this->fireEvent('admin.controller.extendFormQuery', [$query]);
         $result = $query->where('code', $recordId)->first();
 
         if (!$result) {
