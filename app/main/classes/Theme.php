@@ -130,7 +130,7 @@ class Theme
 
     public function getParentPath()
     {
-        return dirname($this->path).'/'.$this->parentName;
+        return ThemeManager::instance()->findPath($this->parentName);
     }
 
     public function getParentName()
