@@ -5,6 +5,7 @@ namespace System\Classes;
 use BadMethodCallException;
 use Igniter\Flame\Pagic\TemplateCode;
 use Igniter\Flame\Support\Extendable;
+use Igniter\Flame\Support\Facades\File;
 use Igniter\Flame\Traits\EventEmitter;
 use Illuminate\Support\Facades\Lang;
 use Main\Classes\MainController;
@@ -78,8 +79,10 @@ abstract class BaseComponent extends Extendable
 
         $this->properties = $this->validateProperties($properties);
 
-        $this->dirName = strtolower(str_replace('\\', '/', get_called_class()));
-        $this->assetPath = extension_path(dirname(dirname($this->dirName))).'/assets';
+        $reflector = new \ReflectionClass($calledClass = get_called_class());
+        $this->path = dirname($reflector->getFileName()).'/'.basename(File::normalizePath(strtolower($calledClass)));
+        $this->dirName = strtolower(str_replace('\\', '/', $calledClass));
+        $this->assetPath = dirname($this->path, 2).'/assets';
 
         parent::__construct();
     }
@@ -89,7 +92,7 @@ abstract class BaseComponent extends Extendable
      */
     public function getPath()
     {
-        return extension_path($this->dirName);
+        return $this->path;
     }
 
     /**
