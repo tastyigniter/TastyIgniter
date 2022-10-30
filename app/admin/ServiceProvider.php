@@ -88,7 +88,7 @@ class ServiceProvider extends AppServiceProvider
             }
 
             // Admin asset bundles
-            $manager->registerBundle('scss', '~/app/admin/assets/scss/admin.scss', null, 'admin');
+            $manager->registerBundle('scss', '~/app/admin/assets/src/scss/admin.scss', null, 'admin');
         });
     }
 
