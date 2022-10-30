@@ -19,7 +19,7 @@ class MailPartial extends FormRequest
     {
         return [
             'name' => ['required'],
-            'code' => ['sometimes', 'required', 'unique:mail_partials'],
+            'code' => ['sometimes', 'required', 'regex:/^[a-z-_\.\:]+$/i', 'unique:mail_partials'],
             'html' => ['required'],
         ];
     }
