@@ -49,6 +49,8 @@ abstract class BaseComponent extends Extendable
      */
     protected $dirName;
 
+    protected $path;
+
     /**
      * @var array Holds the component layout settings array.
      */
