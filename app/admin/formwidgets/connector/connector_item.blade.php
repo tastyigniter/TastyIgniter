@@ -28,7 +28,7 @@
                     <p class="card-subtitle mb-0">{!! $item->{$descriptionFrom} !!}</p>
                 @endif
             </div>
-            @unless ($this->previewMode)
+            @unless ($this->previewMode || !$this->editable)
                 <div class="align-self-center ml-auto">
                     <a
                         class="close text-danger"

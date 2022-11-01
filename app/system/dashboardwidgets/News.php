@@ -15,7 +15,7 @@ class News extends BaseDashboardWidget
      */
     protected $defaultAlias = 'news';
 
-    public $newsRss = 'https://feeds.feedburner.com/Tastyigniter';
+    public $newsRss = 'https://tastyigniter.com/feed?ref=dashboard';
 
     public function render()
     {
@@ -33,7 +33,7 @@ class News extends BaseDashboardWidget
             ],
             'newsCount' => [
                 'label' => 'admin::lang.dashboard.text_news_count',
-                'default' => 5,
+                'default' => 6,
                 'type' => 'select',
                 'options' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10],
             ],
@@ -42,10 +42,32 @@ class News extends BaseDashboardWidget
 
     protected function prepareVars()
     {
-        $this->vars['newsRss'] = $this->createRssDocument();
+        $this->vars['newsFeed'] = $this->loadFeedItems();
     }
 
-    public function createRssDocument()
+    public function loadFeedItems()
+    {
+        $dom = $this->createRssDocument();
+        if (!$dom || !$dom->load($this->newsRss))
+            return [];
+
+        $newsFeed = [];
+        foreach ($dom->getElementsByTagName('entry') as $content) {
+            $newsFeed[] = [
+                'title' => $content->getElementsByTagName('title')->item(0)->nodeValue,
+                'description' => $content->getElementsByTagName('summary')->item(0)->nodeValue,
+                'link' => $content->getElementsByTagName('link')->item(0)->getAttribute('href'),
+                'date' => $content->getElementsByTagName('updated')->item(0)->nodeValue,
+            ];
+        }
+
+        $newsCount = $this->property('newsCount');
+        $count = (($count = count($newsFeed)) < $newsCount) ? $count : $newsCount;
+
+        return array_slice($newsFeed, 0, $count);
+    }
+
+    protected function createRssDocument()
     {
         return class_exists('DOMDocument', false) ? new DOMDocument() : null;
     }

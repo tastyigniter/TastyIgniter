@@ -28,8 +28,8 @@
     // EVENT HANDLERS
     // ============================
 
-    RecordEditor.prototype.onRecordChanged = function () {
-        var recordId = this.$chooseRecordEl.val()
+    RecordEditor.prototype.onRecordChanged = function (event) {
+        var recordId = event ? $(event.currentTarget).val() : 0
 
         this.$el.find('[data-control="edit-record"]').toggleClass('hide', recordId == 0)
         this.$el.find('[data-control="delete-record"]').toggleClass('hide', recordId == 0)

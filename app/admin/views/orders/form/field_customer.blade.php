@@ -22,7 +22,7 @@
     <div class="card-body border-top">
         <h5 class="card-title">@lang('admin::lang.orders.label_delivery_address')</h5>
         <div class="py-2">
-            {!! format_address($formModel->address->toArray()) !!}
+            {{ format_address($formModel->address->toArray()) }}
         </div>
     </div>
 @endif

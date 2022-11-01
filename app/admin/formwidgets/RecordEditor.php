@@ -87,8 +87,7 @@ class RecordEditor extends BaseFormWidget
 
     public function prepareVars()
     {
-        $this->vars['field'] = $this->formField;
-        $this->vars['fieldOptions'] = $this->getRecordEditorOptions();
+        $this->vars['field'] = $this->makeFormField();
         $this->vars['addonLeft'] = $this->makeFieldAddon('left');
         $this->vars['addonRight'] = $this->makeFieldAddon('right');
 
@@ -136,7 +135,7 @@ class RecordEditor extends BaseFormWidget
 
         return [
             '#notification' => $this->makePartial('flash'),
-            '#'.$this->formField->getId() => $form->renderField($this->formField, [
+            '#'.$this->formField->getId('group') => $form->renderField($this->formField, [
                 'useContainer' => false,
             ]),
         ];
@@ -188,7 +187,7 @@ class RecordEditor extends BaseFormWidget
             $config = [$config];
 
         $config = (object)array_merge([
-            'tag' => 'span',
+            'tag' => 'div',
             'label' => 'Label',
             'attributes' => [],
         ], $config);
@@ -229,5 +228,16 @@ class RecordEditor extends BaseFormWidget
         $model = $this->findFormModel($recordId);
 
         $this->makeRecordFormWidget($model);
+    }
+
+    protected function makeFormField()
+    {
+        $field = clone $this->formField;
+
+        $field->options(function () {
+            return $this->getRecordEditorOptions();
+        });
+
+        return $this->clonedFormField = $field;
     }
 }

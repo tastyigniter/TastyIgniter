@@ -401,7 +401,7 @@
         })
     }
 
-    // Move to script tags instead
+    // @todo: Move to script tags instead
     Updates.TEMPLATES = {
         suggestion: [
             '<div class="item-details">',

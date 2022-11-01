@@ -547,9 +547,9 @@ class ExtensionManager
         return str_replace('.', '/', $code);
     }
 
-    public function getExtensionPath($code)
+    public function getExtensionPath($code, $path = '')
     {
-        return $this->paths[$code] ?? null;
+        return ($this->paths[$code] ?? null).$path;
     }
 
     /**

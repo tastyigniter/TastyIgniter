@@ -253,7 +253,9 @@ class Reservations_model extends Model
 
     public function getTableNameAttribute()
     {
-        return $this->tables ? implode(', ', $this->tables->pluck('table_name')->all()) : null;
+        return ($this->tables && $this->tables->isNotEmpty())
+            ? implode(', ', $this->tables->pluck('name')->all())
+            : '';
     }
 
     public function setDurationAttribute($value)
@@ -315,7 +317,7 @@ class Reservations_model extends Model
 
         return [
             'id' => $this->getKey(),
-            'title' => $this->customer_name,
+            'title' => $this->table_name.' ('.$this->guest_num.')',
             'start' => $this->reservation_datetime->toIso8601String(),
             'end' => $this->reservation_end_datetime->toIso8601String(),
             'allDay' => $this->isReservedAllDay(),
