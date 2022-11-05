@@ -3,9 +3,7 @@ name: Split Modules
 on:
   push:
     branches:
-      - master
-      - develop
-      - 3.x
+      - '*'
     tags:
       - '*'
 
