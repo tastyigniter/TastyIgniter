@@ -342,14 +342,14 @@ class Components extends BaseFormWidget
     protected function extendPartialField($formField, $componentObj)
     {
         $activeTheme = $this->model->getTheme();
-        $themePartialPath = sprintf('%s/%s/%s/', $activeTheme->publicPath, '_partials', $componentObj->alias);
+        $themePartialPath = sprintf('%s/%s/%s/', $activeTheme->name, '_partials', $componentObj->alias);
 
         $formField->comment(sprintf(lang('system::lang.themes.help_override_partial'), $themePartialPath));
 
         $formField->options(function () use ($componentObj) {
             return collect(File::glob($componentObj->getPath().'/*.blade.php'))
                 ->mapWithKeys(function ($path) {
-                    return [File::basename($path) => File::basename($path, '.blade.php')];
+                    return [File::basename($path) => str_before(File::basename($path), '.blade.php')];
                 });
         });
     }

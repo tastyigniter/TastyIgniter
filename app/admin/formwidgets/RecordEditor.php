@@ -135,7 +135,7 @@ class RecordEditor extends BaseFormWidget
 
         return [
             '#notification' => $this->makePartial('flash'),
-            '#'.$this->formField->getId() => $form->renderField($this->formField, [
+            '#'.$this->formField->getId('group') => $form->renderField($this->formField, [
                 'useContainer' => false,
             ]),
         ];

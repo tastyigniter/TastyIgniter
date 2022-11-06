@@ -169,8 +169,8 @@ class IgniterInstall extends Command
         });
 
         $password = $this->output->ask('Admin Password', '123456', function ($answer) {
-            if (!is_string($answer) || strlen($answer) < 6) {
-                throw new \RuntimeException('Please specify the administrator password, at least 6 characters');
+            if (!is_string($answer) || strlen($answer) < 6 || strlen($answer) > 32) {
+                throw new \RuntimeException('Please specify the administrator password, at least 6 characters and not more than 32 characters.');
             }
 
             return $answer;
