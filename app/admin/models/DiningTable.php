@@ -57,15 +57,20 @@ class DiningTable extends \Igniter\Flame\Database\Model
     ];
 
     public $rules = [
-        'name' => ['sometimes', 'required', 'string', 'between:2,255'],
-        'shape' => ['sometimes', 'in:rectangle,round'],
-        'min_capacity' => ['sometimes', 'required', 'integer', 'min:1', 'lte:max_capacity'],
-        'max_capacity' => ['sometimes', 'required', 'integer', 'min:1', 'gte:min_capacity'],
-        'extra_capacity' => ['sometimes', 'required', 'integer'],
-        'priority' => ['sometimes', 'required', 'integer'],
-        'is_enabled' => ['sometimes', 'required', 'boolean'],
-        'dining_area_id' => ['sometimes', 'required', 'integer'],
+        'name' => ['required', 'string', 'between:2,255'],
+        'shape' => ['required', 'in:rectangle,round'],
+        'min_capacity' => ['required', 'integer', 'min:1', 'lte:max_capacity'],
+        'max_capacity' => ['required', 'integer', 'min:1', 'gte:min_capacity'],
+        'extra_capacity' => ['required', 'integer'],
+        'priority' => ['required', 'integer'],
+        'is_enabled' => ['required', 'boolean'],
+        'dining_area_id' => ['required', 'integer'],
         'dining_section_id' => ['nullable', 'integer'],
+    ];
+
+    public $attributes = [
+        'priority' => 0,
+        'extra_capacity' => 0,
     ];
 
     public function getDiningSectionIdOptions()
@@ -85,7 +90,7 @@ class DiningTable extends \Igniter\Flame\Database\Model
 
     public function afterSave()
     {
-        if (!is_null($this->parent_id)) {
+        if (!is_null($this->parent_id) && $this->parent) {
             $this->parent->name = $this->parent->children->pluck('name')->join('/');
             $this->parent->saveQuietly();
         }
@@ -95,6 +100,13 @@ class DiningTable extends \Igniter\Flame\Database\Model
     {
         if (!is_null($this->parent_id))
             throw new ApplicationException(lang('admin::lang.dining_tables.error_cannot_delete_has_parent'));
+
+        if ($this->children()->count()) {
+            $this->children()->each(function ($child) {
+                $child->parent_id = null;
+                $child->saveQuietly();
+            });
+        }
     }
 
     //

@@ -531,6 +531,7 @@ return [
         'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
         'error_table_widget_data_class_not_found' => 'The Table widget data source class "%s" could not be found.',
         'error_cannot_delete_has_parent' => 'Cannot delete this table, it belongs to a combo',
+        'error_cannot_delete_has_children' => 'Cannot delete this table, it has tables combined to it',
     ],
 
     'locations' => [

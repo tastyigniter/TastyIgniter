@@ -91,7 +91,9 @@ class DiningAreas extends \Admin\Classes\AdminController
 
     public function formBeforeSave($model)
     {
-        if (DiningTable::isBroken())
-            DiningTable::fixTree();
+        DiningTable::withoutEvents(function () {
+            if (DiningTable::isBroken())
+                DiningTable::fixTree();
+        });
     }
 }

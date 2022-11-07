@@ -26,6 +26,7 @@ class DiningSection extends \Igniter\Flame\Database\Model
     public $rules = [
         'location_id' => ['required', 'integer'],
         'name' => ['required', 'string'],
+        'priority' => ['required', 'integer'],
         'description' => ['string'],
         'color' => ['nullable', 'string'],
     ];

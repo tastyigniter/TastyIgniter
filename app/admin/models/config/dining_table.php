@@ -17,6 +17,7 @@ return [
             'priority' => [
                 'label' => 'lang:admin::lang.dining_tables.label_priority',
                 'type' => 'number',
+                'default' => 0,
                 'span' => 'right',
                 'comment' => 'lang:admin::lang.dining_tables.help_table_priority',
             ],
@@ -39,6 +40,7 @@ return [
             'extra_capacity' => [
                 'label' => 'lang:admin::lang.dining_tables.label_extra_capacity',
                 'type' => 'number',
+                'default' => 0,
                 'span' => 'left',
                 'comment' => 'lang:admin::lang.dining_tables.help_extra_capacity',
             ],
@@ -56,6 +58,7 @@ return [
             'is_enabled' => [
                 'label' => 'lang:admin::lang.dining_tables.label_is_enabled',
                 'type' => 'switch',
+                'default' => true,
                 'span' => 'left',
             ],
         ],
