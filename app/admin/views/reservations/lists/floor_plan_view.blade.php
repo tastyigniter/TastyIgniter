@@ -24,7 +24,7 @@
         </div>
         <input
             type="hidden"
-            value="{{ $diningArea->floor_plan ?? '' }}"
+            value='@json($diningArea->floor_plan)'
             data-floor-planner-input
         />
     </div>

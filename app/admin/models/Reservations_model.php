@@ -8,7 +8,6 @@ use Admin\Traits\LogsStatusHistory;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;
@@ -70,7 +69,6 @@ class Reservations_model extends Model
         ],
         'belongsToMany' => [
             'tables' => [DiningTable::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_table_id', 'scope' => 'whereIsRoot'],
-            'dining_areas' => [DiningArea::class, 'table' => 'reservation_tables', 'otherKey' => 'dining_area_id'],
         ],
     ];
 
@@ -100,9 +98,7 @@ class Reservations_model extends Model
         $this->restorePurgedValues();
 
         if (array_key_exists('tables', $this->attributes)) {
-            $this->addReservationTables(
-                $this->getReservationTablesAttributes((array)$this->attributes['tables'])
-            );
+            $this->addReservationTables((array)$this->attributes['tables']);
         }
 
         if ($this->location->getOption('auto_allocate_table', 1) && !$this->tables()->count()) {
@@ -443,13 +439,28 @@ class Reservations_model extends Model
      */
     public function getNextBookableTable()
     {
-        $diningTable = DiningTable::query()
+        $lastSectionPriority = $this->getLastSectionPriority();
+
+        $diningTables = DiningTable::query()
+            ->with(['dining_section'])
             ->select('dining_tables.*', 'dining_sections.priority')
             ->reservable([
                 'locationId' => $this->location_id,
                 'dateTime' => $this->reservation_datetime,
                 'guestNum' => $this->guest_num,
-            ])->first();
+            ])->get();
+
+        $diningTable = null;
+
+        if ($lastSectionPriority) {
+            $diningTable = $diningTables->first(function ($diningTable) use ($lastSectionPriority) {
+                    return $diningTable->dining_section && $diningTable->dining_section->priority > $lastSectionPriority;
+                }) ?? $diningTables->first(function ($diningTable) use ($lastSectionPriority) {
+                    return $diningTable->dining_section && $diningTable->dining_section->priority <= $lastSectionPriority;
+                });
+        }
+
+        $diningTable = $diningTable ?? $diningTables->first();
 
         return collect($diningTable ? [$diningTable] : []);
     }
@@ -460,24 +471,25 @@ class Reservations_model extends Model
         if ($diningTables->isEmpty())
             return false;
 
-        $this->addReservationTables(
-            $this->getReservationTablesAttributes($diningTables)
-        );
+        $this->addReservationTables($diningTables->pluck('id')->all());
 
         return true;
     }
 
-    protected function getReservationTablesAttributes($diningTables)
+    protected function getLastSectionPriority()
     {
-        if (!$diningTables instanceof Collection)
-            $diningTables = DiningTable::whereIn('id', $diningTables)->get();
+        $lastReservation = $this->newQuery()
+            ->whereHas('tables')
+            ->where('location_id', $this->location_id)
+            ->whereDate('reserve_date', $this->reserve_date)
+            ->whereNotIn('status_id', [0, setting('canceled_reservation_status')])
+            ->orderBy('reserve_time', 'desc')
+            ->first();
 
-        return $diningTables->mapWithKeys(function ($table) {
-            return [$table->id => [
-                'dining_area_id' => $table->dining_area_id,
-                'dining_section_id' => $table->dining_section_id,
-            ]];
-        })->all();
+        if (!$lastReservation || !$lastReservation->tables || $lastReservation->tables->isEmpty())
+            return null;
+
+        return optional($lastReservation->tables->first()->dining_section)->priority ?? null;
     }
 
     //

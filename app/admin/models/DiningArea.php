@@ -16,6 +16,10 @@ class DiningArea extends \Igniter\Flame\Database\Model
 
     public $timestamps = true;
 
+    protected $casts = [
+        'floor_plan' => 'array',
+    ];
+
     /**
      * @var array Relations
      */
@@ -43,7 +47,21 @@ class DiningArea extends \Igniter\Flame\Database\Model
 
     public function getTablesForFloorPlan()
     {
-        return $this->available_tables;
+        return $this->available_tables->map(function ($diningTable) {
+            return $diningTable->toFloorPlanArray();
+        });
+    }
+
+    public function getDiningTablesWithReservation($reservations)
+    {
+        return $this->available_tables
+            ->map(function ($diningTable) use ($reservations) {
+                $reservation = $reservations->first(function ($reservation) use ($diningTable) {
+                    return $reservation->tables->where('id', $diningTable->id)->count() > 0;
+                });
+
+                return $diningTable->toFloorPlanArray($reservation);
+            });
     }
 
     //
@@ -67,6 +85,25 @@ class DiningArea extends \Igniter\Flame\Database\Model
     //
     // Helpers
     //
+
+    public function duplicate()
+    {
+        $newDiningArea = $this->replicate();
+        $newDiningArea->name .= ' (copy)';
+        $newDiningArea->save();
+
+        $this->dining_tables
+            ->filter(function ($table) {
+                return !$table->is_combo;
+            })
+            ->each(function ($table) use ($newDiningArea) {
+                $newTable = $table->replicate();
+                $newTable->dining_area_id = $newDiningArea->getKey();
+                $newTable->save();
+            });
+
+        return $newDiningArea;
+    }
 
     public function createCombo(Collection $tables)
     {
@@ -96,25 +133,8 @@ class DiningArea extends \Igniter\Flame\Database\Model
             $table->parent()->associate($comboTable)->saveQuietly();
         });
 
+        $comboTable::fixBrokenTreeQuietly();
+
         return $comboTable;
-    }
-
-    public function getDiningTablesWithReservation($reservations)
-    {
-        return $this->available_tables
-            ->map(function ($diningTable) use ($reservations) {
-                $reservation = $reservations->first(function ($reservation) use ($diningTable) {
-                    return $reservation->tables->where('id', $diningTable->id)->count() > 0;
-                });
-
-                $diningTable->statusColor = $reservation->status->status_color ?? null;
-                $diningTable->customerName = $reservation->customer_name ?? null;
-                $diningTable->description = $reservation
-                    ? $reservation->reservation_datetime->isoFormat(lang('system::lang.moment.time_format'))
-                    .' - '.$reservation->reservation_end_datetime->isoFormat(lang('system::lang.moment.time_format'))
-                    : null;
-
-                return $diningTable;
-            });
     }
 }

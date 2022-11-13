@@ -3,7 +3,9 @@
 namespace Admin\FormWidgets;
 
 use Admin\Classes\BaseFormWidget;
+use Admin\Classes\FormField;
 use Admin\Traits\FormModelWidget;
+use Admin\Traits\ValidatesForm;
 
 /**
  * Floor planner
@@ -13,6 +15,7 @@ use Admin\Traits\FormModelWidget;
 class FloorPlanner extends BaseFormWidget
 {
     use FormModelWidget;
+    use ValidatesForm;
 
     //
     // Configurable properties
@@ -84,6 +87,37 @@ class FloorPlanner extends BaseFormWidget
         $this->addJs('https://unpkg.com/konva@8.3.12/konva.min.js', 'konva-js');
         $this->addCss('css/floorplanner.css', 'floorplanner-css');
         $this->addJs('js/floorplanner.js', 'floorplanner-js');
+    }
+
+    public function onSaveState()
+    {
+        $state = json_decode(post('state'), true);
+
+        $this->validate($state, [
+            'stage.x' => ['required', 'numeric'],
+            'stage.y' => ['required', 'numeric'],
+            'stage.scaleX' => ['required', 'numeric'],
+            'stage.scaleY' => ['required', 'numeric'],
+            'groups.*.x' => ['required', 'numeric'],
+            'groups.*.y' => ['required', 'numeric'],
+            'groups.*.rotation' => ['required', 'numeric'],
+        ]);
+
+        $this->model->floor_plan = array_only($state, 'stage');
+        $this->model->save();
+
+        collect(array_get($state, 'groups'))->each(function ($group) {
+            $id = str_after(array_get($group, 'id'), 'group-');
+            if ($table = $this->model->dining_tables()->find($id)) {
+                $table->seat_layout = $group;
+                $table->save();
+            }
+        });
+    }
+
+    public function getSaveValue($value)
+    {
+        return FormField::NO_SAVE_DATA;
     }
 
     protected function sectionColors()

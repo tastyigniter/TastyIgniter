@@ -61,7 +61,18 @@ class DiningAreas extends \Admin\Classes\AdminController
         AdminMenu::setContext('dining_areas', 'restaurant');
     }
 
-    public function edit_onCreateCombo($context = null, $recordId = null)
+    public function index_onDuplicate($context)
+    {
+        $model = $this->asExtension('FormController')->formFindModelObject(post('id'));
+
+        $duplicate = $model->duplicate();
+
+        flash()->success(sprintf(lang('admin::lang.alert_success'), 'Dining area duplicated'));
+
+        return $this->redirect('dining_areas/edit/'.$duplicate->getKey());
+    }
+
+    public function edit_onCreateCombo($context, $recordId)
     {
         $checked = (array)post('DiningArea._select_dining_tables', []);
         if (!$checked || count($checked) < 2)
@@ -91,9 +102,6 @@ class DiningAreas extends \Admin\Classes\AdminController
 
     public function formBeforeSave($model)
     {
-        DiningTable::withoutEvents(function () {
-            if (DiningTable::isBroken())
-                DiningTable::fixTree();
-        });
+        DiningTable::fixBrokenTreeQuietly();
     }
 }

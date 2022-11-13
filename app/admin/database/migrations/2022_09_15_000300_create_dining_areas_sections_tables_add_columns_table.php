@@ -54,6 +54,7 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
             $table->integer('nest_left')->nullable();
             $table->integer('nest_right')->nullable();
             $table->integer('priority')->default(0);
+            $table->longText('seat_layout')->nullable();
             $table->timestamps();
         });
 
@@ -65,8 +66,6 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
             });
 
             Schema::table('reservation_tables', function (Blueprint $table) {
-                $table->unsignedBigInteger('dining_section_id')->nullable()->after('reservation_id');
-                $table->unsignedBigInteger('dining_area_id')->nullable()->after('reservation_id');
                 $table->unsignedBigInteger('dining_table_id')->after('reservation_id');
                 $table->unique(['reservation_id', 'dining_table_id']);
             });
@@ -146,10 +145,7 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
                 DB::table('reservation_tables')
                     ->where('reservation_id', $reservationTable->reservation_id)
                     ->where('table_id', $reservationTable->table_id)
-                    ->update([
-                        'dining_table_id' => array_get($diningTable, 'dining_table_id'),
-                        'dining_area_id' => array_get($diningTable, 'dining_area_id'),
-                    ]);
+                    ->update(['dining_table_id' => array_get($diningTable, 'dining_table_id')]);
             });
     }
 

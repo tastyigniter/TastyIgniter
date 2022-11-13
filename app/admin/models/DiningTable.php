@@ -101,11 +101,14 @@ class DiningTable extends \Igniter\Flame\Database\Model
         if (!is_null($this->parent_id))
             throw new ApplicationException(lang('admin::lang.dining_tables.error_cannot_delete_has_parent'));
 
-        if ($this->children()->count()) {
-            $this->children()->each(function ($child) {
-                $child->parent_id = null;
-                $child->saveQuietly();
+        if ($this->is_combo) {
+            $this->descendants()->each(function ($descendant) {
+                $descendant->saveAsRoot();
             });
+
+            self::fixBrokenTreeQuietly();
+
+            $this->refreshNode();
         }
     }
 
@@ -211,5 +214,30 @@ class DiningTable extends \Igniter\Flame\Database\Model
     public function sortWhenCreating()
     {
         return false;
+    }
+
+    public function toFloorPlanArray($reservation = null)
+    {
+        $defaults = [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->min_capacity.'-'.$this->max_capacity,
+            'capacity' => $this->max_capacity,
+            'shape' => $this->shape,
+            'seatLayout' => $this->seat_layout,
+            'tableColor' => null,
+            'seatColor' => null,
+            'customerName' => null,
+        ];
+
+        if (!is_null($reservation)) {
+            $defaults['description'] = $reservation->reservation_datetime->isoFormat(lang('system::lang.moment.time_format'))
+                .' - '.$reservation->reservation_end_datetime->isoFormat(lang('system::lang.moment.time_format'));
+
+            $defaults['seatColor'] = $reservation->status->status_color ?? null;
+            $defaults['customerName'] = $reservation->customer_name;
+        }
+
+        return $defaults;
     }
 }

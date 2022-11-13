@@ -28,6 +28,15 @@ return [
                     'href' => 'dining_areas/edit/{id}',
                 ],
             ],
+            'duplicate' => [
+                'type' => 'button',
+                'iconCssClass' => 'fa fa-copy  text-muted',
+                'attributes' => [
+                    'class' => 'btn',
+                    'data-request' => 'onDuplicate',
+                    'data-request-data' => 'id: {id}',
+                ],
+            ],
             'name' => [
                 'label' => 'lang:admin::lang.label_name',
                 'type' => 'text',

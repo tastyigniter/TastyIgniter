@@ -26,7 +26,7 @@
         <input
             type="hidden"
             name="{{ $field->getName() }}"
-            value="{{ $field->value }}"
+            value='@json($field->value)'
             data-floor-planner-input
         />
     @endisset

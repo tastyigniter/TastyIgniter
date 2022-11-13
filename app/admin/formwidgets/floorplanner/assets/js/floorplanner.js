@@ -9,6 +9,8 @@
         this.options.textOptions.fontFamily = this.computedStyle.getPropertyValue('--bs-font-sans-serif')
         this.options.textOptions.fill = this.computedStyle.getPropertyValue('--bs-body-color')
 
+        this.$container.addClass('initialized')
+
         this.stage = null
         this.layer = null
         this.transformer = null
@@ -78,7 +80,9 @@
             })
         })
 
-        this.$container.find(this.options.dataInputSelector).val(JSON.stringify(state))
+        $.request(this.options.alias+'::onSaveState', {
+            data: {state: JSON.stringify(state)},
+        })
     }
 
     FloorPlanner.prototype.loadState = function () {
@@ -92,6 +96,9 @@
         this.stage.y(state.stage.y)
         this.stage.scaleX(state.stage.scaleX)
         this.stage.scaleY(state.stage.scaleY)
+
+        if (!state.groups)
+            return
 
         state.groups.forEach(function (groupState) {
             var group = this.layer.findOne('#'+groupState.id)
@@ -111,8 +118,9 @@
             var diningTable = this.options.diningTables[i],
                 group = new Konva.Group({
                     id: 'group-'+diningTable.id,
-                    x: this.options.seatWidth * count,
-                    y: this.options.seatWidth * count,
+                    x: diningTable.seatLayout ? diningTable.seatLayout.x : this.options.seatWidth * count,
+                    y: diningTable.seatLayout ? diningTable.seatLayout.y : this.options.seatWidth * count,
+                    rotation: diningTable.seatLayout ? diningTable.seatLayout.rotation : 0,
                     draggable: !this.options.previewMode,
                 })
 
@@ -132,7 +140,7 @@
                 .on('mouseleave', function () {
                     self.stage.container().style.cursor = 'grab';
                 })
-                .on('transformend dragend', function () {
+                .on('transformend', function () {
                     self.saveState()
                 })
 
@@ -143,7 +151,7 @@
 
     FloorPlanner.prototype.applyRectLayout = function (diningTable) {
         var width, height, seats = {},
-            seatCapacity = diningTable.max_capacity
+            seatCapacity = diningTable.capacity
 
         width = height = this.options.seatWidth
 
@@ -178,7 +186,7 @@
 
     FloorPlanner.prototype.applyRoundLayout = function (diningTable) {
         var width, radius,
-            seatCapacity = diningTable.max_capacity,
+            seatCapacity = diningTable.capacity,
             seats = {round: seatCapacity},
             remaining = seatCapacity-2
 
@@ -233,7 +241,7 @@
             name: 'table-description',
             x: options.x,
             y: options.y+this.options.textOptions.height,
-            text: diningTable.description ?? diningTable.min_capacity+'-'+diningTable.max_capacity,
+            text: diningTable.description,
             fontSize: 12,
         }))
 
@@ -245,8 +253,8 @@
     FloorPlanner.prototype.createTable = function (diningTable, group) {
         var table, options = $.extend({}, diningTable.shapeLayout, {
             name: 'table-top',
-            fill: this.options.tableColor,
-            stroke: this.options.seatColor,
+            fill: diningTable.tableColor ?? this.options.tableColor,
+            stroke: diningTable.seatColor ?? this.options.seatColor,
             strokeWidth: 1,
         })
 
@@ -277,7 +285,7 @@
                         y: 0,
                         width: this.options.seatWidth,
                         height: this.options.seatWidth,
-                        fill: diningTable.statusColor ?? this.options.seatColor,
+                        fill: diningTable.seatColor ?? this.options.seatColor,
                         cornerRadius: 4
                     }
 
@@ -322,7 +330,7 @@
                         x: ((diningTable.shapeLayout.radius-this.options.tableLayoutPadding) * Math.cos(radian))+this.options.tableLayoutPadding,
                         y: ((diningTable.shapeLayout.radius-this.options.tableLayoutPadding) * Math.sin(radian))+this.options.tableLayoutPadding,
                         radius: this.options.seatWidth / 2,
-                        fill: diningTable.statusColor ?? this.options.seatColor,
+                        fill: diningTable.seatColor ?? this.options.seatColor,
                         angle: angle,
                     }
 
@@ -406,6 +414,7 @@
     }
 
     FloorPlanner.DEFAULTS = {
+        alias: undefined,
         canvasSelector: '[data-floor-planner-canvas]',
         dataInputSelector: '[data-floor-planner-input]',
         connectorWidgetAlias: undefined,
@@ -462,6 +471,6 @@
     $.fn.floorPlanner.Constructor = FloorPlanner
 
     $(document).render(function () {
-        $('[data-control="floorplanner"]').floorPlanner()
+        $('[data-control="floorplanner"]:not(".initialized")').floorPlanner()
     })
 }(window.jQuery);
