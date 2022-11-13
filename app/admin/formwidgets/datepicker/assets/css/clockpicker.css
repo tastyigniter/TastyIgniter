@@ -1,4 +1,7 @@
-.clockpicker-popover
+.clockpicker-popover {
+  position: absolute;
+}
+.clockpicker-popover,
 .popover-content {
 	background-color: #E9E9ED;
 }
