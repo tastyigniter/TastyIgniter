@@ -214,9 +214,9 @@ class Reservations_model extends Model
 
     public function scopeWhereHasDiningArea($query, $diningAreaId)
     {
-        $query->whereHas('dining_areas', function ($q) use ($diningAreaId) {
-            $q->where('reservation_tables.dining_area_id', $diningAreaId);
-        })->orDoesntHave('dining_areas');
+        $query->whereHas('tables', function ($q) use ($diningAreaId) {
+            $q->where('dining_tables.dining_area_id', $diningAreaId);
+        })->orDoesntHave('tables');
 
         return $query;
     }

@@ -64,6 +64,9 @@
     FloorPlanner.prototype.saveState = function () {
         var state = {stage: {}, groups: []}
 
+        if (this.options.alias === undefined)
+            return
+
         state.stage.x = this.stage.x()
         state.stage.y = this.stage.y()
         state.stage.scaleX = this.stage.scaleX()
