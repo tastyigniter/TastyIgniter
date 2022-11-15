@@ -36,7 +36,7 @@ class Reservations_model extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     /**
      * The storage format of the model's date columns.
@@ -64,6 +64,7 @@ class Reservations_model extends Model
 
     public $relation = [
         'belongsTo' => [
+            'customer' => 'Admin\Models\Customers_model',
             'related_table' => ['Admin\Models\Tables_model', 'foreignKey' => 'table_id'],
             'location' => 'Admin\Models\Locations_model',
         ],
@@ -99,6 +100,10 @@ class Reservations_model extends Model
 
         if (array_key_exists('tables', $this->attributes)) {
             $this->addReservationTables((array)$this->attributes['tables']);
+        }
+
+        if ($this->location->getOption('auto_allocate_table', 1) && !$this->tables()->count()) {
+            $this->addReservationTables($this->getNextBookableTable()->pluck('table_id')->all());
         }
     }
 
@@ -165,8 +170,8 @@ class Reservations_model extends Model
             $query->search($search, $searchableFields);
         }
 
-        $startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', FALSE);
-        $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', FALSE);
+        $startDateTime = array_get($dateTimeFilter, 'reservationDateTime.startAt', false);
+        $endDateTime = array_get($dateTimeFilter, 'reservationDateTime.endAt', false);
         if ($startDateTime && $endDateTime)
             $query = $this->scopeWhereBetweenReservationDateTime($query, Carbon::parse($startDateTime)->format('Y-m-d H:i:s'), Carbon::parse($endDateTime)->format('Y-m-d H:i:s'));
 
@@ -248,7 +253,9 @@ class Reservations_model extends Model
 
     public function getTableNameAttribute()
     {
-        return $this->tables ? implode(', ', $this->tables->pluck('table_name')->all()) : null;
+        return ($this->tables && $this->tables->isNotEmpty())
+            ? implode(', ', $this->tables->pluck('name')->all())
+            : '';
     }
 
     public function setDurationAttribute($value)
@@ -310,7 +317,7 @@ class Reservations_model extends Model
 
         return [
             'id' => $this->getKey(),
-            'title' => $this->customer_name,
+            'title' => $this->table_name.' ('.$this->guest_num.')',
             'start' => $this->reservation_datetime->toIso8601String(),
             'end' => $this->reservation_end_datetime->toIso8601String(),
             'allDay' => $this->isReservedAllDay(),
@@ -390,14 +397,57 @@ class Reservations_model extends Model
     public function addReservationTables(array $tableIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->tables()->sync($tableIds);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection|null
+     */
+    public function getNextBookableTable()
+    {
+        $tables = $this->location->tables->where('table_status', 1);
+
+        $reserved = static::findReservedTables($this->location, $this->reservation_datetime);
+
+        $tables = $tables->diff($reserved)->sortBy('priority');
+
+        $result = collect();
+        $unseatedGuests = $this->guest_num;
+        foreach ($tables as $table) {
+            if ($table->min_capacity <= $this->guest_num && $table->max_capacity >= $this->guest_num)
+                return collect([$table]);
+
+            if ($table->is_joinable && $unseatedGuests >= $table->min_capacity) {
+                $result->push($table);
+                $unseatedGuests -= $table->max_capacity;
+                if ($unseatedGuests <= 0)
+                    break;
+            }
+        }
+
+        return $unseatedGuests > 0 ? collect() : $result;
     }
 
     //
     // Mail
     //
+
+    public function mailGetReplyTo($type)
+    {
+        $replyTo = [];
+        if (in_array($type, (array)setting('reservation_email', []))) {
+            switch ($type) {
+                case 'location':
+                case 'admin':
+                    $replyTo = [$this->email, $this->customer_name];
+                    break;
+            }
+        }
+
+        return $replyTo;
+    }
 
     public function mailGetRecipients($type)
     {
@@ -435,8 +485,8 @@ class Reservations_model extends Model
         $data['reservation'] = $model;
         $data['reservation_number'] = $model->reservation_id;
         $data['reservation_id'] = $model->reservation_id;
-        $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->format(lang('system::lang.php.time_format'));
-        $data['reservation_date'] = $model->reserve_date->format(lang('system::lang.php.date_format_long'));
+        $data['reservation_time'] = Carbon::createFromTimeString($model->reserve_time)->isoFormat(lang('system::lang.moment.time_format'));
+        $data['reservation_date'] = $model->reserve_date->isoFormat(lang('system::lang.moment.date_format_long'));
         $data['reservation_guest_no'] = $model->guest_num;
         $data['first_name'] = $model->first_name;
         $data['last_name'] = $model->last_name;
@@ -445,6 +495,7 @@ class Reservations_model extends Model
         $data['reservation_comment'] = $model->comment;
 
         if ($model->location) {
+            $data['location_logo'] = $model->location->thumb;
             $data['location_name'] = $model->location->location_name;
             $data['location_email'] = $model->location->location_email;
             $data['location_telephone'] = $model->location->location_telephone;

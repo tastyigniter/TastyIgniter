@@ -14,7 +14,7 @@ trait RuleInjector
      */
     public function getInjectRuleParameters()
     {
-        return $this->injectRuleParameters ?? TRUE;
+        return $this->injectRuleParameters ?? true;
     }
 
     /**
@@ -77,7 +77,7 @@ trait RuleInjector
     {
         $method = 'prepare'.Str::studly($validationRule).'Rule';
 
-        return method_exists($this, $method) ? $method : FALSE;
+        return method_exists($this, $method) ? $method : false;
     }
 
     /**
@@ -96,7 +96,7 @@ trait RuleInjector
         }
 
         // If the connection name isn't set but exists, infer it.
-        if ((strpos($parameters[0], '.') === FALSE) && (($connectionName = $this->getModel()->getConnectionName()) !== null)) {
+        if ((strpos($parameters[0], '.') === false) && (($connectionName = $this->getModel()->getConnectionName()) !== null)) {
             $parameters[0] = $connectionName.'.'.$parameters[0];
         }
 

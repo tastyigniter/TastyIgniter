@@ -21,7 +21,7 @@ class Allocator
 
     public static function isEnabled()
     {
-        return (bool)params('allocator_is_enabled', FALSE);
+        return (bool)params('allocator_is_enabled', false);
     }
 
     public static function addSlot($slot)
@@ -31,7 +31,7 @@ class Allocator
             $slot = [$slot];
 
         foreach ($slot as $item) {
-            $slots[$item] = TRUE;
+            $slots[$item] = true;
         }
 
         params()->set('allocator_slots', $slots);

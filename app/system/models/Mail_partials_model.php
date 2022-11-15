@@ -32,7 +32,7 @@ class Mail_partials_model extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'is_custom' => 'boolean',

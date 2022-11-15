@@ -69,7 +69,8 @@ return [
         'text_items_selected' => 'Items Selected',
         'text_folder_name' => 'Folder name',
         'text_file_name' => 'File name',
-        'text_destination_folder' => 'Destination folder',
+        'text_copy_destination_folder' => 'Select the destination folder to copy to',
+        'text_move_destination_folder' => 'Select the destination folder to move to',
 
         'button_upload' => 'Upload',
         'button_preview' => 'Preview',

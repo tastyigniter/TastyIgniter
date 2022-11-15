@@ -26,9 +26,9 @@ class MediaManager extends BaseWidget
      * @var bool Allow rows to be sorted
      * @todo Not implemented...
      */
-    public $rowSorting = FALSE;
+    public $rowSorting = false;
 
-    public $chooseButton = FALSE;
+    public $chooseButton = false;
 
     public $chooseButtonText = 'main::lang.media_manager.text_choose';
 
@@ -44,7 +44,7 @@ class MediaManager extends BaseWidget
 
     public $configSetting;
 
-    protected $popupLoaded = FALSE;
+    protected $popupLoaded = false;
 
     public function __construct($controller, $config = [])
     {
@@ -96,7 +96,6 @@ class MediaManager extends BaseWidget
         $this->addCss('vendor/dropzone/dropzone.min.css', 'dropzone-css');
         $this->addCss('css/mediamanager.css', 'mediamanager-css');
 
-        $this->addJs('vendor/bootbox/bootbox.min.js', 'bootbox-js');
         $this->addJs('vendor/treeview/bootstrap-treeview.min.js', 'treeview-js');
         $this->addJs('vendor/selectonic/selectonic.min.js', 'selectonic-js');
         $this->addJs('vendor/dropzone/dropzone.min.js', 'dropzone-js');
@@ -180,7 +179,7 @@ class MediaManager extends BaseWidget
 
     public function onLoadPopup()
     {
-        $this->popupLoaded = TRUE;
+        $this->popupLoaded = true;
         $this->selectMode = post('selectMode');
         $this->chooseButton = post('chooseButton');
         $this->chooseButtonText = post('chooseButtonText', $this->chooseButtonText);
@@ -359,7 +358,7 @@ class MediaManager extends BaseWidget
         $files = array_map(function ($value) use ($path) {
             return $this->validateFileName($value['path'])
                 ? $path.'/'.$value['path']
-                : FALSE;
+                : false;
         }, $files);
 
         $mediaLibrary->deleteFiles($files);
@@ -478,7 +477,7 @@ class MediaManager extends BaseWidget
             if ($value == $currentFolder)
                 continue;
 
-            $result[] = $value;
+            $result[$value] = $value;
         }
 
         return $result;
@@ -626,14 +625,14 @@ class MediaManager extends BaseWidget
     protected function validateFileName($name)
     {
         if (!preg_match('/^[0-9a-z@\.\s_\-]+$/i', $name)) {
-            return FALSE;
+            return false;
         }
 
-        if (strpos($name, '..') !== FALSE) {
-            return FALSE;
+        if (strpos($name, '..') !== false) {
+            return false;
         }
 
-        return TRUE;
+        return true;
     }
 
     protected function makeBreadcrumb()

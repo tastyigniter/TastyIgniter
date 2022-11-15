@@ -26,7 +26,8 @@
             <li
                 id="{{ $item->getId($item->itemName.'-options') }}"
                 class="dropdown-body">
-                <p class="wrap-all text-muted text-center"><span class="ti-loading fa-3x fa-fw"></span></p>
+                <p class="wrap-all text-muted text-center"><span class="ti-loading spinner-border fa-3x fa-fw"></span>
+                </p>
             </li>
         @endif
         <li class="dropdown-footer">

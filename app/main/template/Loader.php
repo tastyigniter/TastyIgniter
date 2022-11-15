@@ -65,16 +65,16 @@ class Loader extends \Igniter\Flame\Pagic\Loader
     protected function validateTemplateSource($name)
     {
         if ($name == $this->source->getFilePath()) {
-            return TRUE;
+            return true;
         }
 
         if ($fallbackObj = $this->findFallbackObject($name)) {
             $this->source = $fallbackObj;
 
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -86,8 +86,8 @@ class Loader extends \Igniter\Flame\Pagic\Loader
      */
     protected function findFallbackObject($name)
     {
-        if (strpos($name, '::') !== FALSE)
-            return FALSE;
+        if (strpos($name, '::') !== false)
+            return false;
 
         if (array_key_exists($name, $this->fallbackCache))
             return $this->fallbackCache[$name];

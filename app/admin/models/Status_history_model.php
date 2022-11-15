@@ -21,7 +21,7 @@ class Status_history_model extends Model
 
     protected $appends = ['staff_name', 'status_name', 'notified', 'date_added_since'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'object_id' => 'integer',
@@ -86,8 +86,8 @@ class Status_history_model extends Model
         $model->comment = array_get($options, 'comment', $status->status_comment);
         $model->notify = array_get($options, 'notify', $status->notify_customer);
 
-        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$object, $statusId, $previousStatus], TRUE) === FALSE)
-            return FALSE;
+        if ($model->fireSystemEvent('admin.statusHistory.beforeAddStatus', [$object, $statusId, $previousStatus], true) === false)
+            return false;
 
         $model->save();
 

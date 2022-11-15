@@ -6,7 +6,7 @@ return [
             'buttons' => [
                 'back' => [
                     'label' => 'lang:admin::lang.button_icon_back',
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-outline-secondary',
                     'href' => 'settings',
                 ],
                 'save' => [
@@ -27,42 +27,42 @@ return [
             'image_manager[uploads]' => [
                 'label' => 'lang:system::lang.settings.label_media_uploads',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'span' => 'left',
                 'comment' => 'lang:system::lang.settings.help_media_upload',
             ],
             'image_manager[new_folder]' => [
                 'label' => 'lang:system::lang.settings.label_media_new_folder',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'span' => 'right',
                 'comment' => 'lang:system::lang.settings.help_media_new_folder',
             ],
             'image_manager[copy]' => [
                 'label' => 'lang:system::lang.settings.label_media_copy',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'span' => 'left',
                 'comment' => 'lang:system::lang.settings.help_media_copy',
             ],
             'image_manager[move]' => [
                 'label' => 'lang:system::lang.settings.label_media_move',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'span' => 'right',
                 'comment' => 'lang:system::lang.settings.help_media_move',
             ],
             'image_manager[rename]' => [
                 'label' => 'lang:system::lang.settings.label_media_rename',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'span' => 'left',
                 'comment' => 'lang:system::lang.settings.help_media_rename',
             ],
             'image_manager[delete]' => [
                 'label' => 'lang:system::lang.settings.label_media_delete',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'span' => 'right',
                 'comment' => 'lang:system::lang.settings.help_media_delete',
             ],

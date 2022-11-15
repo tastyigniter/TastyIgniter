@@ -7,7 +7,7 @@
     var MainMenu = function (element, options) {
         this.options = options
         this.$el = $(element)
-        this.loadingHtml = '<p class="spinner text-muted text-center"><span class="ti-loading fa-3x fa-fw"></span></p>'
+        this.loadingHtml = '<span class="ti-loading spinner-border text-muted fa-3x fa-fw"></span>'
         this.$markAsReadButton = $('<a href="#" class="pull-right mark-as-read"><i class="fa fa-check"></i></a>')
 
         // Init
@@ -19,12 +19,6 @@
             throw new Error('Main menu option "alias" is not set.')
 
         this.$el.on('show.bs.dropdown', '.dropdown', $.proxy(this.onDropdownShow, this))
-
-        this.$el.on('click', '.dropdown-menu', function (event) {
-            var $el = $(event.target)
-            if ($el.data('toggle') !== 'modal')
-                event.stopPropagation();
-        });
     }
 
     MainMenu.prototype.requestOptions = function ($itemMenu) {
@@ -62,9 +56,9 @@
     MainMenu.prototype.updateBadgeCount = function (itemName, count) {
         var $itemMenu = this.$el.find('[data-request-options='+itemName+']'),
             $dropdown = $itemMenu.closest('.dropdown'),
-            $dropdownBadge = $dropdown.find('[data-toggle="dropdown"] .badge'),
+            $dropdownBadge = $dropdown.find('[data-bs-toggle="dropdown"] .badge'),
             prevBadgeCount = parseInt($dropdownBadge.html()),
-            badgeCount = (isNaN(prevBadgeCount) ? 0 : prevBadgeCount) + parseInt(count)
+            badgeCount = (isNaN(prevBadgeCount) ? 0 : prevBadgeCount)+parseInt(count)
 
         $dropdownBadge.html(badgeCount < 100 ? badgeCount : '+99')
     }
@@ -89,8 +83,8 @@
     MainMenu.prototype.onMarkOptionsAsRead = function (event) {
         var $toggle = $(event.target),
             $dropdown = $toggle.closest('.dropdown'),
-            $itemMenu =  $dropdown.find('[data-request-options]'),
-            $dropdownBadge = $dropdown.find('[data-toggle="dropdown"] .badge'),
+            $itemMenu = $dropdown.find('[data-request-options]'),
+            $dropdownBadge = $dropdown.find('[data-bs-toggle="dropdown"] .badge'),
             itemName = $itemMenu.data('requestOptions')
 
         if (!$itemMenu.length)

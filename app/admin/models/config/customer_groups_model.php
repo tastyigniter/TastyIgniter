@@ -3,7 +3,7 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'customers',
         ],
         'create' => [
@@ -43,12 +43,12 @@ $config['list']['columns'] = [
     'group_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'customer_count' => [
         'label' => 'lang:admin::lang.customer_groups.column_customers',
         'type' => 'number',
-        'sortable' => FALSE,
+        'sortable' => false,
     ],
     'approval' => [
         'label' => 'lang:admin::lang.customer_groups.label_approval',
@@ -56,16 +56,16 @@ $config['list']['columns'] = [
     ],
     'customer_group_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -74,7 +74,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'customer_groups',
         ],
         'save' => [

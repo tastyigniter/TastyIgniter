@@ -22,7 +22,5 @@
         value="{{ $value ? $value->format('Y-m-d H:i:s') : null }}"
         data-datepicker-value
     />
-    <div class="input-group-append">
-        <span class="input-group-icon"><i class="fa fa-calendar-o"></i></span>
-    </div>
+    <span class="input-group-text"><i class="fa fa-calendar-o"></i></span>
 </div>

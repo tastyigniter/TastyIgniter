@@ -40,8 +40,8 @@ class BasePaymentGateway extends ModelAction
     {
         parent::__construct($model);
 
-        $calledClass = strtolower(get_called_class());
-        $this->configPath = extension_path(File::normalizePath($calledClass));
+        $reflector = new \ReflectionClass($calledClass = get_called_class());
+        $this->configPath = dirname($reflector->getFileName()).'/'.basename(File::normalizePath(strtolower($calledClass)));
 
         $formConfig = $this->loadConfig($this->defineFieldsConfig(), ['fields']);
         $this->configFields = array_get($formConfig, 'fields');
@@ -153,7 +153,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function isApplicable($total, $host)
     {
-        return TRUE;
+        return true;
     }
 
     /**
@@ -190,7 +190,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function completesPaymentOnClient()
     {
-        return FALSE;
+        return false;
     }
 
     /**
@@ -229,7 +229,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function supportsPaymentProfiles()
     {
-        return FALSE;
+        return false;
     }
 
     /**

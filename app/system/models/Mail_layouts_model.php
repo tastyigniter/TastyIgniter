@@ -31,7 +31,7 @@ class Mail_layouts_model extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'language_id' => 'integer',
@@ -134,7 +134,7 @@ class Mail_layouts_model extends Model
 
             $layout = new static;
             $layout->code = $code;
-            $layout->is_locked = TRUE;
+            $layout->is_locked = true;
             $layout->fillFromView($path);
             $layout->save();
         }

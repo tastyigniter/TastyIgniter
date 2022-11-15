@@ -96,7 +96,7 @@ trait ManagesUpdates
     public function onCheckUpdates()
     {
         $updateManager = UpdateManager::instance();
-        $updateManager->requestUpdateList(TRUE);
+        $updateManager->requestUpdateList(true);
 
         return $this->redirect($this->checkUrl);
     }
@@ -142,16 +142,21 @@ trait ManagesUpdates
 
     protected function initUpdate($itemType)
     {
-        $this->addJs('ui/js/vendor/mustache.js', 'mustache-js');
-        $this->addJs('ui/js/vendor/typeahead.js', 'typeahead-js');
-        $this->addJs('ui/js/updates.js', 'updates-js');
-        $this->addJs('~/app/admin/formwidgets/recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
+        $this->prepareAssets();
 
         $updateManager = UpdateManager::instance();
 
         $this->vars['itemType'] = $itemType;
         $this->vars['carteInfo'] = $updateManager->getSiteDetail();
         $this->vars['installedItems'] = $updateManager->getInstalledItems();
+    }
+
+    protected function prepareAssets()
+    {
+        $this->addJs('src/js/vendor/mustache.js', 'mustache-js');
+        $this->addJs('src/js/vendor/typeahead.js', 'typeahead-js');
+        $this->addJs('js/updates.js', 'updates-js');
+        $this->addJs('~/app/admin/formwidgets/recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
     }
 
     protected function buildProcessSteps($response, $params = [])
@@ -163,7 +168,7 @@ trait ManagesUpdates
                 'core' => [],
                 'extensions' => [],
                 'themes' => [],
-                'translations' => [],
+                'languages' => [],
             ];
 
             if ($step == 'complete') {
@@ -185,19 +190,20 @@ trait ManagesUpdates
                         'label' => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
                         'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
-                }
-                else {
-                    $singularType = str_singular($item['type']);
-                    $pluralType = str_plural($item['type']);
 
-                    $action = $this->getActionFromItems($item['code'], $params);
-                    $applySteps[$pluralType][] = array_merge([
-                        'action' => $action ?? 'install',
-                        'process' => $step.ucfirst($singularType),
-                        'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
-                        'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
-                    ], $item);
+                    break;
                 }
+
+                $singularType = str_singular($item['type']);
+                $pluralType = str_plural($item['type']);
+
+                $action = $this->getActionFromItems($item['code'], $params);
+                $applySteps[$pluralType][] = array_merge([
+                    'action' => $action ?? 'install',
+                    'process' => $step.ucfirst($singularType),
+                    'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
+                    'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
+                ], $item);
             }
 
             $processSteps[$step] = array_collapse(array_values($applySteps));
@@ -261,15 +267,18 @@ trait ManagesUpdates
     protected function completeProcess($items)
     {
         if (!count($items))
-            return FALSE;
+            return false;
 
         foreach ($items as $item) {
+            if ($item['type'] == 'core') {
+                $updateManager = UpdateManager::instance();
+                $updateManager->update();
+                $updateManager->setCoreVersion($item['version'], $item['hash']);
+
+                break;
+            }
+
             switch ($item['type']) {
-                case 'core':
-                    $updateManager = UpdateManager::instance();
-                    $updateManager->update();
-                    $updateManager->setCoreVersion($item['version'], $item['hash']);
-                    break;
                 case 'extension':
                     ExtensionManager::instance()->installExtension($item['code'], $item['version']);
                     break;
@@ -279,9 +288,9 @@ trait ManagesUpdates
             }
         }
 
-        UpdateManager::instance()->requestUpdateList(TRUE);
+        UpdateManager::instance()->requestUpdateList(true);
 
-        return TRUE;
+        return true;
     }
 
     protected function getActionFromItems($code, $itemNames)
@@ -296,7 +305,7 @@ trait ManagesUpdates
     {
         return $this->validate(post(), [
             'items.*.name' => ['required'],
-            'items.*.type' => ['required', 'in:core,extension,theme'],
+            'items.*.type' => ['required', 'in:core,extension,theme,language'],
             'items.*.ver' => ['required'],
             'items.*.action' => ['required', 'in:install,update'],
         ], [], [
@@ -312,7 +321,7 @@ trait ManagesUpdates
         if (post('step') != 'complete') {
             $rules = [
                 'meta.code' => ['required'],
-                'meta.type' => ['required', 'in:core,extension,theme'],
+                'meta.type' => ['required', 'in:core,extension,theme,language'],
                 'meta.version' => ['required'],
                 'meta.hash' => ['required'],
                 'meta.description' => ['sometimes'],

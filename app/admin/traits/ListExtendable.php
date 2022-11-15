@@ -52,6 +52,15 @@ trait ListExtendable
     }
 
     /**
+     * listExtendRecords controller override: Extend the records used for populating the list
+     * after the query is processed.
+     * @param Illuminate\Contracts\Pagination\LengthAwarePaginator|Illuminate\Database\Eloquent\Collection $records
+     */
+    public function listExtendRecords($records, $alias = null)
+    {
+    }
+
+    /**
      * Controller override: Extend the query used for populating the filter
      * options before the default query is processed.
      *

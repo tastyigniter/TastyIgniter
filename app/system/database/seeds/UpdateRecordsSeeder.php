@@ -23,8 +23,6 @@ class UpdateRecordsSeeder extends Seeder
 
         $this->fixPermalinkSlugColumns();
 
-        $this->copyRecordsFromLocationsToLocationAreas();
-
         $this->fillColumnsOnMailTemplatesData();
     }
 
@@ -41,7 +39,7 @@ class UpdateRecordsSeeder extends Seeder
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {
             $status = DB::table('statuses')->where('status_id', $model->status_id)->first();
             if (!$status || !isset($morphs[$status->status_for]))
-                return FALSE;
+                return false;
 
             DB::table('status_history')->where('status_history_id', $model->status_history_id)->update([
                 'object_type' => $morphs[$status->status_for],
@@ -57,35 +55,6 @@ class UpdateRecordsSeeder extends Seeder
 
         Locations_model::all()->each(function (Locations_model $model) {
             $model->save();
-        });
-    }
-
-    protected function copyRecordsFromLocationsToLocationAreas()
-    {
-        if (DB::table('location_areas')->count())
-            return;
-
-        collect(DB::table('locations')->pluck('options', 'location_id'))->each(function ($options, $id) {
-            $options = is_string($options) ? json_decode($options, TRUE) : [];
-
-            if (!isset($options['delivery_areas']))
-                return TRUE;
-
-            foreach ($options['delivery_areas'] as $option) {
-                $boundaries = array_except($option, ['type', 'name', 'charge', 'conditions']);
-                if (isset($boundaries['shape']))
-                    $boundaries['polygon'] = $boundaries['shape'];
-
-                unset($boundaries['shape']);
-
-                DB::table('location_areas')->insert([
-                    'location_id' => $id,
-                    'name' => $option['name'],
-                    'type' => $option['type'] == 'shape' ? 'polygon' : $option['type'],
-                    'boundaries' => json_encode($boundaries),
-                    'conditions' => json_encode($option['conditions'] ?? $option['charge']),
-                ]);
-            }
         });
     }
 

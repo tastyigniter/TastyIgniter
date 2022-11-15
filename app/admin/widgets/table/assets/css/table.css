@@ -56,5 +56,5 @@
 /*.fixed-table-pagination:after, .fixed-table-toolbar:after { content: ""; display: block; clear: both }*/
 
 .bootstrap-table .fixed-table-container .fixed-table-body .fixed-table-loading {
-  background: var(--gray-200);
+  background: var(--bs-gray-200);
 }

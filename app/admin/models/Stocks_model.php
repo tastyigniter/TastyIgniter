@@ -50,7 +50,7 @@ class Stocks_model extends Model
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public function getStockActionOptions()
     {
@@ -86,7 +86,7 @@ class Stocks_model extends Model
             $history = Stock_history_model::createHistory($this, $quantity, $state, $options);
 
             if (in_array($state, [self::STATE_IN_STOCK, self::STATE_RESTOCK, self::STATE_RECOUNT]))
-                $this->low_stock_alert_sent = FALSE;
+                $this->low_stock_alert_sent = false;
 
             $this->quantity = $stockQty;
             $this->saveQuietly();
@@ -97,13 +97,13 @@ class Stocks_model extends Model
                 });
 
                 // Prevent duplicate low stock alerts
-                $this->updateQuietly(['low_stock_alert_sent' => TRUE]);
+                $this->updateQuietly(['low_stock_alert_sent' => true]);
             }
 
             $this->fireSystemEvent('admin.stock.updated', [$history, $stockQty]);
         }
 
-        return TRUE;
+        return true;
     }
 
     public function updateStockSold(int $orderId, int $quantity)
@@ -116,7 +116,7 @@ class Stocks_model extends Model
     public function checkStock(int $quantity)
     {
         if (!$this->is_tracked)
-            return TRUE;
+            return true;
 
         return $this->quantity >= $quantity;
     }
@@ -134,7 +134,7 @@ class Stocks_model extends Model
     protected function shouldUpdateStock($state)
     {
         if (!$this->is_tracked)
-            return FALSE;
+            return false;
 
         return strlen($state) && $state !== self::STATE_NONE;
     }
@@ -163,7 +163,7 @@ class Stocks_model extends Model
     protected function shouldAlertOnLowStock()
     {
         if (!$this->low_stock_alert)
-            return FALSE;
+            return false;
 
         return !$this->low_stock_alert_sent;
     }

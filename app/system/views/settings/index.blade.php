@@ -1,7 +1,7 @@
 <div class="container-fluid pt-4">
     @foreach ($settings as $item => $categories)
         @continue(!count($categories))
-        <h5 class="mb-2 px-3">{{ ucwords($item) }}</h5>
+        @unless($item == 'core')<h5 class="mb-2 px-3">{{ ucwords($item) }}</h5>@endunless
 
         <div class="row no-gutters mb-3">
             @foreach ($categories as $key => $category)
@@ -15,16 +15,18 @@
                             <div class="card-body d-flex align-items-center">
                                 <div class="pr-3">
                                     <h5>
-                                        @if ($item == 'core' && count(array_get($settingItemErrors, $category->code, [])))
-                                            <i
-                                                class="text-danger fa fa-exclamation-triangle fa-fw"
-                                                title="@lang('system::lang.settings.alert_settings_errors')"
-                                            ></i>
-                                        @elseif ($category->icon)
-                                            <i class="text-muted {{ $category->icon }} fa-fw"></i>
-                                        @else
-                                            <i class="text-muted fa fa-puzzle-piece fa-fw"></i>
-                                        @endif
+                                        <div class="rounded-circle bg-light">
+                                            @if ($item == 'core' && count(array_get($settingItemErrors, $category->code, [])))
+                                                <i
+                                                    class="text-danger fa fa-exclamation-triangle fa-fw"
+                                                    title="@lang('system::lang.settings.alert_settings_errors')"
+                                                ></i>
+                                            @elseif ($category->icon)
+                                                <i class="text-muted {{ $category->icon }} fa-fw"></i>
+                                            @else
+                                                <i class="text-muted fa fa-puzzle-piece fa-fw"></i>
+                                            @endif
+                                        </div>
                                     </h5>
                                 </div>
                                 <div class="">

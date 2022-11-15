@@ -14,7 +14,7 @@ class Login extends \Admin\Classes\AdminController
 {
     use ValidatesForm;
 
-    protected $requireAuthentication = FALSE;
+    protected $requireAuthentication = false;
 
     public $bodyClass = 'page-login';
 
@@ -72,7 +72,7 @@ class Login extends \Admin\Classes\AdminController
             'password' => array_get($data, 'password'),
         ];
 
-        if (!AdminAuth::authenticate($credentials, TRUE, TRUE))
+        if (!AdminAuth::authenticate($credentials, true, true))
             throw new ValidationException(['username' => lang('admin::lang.login.alert_username_not_found')]);
 
         session()->regenerate();

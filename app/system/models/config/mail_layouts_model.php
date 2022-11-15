@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['toolbar'] = [
     'buttons' => [
         'create' => [
@@ -39,12 +40,12 @@ $config['list']['columns'] = [
     'code' => [
         'label' => 'lang:system::lang.mail_templates.column_code',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
@@ -56,7 +57,7 @@ $config['list']['columns'] = [
     ],
     'layout_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 
 ];
@@ -65,7 +66,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'mail_layouts',
         ],
         'save' => [
@@ -107,16 +108,16 @@ $config['form']['tabs'] = [
             'tab' => 'lang:system::lang.mail_templates.label_body',
             'type' => 'codeeditor',
         ],
-        'layout_css' => [
-            'tab' => 'lang:system::lang.mail_templates.label_layout_css',
-            'type' => 'codeeditor',
-        ],
         'plain_layout' => [
             'tab' => 'lang:system::lang.mail_templates.label_plain',
             'type' => 'textarea',
             'attributes' => [
                 'rows' => 10,
             ],
+        ],
+        'layout_css' => [
+            'tab' => 'lang:system::lang.mail_templates.label_layout_css',
+            'type' => 'codeeditor',
         ],
     ],
 ];

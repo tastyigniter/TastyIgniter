@@ -28,7 +28,7 @@ class Country
 
     protected $countriesCollection = [];
 
-    public function addressFormat($address, $useLineBreaks = TRUE)
+    public function addressFormat($address, $useLineBreaks = true)
     {
         $format = $this->getDefaultFormat();
 
@@ -49,7 +49,7 @@ class Country
         if (!$useLineBreaks)
             $formattedAddress = str_replace('<br />', ', ', $formattedAddress);
 
-        return $formattedAddress;
+        return strip_tags($formattedAddress);
     }
 
     public function getCountryNameById($id = null)

@@ -4,16 +4,16 @@
         data-control="bulk-actions"
         data-action-total-records="{{ $records->total() }}"
     >
-        <td class="bulk-action">
-            <div class="custom-control custom-checkbox active">
+        <td class="bulk-action pb-0 ">
+            <div class="form-check active">
                 <input
                     type="checkbox" id="{{ 'checkboxAll-bulk-'.$listId }}"
-                    class="custom-control-input" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
-                <label class="custom-control-label" for="{{ 'checkboxAll-bulk-'.$listId }}">&nbsp;</label>
+                    class="form-check-input" onclick="$('input[name*=\'checked\']').prop('checked', this.checked)"/>
+                <label class="form-check-label" for="{{ 'checkboxAll-bulk-'.$listId }}">&nbsp;</label>
             </div>
         </td>
-        <td class="w-100" colspan="999">
-            <div class="form-group mb-0">
+        <td class="w-100 pb-0 pt-1" colspan="999">
+            <div>
                 <div class="btn-counter btn py-1 text-nowrap">
                     <span data-action-counter>0</span> record(s) selected
                 </div>

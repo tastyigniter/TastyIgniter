@@ -6,50 +6,5 @@
   "location_country_id": 222,
   "location_lat": 52.415884,
   "location_lng": -1.603648,
-  "location_status": 1,
-  "options": {
-    "offer_delivery": 1,
-    "offer_collection": 1,
-    "delivery_lead_time": 15,
-    "collection_lead_time": 15,
-    "delivery_time_interval": 15,
-    "collection_time_interval": 15,
-    "reservation_time_interval": 15,
-    "reservation_stay_time": 45,
-    "hours": {
-      "opening": {
-        "type": "24_7"
-      },
-      "delivery": {
-        "type": "24_7"
-      },
-      "collection": {
-        "type": "24_7"
-      }
-    }
-  },
-  "delivery_areas": [
-    {
-      "name": "Area 1",
-      "type": "circle",
-      "is_default": 1,
-      "conditions": [
-        {
-          "priority": 1,
-          "amount": 10,
-          "type": "all",
-          "total": 0
-        }
-      ],
-      "boundaries": {
-        "polygon": null,
-        "vertices": null,
-        "circle": {
-          "lat": 52.415884,
-          "lng": -1.603648,
-          "radius": 1500
-        }
-      }
-    }
-  ]
+  "location_status": 1
 }

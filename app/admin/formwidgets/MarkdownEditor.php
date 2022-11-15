@@ -33,7 +33,7 @@ class MarkdownEditor extends BaseFormWidget
         ]);
 
         if ($this->formField->disabled || $this->formField->readOnly) {
-            $this->previewMode = TRUE;
+            $this->previewMode = true;
         }
     }
 

@@ -280,7 +280,7 @@ class Components extends BaseFormWidget
     {
         $existingComponents = (array)$this->getLoadValue();
         while (isset($existingComponents[$alias])) {
-            if (strpos($alias, ' ') === FALSE)
+            if (strpos($alias, ' ') === false)
                 $alias .= ' '.$alias;
 
             $alias .= 'Copy';
@@ -342,14 +342,14 @@ class Components extends BaseFormWidget
     protected function extendPartialField($formField, $componentObj)
     {
         $activeTheme = $this->model->getTheme();
-        $themePartialPath = sprintf('%s/%s/%s/', $activeTheme->publicPath, '_partials', $componentObj->alias);
+        $themePartialPath = sprintf('%s/%s/%s/', $activeTheme->name, '_partials', $componentObj->alias);
 
         $formField->comment(sprintf(lang('system::lang.themes.help_override_partial'), $themePartialPath));
 
         $formField->options(function () use ($componentObj) {
             return collect(File::glob($componentObj->getPath().'/*.blade.php'))
                 ->mapWithKeys(function ($path) {
-                    return [File::basename($path) => File::basename($path, '.blade.php')];
+                    return [File::basename($path) => str_before(File::basename($path), '.blade.php')];
                 });
         });
     }
@@ -368,7 +368,7 @@ class Components extends BaseFormWidget
             throw new ApplicationException('The selected component partial already exists in active theme partials directory.');
 
         if (!File::exists($themePartialPath))
-            File::makeDirectory($themePartialPath, 077, TRUE);
+            File::makeDirectory($themePartialPath, 077, true);
 
         File::copy($componentObj->getPath().'/'.$fileName, $themePartialPath.'/'.$fileName);
     }

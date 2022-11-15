@@ -38,8 +38,8 @@ class Menu_options_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
-            'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => TRUE],
+            'menu_options' => ['Admin\Models\Menu_item_options_model', 'foreignKey' => 'option_id', 'delete' => true],
+            'option_values' => ['Admin\Models\Menu_option_values_model', 'foreignKey' => 'option_id', 'delete' => true],
         ],
         'hasManyThrough' => [
             'menu_option_values' => [
@@ -50,13 +50,14 @@ class Menu_options_model extends Model
             ],
         ],
         'morphToMany' => [
+            'allergens' => ['Admin\Models\Allergens_model', 'name' => 'allergenable'],
             'locations' => ['Admin\Models\Locations_model', 'name' => 'locationable'],
         ],
     ];
 
     protected $purgeable = ['values'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function getRecordEditorOptions()
     {
@@ -65,7 +66,7 @@ class Menu_options_model extends Model
         if (!is_null($ids = AdminLocation::getIdOrAll()))
             $query->whereHasLocation($ids);
 
-        return $query->dropdown('display_name');
+        return $query->orderBy('option_name')->dropdown('display_name');
     }
 
     public function getDisplayTypeOptions()
@@ -95,6 +96,7 @@ class Menu_options_model extends Model
 
     protected function beforeDelete()
     {
+        $this->allergens()->detach();
         $this->locations()->detach();
     }
 
@@ -113,7 +115,7 @@ class Menu_options_model extends Model
     {
         $query = self::orderBy('priority')->from('option_values');
 
-        if ($option_id !== FALSE) {
+        if ($option_id !== false) {
             $query->where('option_id', $option_id);
         }
 

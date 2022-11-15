@@ -208,7 +208,7 @@ class StatusEditor extends BaseFormWidget
 
         return [
             '#'.$formField->getId() => $form->renderField($formField, [
-                'useContainer' => FALSE,
+                'useContainer' => false,
             ]),
         ];
     }

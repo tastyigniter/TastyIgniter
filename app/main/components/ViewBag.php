@@ -13,7 +13,7 @@ class ViewBag extends BaseComponent
     /**
      * @var bool This component is hidden from the admin UI.
      */
-    public $isHidden = TRUE;
+    public $isHidden = true;
 
     /**
      * @return array
@@ -62,10 +62,10 @@ class ViewBag extends BaseComponent
     public function __isset($key)
     {
         if (array_key_exists($key, $this->properties)) {
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

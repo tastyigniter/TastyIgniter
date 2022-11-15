@@ -20,7 +20,7 @@ class CreateMenuMealtimesTable extends Migration
 
         DB::table('menus')->select('menu_id', 'mealtime_id')->get()->each(function ($menu) {
             if (is_null($menu->mealtime_id))
-                return TRUE;
+                return true;
 
             DB::table('menu_mealtimes')->insert([
                 'mealtime_id' => $menu->mealtime_id,

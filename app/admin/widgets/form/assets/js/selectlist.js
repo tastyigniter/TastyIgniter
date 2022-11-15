@@ -26,26 +26,14 @@
     SelectList.prototype.onInitialized = function (select, container) {
         this.$container = $(container);
 
-        this.$container.find('.multiselect').tooltip('dispose')
-
-        var $options = this.$container.find('.multiselect-container > li')
-        $options.each(function () {
-            var $li = $(this),
-                $label = $li.find('label'),
-                classes = $label.attr('class')
-
-            $label.attr('class', '')
-            $label.parent('div').attr('class', classes)
-        })
+        this.$container.find('.multiselect').removeClass('text-center')
     }
 
     SelectList.prototype.onDropdownShown = function (event) {
-        $(event.relatedTarget).tooltip('dispose')
         this.$el.parents('.form-group').css({ zIndex: 1000 });
     }
 
     SelectList.prototype.onDropdownHidden = function (event) {
-        $(event.relatedTarget).tooltip('dispose')
         this.$el.parents('.form-group').css({ zIndex: '' });
     }
 
@@ -53,21 +41,17 @@
     // ============================
 
     SelectList.DEFAULTS = {
-        enableHTML: true,
         numberDisplayed: 5,
         includeSelectAllOption: true,
         maxHeight: 200,
         enableFiltering: false,
         enableCaseInsensitiveFiltering: true,
         selectAllText: 'Select all/none',
-        buttonClass: 'btn btn-light btn-block',
         optionClass: function (element) {
             return 'dropdown-item multiselect-item'
         },
         templates: {
-            filter: '<li class="dropdown-item multiselect-item filter"><div class="input-group"><span class="input-group-prepend"><span class="input-group-icon"><i class="fa fa-search"></i></span></span><input class="form-control multiselect-search" type="text"></div></li>',
-            filterClearBtn: '<span class="input-group-prepend"><span class="input-group-icon"><i class="fa fa-times-circle multiselect-clear-filter"></i></span></span>',
-            li: '<li class="dropdown-item"><a class="dropdown-link" href="javascript:void(0);"><div class="custom-control"><label></label></div></a></li>',
+            button: '<button type="button" class="multiselect dropdown-toggle form-select" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
         }
     }
 

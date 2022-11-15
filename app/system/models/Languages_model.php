@@ -23,11 +23,11 @@ class Languages_model extends Language
 
     public $relation = [
         'hasMany' => [
-            'translations' => ['System\Models\Translations_model', 'foreignKey' => 'locale', 'otherKey' => 'code', 'delete' => TRUE],
+            'translations' => ['System\Models\Translations_model', 'foreignKey' => 'locale', 'otherKey' => 'code', 'delete' => true],
         ],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     /**
      *  List of variables that cannot be mass assigned
@@ -63,11 +63,6 @@ class Languages_model extends Language
     public static function getDropdownOptions()
     {
         return self::isEnabled()->dropdown('name', 'code');
-    }
-
-    public static function listCloneableLanguages()
-    {
-        return self::isEnabled()->whereNull('original_id')->dropdown('name', 'idiom');
     }
 
     //
@@ -209,7 +204,7 @@ class Languages_model extends Language
     {
         $languageId = $this->getKey();
         if (!is_numeric($languageId))
-            return FALSE;
+            return false;
 
         foreach ($translations as $key => $translation) {
             preg_match('/^(.+)::(?:(.+?))\.(.+)+$/', $key, $matches);
@@ -237,7 +232,7 @@ class Languages_model extends Language
         $oldText = Lang::get("{$namespace}::{$group}.{$key}", [], $this->code);
 
         if (strcmp($text, $oldText) === 0)
-            return FALSE;
+            return false;
 
         $translation = $this->translations()->firstOrNew([
             'group' => $group,

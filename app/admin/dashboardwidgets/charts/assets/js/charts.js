@@ -32,17 +32,17 @@
         options: {
             maintainAspectRatio: false,
             scales: {
-                yAxes: [{
+                y: {
+                    beginAtZero: true,
                     ticks: {
-                        beginAtZero: true,
                         callback: function (value) {
                             if (value % 1 === 0) {
                                 return value;
                             }
                         }
                     }
-                }],
-                xAxes: [{
+                },
+                x: {
                     type: 'time',
                     time: {
                         unit: 'day'
@@ -50,7 +50,7 @@
                     gridLines: {
                         display: false
                     }
-                }]
+                }
             }
         }
     }

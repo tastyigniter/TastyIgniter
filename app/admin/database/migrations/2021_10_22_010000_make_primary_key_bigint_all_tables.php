@@ -44,7 +44,7 @@ class MakePrimaryKeyBigintAllTables extends Migration
             'users' => 'user_id',
         ] as $table => $key) {
             Schema::table($table, function (Blueprint $table) use ($key) {
-                $table->unsignedBigInteger($key, TRUE)->change();
+                $table->unsignedBigInteger($key, true)->change();
             });
         }
     }

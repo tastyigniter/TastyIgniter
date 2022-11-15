@@ -3,7 +3,7 @@ $config['list']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'staffs',
         ],
         'create' => [
@@ -34,30 +34,30 @@ $config['list']['columns'] = [
     'staff_group_name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'description' => [
         'label' => 'lang:admin::lang.label_description',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'staff_count' => [
         'label' => 'lang:admin::lang.staff_groups.column_users',
         'type' => 'text',
-        'sortable' => FALSE,
+        'sortable' => false,
     ],
     'staff_group_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -66,7 +66,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'staff_groups',
         ],
         'save' => [
@@ -132,7 +132,7 @@ $config['form']['fields'] = [
     'auto_assign_availability' => [
         'label' => 'lang:admin::lang.staff_groups.label_assignment_availability',
         'type' => 'switch',
-        'default' => TRUE,
+        'default' => true,
         'comment' => 'lang:admin::lang.staff_groups.help_assignment_availability',
         'trigger' => [
             'action' => 'show',

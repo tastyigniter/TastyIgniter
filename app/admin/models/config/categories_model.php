@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:admin::lang.categories.text_filter_search',
@@ -7,11 +8,11 @@ $config['list']['filter'] = [
     'scopes' => [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
-            'type' => 'select',
+            'type' => 'selectlist',
             'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
-            'locationAware' => TRUE,
+            'locationAware' => true,
         ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
@@ -70,19 +71,19 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
     ],
-    'parent_cat' => [
+    'parent' => [
         'label' => 'lang:admin::lang.categories.column_parent',
         'type' => 'text',
         'relation' => 'parent_cat',
         'select' => 'name',
     ],
-    'locations' => [
+    'location_name' => [
         'label' => 'lang:admin::lang.column_location',
         'type' => 'text',
         'relation' => 'locations',
         'select' => 'location_name',
-        'locationAware' => TRUE,
-        'invisible' => TRUE,
+        'locationAware' => true,
+        'invisible' => true,
     ],
     'priority' => [
         'label' => 'lang:admin::lang.categories.column_priority',
@@ -94,16 +95,16 @@ $config['list']['columns'] = [
     ],
     'category_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -112,7 +113,7 @@ $config['form']['toolbar'] = [
     'buttons' => [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
-            'class' => 'btn btn-default',
+            'class' => 'btn btn-outline-secondary',
             'href' => 'categories',
         ],
         'save' => [
@@ -182,7 +183,7 @@ $config['form']['fields'] = [
     'thumb' => [
         'label' => 'lang:admin::lang.categories.label_image',
         'type' => 'mediafinder',
-        'useAttachment' => TRUE,
+        'useAttachment' => true,
         'span' => 'right',
         'comment' => 'lang:admin::lang.categories.help_photo',
     ],

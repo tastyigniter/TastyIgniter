@@ -42,7 +42,7 @@ class MapArea extends BaseFormWidget
 
     public $sortColumnName = 'priority';
 
-    public $sortable = TRUE;
+    public $sortable = true;
 
     //
     // Object properties
@@ -59,8 +59,8 @@ class MapArea extends BaseFormWidget
         'circle' => [],
         'polygon' => [],
         'vertices' => [],
-        'serialized' => FALSE,
-        'editable' => FALSE,
+        'serialized' => false,
+        'editable' => false,
     ];
 
     protected $sortableInputName;
@@ -84,7 +84,7 @@ class MapArea extends BaseFormWidget
 
         $this->areaColors = Location_areas_model::$areaColors;
 
-        $fieldName = $this->formField->getName(FALSE);
+        $fieldName = $this->formField->getName(false);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
     }
 

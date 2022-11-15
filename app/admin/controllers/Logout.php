@@ -6,7 +6,7 @@ use Admin\Facades\AdminAuth;
 
 class Logout extends \Admin\Classes\AdminController
 {
-    protected $requireAuthentication = FALSE;
+    protected $requireAuthentication = false;
 
     public function index()
     {

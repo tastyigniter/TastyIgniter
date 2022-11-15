@@ -24,7 +24,7 @@ class Assignable_logs_model extends Model
 
     protected $guarded = [];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public $relation = [
         'belongsTo' => [

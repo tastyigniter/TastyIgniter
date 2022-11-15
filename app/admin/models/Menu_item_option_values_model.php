@@ -50,7 +50,7 @@ class Menu_item_option_values_model extends Model
         ['new_price', 'admin::lang.menus.label_option_price', 'numeric|min:0'],
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public function getOptionValueIdOptions()
     {
@@ -92,7 +92,7 @@ class Menu_item_option_values_model extends Model
      * @param bool $subtract
      * @return bool TRUE on success, or FALSE on failure
      */
-    public function updateStock($quantity = 0, $subtract = TRUE)
+    public function updateStock($quantity = 0, $subtract = true)
     {
         traceLog('Menu_item_option_values_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
     }

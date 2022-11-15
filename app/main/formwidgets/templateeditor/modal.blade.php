@@ -1,6 +1,6 @@
 <div
     id="{{ $this->getId('modal') }}"
-    class="modal show"
+    class="modal fade"
     tabindex="-1"
     role="dialog"
     aria-labelledby="newSourceModal"
@@ -25,7 +25,7 @@
                 <button
                     type="button"
                     class="btn btn-secondary"
-                    data-dismiss="modal"
+                    data-bs-dismiss="modal"
                 >@lang('admin::lang.button_close')</button>
                 <button
                     type="button"

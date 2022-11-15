@@ -1,7 +1,7 @@
 @php
     $fieldOptions = $field->options();
-    $useSearch = $field->getConfig('showSearch', FALSE);
-    $multiOption = $field->getConfig('multiOption', FALSE);
+    $useSearch = $field->getConfig('showSearch', false);
+    $multiOption = $field->getConfig('multiOption', false);
     $fieldValue = is_null($field->value) ? [] : $field->value;
     $fieldValue = !is_array($fieldValue) ? [$fieldValue] : $fieldValue;
 @endphp
@@ -13,7 +13,7 @@
     <select
         id="{{ $field->getId() }}"
         name="{!! $field->getName().($multiOption ? '[]' : '') !!}"
-        class="form-control"
+        class="form-select"
         {!! $multiOption ? 'multiple="multiple"' : '' !!}
         {!! $field->getAttributes() !!}>
 
