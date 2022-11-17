@@ -479,11 +479,11 @@ class Reservations_model extends Model
     protected function getLastSectionPriority()
     {
         $lastReservation = $this->newQuery()
-            ->whereHas('tables')
+            ->has('tables')
             ->where('location_id', $this->location_id)
             ->whereDate('reserve_date', $this->reserve_date)
             ->whereNotIn('status_id', [0, setting('canceled_reservation_status')])
-            ->orderBy('reserve_time', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
 
         if (!$lastReservation || !$lastReservation->tables || $lastReservation->tables->isEmpty())
