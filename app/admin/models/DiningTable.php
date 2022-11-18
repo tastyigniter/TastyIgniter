@@ -121,7 +121,7 @@ class DiningTable extends \Igniter\Flame\Database\Model
         $query->whereIsReservable();
 
         if (strlen($dateTime = array_get($options, 'dateTime')))
-            $query->whereIsAvailableOn($dateTime);
+            $query->whereIsAvailableOn($dateTime, array_get($options, 'duration', 15));
 
         if (strlen($date = array_get($options, 'date')))
             $query->whereIsAvailableForDate($date);
@@ -178,10 +178,12 @@ class DiningTable extends \Igniter\Flame\Database\Model
         });
     }
 
-    public function scopeWhereIsAvailableOn($query, $dateTime)
+    public function scopeWhereIsAvailableOn($query, $dateTime, $duration = 15)
     {
-        return $query->whereDoesntHave('reservations', function ($query) use ($dateTime) {
-            $query->whereBetweenStayTime($dateTime)
+        return $query->whereDoesntHave('reservations', function ($query) use ($dateTime, $duration) {
+            $query
+                ->whereRaw('ADDTIME(reserve_date, reserve_time) >= ?', [make_carbon($dateTime)->toDateTimeString()])
+                ->whereRaw('ADDTIME(reserve_date, reserve_time) <= ?', [make_carbon($dateTime)->addMinutes($duration)->toDateTimeString()])
                 ->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
         });
     }

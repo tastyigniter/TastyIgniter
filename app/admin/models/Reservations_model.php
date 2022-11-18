@@ -448,6 +448,7 @@ class Reservations_model extends Model
                 'locationId' => $this->location_id,
                 'dateTime' => $this->reservation_datetime,
                 'guestNum' => $this->guest_num,
+                'duration' => $this->duration,
             ])->get();
 
         $diningTable = null;
