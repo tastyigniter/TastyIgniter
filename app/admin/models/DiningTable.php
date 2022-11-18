@@ -180,10 +180,13 @@ class DiningTable extends \Igniter\Flame\Database\Model
 
     public function scopeWhereIsAvailableOn($query, $dateTime, $duration = 15)
     {
+        if (is_string($dateTime))
+            $dateTime = make_carbon($dateTime);
+
         return $query->whereDoesntHave('reservations', function ($query) use ($dateTime, $duration) {
             $query
-                ->whereRaw('ADDTIME(reserve_date, reserve_time) >= ?', [make_carbon($dateTime)->toDateTimeString()])
-                ->whereRaw('ADDTIME(reserve_date, reserve_time) <= ?', [make_carbon($dateTime)->addMinutes($duration)->toDateTimeString()])
+                ->whereRaw('ADDTIME(reserve_date, reserve_time) > ?', [$dateTime->clone()->subMinutes($duration)->toDateTimeString()])
+                ->whereRaw('ADDTIME(reserve_date, reserve_time) < ?', [$dateTime->clone()->addMinutes($duration)->toDateTimeString()])
                 ->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
         });
     }
