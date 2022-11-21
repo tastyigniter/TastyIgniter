@@ -5,7 +5,6 @@ namespace System\Classes;
 use Composer\Config\JsonConfigSource;
 use Composer\Console\Application;
 use Composer\Json\JsonFile;
-use Composer\Json\JsonManipulator;
 use Composer\Util\Platform;
 use Igniter\Flame\Support\Facades\File;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -33,8 +32,6 @@ class ComposerManager
     protected $loader;
 
     protected $workingDir;
-
-    protected $composerBackup;
 
     protected $namespacePool = [];
 
@@ -198,12 +195,12 @@ class ComposerManager
         $installedPackages = $installed['packages'] ?? $installed;
 
         return $this->installedPackages = collect($installedPackages)
-            ->whereIn('type', ['tastyigniter-extension', 'tastyigniter-theme'])
+            ->whereIn('type', ['tastyigniter-package', 'tastyigniter-extension', 'tastyigniter-theme'])
             ->mapWithKeys(function ($package) {
-                $code = array_get($package, 'extra.tastyigniter-extension.code',
-                    array_get($package, 'extra.tastyigniter-theme.code'),
-                    array_get($package, 'name')
-                );
+                $code = array_get($package, 'extra.tastyigniter-package.code',
+                    array_get($package, 'extra.tastyigniter-extension.code',
+                        array_get($package, 'extra.tastyigniter-theme.code',
+                            array_get($package, 'name'))));
 
                 return [$code => $package];
             });
@@ -220,6 +217,13 @@ class ComposerManager
         })->all();
 
         return $this->require($corePackages);
+    }
+
+    public function update(array $packages = [])
+    {
+        $options = ['--no-interaction' => true, '--no-progress' => true];
+
+        return $this->runCommand('update', $packages, $options);
     }
 
     public function require(array $packages = [])
@@ -310,69 +314,6 @@ class ComposerManager
         }
 
         return $exitCode === 0;
-    }
-
-    //
-    //
-    //
-
-    protected function writePackages(array $requirements)
-    {
-        $result = null;
-        $requireKey = 'require';
-        $removeKey = 'require-dev';
-        $json = new JsonFile($this->getJsonPath());
-
-        $contents = file_get_contents($json->getPath());
-        $manipulator = new JsonManipulator($contents);
-
-        foreach ($requirements as $package => $version) {
-            $result = $version !== false
-                ? $manipulator->addLink($requireKey, $package, $version, true)
-                : $manipulator->removeSubNode($requireKey, $package);
-
-            if ($result) {
-                $result = $manipulator->removeSubNode($removeKey, $package);
-            }
-        }
-
-        if ($result) {
-            $manipulator->removeMainKeyIfEmpty($removeKey);
-            file_put_contents($json->getPath(), $manipulator->getContents());
-
-            return;
-        }
-
-        // Fallback update
-        $composerDefinition = $json->read();
-        foreach ($requirements as $package => $version) {
-            if ($version !== false) {
-                $composerDefinition[$requireKey][$package] = $version;
-            }
-            else {
-                unset($composerDefinition[$requireKey][$package]);
-            }
-
-            unset($composerDefinition[$removeKey][$package]);
-
-            if (isset($composerDefinition[$removeKey]) && count($composerDefinition[$removeKey]) === 0) {
-                unset($composerDefinition[$removeKey]);
-            }
-        }
-
-        $json->write($composerDefinition);
-    }
-
-    protected function restoreComposerFile()
-    {
-        if ($this->composerBackup) {
-            file_put_contents($this->getJsonPath(), $this->composerBackup);
-        }
-    }
-
-    protected function backupComposerFile()
-    {
-        $this->composerBackup = file_get_contents($this->getJsonPath());
     }
 
     //

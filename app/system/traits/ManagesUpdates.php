@@ -340,7 +340,11 @@ trait ManagesUpdates
     protected function ensureComposerAuthConfigured()
     {
         if ($carteInfo = params('carte_info')) {
-            ComposerManager::instance()->addAuthCredentials('satis.tastyigniter.com', $carteInfo['email'], params('carte_key'));
+            ComposerManager::instance()->addAuthCredentials(
+                'satis.tastyigniter.com',
+                array_get($carteInfo, 'email', ''),
+                params('carte_key')
+            );
         }
     }
 }
