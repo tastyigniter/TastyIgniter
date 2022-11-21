@@ -11,6 +11,7 @@ use Main\Classes\Theme;
 use Main\Classes\ThemeManager;
 use Main\Template\Layout;
 use System\Classes\ComponentManager;
+use System\Classes\ComposerManager;
 use System\Classes\ExtensionManager;
 
 /**
@@ -351,9 +352,15 @@ class Themes_model extends Model
             $themeModel->delete();
         }
 
-        $filesDeleted = ThemeManager::instance()->removeTheme($themeCode);
+        $composerManager = ComposerManager::instance();
+        if ($package = $composerManager->getPackageName($themeCode)) {
+            $composerManager->remove([$package]);
+        }
+        else {
+            ThemeManager::instance()->removeTheme($themeCode);
+        }
 
-        return $filesDeleted;
+        return true;
     }
 
     public static function generateUniqueCode($code, $suffix = null)

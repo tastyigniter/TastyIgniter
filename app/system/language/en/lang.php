@@ -640,10 +640,6 @@ return [
 
         'text_core_update' => '<i class="fa fa-exclamation-triangle fa-fw"></i>&nbsp;&nbsp;After the core update has been installed, all extension updates will be installed.',
 
-        'progress_download' => '<i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Downloading %s&#8230;',
-        'progress_extract' => '<i class="fa fa-file-archive-o fa-fw"></i>&nbsp;&nbsp;&nbsp;Extracting %s&#8230;',
-        'progress_complete' => '<i class="fa fa-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Finishing installation&#8230;',
-
         'label_meta_code' => 'Meta Code',
         'label_meta_type' => 'Meta Type',
         'label_meta_version' => 'Meta Version',
@@ -653,8 +649,15 @@ return [
         'label_meta_action' => 'Meta Action',
         'label_meta_items' => 'Meta Items',
 
-        'progress_success' => '<i class="fa fa-check fa-fw"></i>&nbsp;&nbsp;&nbsp;Finished %s %s successfully.&#8230;',
-        'progress_update' => '<strong id="progress-updating">Updating %s&#8230;</strong>',
+        'progress_composer' => '<i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Updating composer/composer package %s&#8230;',
+        'progress_core' => '<i class="fa fa-cloud-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Updating core&#8230;',
+        'progress_addons' => '<i class="fa fa-file-archive-o fa-fw"></i>&nbsp;&nbsp;&nbsp;Updating extensions & themes %s&#8230;',
+        'progress_complete' => '<i class="fa fa-download fa-fw"></i>&nbsp;&nbsp;&nbsp;Finishing installation&#8230;',
+
+        'progress_composer_success' => '<i class="fa fa-check fa-fw"></i>&nbsp;&nbsp;&nbsp;Finished updating composer/composer successfully.&#8230;',
+        'progress_core_success' => '<i class="fa fa-check fa-fw"></i>&nbsp;&nbsp;&nbsp;Finished updating core successfully.&#8230;',
+        'progress_addons_success' => '<i class="fa fa-check fa-fw"></i>&nbsp;&nbsp;&nbsp;Finished updating extensions & themes successfully.&#8230;',
+        'progress_success' => '<i class="fa fa-check fa-fw"></i>&nbsp;&nbsp;&nbsp;Finished installation successfully.&#8230;',
         'progress_enable_maintenance' => 'Enabling Maintenance mode&#8230;',
         'progress_disable_maintenance' => 'Restoring/Disabling Maintenance mode&#8230;',
 

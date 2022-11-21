@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use System\Classes\ExtensionManager;
-use System\Classes\UpdateManager;
 
 class ExtensionRemove extends Command
 {
@@ -45,9 +44,6 @@ class ExtensionRemove extends Command
             ))) {
             return;
         }
-
-        $manager = UpdateManager::instance();
-        $manager->setLogsOutput($this->output);
 
         $extensionManager->deleteExtension($extensionName);
         $this->output->writeln(sprintf('<info>Deleted extension: %s</info>', $extensionName));

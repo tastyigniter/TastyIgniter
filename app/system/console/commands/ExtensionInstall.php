@@ -4,6 +4,7 @@ namespace System\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use System\Classes\ComposerManager;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 
@@ -25,8 +26,8 @@ class ExtensionInstall extends Command
     public function handle()
     {
         $extensionName = $this->argument('name');
-        $manager = UpdateManager::instance();
-        $manager->setLogsOutput($this->output);
+        $manager = UpdateManager::instance()->setLogsOutput($this->output);
+        $composerManager = ComposerManager::instance()->setLogsOutput($this->output);
 
         $response = $manager->requestApplyItems([[
             'name' => $extensionName,
@@ -38,20 +39,12 @@ class ExtensionInstall extends Command
             return $this->output->writeln(sprintf('<info>Extension %s not found</info>', $extensionName));
 
         $code = array_get($extensionDetails, 'code');
-        $hash = array_get($extensionDetails, 'hash');
+        $package = array_get($extensionDetails, 'package');
         $version = array_get($extensionDetails, 'version');
 
-        $this->output->writeln(sprintf('<info>Downloading extension: %s</info>', $code));
-        $manager->downloadFile($code, $hash, [
-            'name' => $code,
-            'type' => 'extension',
-            'ver' => $version,
-        ]);
-
-        $this->output->writeln(sprintf('<info>Extracting extension %s files</info>', $code));
-        $manager->extractFile($code, extension_path('/'));
-
         $this->output->writeln(sprintf('<info>Installing %s extension</info>', $code));
+        $composerManager->require([$package.':'.$version]);
+
         ExtensionManager::instance()->loadExtensions();
         ExtensionManager::instance()->installExtension($code, $version);
     }

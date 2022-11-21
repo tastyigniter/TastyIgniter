@@ -5,6 +5,7 @@ namespace System\Console\Commands;
 use Illuminate\Console\Command;
 use Main\Classes\ThemeManager;
 use Symfony\Component\Console\Input\InputArgument;
+use System\Classes\ComposerManager;
 use System\Classes\UpdateManager;
 
 class ThemeInstall extends Command
@@ -26,6 +27,7 @@ class ThemeInstall extends Command
     {
         $themeName = $this->argument('name');
         $manager = UpdateManager::instance();
+        $composerManager = ComposerManager::instance()->setLogsOutput($this->output);
 
         $response = $manager->requestApplyItems([[
             'name' => $themeName,
@@ -37,20 +39,12 @@ class ThemeInstall extends Command
             return $this->output->writeln(sprintf('<info>Theme %s not found</info>', $themeName));
 
         $code = array_get($themeDetails, 'code');
-        $hash = array_get($themeDetails, 'hash');
+        $package = array_get($themeDetails, 'package');
         $version = array_get($themeDetails, 'version');
 
-        $this->output->writeln(sprintf('<info>Downloading theme: %s</info>', $code));
-        $manager->downloadFile($code, $hash, [
-            'name' => $code,
-            'type' => 'theme',
-            'ver' => $version,
-        ]);
-
-        $this->output->writeln(sprintf('<info>Extracting theme %s files</info>', $code));
-        $manager->extractFile($code, theme_path('/'));
-
         $this->output->writeln(sprintf('<info>Installing %s theme</info>', $code));
+        $composerManager->require([$package.':'.$version]);
+
         ThemeManager::instance()->loadThemes();
         ThemeManager::instance()->installTheme($code, $version);
     }

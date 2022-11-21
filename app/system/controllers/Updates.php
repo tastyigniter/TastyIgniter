@@ -32,6 +32,8 @@ class Updates extends \Admin\Classes\AdminController
         Extensions_model::syncAll();
         Themes_model::syncAll();
 
+        $this->ensureComposerRepositoryAndAuthConfigured();
+
         $pageTitle = lang('system::lang.updates.text_title');
         Template::setTitle($pageTitle);
         Template::setHeading($pageTitle);

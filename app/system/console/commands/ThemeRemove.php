@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Main\Classes\ThemeManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use System\Classes\ComposerManager;
 use System\Models\Themes_model;
 
 class ThemeRemove extends Command
@@ -33,6 +34,7 @@ class ThemeRemove extends Command
         $forceDelete = $this->option('force');
         $themeName = $this->argument('name');
         $themeManager = ThemeManager::instance();
+        $composerManager = ComposerManager::instance()->setLogsOutput($this->output);
 
         $themeName = strtolower($themeName);
         if (!$themeManager->hasTheme($themeName)) {
@@ -45,6 +47,8 @@ class ThemeRemove extends Command
             ))) {
             return;
         }
+
+        $composerManager->remove([$composerManager->getPackageName($themeName)]);
 
         Themes_model::deleteTheme($themeName);
         $this->output->writeln(sprintf('<info>Deleted theme: %s</info>', $themeName));

@@ -4,6 +4,7 @@ namespace System\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
+use System\Classes\ComposerManager;
 use System\Classes\UpdateManager;
 
 /**
@@ -33,6 +34,7 @@ class IgniterUpdate extends Command
 
         // update system
         $updateManager = UpdateManager::instance()->setLogsOutput($this->output);
+        $composerManager = ComposerManager::instance()->setLogsOutput($this->output);
         $this->output->writeln('<info>Updating TastyIgniter...</info>');
 
         $updates = $updateManager->requestUpdateList($forceUpdate);
@@ -47,53 +49,21 @@ class IgniterUpdate extends Command
         $updatesCollection = collect($itemsToUpdate)->groupBy('type');
 
         $coreUpdate = optional($updatesCollection->pull('core'))->first();
-        $coreCode = array_get($coreUpdate, 'code');
         $coreVersion = array_get($coreUpdate, 'version');
-        $coreHash = array_get($coreUpdate, 'hash');
 
-        $addonUpdates = $updatesCollection->flatten(1);
+        $this->output->writeln('<info>Updating application dependencies...</info>');
+        $composerManager->require(['composer/composer']);
 
-        if ($coreCode && $coreHash) {
-            $this->output->writeln('<info>Downloading application files</info>');
-            $updateManager->downloadFile($coreCode, $coreHash, [
-                'name' => $coreCode,
-                'type' => 'core',
-                'ver' => $coreVersion,
-            ]);
-        }
+        $composerManager->requireCore($coreVersion);
 
-        $addonUpdates->each(function ($addon) use ($updateManager) {
-            $addonCode = array_get($addon, 'code');
-            $addonName = array_get($addon, 'name');
-            $addonType = array_get($addon, 'type');
+        $packages = $updatesCollection->flatten(1)->map(function ($addon) {
+            $addonName = array_get($addon, 'package');
             $addonVersion = array_get($addon, 'version');
-            $addonHash = array_get($addon, 'hash');
 
-            $this->output->writeln(sprintf('<info>Downloading %s files</info>', $addonName));
+            return $addonName.':'.$addonVersion;
+        })->all();
 
-            $updateManager->downloadFile($addonCode, $addonHash, [
-                'name' => $addonCode,
-                'type' => $addonType,
-                'ver' => $addonVersion,
-            ]);
-        });
-
-        if ($coreCode && $coreHash) {
-            $this->output->writeln('<info>Extracting application files</info>');
-            $updateManager->extractCore($coreCode);
-            $updateManager->setCoreVersion($coreVersion, $coreHash);
-        }
-
-        $addonUpdates->each(function ($addon) use ($updateManager) {
-            $addonCode = array_get($addon, 'code');
-            $addonName = array_get($addon, 'name');
-            $addonType = array_get($addon, 'type');
-
-            $this->output->writeln(sprintf('<info>Extracting %s files</info>', $addonName));
-
-            $extractTo = $addonType === 'theme' ? theme_path('/') : extension_path('/');
-            $updateManager->extractFile($addonCode, $extractTo);
-        });
+        $composerManager->require($packages);
 
         // Run migrations
         $this->call('igniter:up');

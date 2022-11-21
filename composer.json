@@ -31,7 +31,8 @@
   ],
   "require": {
     "php": ">=7.4",
-    "composer/installers": "dev-main#6a30b1c1f0e71faeeeae0ed90f74f4fe6b6f6525 as 2.0",
+    "composer/composer": "^2.4",
+    "composer/installers": "~2.2",
     "tastyigniter/flame": "~1.2",
     "tastyigniter/ti-module-system": "~3.0",
     "tastyigniter/ti-module-admin": "~3.0",

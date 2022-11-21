@@ -4,7 +4,9 @@ namespace System\Traits;
 
 use Exception;
 use Igniter\Flame\Exception\ApplicationException;
+use Igniter\Flame\Support\Facades\File;
 use Main\Classes\ThemeManager;
+use System\Classes\ComposerManager;
 use System\Classes\ExtensionManager;
 use System\Classes\UpdateManager;
 
@@ -126,6 +128,8 @@ trait ManagesUpdates
 
         $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
+        $this->ensureComposerAuthConfigured();
+
         return [
             '#carte-details' => $this->makePartial('updates/carte_info', ['carteInfo' => $response]),
         ];
@@ -142,6 +146,8 @@ trait ManagesUpdates
 
     protected function initUpdate($itemType)
     {
+        $this->ensureComposerRepositoryAndAuthConfigured();
+
         $this->prepareAssets();
 
         $updateManager = UpdateManager::instance();
@@ -162,51 +168,42 @@ trait ManagesUpdates
     protected function buildProcessSteps($response, $params = [])
     {
         $processSteps = [];
-        foreach (['download', 'extract', 'complete'] as $step) {
-            // Silly way to sort the process
-            $applySteps = [
-                'core' => [],
-                'extensions' => [],
-                'themes' => [],
-                'languages' => [],
-            ];
-
+        foreach (['install', 'complete'] as $step) {
             if ($step == 'complete') {
                 $processSteps[$step][] = [
                     'items' => $response,
                     'process' => $step,
-                    'label' => lang("system::lang.updates.progress_{$step}"),
-                    'success' => sprintf(lang('system::lang.updates.progress_success'), rtrim($step, 'e').'ing', ''),
+                    'label' => lang("system::lang.updates.progress_complete"),
+                    'success' => lang('system::lang.updates.progress_success'),
+                ];
+            }
+            else {
+                $processSteps[$step][] = [
+                    'items' => $response,
+                    'process' => 'updateComposer',
+                    'label' => lang("system::lang.updates.progress_composer"),
+                    'success' => lang('system::lang.updates.progress_composer_success'),
                 ];
 
-                continue;
-            }
-
-            foreach ($response as $item) {
-                if ($item['type'] == 'core') {
-                    $applySteps['core'][] = array_merge([
+                if ($coreUpdate = collect($response)->firstWhere('type', 'core')) {
+                    $processSteps[$step][] = array_merge($coreUpdate, [
                         'action' => 'update',
                         'process' => "{$step}Core",
-                        'label' => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
-                        'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
-                    ], $item);
-
-                    break;
+                        'label' => lang("system::lang.updates.progress_core"),
+                        'success' => lang('system::lang.updates.progress_core_success'),
+                    ]);
                 }
 
-                $singularType = str_singular($item['type']);
-                $pluralType = str_plural($item['type']);
-
-                $action = $this->getActionFromItems($item['code'], $params);
-                $applySteps[$pluralType][] = array_merge([
-                    'action' => $action ?? 'install',
-                    'process' => $step.ucfirst($singularType),
-                    'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
-                    'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
-                ], $item);
+                $addonUpdates = collect($response)->where('type', '!=', 'core');
+                if ($addonUpdates->isNotEmpty()) {
+                    $processSteps[$step][] = [
+                        'items' => $addonUpdates->all(),
+                        'process' => "{$step}Addon",
+                        'label' => lang("system::lang.updates.progress_addons"),
+                        'success' => lang('system::lang.updates.progress_addons_success'),
+                    ];
+                }
             }
-
-            $processSteps[$step] = array_collapse(array_values($applySteps));
         }
 
         return $processSteps;
@@ -220,46 +217,28 @@ trait ManagesUpdates
 
         $meta = post('meta');
 
-        $params = [];
-        if (post('step') != 'complete') {
-            $params = !isset($meta['code']) ? [] : [
-                'name' => $meta['code'],
-                'type' => $meta['type'],
-                'ver' => $meta['version'],
-                'action' => $meta['action'],
-            ];
-        }
+        $composerManager = ComposerManager::instance();
 
-        $updateManager = UpdateManager::instance();
-
-        $processMeta = $meta['process'];
-        switch ($processMeta) {
-            case 'downloadCore':
-            case 'downloadExtension':
-            case 'downloadTheme':
-                $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
-                if ($result) $json['result'] = 'success';
+        $result = false;
+        switch ($meta['process']) {
+            case 'updateComposer':
+                $result = $composerManager->require(['composer/composer']);
                 break;
-
-            case 'extractCore':
-                $response = $updateManager->extractCore($meta['code']);
-                if ($response) $json['result'] = 'success';
+            case 'installCore':
+                $result = $composerManager->requireCore($meta['version']);
                 break;
-
-            case 'extractExtension':
-                $response = $updateManager->extractFile($meta['code'], extension_path('/'));
-                if ($response) $json['result'] = 'success';
-                break;
-            case 'extractTheme':
-                $response = $updateManager->extractFile($meta['code'], theme_path('/'));
-                if ($response) $json['result'] = 'success';
+            case 'installAddon':
+                $result = $composerManager->require(collect($meta['items'])->map(function ($item) {
+                    return $item['package'].':'.$item['version'];
+                })->all());
                 break;
 
             case 'complete':
-                $response = $this->completeProcess($meta['items']);
-                if ($response) $json['result'] = 'success';
+                $result = $this->completeProcess($meta['items']);
                 break;
         }
+
+        if ($result) $json['result'] = 'success';
 
         return $json;
     }
@@ -318,33 +297,50 @@ trait ManagesUpdates
 
     protected function validateProcess()
     {
-        if (post('step') != 'complete') {
-            $rules = [
-                'meta.code' => ['required'],
-                'meta.type' => ['required', 'in:core,extension,theme,language'],
-                'meta.version' => ['required'],
-                'meta.hash' => ['required'],
-                'meta.description' => ['sometimes'],
-                'meta.action' => ['required', 'in:install,update'],
-            ];
+        $rules = [
+            'meta.code' => ['sometimes', 'required'],
+            'meta.type' => ['sometimes', 'required', 'in:core,extension,theme,language'],
+            'meta.version' => ['sometimes', 'required'],
+            'meta.hash' => ['sometimes', 'required'],
+            'meta.description' => ['sometimes'],
+            'meta.action' => ['sometimes', 'required', 'in:install,update'],
+        ];
 
-            $attributes = [
-                'meta.code' => lang('system::lang.updates.label_meta_code'),
-                'meta.type' => lang('system::lang.updates.label_meta_type'),
-                'meta.version' => lang('system::lang.updates.label_meta_version'),
-                'meta.hash' => lang('system::lang.updates.label_meta_hash'),
-                'meta.description' => lang('system::lang.updates.label_meta_description'),
-                'meta.action' => lang('system::lang.updates.label_meta_action'),
-            ];
-        }
-        else {
-            $rules = ['meta.items' => ['required', 'array']];
-            $attributes = ['meta.items' => lang('system::lang.updates.label_meta_items')];
-        }
+        $attributes = [
+            'meta.code' => lang('system::lang.updates.label_meta_code'),
+            'meta.type' => lang('system::lang.updates.label_meta_type'),
+            'meta.version' => lang('system::lang.updates.label_meta_version'),
+            'meta.hash' => lang('system::lang.updates.label_meta_hash'),
+            'meta.description' => lang('system::lang.updates.label_meta_description'),
+            'meta.action' => lang('system::lang.updates.label_meta_action'),
+        ];
 
-        $rules['step'] = ['required', 'in:download,extract,complete'];
+        $rules['step'] = ['required', 'in:install,complete'];
+        $rules['meta.items'] = ['sometimes', 'required', 'array'];
+
         $attributes['step'] = lang('system::lang.updates.label_meta_step');
+        $attributes['meta.items'] = lang('system::lang.updates.label_meta_items');
 
         return $this->validate(post(), $rules, [], $attributes);
+    }
+
+    protected function ensureComposerRepositoryAndAuthConfigured()
+    {
+        $composerManager = ComposerManager::instance();
+
+        if (!$composerManager->hasRepository('https://satis.tastyigniter.com')) {
+            $composerManager->addRepository('tastyigniter', 'composer', 'https://satis.tastyigniter.com');
+        }
+
+        if (!File::exists(base_path('auth.json'))) {
+            $this->ensureComposerAuthConfigured();
+        }
+    }
+
+    protected function ensureComposerAuthConfigured()
+    {
+        if ($carteInfo = params('carte_info')) {
+            ComposerManager::instance()->addAuthCredentials('satis.tastyigniter.com', $carteInfo['email'], params('carte_key'));
+        }
     }
 }

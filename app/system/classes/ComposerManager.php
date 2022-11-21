@@ -2,27 +2,14 @@
 
 namespace System\Classes;
 
-use Composer\Composer;
 use Composer\Config\JsonConfigSource;
-use Composer\DependencyResolver\Request;
-use Composer\Factory;
-use Composer\Installer;
-use Composer\IO\BufferIO;
-use Composer\IO\ConsoleIO;
-use Composer\IO\IOInterface;
-use Composer\IO\NullIO;
+use Composer\Console\Application;
 use Composer\Json\JsonFile;
 use Composer\Json\JsonManipulator;
 use Composer\Util\Platform;
-use DirectoryIterator;
-use Exception;
 use Igniter\Flame\Support\Facades\File;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use RegexIterator;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Throwable;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * ComposerManager Class
@@ -31,10 +18,14 @@ class ComposerManager
 {
     use \Igniter\Flame\Traits\Singleton;
 
+    protected $logs = [];
+
     /**
-     * @var IOInterface output
+     * The output interface implementation.
+     *
+     * @var \Illuminate\Console\OutputStyle
      */
-    protected $output;
+    protected $logsOutput;
 
     /**
      * @var \Composer\Autoload\ClassLoader The primary composer instance.
@@ -55,11 +46,17 @@ class ComposerManager
 
     protected $installedPackages = [];
 
+    protected static $corePackages = [
+        'tastyigniter/flame',
+        'tastyigniter/ti-module-system',
+        'tastyigniter/ti-module-admin',
+        'tastyigniter/ti-module-main',
+    ];
+
     public function initialize()
     {
         $this->loader = require base_path('/vendor/autoload.php');
         $this->preloadPools();
-        $this->setOutput();
     }
 
     /**
@@ -114,6 +111,11 @@ class ComposerManager
     public function getPackageVersion($name)
     {
         return array_get($this->loadInstalledPackages()->get($name, []), 'version');
+    }
+
+    public function getPackageName($name)
+    {
+        return array_get($this->loadInstalledPackages()->get($name, []), 'name');
     }
 
     public function listInstalledPackages()
@@ -211,75 +213,27 @@ class ComposerManager
     //
     //
 
-    public function update(array $packageNames = [])
+    public function requireCore($coreVersion)
     {
-        $this->assertPhpIniSet();
-        $this->assertHomeEnvSet();
+        $corePackages = collect(self::$corePackages)->map(function ($package) use ($coreVersion) {
+            return $package == 'tastyigniter/flame' ? $package : $package.':'.$coreVersion;
+        })->all();
 
-        try {
-            $this->assertHomeDirectory();
-            $this->assertComposerLoaded();
-
-            Installer::create($this->output, $this->makeComposer())
-                ->setDevMode(config('app.debug', false))
-                ->setUpdateAllowList($packageNames)
-                ->setPreferDist()
-                ->setOptimizeAutoloader(!config('app.debug', false))
-                ->setUpdate(true)
-                ->run();
-        }
-        finally {
-            $this->assertWorkingDirectory();
-        }
+        return $this->require($corePackages);
     }
 
     public function require(array $packages = [])
     {
-        $this->assertPhpIniSet();
-        $this->assertHomeEnvSet();
-        $this->backupComposerFile();
+        $options = ['--no-interaction' => true, '--no-progress' => true];
 
-        $lastException = new Exception('Failed to update composer dependencies');
-
-        try {
-            $this->assertHomeDirectory();
-            $this->assertComposerLoaded();
-            $this->writePackages($packages);
-
-            $composer = $this->makeComposer();
-            $installer = Installer::create($this->output, $composer)
-                ->setDevMode(config('app.debug', false))
-                ->setPreferDist()
-                ->setUpdate(true)
-                ->setUpdateAllowTransitiveDependencies(Request::UPDATE_LISTED_WITH_TRANSITIVE_DEPS);
-
-            // If no lock is present, or the file is brand new, we do not do a
-            // partial update as this is not supported by the Installer
-            if ($composer->getLocker()->isLocked()) {
-                $installer->setUpdateAllowList(array_keys($packages));
-            }
-
-            $statusCode = $installer->run();
-        }
-        catch (Throwable $ex) {
-            $statusCode = 1;
-            $lastException = $ex;
-        }
-        finally {
-            $this->assertWorkingDirectory();
-        }
-
-        if ($statusCode !== 0) {
-            $this->restoreComposerFile();
-            throw $lastException;
-        }
+        return $this->runCommand('require', $packages, $options);
     }
 
     public function remove(array $packages = [])
     {
-        $this->require(array_map(function ($package) {
-            return false;
-        }, $packages));
+        $options = ['--no-interaction' => true];
+
+        return $this->runCommand('remove', $packages, $options);
     }
 
     public function addRepository($name, $type, $address, $options = [])
@@ -319,31 +273,43 @@ class ComposerManager
         ]);
     }
 
-    protected function makeComposer(): Composer
-    {
-        $composer = Factory::create($this->output, $this->getJsonPath());
-
-        // Disable scripts
-        $composer->getEventDispatcher()->setRunScripts(false);
-
-        // Discard changes to prevent corrupt state
-        $composer->getConfig()->merge([
-            'config' => [
-                'discard-changes' => true,
-            ],
-        ]);
-
-        return $composer;
-    }
-
     protected function getJsonPath(): string
     {
-        return base_path('composer-dev.json');
+        return base_path('composer.json');
     }
 
     protected function getAuthPath(): string
     {
         return base_path('auth.json');
+    }
+
+    protected function runCommand($action, array $packages = [], array $options = [])
+    {
+        $this->assertPhpIniSet();
+        $this->assertHomeEnvSet();
+
+        try {
+            $this->assertHomeDirectory();
+
+            $stream = fopen('php://temp', 'wb+');
+            $output = new StreamOutput($stream);
+
+            $application = new Application();
+            $application->setAutoExit(false);
+            $application->setCatchExceptions(false);
+            $exitCode = $application->run(new ArrayInput([
+                    'command' => $action,
+                    'packages' => $packages,
+                ] + $options), $output);
+
+            rewind($stream);
+            $this->log(stream_get_contents($stream));
+        }
+        finally {
+            $this->assertWorkingDirectory();
+        }
+
+        return $exitCode === 0;
     }
 
     //
@@ -422,10 +388,8 @@ class ComposerManager
 
     protected function assertHomeEnvSet()
     {
-        $osHome = Platform::isWindows() ? 'APPDATA' : 'HOME';
-        if (Platform::getEnv('COMPOSER_HOME') || Platform::getEnv($osHome)) {
+        if (Platform::getEnv('COMPOSER_HOME'))
             return;
-        }
 
         $tempPath = temp_path('composer');
         if (!file_exists($tempPath)) {
@@ -446,93 +410,45 @@ class ComposerManager
         chdir($this->workingDir);
     }
 
-    protected function assertComposerLoaded()
-    {
-        // Preload root package
-        $this->assertPackageLoaded('Composer', base_path('vendor/composer/composer/src/Composer'), false);
-
-        // Preload child packages
-        foreach ([
-            'Composer\Autoload',
-            'Composer\Config',
-            'Composer\DependencyResolver',
-            'Composer\Downloader',
-            'Composer\EventDispatcher',
-            'Composer\Exception',
-            'Composer\Filter',
-            'Composer\Installer',
-            'Composer\IO',
-            'Composer\Json',
-            'Composer\Package',
-            'Composer\Platform',
-            'Composer\Plugin',
-            'Composer\Question',
-            'Composer\Repository',
-            'Composer\Script',
-            'Composer\SelfUpdate',
-            'Composer\Util',
-        ] as $package) {
-            $this->assertPackageLoaded(
-                $package,
-                base_path('vendor/composer/composer/src/'.str_replace("\\", "/", $package))
-            );
-        }
-    }
-
-    protected function assertPackageLoaded($packageName, $packagePath, $recursive = true)
-    {
-        $allFiles = $recursive
-            ? new RecursiveIteratorIterator(new RecursiveDirectoryIterator($packagePath))
-            : new DirectoryIterator($packagePath);
-
-        $phpFiles = new RegexIterator($allFiles, '/\.php$/');
-        $packagePathLen = strlen($packagePath);
-
-        foreach ($phpFiles as $phpFile) {
-            // Remove base directory and .php extension
-            $className = substr($phpFile->getRealPath(), $packagePathLen, -4);
-
-            // Normalize OS path separators, normalize to a class namespace
-            $className = trim(str_replace("/", "\\", $className), '\\');
-
-            // Build complete namespace
-            $className = $packageName.'\\'.$className;
-
-            // Preload class
-            class_exists($className);
-        }
-    }
-
     //
     //
     //
 
-    public function setOutput(IOInterface $output = null)
+    /**
+     * Set the output implementation that should be used by the console.
+     *
+     * @param \Illuminate\Console\OutputStyle $output
+     * @return $this
+     */
+    public function setLogsOutput($output)
     {
-        if ($output === null) {
-            $this->output = new NullIO();
-        }
-        else {
-            $this->output = $output;
-        }
+        $this->logsOutput = $output;
+
+        return $this;
     }
 
-    public function setOutputCommand(Command $command, InputInterface $input)
+    public function log($message)
     {
-        $this->setOutput(new ConsoleIO($input, $command->getOutput(), $command->getHelperSet()));
+        if (!is_null($this->logsOutput))
+            $this->logsOutput->writeln($message);
+
+        $this->logs[] = $message;
+
+        return $this;
     }
 
-    public function setOutputBuffer()
+    /**
+     * @return \System\Classes\UpdateManager $this
+     */
+    public function resetLogs()
     {
-        $this->setOutput(new BufferIO());
+        $this->logs = [];
+
+        return $this;
     }
 
-    public function getOutputBuffer(): string
+    public function getLogs()
     {
-        if ($this->output instanceof BufferIO) {
-            return $this->output->getOutput();
-        }
-
-        return '';
+        return $this->logs;
     }
 }
