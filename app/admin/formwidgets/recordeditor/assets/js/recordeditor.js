@@ -41,6 +41,9 @@
             isCreateContext = $button.data('control') === 'create-record',
             $chooseRecordEl = this.$chooseRecordEl
 
+        if ($chooseRecordEl.is("input[type='radio']"))
+            $chooseRecordEl = $chooseRecordEl.filter(':checked')
+
         new $.ti.recordEditor.modal({
             alias: this.options.alias,
             recordId: isCreateContext ? null : $chooseRecordEl.val(),
