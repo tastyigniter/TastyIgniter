@@ -222,6 +222,8 @@ class ComposerManager
     public function update(array $packages = [])
     {
         $options = ['--no-interaction' => true, '--no-progress' => true];
+        if (!config('app.debug', false))
+            $options['--no-dev'] = $options['--optimize-autoloader'] = true;
 
         return $this->runCommand('update', $packages, $options);
     }
@@ -229,13 +231,15 @@ class ComposerManager
     public function require(array $packages = [])
     {
         $options = ['--no-interaction' => true, '--no-progress' => true];
+        if (!config('app.debug', false))
+            $options['--update-no-dev'] = $options['--optimize-autoloader'] = true;
 
         return $this->runCommand('require', $packages, $options);
     }
 
     public function remove(array $packages = [])
     {
-        $options = ['--no-interaction' => true];
+        $options = ['--no-interaction' => true, '--no-progress' => true];
 
         return $this->runCommand('remove', $packages, $options);
     }
