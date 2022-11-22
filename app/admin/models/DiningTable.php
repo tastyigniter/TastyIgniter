@@ -185,8 +185,12 @@ class DiningTable extends \Igniter\Flame\Database\Model
 
         return $query->whereDoesntHave('reservations', function ($query) use ($dateTime, $duration) {
             $query
-                ->whereRaw('ADDTIME(reserve_date, reserve_time) > ?', [$dateTime->clone()->subMinutes($duration)->toDateTimeString()])
-                ->whereRaw('ADDTIME(reserve_date, reserve_time) < ?', [$dateTime->clone()->addMinutes($duration)->toDateTimeString()])
+                ->where(function ($query) use ($dateTime) {
+                    $query->whereBetweenStayTime($dateTime->clone()->addMinute());
+                })
+                ->orWhere(function ($query) use ($dateTime, $duration) {
+                    $query->whereBetweenStayTime($dateTime->clone()->addMinutes($duration - 1));
+                })
                 ->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
         });
     }
