@@ -39,15 +39,7 @@
     "tastyigniter/ti-ext-api": "v4.x-dev",
     "tastyigniter/ti-ext-automation": "v4.x-dev",
     "tastyigniter/ti-ext-broadcast": "v4.x-dev",
-    "tastyigniter/ti-ext-cart": "v4.x-dev",
-    "tastyigniter/ti-ext-coupons": "v4.x-dev",
-    "tastyigniter/ti-ext-frontend": "v4.x-dev",
-    "tastyigniter/ti-ext-local": "v4.x-dev",
-    "tastyigniter/ti-ext-pages": "v4.x-dev",
-    "tastyigniter/ti-ext-payregister": "v4.x-dev",
-    "tastyigniter/ti-ext-reservation": "v4.x-dev",
     "tastyigniter/ti-ext-socialite": "v4.x-dev",
-    "tastyigniter/ti-ext-user": "v4.x-dev",
     "tastyigniter/ti-theme-orange": "v4.x-dev"
   },
   "autoload": {
