@@ -156,7 +156,6 @@ $config['floor_plan']['filter'] = [
             'modelClass' => 'Admin\Models\DiningArea',
             'nameFrom' => 'name',
             'scope' => 'whereHasDiningArea',
-            'locationAware' => true,
         ],
         'reserve_date' => [
             'label' => 'lang:admin::lang.reservations.text_filter_date',

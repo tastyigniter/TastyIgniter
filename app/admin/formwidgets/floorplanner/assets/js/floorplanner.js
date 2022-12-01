@@ -95,6 +95,9 @@
             return
         }
 
+        if (!state)
+            return
+
         this.stage.x(state.stage.x)
         this.stage.y(state.stage.y)
         this.stage.scaleX(state.stage.scaleX)
