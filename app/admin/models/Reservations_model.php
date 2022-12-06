@@ -439,11 +439,12 @@ class Reservations_model extends Model
      */
     public function getNextBookableTable()
     {
-        $lastSectionPriority = $this->getLastSectionPriority();
-
         $diningTables = DiningTable::query()
             ->with(['dining_section'])
-            ->select('dining_tables.*', 'dining_sections.priority')
+            ->withCount(['reservations' => function ($query) {
+                $query->where('reserve_date', $this->reserve_date)
+                    ->whereNotIn('status_id', [0, setting('canceled_reservation_status')]);
+            }])
             ->reservable([
                 'locationId' => $this->location_id,
                 'dateTime' => $this->reservation_datetime,
@@ -451,17 +452,8 @@ class Reservations_model extends Model
                 'duration' => $this->duration,
             ])->get();
 
-        $diningTable = null;
-
-        if ($lastSectionPriority) {
-            $diningTable = $diningTables->first(function ($diningTable) use ($lastSectionPriority) {
-                    return $diningTable->dining_section && $diningTable->dining_section->priority > $lastSectionPriority;
-                }) ?? $diningTables->first(function ($diningTable) use ($lastSectionPriority) {
-                    return $diningTable->dining_section && $diningTable->dining_section->priority <= $lastSectionPriority;
-                });
-        }
-
-        $diningTable = $diningTable ?? $diningTables->first();
+        if (!$diningTable = $this->getNextBookableTableInSection($diningTables))
+            $diningTable = $diningTables->first();
 
         return collect($diningTable ? [$diningTable] : []);
     }
@@ -477,20 +469,66 @@ class Reservations_model extends Model
         return true;
     }
 
-    protected function getLastSectionPriority()
+    protected function getLastSectionId()
     {
         $lastReservation = $this->newQuery()
             ->has('tables')
             ->where('location_id', $this->location_id)
             ->whereDate('reserve_date', $this->reserve_date)
-            ->whereNotIn('status_id', [0, setting('canceled_reservation_status')])
-            ->orderBy('created_at', 'desc')
+            ->where(function ($query) {
+                $query->whereNotIn('status_id', [0, setting('canceled_reservation_status')])
+                    ->orWhereNull('status_id');
+            })
+            ->orderBy('reservation_id', 'desc')
             ->first();
 
-        if (!$lastReservation || !$lastReservation->tables || $lastReservation->tables->isEmpty())
+        $nextSectionId = null;
+        if ($lastReservation && $lastReservation->tables)
+            $nextSectionId = $lastReservation->tables->first()->dining_section->id;
+
+        return $nextSectionId;
+    }
+
+    protected function getNextBookableTableInSection($diningTables)
+    {
+        if ($diningTables->isEmpty() || $diningTables->pluck('dining_section.id')->unique()->isEmpty())
             return null;
 
-        return optional($lastReservation->tables->first()->dining_section)->priority ?? null;
+        $diningSectionsIds = DiningSection::whereHasLocation($this->location_id)
+            ->whereIsReservable()->orderBy('priority')->pluck('id');
+
+        if ($diningSectionsIds->isEmpty())
+            return null;
+
+        $diningSectionsIds = $diningSectionsIds->all();
+
+        $lastSectionId = $this->getLastSectionId();
+        if (($nextIndex = array_search($lastSectionId, $diningSectionsIds)) !== false)
+            $nextIndex++;
+
+        $sectionCount = count($diningSectionsIds);
+        if ($nextIndex === false || $nextIndex >= $sectionCount)
+            $nextIndex = 0;
+
+        $diningTable = null;
+        $diningSections = $diningTables->groupBy('dining_section.id')->all();
+        for ($i = $nextIndex; $i < $sectionCount; $i++) {
+            $sectionId = $diningSectionsIds[$i];
+            $tables = array_pull($diningSections, $sectionId);
+            if ($tables && $tables->isNotEmpty()) {
+                $diningTable = $tables->sortBy('reservations_count')->first();
+                break;
+            }
+
+            if (!count($diningSections))
+                break;
+
+            if ($i == count($diningSectionsIds) - 1) {
+                $i = -1;
+            }
+        }
+
+        return $diningTable;
     }
 
     //

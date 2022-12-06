@@ -18,6 +18,9 @@ class DiningSection extends \Igniter\Flame\Database\Model
      * @var array Relations
      */
     public $relation = [
+        'belongsTo' => [
+            'location' => [Locations_model::class],
+        ],
         'hasMany' => [
             'dining_areas' => [DiningArea::class, 'foreignKey' => 'location_id', 'otherKey' => 'location_id'],
         ],
@@ -36,8 +39,15 @@ class DiningSection extends \Igniter\Flame\Database\Model
         return self::dropdown('name');
     }
 
+    public function getPriorityOptions()
+    {
+        return collect(range(0, 9))->map(function ($priority) {
+            return lang('admin::lang.dining_tables.text_priority_'.$priority);
+        })->all();
+    }
+
     public function scopeWhereIsReservable($query)
     {
-        return $query->whereIsRoot()->where('is_enabled', 1);
+        return $query->where('is_enabled', 1);
     }
 }

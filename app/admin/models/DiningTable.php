@@ -78,6 +78,13 @@ class DiningTable extends \Igniter\Flame\Database\Model
         return $this->exists ? DiningSection::where('location_id', $this->dining_area->location_id)->dropdown('name') : [];
     }
 
+    public function getPriorityOptions()
+    {
+        return collect(range(0, 9))->map(function ($priority) {
+            return lang('admin::lang.dining_tables.text_priority_'.$priority);
+        })->all();
+    }
+
     //
     // Events
     //
@@ -133,8 +140,8 @@ class DiningTable extends \Igniter\Flame\Database\Model
             $query->whereCanAccommodate($guestNum);
 
         $query
-            ->orderBy('dining_sections.priority')
-            ->orderBy('dining_tables.priority');
+            ->orderBy('dining_sections.priority', 'desc')
+            ->orderBy('dining_tables.priority', 'desc');
 
         $this->fireEvent('model.extendDiningTableReservableQuery', [$query]);
 

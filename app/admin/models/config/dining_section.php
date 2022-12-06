@@ -12,7 +12,8 @@ return [
             ],
             'priority' => [
                 'label' => 'lang:admin::lang.dining_tables.label_priority',
-                'type' => 'number',
+                'type' => 'select',
+                'default' => 0,
                 'comment' => 'lang:admin::lang.dining_areas.help_section_priority',
             ],
             'description' => [
