@@ -66,14 +66,14 @@ class CreateDiningAreasSectionsTablesAddColumnsTable extends Migration
             });
 
             Schema::table('reservation_tables', function (Blueprint $table) {
-                $table->unsignedBigInteger('dining_table_id')->after('reservation_id');
+                $table->unsignedBigInteger('dining_table_id')->nullable()->after('reservation_id');
                 $table->unique(['reservation_id', 'dining_table_id']);
             });
         }
 
         $this->setDiningTableIdOnReservationTables();
 
-        DiningTable::fixTree();
+        DiningTable::fixBrokenTreeQuietly();
     }
 
     public function down()
