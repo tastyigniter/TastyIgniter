@@ -483,7 +483,7 @@ class Reservations_model extends Model
             ->first();
 
         $nextSectionId = null;
-        if ($lastReservation && $lastReservation->tables)
+        if ($lastReservation && $lastReservation->tables && $lastReservation->tables->first()->dining_section)
             $nextSectionId = $lastReservation->tables->first()->dining_section->id;
 
         return $nextSectionId;
