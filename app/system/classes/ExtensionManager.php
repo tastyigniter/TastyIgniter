@@ -9,8 +9,6 @@ use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\View;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 use System\Models\Extensions_model;
 use ZipArchive;
 
@@ -50,17 +48,19 @@ class ExtensionManager
     /**
      * @var array used Set whether extensions have been booted.
      */
-    protected $booted = FALSE;
+    protected $booted = false;
 
     /**
      * @var array used Set whether extensions have been registered.
      */
-    protected $registered = FALSE;
+    protected $registered = false;
 
     /**
      * @var string Path to the disarm file.
      */
     protected $metaFile;
+
+    protected static $directories = [];
 
     public function initialize()
     {
@@ -72,6 +72,11 @@ class ExtensionManager
         if (App::runningInAdmin()) {
             $this->loadDependencies();
         }
+    }
+
+    public static function addDirectory($directory)
+    {
+        self::$directories[] = $directory;
     }
 
     /**
@@ -169,7 +174,7 @@ class ExtensionManager
      */
     public function folders()
     {
-        return [App::extensionsPath()];
+        return array_merge([App::extensionsPath()], self::$directories);
     }
 
     /**
@@ -178,19 +183,7 @@ class ExtensionManager
      */
     public function listExtensions()
     {
-        $map = [];
-        foreach ($this->paths() as $vendor => $paths) {
-            foreach ($paths as $code => $path) {
-                $map[] = "{$vendor}.{$code}";
-            }
-        }
-
-        $count = count($map);
-        if (!$count) {
-            return $map;
-        }
-
-        return $map;
+        return array_keys($this->paths());
     }
 
     /**
@@ -230,16 +223,16 @@ class ExtensionManager
             if (!$required = $this->getDependencies($extension))
                 continue;
 
-            $disable = FALSE;
+            $disable = false;
             foreach ($required as $require) {
                 $extensionObj = $this->findExtension($require);
                 if (!$extensionObj || $extensionObj->disabled)
-                    $disable = TRUE;
+                    $disable = true;
             }
 
             // Only disable extension with missing dependencies.
             if ($disable && !$extension->disabled)
-                $this->updateInstalledExtensions($code, FALSE);
+                $this->updateInstalledExtensions($code, false);
         }
     }
 
@@ -253,7 +246,7 @@ class ExtensionManager
     public function getDependencies($extension)
     {
         if (is_string($extension) && (!$extension = $this->findExtension($extension)))
-            return FALSE;
+            return false;
 
         if (!$require = array_get($extension->extensionMeta(), 'require'))
             return null;
@@ -313,31 +306,24 @@ class ExtensionManager
      */
     public function paths()
     {
-        $data = [];
-        $dirPath = extension_path();
-        if (!File::isDirectory($dirPath)) {
-            return $data;
-        }
+        if ($this->paths)
+            return $this->paths;
 
-        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(
-            $dirPath, RecursiveDirectoryIterator::FOLLOW_SYMLINKS
-        ));
+        $paths = [];
+        foreach ($this->folders() as $extensionPath) {
+            if (!File::isDirectory($extensionPath))
+                continue;
 
-        $it->setMaxDepth(2);
-        $it->rewind();
-
-        while ($it->valid()) {
-            if (($it->getDepth() > 1) && $it->isFile() && (strtolower($it->getFilename()) == 'extension.php')) {
-                $filePath = dirname($it->getPathname());
+            $files = File::glob($extensionPath.'/**/**/Extension.php');
+            foreach ($files as $file) {
+                $filePath = dirname($file);
                 $extensionName = basename($filePath);
                 $extensionVendor = basename(dirname($filePath));
-                $data[$extensionVendor][$extensionName] = $filePath;
+                $paths[$extensionVendor][$extensionName] = $filePath;
             }
-
-            $it->next();
         }
 
-        return $data;
+        return $this->paths = array_dot($paths);
     }
 
     /**
@@ -349,8 +335,8 @@ class ExtensionManager
     {
         $this->extensions = [];
 
-        foreach ($this->namespaces() as $name => $path) {
-            $this->loadExtension($name, $path);
+        foreach ($this->namespaces() as $namespace => $path) {
+            $this->loadExtension($namespace, $path);
         }
 
         return $this->extensions;
@@ -359,17 +345,17 @@ class ExtensionManager
     /**
      * Loads a single extension in to the manager.
      *
-     * @param string $name Eg: directory_name
-     * @param string $path Eg: base_path().'/extensions/directory_name';
+     * @param string $code Eg: extension code
+     * @param string $path Eg: base_path().'/extensions/vendor/extension';
      *
      * @return object|bool
      * @throws \Igniter\Flame\Exception\SystemException
      */
-    public function loadExtension($name, $path)
+    public function loadExtension($code, $path)
     {
-        if (!$this->checkName($name)) return FALSE;
+        if (!$this->checkName($code)) return false;
 
-        $identifier = $this->getIdentifier($name);
+        $identifier = $this->getIdentifier($code);
 
         if (isset($this->extensions[$identifier])) {
             return $this->extensions[$identifier];
@@ -377,9 +363,9 @@ class ExtensionManager
 
         $classPath = $path.'/Extension.php';
         if (!file_exists($classPath))
-            return FALSE;
+            return false;
 
-        $namespace = ucfirst($name).'\\';
+        $namespace = ucfirst($code).'\\';
         $class = $namespace.'Extension';
 
         if (!class_exists($class)) {
@@ -390,11 +376,10 @@ class ExtensionManager
 
         // Check for disabled extensions
         if ($this->isDisabled($identifier)) {
-            $classObj->disabled = TRUE;
+            $classObj->disabled = true;
         }
 
         $this->extensions[$identifier] = $classObj;
-        $this->paths[$identifier] = $path;
 
         return $classObj;
     }
@@ -409,11 +394,11 @@ class ExtensionManager
             return;
         }
 
-        foreach ($this->extensions as $name => $extension) {
+        foreach ($this->extensions as $extension) {
             $this->bootExtension($extension);
         }
 
-        $this->booted = TRUE;
+        $this->booted = true;
     }
 
     /**
@@ -446,11 +431,11 @@ class ExtensionManager
             return;
         }
 
-        foreach ($this->extensions as $name => $extension) {
-            $this->registerExtension($name, $extension);
+        foreach ($this->extensions as $code => $extension) {
+            $this->registerExtension($code, $extension);
         }
 
-        $this->registered = TRUE;
+        $this->registered = true;
     }
 
     /**
@@ -460,15 +445,14 @@ class ExtensionManager
      *
      * @return void
      */
-    public function registerExtension($name, $extension = null)
+    public function registerExtension($code, $extension = null)
     {
         if (!$extension) {
             return;
         }
 
-        $path = $this->getNamePath($name);
-        $extensionPath = extension_path($path);
-        $extensionNamespace = strtolower($name);
+        $extensionPath = $this->getExtensionPath($code);
+        $extensionNamespace = strtolower($code);
 
         $langPath = $extensionPath.'/language';
         if (File::isDirectory($langPath)) {
@@ -496,7 +480,7 @@ class ExtensionManager
         // Register views path
         $viewsPath = $extensionPath.'/views';
         if (File::isDirectory($viewsPath)) {
-            View::addNamespace($name, $viewsPath);
+            View::addNamespace($code, $viewsPath);
         }
 
         // Add routes, if available
@@ -515,9 +499,9 @@ class ExtensionManager
     public function getExtensions()
     {
         $extensions = [];
-        foreach ($this->extensions as $name => $extension) {
+        foreach ($this->extensions as $code => $extension) {
             if (!$extension->disabled)
-                $extensions[$name] = $extension;
+                $extensions[$code] = $extension;
         }
 
         return $extensions;
@@ -526,58 +510,63 @@ class ExtensionManager
     /**
      * Returns a extension registration class based on its name.
      *
-     * @param $name
+     * @param $code
      *
      * @return mixed|null
      */
-    public function findExtension($name)
+    public function findExtension($code)
     {
-        if (!$this->hasExtension($name)) {
+        if (!$this->hasExtension($code)) {
             return null;
         }
 
-        return $this->extensions[$name];
+        return $this->extensions[$code];
     }
 
     /**
      * Checks to see if an extension name is well formed.
      *
-     * @param $name
+     * @param $code
      *
      * @return string
      */
-    public function checkName($name)
+    public function checkName($code)
     {
-        return (strpos($name, '_') === 0 || preg_match('/\s/', $name)) ? null : $name;
+        return (strpos($code, '_') === 0 || preg_match('/\s/', $code)) ? null : $code;
     }
 
-    public function getIdentifier($name)
+    public function getIdentifier($namespace)
     {
-        $name = trim($name, '\\');
+        $namespace = trim($namespace, '\\');
 
-        return str_replace('\\', '.', $name);
+        return str_replace('\\', '.', $namespace);
     }
 
-    public function getNamePath($name)
+    public function getNamePath($code)
     {
-        return str_replace('.', '/', $name);
+        return str_replace('.', '/', $code);
+    }
+
+    public function getExtensionPath($code, $path = '')
+    {
+        return ($this->paths[$code] ?? null).$path;
     }
 
     /**
      * Checks to see if an extension has been registered.
      *
-     * @param $name
+     * @param $code
      *
      * @return bool
      */
-    public function hasExtension($name)
+    public function hasExtension($code)
     {
-        return isset($this->extensions[$name]);
+        return isset($this->extensions[$code]);
     }
 
     public function hasVendor($path)
     {
-        return array_key_exists($path, $this->paths());
+        return array_key_exists($path, array_undot($this->paths()));
     }
 
     /**
@@ -587,12 +576,10 @@ class ExtensionManager
     {
         $classNames = [];
 
-        foreach ($this->paths() as $vendor => $extensions) {
-            foreach ($extensions as $name => $path) {
-                $namespace = '\\'.$vendor.'\\'.$name;
-                $namespace = normalize_class_name($namespace);
-                $classNames[$namespace] = $path;
-            }
+        foreach ($this->paths() as $extensionCode => $path) {
+            $namespace = '\\'.str_replace('.', '\\', $extensionCode);
+            $namespace = normalize_class_name($namespace);
+            $classNames[$namespace] = $path;
         }
 
         return $classNames;
@@ -601,13 +588,13 @@ class ExtensionManager
     /**
      * Determines if an extension is disabled by looking at the installed extensions config.
      *
-     * @param $name
+     * @param $code
      *
      * @return bool
      */
-    public function isDisabled($name)
+    public function isDisabled($code)
     {
-        return !$this->checkName($name) || !array_get($this->installedExtensions, $name, FALSE);
+        return !$this->checkName($code) || !array_get($this->installedExtensions, $code, false);
     }
 
     /**
@@ -642,7 +629,7 @@ class ExtensionManager
         if (!File::exists($this->metaFile))
             return;
 
-        $this->installedExtensions = json_decode(File::get($this->metaFile, TRUE), TRUE) ?: [];
+        $this->installedExtensions = json_decode(File::get($this->metaFile, true), true) ?: [];
     }
 
     /**
@@ -650,7 +637,7 @@ class ExtensionManager
      * @param bool $enable
      * @return bool
      */
-    public function updateInstalledExtensions($code, $enable = TRUE)
+    public function updateInstalledExtensions($code, $enable = true)
     {
         $code = $this->getIdentifier($code);
 
@@ -662,13 +649,13 @@ class ExtensionManager
         }
 
         // Write the installed extensions to a meta file.
-        File::put($this->metaFile, json_encode($this->installedExtensions), TRUE);
+        File::put($this->metaFile, json_encode($this->installedExtensions), true);
 
-        if ($enable === FALSE && $extension = $this->findExtension($code)) {
-            $extension->disabled = TRUE;
+        if ($extension = $this->findExtension($code)) {
+            $extension->disabled = $enable === false;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -680,7 +667,8 @@ class ExtensionManager
      */
     public function removeExtension($extCode = null)
     {
-        $extensionPath = extension_path($this->getNamePath($extCode));
+        if (!$extensionPath = $this->getExtensionPath($extCode))
+            return false;
 
         // Delete the specified extension folder.
         if (File::isDirectory($extensionPath))
@@ -694,7 +682,7 @@ class ExtensionManager
         )
             File::deleteDirectory($vendorPath);
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -711,13 +699,13 @@ class ExtensionManager
         $extractTo = current($this->folders());
 
         $zip = new ZipArchive;
-        if ($zip->open($zipPath) === TRUE) {
+        if ($zip->open($zipPath) === true) {
             $extensionDir = $zip->getNameIndex(0);
 
             if (!$this->checkName($extensionDir))
                 throw new SystemException('Extension name can not have spaces.');
 
-            if ($zip->locateName($extensionDir.'Extension.php') === FALSE)
+            if ($zip->locateName($extensionDir.'Extension.php') === false)
                 throw new SystemException('Extension registration class was not found.');
 
             $meta = @json_decode($zip->getFromName($extensionDir.'extension.json'));
@@ -744,26 +732,26 @@ class ExtensionManager
     {
         $model = Extensions_model::firstOrNew(['name' => $code]);
         if (!$model->applyExtensionClass())
-            return FALSE;
+            return false;
 
         if (!$extension = $this->findExtension($model->name))
-            return FALSE;
+            return false;
 
         // Register and boot the extension to make
         // its services available before migrating
-        $extension->disabled = FALSE;
+        $extension->disabled = false;
         $this->registerExtension($model->name, $extension);
         $this->bootExtension($extension);
 
         // set extension migration to the latest version
         UpdateManager::instance()->migrateExtension($model->name);
 
-        $model->version = $version ?? $this->getComposerInstalledVersion($extension) ?? $model->version;
+        $model->version = $version ?? ComposerManager::instance()->getPackageVersion($model->name) ?? $model->version;
         $model->save();
 
         $this->updateInstalledExtensions($model->name);
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -774,14 +762,14 @@ class ExtensionManager
      * @param bool $purgeData
      * @return bool
      */
-    public function uninstallExtension($code, $purgeData = FALSE)
+    public function uninstallExtension($code, $purgeData = false)
     {
         if ($purgeData)
             UpdateManager::instance()->purgeExtension($code);
 
-        $this->updateInstalledExtensions($code, FALSE);
+        $this->updateInstalledExtensions($code, false);
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -793,7 +781,7 @@ class ExtensionManager
      * @return bool
      * @throws \Exception
      */
-    public function deleteExtension($code, $purgeData = TRUE)
+    public function deleteExtension($code, $purgeData = true)
     {
         if ($extensionModel = Extensions_model::where('name', $code)->first())
             $extensionModel->delete();
@@ -807,7 +795,7 @@ class ExtensionManager
         // remove extension from installed.json meta file
         $this->updateInstalledExtensions($code, null);
 
-        return TRUE;
+        return true;
     }
 
     protected function mergeConfigFrom(string $namespace, string $path)
@@ -821,31 +809,5 @@ class ExtensionManager
                 require $configPath, $this->app['config']->get($configKey, [])
             ));
         }
-    }
-
-    protected function getComposerInstalledVersion($extension)
-    {
-        if (!$extensionCode = array_get($extension->extensionMeta(), 'code'))
-            return null;
-
-        if (!File::exists(sprintf('%s/composer.json', $this->path($extensionCode))))
-            return null;
-
-        if (!File::exists($path = base_path('/vendor/composer/installed.json')))
-            return null;
-
-        $installed = json_decode(File::get($path), TRUE);
-
-        // Structure of the installed.json manifest in different in Composer 2.0
-        $installed = $installed['packages'] ?? $installed;
-
-        $package = collect($installed)->first(function ($package) use ($extensionCode) {
-            if (array_get($package, 'type') !== 'tastyigniter-extension')
-                return FALSE;
-
-            return array_get($package, 'extra.tastyigniter-extension.code') === $extensionCode;
-        });
-
-        return array_get($package ?? [], 'version');
     }
 }

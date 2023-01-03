@@ -3,11 +3,11 @@
 namespace Admin\Models;
 
 use Admin\Traits\Locationable;
+use Admin\Traits\Stockable;
 use Carbon\Carbon;
 use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Purgeable;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Menus Model Class
@@ -17,6 +17,7 @@ class Menus_model extends Model
     use Purgeable;
     use Locationable;
     use HasMedia;
+    use Stockable;
 
     const LOCATIONABLE_RELATION = 'locations';
 
@@ -35,9 +36,7 @@ class Menus_model extends Model
     protected $casts = [
         'menu_price' => 'float',
         'menu_category_id' => 'integer',
-        'stock_qty' => 'integer',
         'minimum_qty' => 'integer',
-        'subtract_stock' => 'boolean',
         'order_restriction' => 'array',
         'menu_status' => 'boolean',
         'menu_priority' => 'integer',
@@ -45,10 +44,10 @@ class Menus_model extends Model
 
     public $relation = [
         'hasMany' => [
-            'menu_options' => ['Admin\Models\Menu_item_options_model', 'delete' => TRUE],
+            'menu_options' => ['Admin\Models\Menu_item_options_model', 'delete' => true],
         ],
         'hasOne' => [
-            'special' => ['Admin\Models\Menus_specials_model', 'delete' => TRUE],
+            'special' => ['Admin\Models\Menus_specials_model', 'delete' => true],
         ],
         'belongsToMany' => [
             'categories' => ['Admin\Models\Categories_model', 'table' => 'menu_categories'],
@@ -66,7 +65,17 @@ class Menus_model extends Model
 
     public static $allowedSortingColumns = ['menu_priority asc', 'menu_priority desc'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
+
+    public function getMenuPriceFromAttribute()
+    {
+        if ($this->menu_price > 0)
+            return $this->menu_price;
+
+        return $this->menu_options->mapWithKeys(function ($option) {
+            return $option->menu_option_values->keyBy('menu_option_value_id');
+        })->min('price');
+    }
 
     //
     // Scopes
@@ -97,7 +106,7 @@ class Menus_model extends Model
         extract(array_merge([
             'page' => 1,
             'pageLimit' => 20,
-            'enabled' => TRUE,
+            'enabled' => true,
             'sort' => 'menu_priority asc',
             'group' => null,
             'location' => null,
@@ -208,28 +217,9 @@ class Menus_model extends Model
      * @param bool $subtract
      * @return bool TRUE on success, or FALSE on failure
      */
-    public function updateStock($quantity = 0, $subtract = TRUE)
+    public function updateStock($quantity = 0, $subtract = true)
     {
-        if (!$this->subtract_stock)
-            return FALSE;
-
-        if ($this->stock_qty == 0)
-            return FALSE;
-
-        $stockQty = ($subtract === TRUE)
-            ? $this->stock_qty - $quantity
-            : $this->stock_qty + $quantity;
-
-        $stockQty = ($stockQty <= 0) ? -1 : $stockQty;
-
-        // Update using query to prevent model events from firing
-        $this->newQuery()
-            ->where($this->getKeyName(), $this->getKey())
-            ->update(['stock_qty' => $stockQty]);
-
-        Event::fire('admin.menu.stockUpdated', [$this, $quantity, $subtract]);
-
-        return TRUE;
+        traceLog('Menus_model::updateStock() has been deprecated, use Stocks_model::updateStock() instead.');
     }
 
     /**
@@ -242,7 +232,7 @@ class Menus_model extends Model
     public function addMenuAllergens(array $allergenIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->allergens()->sync($allergenIds);
     }
@@ -257,7 +247,7 @@ class Menus_model extends Model
     public function addMenuCategories(array $categoryIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->categories()->sync($categoryIds);
     }
@@ -272,7 +262,7 @@ class Menus_model extends Model
     public function addMenuMealtimes(array $mealtimeIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->mealtimes()->sync($mealtimeIds);
     }
@@ -288,7 +278,7 @@ class Menus_model extends Model
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))
-            return FALSE;
+            return false;
 
         $idsToKeep = [];
         foreach ($menuOptions as $option) {
@@ -318,7 +308,7 @@ class Menus_model extends Model
     {
         $menuId = $this->getKey();
         if (!is_numeric($menuId))
-            return FALSE;
+            return false;
 
         $menuSpecial['menu_id'] = $menuId;
         $this->special()->updateOrCreate([
@@ -342,10 +332,10 @@ class Menus_model extends Model
             $datetime = Carbon::parse($datetime);
         }
 
-        $isAvailable = TRUE;
+        $isAvailable = true;
 
         if (count($this->mealtimes) > 0) {
-            $isAvailable = FALSE;
+            $isAvailable = false;
             foreach ($this->mealtimes as $mealtime) {
                 if ($mealtime->mealtime_status) {
                     $isAvailable = $isAvailable || $mealtime->isAvailable($datetime);
@@ -353,7 +343,7 @@ class Menus_model extends Model
             }
         }
 
-        if (is_bool($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], TRUE)))
+        if (is_bool($eventResults = $this->fireSystemEvent('admin.menu.isAvailable', [$datetime, $isAvailable], true)))
             $isAvailable = $eventResults;
 
         return $isAvailable;

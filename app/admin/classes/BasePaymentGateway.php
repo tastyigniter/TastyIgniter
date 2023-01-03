@@ -24,6 +24,10 @@ class BasePaymentGateway extends ModelAction
 
     protected $configFields = [];
 
+    protected $configValidationAttributes = [];
+
+    protected $configValidationMessages = [];
+
     protected $configRules = [];
 
     /**
@@ -36,12 +40,14 @@ class BasePaymentGateway extends ModelAction
     {
         parent::__construct($model);
 
-        $calledClass = strtolower(get_called_class());
-        $this->configPath = extension_path(File::normalizePath($calledClass));
+        $reflector = new \ReflectionClass($calledClass = get_called_class());
+        $this->configPath = dirname($reflector->getFileName()).'/'.basename(File::normalizePath(strtolower($calledClass)));
 
         $formConfig = $this->loadConfig($this->defineFieldsConfig(), ['fields']);
         $this->configFields = array_get($formConfig, 'fields');
-        $this->configRules = array_get($formConfig, 'rules');
+        $this->configRules = array_get($formConfig, 'rules', []);
+        $this->configValidationAttributes = array_get($formConfig, 'validationAttributes', []);
+        $this->configValidationMessages = array_get($formConfig, 'validationMessages', []);
 
         if (!$model)
             return;
@@ -79,7 +85,7 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Returns the form configuration used by this model.
+     * Returns the form configuration used by this payment type.
      */
     public function getConfigFields()
     {
@@ -87,11 +93,27 @@ class BasePaymentGateway extends ModelAction
     }
 
     /**
-     * Returns the form configuration used by this model.
+     * Returns the form validation rules used by this payment type.
      */
     public function getConfigRules()
     {
         return $this->configRules;
+    }
+
+    /**
+     * Returns the form validation attributes used by this model.
+     */
+    public function getConfigValidationAttributes()
+    {
+        return $this->configValidationAttributes;
+    }
+
+    /**
+     * Returns the form validation messages used by this model.
+     */
+    public function getConfigValidationMessages()
+    {
+        return $this->configValidationMessages;
     }
 
     /**
@@ -131,7 +153,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function isApplicable($total, $host)
     {
-        return TRUE;
+        return true;
     }
 
     /**
@@ -168,7 +190,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function completesPaymentOnClient()
     {
-        return FALSE;
+        return false;
     }
 
     /**
@@ -207,7 +229,7 @@ class BasePaymentGateway extends ModelAction
      */
     public function supportsPaymentProfiles()
     {
-        return FALSE;
+        return false;
     }
 
     /**

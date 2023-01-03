@@ -4,7 +4,7 @@ $config['list']['toolbar'] = [
         'browse' => [
             'label' => 'lang:system::lang.themes.button_browse',
             'class' => 'btn btn-primary',
-            'href' => 'https://tastyigniter.com/marketplace',
+            'href' => 'https://tastyigniter.com/marketplace/themes',
             'target' => '_blank',
         ],
         'check' => [
@@ -54,20 +54,20 @@ $config['list']['columns'] = [
     'name' => [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'theme_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
-        'invisible' => TRUE,
+        'invisible' => true,
         'type' => 'timesense',
     ],
 ];
@@ -93,13 +93,13 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.label_name',
         'type' => 'text',
         'span' => 'left',
-        'disabled' => TRUE,
+        'disabled' => true,
     ],
     'code' => [
         'label' => 'lang:system::lang.themes.label_code',
         'type' => 'text',
         'span' => 'right',
-        'disabled' => TRUE,
+        'disabled' => true,
     ],
     'template' => [
         'label' => 'lang:system::lang.themes.label_template',

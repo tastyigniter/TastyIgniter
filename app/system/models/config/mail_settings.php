@@ -6,7 +6,7 @@ return [
             'buttons' => [
                 'back' => [
                     'label' => 'lang:admin::lang.button_icon_back',
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-outline-secondary',
                     'href' => 'settings',
                 ],
                 'save' => [
@@ -32,6 +32,7 @@ return [
                 'label' => 'lang:system::lang.settings.label_protocol',
                 'type' => 'select',
                 'default' => 'sendmail',
+                'span' => 'left',
                 'options' => [
                     'log' => 'lang:system::lang.settings.text_log_file',
                     'sendmail' => 'lang:system::lang.settings.text_sendmail',
@@ -40,6 +41,13 @@ return [
                     'postmark' => 'lang:system::lang.settings.text_postmark',
                     'ses' => 'lang:system::lang.settings.text_ses',
                 ],
+            ],
+            'mail_logo' => [
+                'label' => 'lang:system::lang.settings.label_mail_logo',
+                'type' => 'mediafinder',
+                'span' => 'right',
+                'mode' => 'inline',
+                'comment' => 'lang:system::lang.settings.help_mail_logo',
             ],
 
             'sendmail_path' => [
@@ -174,28 +182,6 @@ return [
                 'path' => 'settings/test_email_button',
                 'span' => 'left',
             ],
-        ],
-        'rules' => [
-            ['sender_name', 'lang:system::lang.settings.label_sender_name', 'required'],
-            ['sender_email', 'lang:system::lang.settings.label_sender_email', 'required'],
-            ['protocol', 'lang:system::lang.settings.label_protocol', 'required'],
-
-            ['sendmail_path', 'lang:system::lang.settings.label_sendmail_path', 'required_if:protocol,sendmail|string'],
-
-            ['smtp_host', 'lang:system::lang.settings.label_smtp_host', 'string'],
-            ['smtp_port', 'lang:system::lang.settings.label_smtp_port', 'string'],
-            ['smtp_encryption', 'lang:system::lang.settings.label_smtp_encryption'],
-            ['smtp_user', 'lang:system::lang.settings.label_smtp_user', 'string'],
-            ['smtp_pass', 'lang:system::lang.settings.label_smtp_pass', 'string'],
-
-            ['mailgun_domain', 'lang:system::lang.settings.label_mailgun_domain', 'required_if:protocol,mailgun|string'],
-            ['mailgun_secret', 'lang:system::lang.settings.label_mailgun_secret', 'required_if:protocol,mailgun|string'],
-
-            ['postmark_token', 'lang:system::lang.settings.label_postmark_token', 'required_if:protocol,postmark|string'],
-
-            ['ses_key', 'lang:system::lang.settings.label_ses_key', 'required_if:protocol,ses|string'],
-            ['ses_secret', 'lang:system::lang.settings.label_ses_secret', 'required_if:protocol,ses|string'],
-            ['ses_region', 'lang:system::lang.settings.label_ses_region', 'required_if:protocol,ses|string'],
         ],
     ],
 ];

@@ -91,8 +91,6 @@ class DemoSchemaSeeder extends Seeder
                         'menu_option_id' => $menuOptionId,
                         'option_value_id' => $optionValue->option_value_id,
                         'new_price' => $optionValue->price,
-                        'quantity' => 0,
-                        'subtract_stock' => 0,
                         'priority' => $optionValue->priority,
                     ]);
                 }
@@ -106,6 +104,6 @@ class DemoSchemaSeeder extends Seeder
 
     protected function getSeedRecords($name)
     {
-        return json_decode(file_get_contents($this->recordsPath.'/'.$name.'.json'), TRUE);
+        return json_decode(file_get_contents($this->recordsPath.'/'.$name.'.json'), true);
     }
 }

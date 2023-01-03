@@ -71,7 +71,7 @@ class User_preferences_model extends Model
     public function set($item, $value)
     {
         if (!$user = $this->userContext) {
-            return FALSE;
+            return false;
         }
 
         $record = static::findRecord($item, $user);
@@ -87,18 +87,18 @@ class User_preferences_model extends Model
         $cacheKey = $this->getCacheKey($item, $user);
         static::$cache[$cacheKey] = $value;
 
-        return TRUE;
+        return true;
     }
 
     public function reset($item)
     {
         if (!$user = $this->userContext) {
-            return FALSE;
+            return false;
         }
 
         $record = static::findRecord($item, $user);
         if (!$record) {
-            return FALSE;
+            return false;
         }
 
         $record->delete();
@@ -106,7 +106,7 @@ class User_preferences_model extends Model
         $cacheKey = $this->getCacheKey($item, $user);
         unset(static::$cache[$cacheKey]);
 
-        return TRUE;
+        return true;
     }
 
     public function scopeApplyItemAndUser($query, $item, $user = null)

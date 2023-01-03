@@ -13,25 +13,6 @@ use InvalidArgumentException;
 
 trait HasWorkingHours
 {
-    public static function bootHasWorkingHours()
-    {
-        static::fetched(function (self $model) {
-            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
-
-            $model->parseHoursFromOptions($value);
-
-            $model->attributes['options'] = @json_encode($value);
-        });
-
-        static::saving(function (self $model) {
-            $value = @json_decode($model->attributes['options'], TRUE) ?: [];
-
-            $model->parseHoursFromOptions($value);
-
-            $model->attributes['options'] = @json_encode($value);
-        });
-    }
-
     /**
      * @return Carbon
      */
@@ -197,7 +178,7 @@ trait HasWorkingHours
             }
         }
 
-        return TRUE;
+        return true;
     }
 
     protected function parseHoursFromOptions(&$value)

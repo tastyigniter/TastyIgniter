@@ -32,8 +32,8 @@
                         class="text"
                         @if ($log['stack'])
                         role="button"
-                        data-toggle="collapse"
-                        data-target="#stack-{{ $key }}"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#stack-{{ $key }}"
                         aria-expanded="false"
                         aria-controls="stack{{ $key }}"
                         @endif

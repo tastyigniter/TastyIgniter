@@ -55,6 +55,7 @@
         this.$el.on('click', '[data-media-control]', $.proxy(this.onControlClick, this))
 
         this.$el.on('click', '[data-media-sort]', $.proxy(this.onSortingChanged, this))
+        this.$el.on('click', '[data-media-filter]', $.proxy(this.onFilterChanged, this))
         this.$el.on('keyup', '[data-media-control="search"]', $.proxy(this.onSearchChanged, this))
 
         $(window).bind("load resize", $.proxy(this.initScroll, this));
@@ -73,7 +74,7 @@
             statusbarHeight = this.$el.find('[data-control="media-statusbar"]').outerHeight() || 0,
             modalHeaderHeight = this.$el.closest('.modal').find('.modal-header').outerHeight() || 0
 
-        var listHeight = Math.max(0, windowHeight - listTopOffset - parseInt(modalHeaderHeight) - parseInt(statusbarHeight))
+        var listHeight = Math.max(0, windowHeight-listTopOffset-parseInt(modalHeaderHeight)-parseInt(statusbarHeight))
 
         if (listHeight < 1)
             return
@@ -157,7 +158,7 @@
 
         var currentScroll = $itemElement.scrollTop()
         $mediaList.animate({
-            scrollTop: currentScroll + $itemElement.position().top - 30
+            scrollTop: currentScroll+$itemElement.position().top-30
         }, 0)
     }
 
@@ -232,7 +233,7 @@
         }
 
         $.ti.loadingIndicator.show()
-        this.navigationAjax = element.request(this.options.alias + '::' + handler, {
+        this.navigationAjax = element.request(this.options.alias+'::'+handler, {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
@@ -254,11 +255,28 @@
     MediaManager.prototype.updateSidebar = function (items) {
         var container = this.$el[0],
             previewContainer = container.querySelector('[data-media-preview-container]'),
-            template = ''
+            template, previewTemplate
 
         // Single selection
         if (items.length == 1) {
-            var item = items[0].querySelector('[data-media-item]')
+            var item = items[0].querySelector('[data-media-item]'),
+                previewSelector = '[data-media-file-selection-template]',
+                itemFileType = item.getAttribute('data-media-item-file-type')
+
+            if (itemFileType === 'video')
+                previewSelector = '[data-media-video-selection-template]'
+
+            if (itemFileType === 'audio')
+                previewSelector = '[data-media-audio-selection-template]'
+
+            if (itemFileType === 'image')
+                previewSelector = '[data-media-image-selection-template]'
+
+            previewTemplate = container.querySelector(previewSelector).innerHTML
+                .replace('{fileType}', itemFileType)
+                .replace('{src}', item.getAttribute('data-media-item-url'))
+                .replace('{url}', item.getAttribute('data-media-item-url'))
+
             template = container.querySelector('[data-media-single-selection-template]').innerHTML
             previewContainer.innerHTML = template
                 .replace('{name}', item.getAttribute('data-media-item-name'))
@@ -268,6 +286,7 @@
                 .replace('{url}', item.getAttribute('data-media-item-url'))
                 .replace('{path}', item.getAttribute('data-media-item-path'))
                 .replace('{modified}', item.getAttribute('data-media-item-modified'))
+                .replace('<div data-media-preview-placeholder></div>', previewTemplate)
         }
         // No selection
         else if (items.length == 0) {
@@ -359,7 +378,7 @@
     MediaManager.prototype.uploadQueueComplete = function () {
         var status = false;
 
-        $.each(this.dropzone.getAcceptedFiles(), function() {
+        $.each(this.dropzone.getAcceptedFiles(), function () {
             if (this.status === 'success')
                 status = true
         })
@@ -371,15 +390,12 @@
     // Dialog
 
     MediaManager.prototype.showDialog = function (options) {
-        MediaManager.DIALOG_DEFAULTS.buttons.apply.callback = this.onDialogApply
 
-        options = $.extend({}, MediaManager.DIALOG_DEFAULTS, options)
+        Swal.fire($.extend({}, MediaManager.DIALOG_DEFAULTS, options));
 
-        this.dialogElement = bootbox.dialog(options);
-
-        $(this.dialogElement).one('shown.bs.modal', function () {
-            $(this).find('input, select').focus()
-        })
+        // $(this.dialogElement).one('shown.bs.modal', function () {
+        //     $(this).find('input, select').focus()
+        // })
     }
 
     //
@@ -390,7 +406,7 @@
         var $folderTreeDropdown = this.$el.find('[data-control="folder-tree-dropdown"]'),
             $folderTree = this.$folderTreeElement.find('.folder-tree')
 
-        $folderTreeDropdown.find('[data-toggle="dropdown"]').dropdown('hide')
+        $folderTreeDropdown.find('[data-bs-toggle="dropdown"]').dropdown('hide')
 
         var treeOptions = {
             data: $folderTree[0].getAttribute('data-tree-data'),
@@ -410,43 +426,44 @@
     //
     // File and folder operations
 
-    MediaManager.prototype.createFolder = function () {
+    MediaManager.prototype.createFolder = function (event) {
         this.showDialog({
-            title: 'New Folder',
-            message: this.$el.find('[data-media-new-folder-form]').html(),
+            input: 'text',
+            title: $(event.currentTarget).data('swal-title'),
+            preConfirm: $.proxy(this.onCreateFolderSubmit, this)
         })
-
-        $(this.dialogElement).one('submit.dialog', 'form', $.proxy(this.onCreateFolderSubmit, this))
     }
 
-    MediaManager.prototype.renameFolder = function () {
+    MediaManager.prototype.renameFolder = function (event) {
         if (this.$el.find('[data-media-type="current-folder"]').val() === '/') {
             $.ti.flashMessage({text: this.options.renameDisabled, class: 'warning'});
             return;
         }
 
         this.showDialog({
-            title: 'Rename Folder',
-            message: this.$el.find('[data-media-rename-folder-form]').html(),
+            input: 'text',
+            title: $(event.currentTarget).data('swal-title'),
+            preConfirm: $.proxy(this.onRenameFolderSubmit, this)
         })
-
-        $(this.dialogElement).one('submit.dialog', 'form', $.proxy(this.onRenameFolderSubmit, this))
     }
 
-    MediaManager.prototype.deleteFolder = function () {
+    MediaManager.prototype.deleteFolder = function (event) {
         if (this.$el.find('[data-media-type="current-folder"]').val() === '/') {
             $.ti.flashMessage({text: this.options.deleteDisabled, class: 'warning'});
             return;
         }
 
         this.showDialog({
-            message: this.$el.find('[data-media-delete-folder-form]').html(),
+            text: $(event.currentTarget).data('swal-confirm'),
+            icon: 'warning',
+            customClass: {
+                confirmButton: "btn-danger",
+            },
+            preConfirm: $.proxy(this.onDeleteFolderSubmit, this)
         })
-
-        $(this.dialogElement).on('submit.dialog', 'form', $.proxy(this.onDeleteFolderSubmit, this))
     }
 
-    MediaManager.prototype.renameItem = function () {
+    MediaManager.prototype.renameItem = function (event) {
         var items = this.getSelectedItems()
         if (items.length > 1) {
             $.ti.flashMessage({text: this.options.selectSingleImage, class: 'danger'});
@@ -454,14 +471,13 @@
         }
 
         this.showDialog({
-            title: 'Rename File',
-            message: this.$el.find('[data-media-rename-file-form]').html(),
+            input: 'text',
+            title: $(event.currentTarget).data('swal-title'),
+            preConfirm: $.proxy(this.onRenameFileSubmit, this)
         })
-
-        $(this.dialogElement).on('submit.dialog', 'form', $.proxy(this.onRenameFileSubmit, this))
     }
 
-    MediaManager.prototype.moveItems = function () {
+    MediaManager.prototype.moveItems = function (event) {
         var items = this.getSelectedItems()
         if (!items.length) {
             $.ti.flashMessage({text: this.options.moveEmpty, class: 'danger'});
@@ -469,14 +485,14 @@
         }
 
         this.showDialog({
-            title: 'Move File',
-            message: this.$el.find('[data-media-move-file-form]').html(),
+            input: 'select',
+            inputOptions: JSON.parse(this.$folderTreeElement.find('.folder-tree')[0].getAttribute('data-folders')),
+            title: $(event.currentTarget).data('swal-title'),
+            preConfirm: $.proxy(this.onMoveFilesSubmit, this)
         })
-
-        $(this.dialogElement).on('submit.dialog', 'form', $.proxy(this.onMoveFilesSubmit, this))
     }
 
-    MediaManager.prototype.copyItems = function () {
+    MediaManager.prototype.copyItems = function (event) {
         var items = this.getSelectedItems()
         if (!items.length) {
             $.ti.flashMessage({text: this.options.copyEmpty, class: 'danger'});
@@ -484,14 +500,14 @@
         }
 
         this.showDialog({
-            title: 'Copy File',
-            message: this.$el.find('[data-media-copy-file-form]').html(),
+            input: 'select',
+            inputOptions: JSON.parse(this.$folderTreeElement.find('.folder-tree')[0].getAttribute('data-folders')),
+            title: $(event.currentTarget).data('swal-title'),
+            preConfirm: $.proxy(this.onCopyFilesSubmit, this)
         })
-
-        $(this.dialogElement).on('submit.dialog', 'form', $.proxy(this.onCopyFilesSubmit, this))
     }
 
-    MediaManager.prototype.deleteItems = function () {
+    MediaManager.prototype.deleteItems = function (event) {
         var items = this.getSelectedItems()
         if (!items.length) {
             $.ti.flashMessage({text: this.options.deleteEmpty, class: 'danger'});
@@ -499,10 +515,13 @@
         }
 
         this.showDialog({
-            message: this.$el.find('[data-media-delete-file-form]').html(),
+            text: $(event.currentTarget).data('swal-confirm'),
+            icon: 'warning',
+            customClass: {
+                confirmButton: "btn-danger",
+            },
+            preConfirm: $.proxy(this.onDeleteFilesSubmit, this)
         })
-
-        $(this.dialogElement).on('submit.dialog', 'form', $.proxy(this.onDeleteFilesSubmit, this))
     }
 
     MediaManager.prototype.clearSearchTrackInputTimer = function () {
@@ -557,25 +576,25 @@
                 this.hideUploadZone()
                 break;
             case 'new-folder':
-                this.createFolder()
+                this.createFolder(event)
                 break;
             case 'rename-folder':
-                this.renameFolder()
+                this.renameFolder(event)
                 break;
             case 'delete-folder':
-                this.deleteFolder()
+                this.deleteFolder(event)
                 break;
             case 'rename-item':
-                this.renameItem()
+                this.renameItem(event)
                 break;
             case 'move-item':
-                this.moveItems()
+                this.moveItems(event)
                 break;
             case 'copy-item':
-                this.copyItems()
+                this.copyItems(event)
                 break;
             case 'delete-item':
-                this.deleteItems()
+                this.deleteItems(event)
                 break;
         }
     }
@@ -587,6 +606,12 @@
         }
 
         this.execNavigationRequest('onSetSorting', data)
+    }
+
+    MediaManager.prototype.onFilterChanged = function (event) {
+        this.execNavigationRequest('onSetFilter', {
+            filterBy: $(event.target).data('mediaFilter')
+        })
     }
 
     MediaManager.prototype.onSearchChanged = function (event) {
@@ -602,42 +627,32 @@
         }, 500)
     }
 
-    MediaManager.prototype.onCreateFolderSubmit = function (event) {
+    MediaManager.prototype.onCreateFolderSubmit = function (name) {
         var data = {
-            name: $(event.target).find('input[name="name"]').val(),
+            name: name,
             path: this.$el.find('[data-media-type="current-folder"]').val()
         }
 
-        event.preventDefault()
-
-        this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onCreateFolder', {
+        return this.$form.request(this.options.alias+'::onCreateFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
         }).done($.proxy(this.afterNavigate, this))
-
-        return false
     }
 
-    MediaManager.prototype.onRenameFolderSubmit = function (event) {
+    MediaManager.prototype.onRenameFolderSubmit = function (name) {
         var data = {
-            name: $(event.target).find('input[name="name"]').val(),
+            name: name,
             path: this.$el.find('[data-media-type="current-folder"]').val()
         }
 
-        event.preventDefault()
-
-        this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onRenameFolder', {
+        return this.$form.request(this.options.alias+'::onRenameFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
         }).done($.proxy(this.afterNavigate, this))
-
-        return false
     }
 
     MediaManager.prototype.onDeleteFolderSubmit = function (event) {
@@ -645,42 +660,33 @@
             path: this.$el.find('[data-media-type="current-folder"]').val()
         }
 
-        event.preventDefault()
-
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onDeleteFolder', {
+        return this.$form.request(this.options.alias+'::onDeleteFolder', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
         }).done($.proxy(this.afterNavigate, this))
-
-        return false
     }
 
-    MediaManager.prototype.onRenameFileSubmit = function (event) {
+    MediaManager.prototype.onRenameFileSubmit = function (name) {
         var items = this.getSelectedItems(),
             item = items[0].querySelector('[data-media-item]')
 
         var data = {
             file: item.getAttribute('data-media-item-name'),
-            name: $(event.target).find('input[name="name"]').val(),
+            name: name,
             path: this.$el.find('[data-media-type="current-folder"]').val()
         }
 
-        event.preventDefault()
-
-        this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onRenameFile', {
+        return this.$form.request(this.options.alias+'::onRenameFile', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
         }).done($.proxy(this.afterNavigate, this))
-
-        return false
     }
 
-    MediaManager.prototype.onMoveFilesSubmit = function (event) {
+    MediaManager.prototype.onMoveFilesSubmit = function (selected) {
         var items = this.getSelectedItems(),
             files = []
 
@@ -694,24 +700,19 @@
 
         var data = {
             files: files,
-            destination: $(event.target).find('select[name="destination"]').val(),
+            destination: selected,
             path: this.$el.find('[data-media-type="current-folder"]').val()
         }
 
-        event.preventDefault()
-
-        this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onMoveFiles', {
+        return this.$form.request(this.options.alias+'::onMoveFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
         }).done($.proxy(this.afterNavigate, this))
-
-        return false
     }
 
-    MediaManager.prototype.onCopyFilesSubmit = function (event) {
+    MediaManager.prototype.onCopyFilesSubmit = function (selected) {
         var items = this.getSelectedItems(),
             files = []
 
@@ -725,21 +726,16 @@
 
         var data = {
             files: files,
-            destination: $(event.target).find('select[name="destination"]').val(),
+            destination: selected,
             path: this.$el.find('[data-media-type="current-folder"]').val()
         }
 
-        event.preventDefault()
-
-        this.dialogElement.modal('hide')
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onCopyFiles', {
+        return this.$form.request(this.options.alias+'::onCopyFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
         }).done($.proxy(this.afterNavigate, this))
-
-        return false
     }
 
     MediaManager.prototype.onDeleteFilesSubmit = function (event) {
@@ -759,35 +755,26 @@
             path: this.$el.find('[data-media-type="current-folder"]').val()
         }
 
-        event.preventDefault()
-
         $.ti.loadingIndicator.show()
-        this.$form.request(this.options.alias + '::onDeleteFiles', {
+        return this.$form.request(this.options.alias+'::onDeleteFiles', {
             data: data
         }).always(function () {
             $.ti.loadingIndicator.hide()
         }).done($.proxy(this.afterNavigate, this))
-
-        return false
     }
 
     // MEDIA MANAGER PLUGIN DEFINITION
     // ============================
 
     MediaManager.DIALOG_DEFAULTS = {
-        message: '',
         title: '',
-        onEscape: true,
-        callback: null,
-        buttons: {
-            apply: {
-                label: "Apply",
-                className: "btn-primary",
-            },
-            cancel: {
-                label: "Cancel",
-                className: "btn-default",
-            }
+        confirmButtonText: 'Apply',
+        cancelButtonText: 'Cancel',
+        showCancelButton: true,
+        showLoaderOnConfirm: true,
+        customClass: {
+            confirmButton: "btn-primary",
+            cancelButton: "btn-default",
         },
     }
 

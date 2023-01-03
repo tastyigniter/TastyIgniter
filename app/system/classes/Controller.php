@@ -112,12 +112,10 @@ class Controller extends IlluminateController
         }
 
         if ($result = $this->locateController($url)) {
-            $result['controller']->initialize();
-
-            return $result['controller']->remap($result['action'], $result['segments']);
+            return $result['controller']->initialize()->remap($result['action'], $result['segments']);
         }
 
-        return Response::make(View::make('main::404'), 404);
+        return App::make('Admin\Classes\AdminController')->initialize()->remap('404', []);
     }
 
     /**
@@ -164,7 +162,7 @@ class Controller extends IlluminateController
      *
      * @param string $controller Specifies a controller name to locate.
      * @param string|array $modules Specifies a list of modules to look in.
-     * @param string $inPath Base path to search the class file.
+     * @param string|array $inPath Base path to search the class file.
      *
      * @return bool|\Admin\Classes\AdminController|\Main\Classes\MainController
      * Returns the backend controller object
@@ -172,14 +170,19 @@ class Controller extends IlluminateController
     protected function locateControllerInPath($controller, $modules, $inPath)
     {
         is_array($modules) || $modules = [$modules];
+        is_array($inPath) || $inPath = [$inPath];
 
         $controllerClass = null;
-        $matchPath = $inPath.'/%s/controllers/%s.php';
         foreach ($modules as $module => $namespace) {
             $controller = strtolower(str_replace(['\\', '_'], ['/', ''], $controller));
-            $controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller));
-            if ($controllerFile && !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller))
-                include_once $controllerFile;
+            foreach ($inPath as $path) {
+                $matchPath = $path.'/%s/controllers/%s.php';
+                $controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller));
+                if ($controllerFile && !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller)) {
+                    include_once $controllerFile;
+                    break 2;
+                }
+            }
         }
 
         if (!$controllerClass || !class_exists($controllerClass))
@@ -191,7 +194,7 @@ class Controller extends IlluminateController
             return $controllerObj;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -203,7 +206,7 @@ class Controller extends IlluminateController
      */
     protected function processAction($actionName)
     {
-        if (strpos($actionName, '-') !== FALSE) {
+        if (strpos($actionName, '-') !== false) {
             return camel_case($actionName);
         }
 
@@ -243,7 +246,7 @@ class Controller extends IlluminateController
             if ($controllerObj = $this->locateControllerInPath(
                 $controller,
                 ["{$author}/{$extension}" => "{$author}\\{$extension}"],
-                extension_path()
+                ExtensionManager::instance()->folders()
             )) {
                 return [
                     'controller' => $controllerObj,

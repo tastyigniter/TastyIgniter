@@ -2,7 +2,6 @@
 
 namespace Admin\Middleware;
 
-use Admin\Classes\UserState;
 use Admin\Facades\AdminAuth;
 use Carbon\Carbon;
 use Closure;
@@ -19,8 +18,6 @@ class LogUserLastSeen
             Cache::remember($cacheKey, $expireAt, function () {
                 return AdminAuth::user()->updateLastSeen(Carbon::now()->addMinutes(5));
             });
-
-            UserState::forUser(AdminAuth::user())->clearExpiredStatus();
         }
 
         return $next($request);

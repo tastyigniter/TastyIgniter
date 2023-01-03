@@ -5,6 +5,7 @@
         $.ti.recordEditor = {}
 
     var RecordEditorModal = function (options) {
+        this.modal = null
         this.$modalRootElement = null
 
         this.options = $.extend({}, RecordEditorModal.DEFAULTS, options)
@@ -30,17 +31,20 @@
 
     RecordEditorModal.prototype.show = function () {
         this.$modalRootElement.html(
-            '<div class="modal-dialog"><div class="modal-content"><div class="modal-body"><div class="progress-indicator">'
-            +'<span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>Loading...'
+            '<div class="modal-dialog"><div class="modal-content"><div class="modal-body"><div class="text-center">'
+            +'<div class="ti-loading spinner-border fa-3x fa-fw" role="status"></div><div class="fw-bold mt-2">Loading...</div>'
             +'</div></div></div></div>'
         );
 
-        this.$modalRootElement.modal({backdrop: 'static', keyboard: false})
+        $('body').append(this.$modalRootElement)
+
+        this.modal = new bootstrap.Modal('#'+this.options.attributes.id)
+        this.modal.show()
     }
 
     RecordEditorModal.prototype.hide = function () {
         if (this.$modalElement)
-            this.$modalElement.modal('hide')
+            this.modal.hide()
     }
 
     RecordEditorModal.prototype.handleFormSetup = function (event, context) {

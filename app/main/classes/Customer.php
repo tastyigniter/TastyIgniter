@@ -77,7 +77,7 @@ class Customer extends \Igniter\Flame\Auth\Manager
      * @return \Admin\Models\Customers_model
      * @throws \Exception
      */
-    public function register(array $attributes, $activate = FALSE)
+    public function register(array $attributes, $activate = false)
     {
         $model = $this->createModel();
         $model->fill($attributes);

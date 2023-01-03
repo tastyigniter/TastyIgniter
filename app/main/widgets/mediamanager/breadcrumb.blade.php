@@ -1,4 +1,4 @@
-<ol class="breadcrumb">
+<ol class="breadcrumb py-2">
     @foreach ($breadcrumbs as $key => $breadcrumb)
         @if ($key == count($breadcrumbs) - 1)
             <li class="breadcrumb-item active">{!! $breadcrumb['name'] !!}</li>

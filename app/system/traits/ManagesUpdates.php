@@ -96,7 +96,7 @@ trait ManagesUpdates
     public function onCheckUpdates()
     {
         $updateManager = UpdateManager::instance();
-        $updateManager->requestUpdateList(TRUE);
+        $updateManager->requestUpdateList(true);
 
         return $this->redirect($this->checkUrl);
     }
@@ -142,16 +142,21 @@ trait ManagesUpdates
 
     protected function initUpdate($itemType)
     {
-        $this->addJs('ui/js/vendor/mustache.js', 'mustache-js');
-        $this->addJs('ui/js/vendor/typeahead.js', 'typeahead-js');
-        $this->addJs('ui/js/updates.js', 'updates-js');
-        $this->addJs('~/app/admin/formwidgets/recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
+        $this->prepareAssets();
 
         $updateManager = UpdateManager::instance();
 
         $this->vars['itemType'] = $itemType;
         $this->vars['carteInfo'] = $updateManager->getSiteDetail();
         $this->vars['installedItems'] = $updateManager->getInstalledItems();
+    }
+
+    protected function prepareAssets()
+    {
+        $this->addJs('src/js/vendor/mustache.js', 'mustache-js');
+        $this->addJs('src/js/vendor/typeahead.js', 'typeahead-js');
+        $this->addJs('js/updates.js', 'updates-js');
+        $this->addJs('~/app/admin/formwidgets/recordeditor/assets/js/recordeditor.modal.js', 'recordeditor-modal-js');
     }
 
     protected function buildProcessSteps($response, $params = [])
@@ -163,7 +168,7 @@ trait ManagesUpdates
                 'core' => [],
                 'extensions' => [],
                 'themes' => [],
-                'translations' => [],
+                'languages' => [],
             ];
 
             if ($step == 'complete') {
@@ -185,19 +190,20 @@ trait ManagesUpdates
                         'label' => sprintf(lang("system::lang.updates.progress_{$step}"), $item['name'].' update'),
                         'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
                     ], $item);
-                }
-                else {
-                    $singularType = str_singular($item['type']);
-                    $pluralType = str_plural($item['type']);
 
-                    $action = $this->getActionFromItems($item['code'], $params);
-                    $applySteps[$pluralType][] = array_merge([
-                        'action' => $action ?? 'install',
-                        'process' => $step.ucfirst($singularType),
-                        'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
-                        'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
-                    ], $item);
+                    break;
                 }
+
+                $singularType = str_singular($item['type']);
+                $pluralType = str_plural($item['type']);
+
+                $action = $this->getActionFromItems($item['code'], $params);
+                $applySteps[$pluralType][] = array_merge([
+                    'action' => $action ?? 'install',
+                    'process' => $step.ucfirst($singularType),
+                    'label' => sprintf(lang("system::lang.updates.progress_{$step}"), "{$item['name']} {$singularType}"),
+                    'success' => sprintf(lang('system::lang.updates.progress_success'), $step.'ing', $item['name']),
+                ], $item);
             }
 
             $processSteps[$step] = array_collapse(array_values($applySteps));
@@ -261,15 +267,18 @@ trait ManagesUpdates
     protected function completeProcess($items)
     {
         if (!count($items))
-            return FALSE;
+            return false;
 
         foreach ($items as $item) {
+            if ($item['type'] == 'core') {
+                $updateManager = UpdateManager::instance();
+                $updateManager->update();
+                $updateManager->setCoreVersion($item['version'], $item['hash']);
+
+                break;
+            }
+
             switch ($item['type']) {
-                case 'core':
-                    $updateManager = UpdateManager::instance();
-                    $updateManager->update();
-                    $updateManager->setCoreVersion($item['version'], $item['hash']);
-                    break;
                 case 'extension':
                     ExtensionManager::instance()->installExtension($item['code'], $item['version']);
                     break;
@@ -279,9 +288,9 @@ trait ManagesUpdates
             }
         }
 
-        UpdateManager::instance()->requestUpdateList(TRUE);
+        UpdateManager::instance()->requestUpdateList(true);
 
-        return TRUE;
+        return true;
     }
 
     protected function getActionFromItems($code, $itemNames)
@@ -294,33 +303,48 @@ trait ManagesUpdates
 
     protected function validateItems()
     {
-        $rules = [
-            ['items.*.name', 'lang:system::lang.updates.label_meta_code', 'required'],
-            ['items.*.type', 'lang:system::lang.updates.label_meta_type', 'required|in:core,extension,theme'],
-            ['items.*.ver', 'lang:system::lang.updates.label_meta_version', 'required'],
-            ['items.*.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'],
-        ];
-
-        return $this->validate(post(), $rules);
+        return $this->validate(post(), [
+            'items.*.name' => ['required'],
+            'items.*.type' => ['required', 'in:core,extension,theme,language'],
+            'items.*.ver' => ['required'],
+            'items.*.action' => ['required', 'in:install,update'],
+        ], [], [
+            'items.*.name' => lang('system::lang.updates.label_meta_code'),
+            'items.*.type' => lang('system::lang.updates.label_meta_type'),
+            'items.*.ver' => lang('system::lang.updates.label_meta_version'),
+            'items.*.action' => lang('system::lang.updates.label_meta_action'),
+        ]);
     }
 
     protected function validateProcess()
     {
-        $rules = [];
         if (post('step') != 'complete') {
-            $rules[] = ['meta.code', 'lang:system::lang.updates.label_meta_code', 'required'];
-            $rules[] = ['meta.type', 'lang:system::lang.updates.label_meta_type', 'required|in:core,extension,theme'];
-            $rules[] = ['meta.version', 'lang:system::lang.updates.label_meta_version', 'required'];
-            $rules[] = ['meta.hash', 'lang:system::lang.updates.label_meta_hash', 'required'];
-            $rules[] = ['meta.description', 'lang:system::lang.updates.label_meta_description', 'sometimes'];
-            $rules[] = ['meta.action', 'lang:system::lang.updates.label_meta_action', 'required|in:install,update'];
+            $rules = [
+                'meta.code' => ['required'],
+                'meta.type' => ['required', 'in:core,extension,theme,language'],
+                'meta.version' => ['required'],
+                'meta.hash' => ['required'],
+                'meta.description' => ['sometimes'],
+                'meta.action' => ['required', 'in:install,update'],
+            ];
+
+            $attributes = [
+                'meta.code' => lang('system::lang.updates.label_meta_code'),
+                'meta.type' => lang('system::lang.updates.label_meta_type'),
+                'meta.version' => lang('system::lang.updates.label_meta_version'),
+                'meta.hash' => lang('system::lang.updates.label_meta_hash'),
+                'meta.description' => lang('system::lang.updates.label_meta_description'),
+                'meta.action' => lang('system::lang.updates.label_meta_action'),
+            ];
         }
         else {
-            $rules[] = ['meta.items', 'lang:system::lang.updates.label_meta_items', 'required|array'];
+            $rules = ['meta.items' => ['required', 'array']];
+            $attributes = ['meta.items' => lang('system::lang.updates.label_meta_items')];
         }
 
-        $rules[] = ['step', 'lang:system::lang.updates.label_meta_step', 'required|in:download,extract,complete'];
+        $rules['step'] = ['required', 'in:download,extract,complete'];
+        $attributes['step'] = lang('system::lang.updates.label_meta_step');
 
-        return $this->validate(post(), $rules);
+        return $this->validate(post(), $rules, [], $attributes);
     }
 }

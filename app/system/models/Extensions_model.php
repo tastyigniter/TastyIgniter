@@ -7,6 +7,7 @@ use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Mail\Markdown;
 use Igniter\Flame\Support\Facades\File;
 use Main\Classes\ThemeManager;
+use System\Classes\ComposerManager;
 use System\Classes\ExtensionManager;
 
 /**
@@ -16,9 +17,6 @@ class Extensions_model extends Model
 {
     const ICON_MIMETYPES = [
         'svg' => 'image/svg+xml',
-        'png' => 'image/png',
-        'jpeg' => 'image/jpeg',
-        'jpg' => 'image/jpeg',
     ];
 
     /**
@@ -47,16 +45,16 @@ class Extensions_model extends Model
     {
         $activeTheme = ThemeManager::instance()->getActiveTheme();
         if (!$activeTheme)
-            return FALSE;
+            return false;
 
         $requiredExtensions = (array)$activeTheme->requires;
         foreach ($requiredExtensions as $name => $constraint) {
             $extension = ExtensionManager::instance()->findExtension($name);
             if (!$extension || $extension->disabled)
-                return FALSE;
+                return false;
         }
 
-        return TRUE;
+        return true;
     }
 
     //
@@ -99,7 +97,7 @@ class Extensions_model extends Model
             if (file_exists($file)) {
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
                 if (!array_key_exists($extension, self::ICON_MIMETYPES))
-                    throw new ApplicationException('Invalid extension icon type');
+                    throw new ApplicationException('Invalid extension icon file type in: '.$this->name.'. Only SVG images are supported');
 
                 $mimeType = self::ICON_MIMETYPES[$extension];
                 $data = base64_encode(file_get_contents($file));
@@ -147,15 +145,15 @@ class Extensions_model extends Model
         $code = $this->name;
 
         if (!$code)
-            return FALSE;
+            return false;
 
         if (!$extensionClass = ExtensionManager::instance()->findExtension($code)) {
-            return FALSE;
+            return false;
         }
 
         $this->class = $extensionClass;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -173,6 +171,7 @@ class Extensions_model extends Model
 
             $enableExtension = ($model->exists && !$extension->disabled);
 
+            $model->version = ComposerManager::instance()->getPackageVersion($model->name) ?? $model->version;
             $model->save();
 
             $extensionManager->updateInstalledExtensions($code, $enableExtension);

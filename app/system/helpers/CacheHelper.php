@@ -23,11 +23,20 @@ class CacheHelper
     {
         $instance = self::instance();
         $instance->clearCache();
+        $instance->clearView();
         $instance->clearTemplates();
 
         $instance->clearCombiner();
 
         $instance->clearMeta();
+    }
+
+    public function clearView()
+    {
+        $path = config()->get('view.compiled');
+        foreach (File::glob("{$path}/*") as $view) {
+            File::delete($view);
+        }
     }
 
     public function clearCombiner()
@@ -53,6 +62,9 @@ class CacheHelper
 
     public function clearDirectory($path)
     {
+        if (!File::isDirectory(storage_path().$path))
+            return;
+
         foreach (File::directories(storage_path().$path) as $directory) {
             File::deleteDirectory($directory);
         }

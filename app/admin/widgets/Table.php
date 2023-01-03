@@ -20,7 +20,7 @@ class Table extends BaseWidget
     /**
      * @var bool Show data table header
      */
-    protected $showHeader = TRUE;
+    protected $showHeader = true;
 
     /**
      * @var \Admin\Widgets\Table\Source\DataSource
@@ -39,9 +39,9 @@ class Table extends BaseWidget
 
     protected $dataSourceAliases = 'Admin\Widgets\Table\Source\DataSource';
 
-    public $showPagination = TRUE;
+    public $showPagination = true;
 
-    public $useAjax = FALSE;
+    public $useAjax = false;
 
     public $pageLimit = 10;
 
@@ -68,7 +68,7 @@ class Table extends BaseWidget
         $this->dataSource = new $dataSourceClass($this->recordsKeyFrom);
 
         if (Request::method() == 'post' && $this->isClientDataSource()) {
-            if (strpos($this->fieldName, '[') === FALSE) {
+            if (strpos($this->fieldName, '[') === false) {
                 $requestDataField = $this->fieldName.'TableData';
             }
             else {
@@ -114,10 +114,10 @@ class Table extends BaseWidget
 
         $this->vars['showPagination'] = $this->getConfig('showPagination', $this->showPagination);
         $this->vars['pageLimit'] = $this->getConfig('pageLimit', $this->pageLimit);
-        $this->vars['toolbar'] = $this->getConfig('toolbar', TRUE);
+        $this->vars['toolbar'] = $this->getConfig('toolbar', true);
         $this->vars['height'] = $this->getConfig('height', 'undefined');
-        $this->vars['dynamicHeight'] = $this->getConfig('dynamicHeight', FALSE);
-        $this->vars['useAjax'] = $this->getConfig('useAjax', FALSE);
+        $this->vars['dynamicHeight'] = $this->getConfig('dynamicHeight', false);
+        $this->vars['useAjax'] = $this->getConfig('useAjax', false);
 
         $isClientDataSource = $this->isClientDataSource();
         $this->vars['clientDataSourceClass'] = $isClientDataSource ? 'client' : 'server';
@@ -171,7 +171,7 @@ class Table extends BaseWidget
         $offset = Request::post('offset');
         $limit = Request::post('limit', $this->getConfig('pageLimit', $this->pageLimit));
 
-        $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], TRUE);
+        $eventResults = $this->fireEvent('table.getRecords', [$offset, $limit, $search], true);
 
         $records = $eventResults->getCollection()->toArray();
 

@@ -30,11 +30,11 @@ class RecordEditor extends BaseFormWidget
 
     public $formName = 'Record';
 
-    public $hideEditButton = FALSE;
+    public $hideEditButton = false;
 
-    public $hideDeleteButton = FALSE;
+    public $hideDeleteButton = false;
 
-    public $hideCreateButton = FALSE;
+    public $hideCreateButton = false;
 
     public $addLabel = 'New';
 
@@ -87,8 +87,7 @@ class RecordEditor extends BaseFormWidget
 
     public function prepareVars()
     {
-        $this->vars['field'] = $this->formField;
-        $this->vars['fieldOptions'] = $this->getRecordEditorOptions();
+        $this->vars['field'] = $this->makeFormField();
         $this->vars['addonLeft'] = $this->makeFieldAddon('left');
         $this->vars['addonRight'] = $this->makeFieldAddon('right');
 
@@ -136,8 +135,8 @@ class RecordEditor extends BaseFormWidget
 
         return [
             '#notification' => $this->makePartial('flash'),
-            '#'.$this->formField->getId() => $form->renderField($this->formField, [
-                'useContainer' => FALSE,
+            '#'.$this->formField->getId('group') => $form->renderField($this->formField, [
+                'useContainer' => false,
             ]),
         ];
     }
@@ -155,7 +154,7 @@ class RecordEditor extends BaseFormWidget
         return [
             '#notification' => $this->makePartial('flash'),
             '#'.$this->formField->getId() => $form->renderField($this->formField, [
-                'useContainer' => FALSE,
+                'useContainer' => false,
             ]),
         ];
     }
@@ -188,7 +187,7 @@ class RecordEditor extends BaseFormWidget
             $config = [$config];
 
         $config = (object)array_merge([
-            'tag' => 'span',
+            'tag' => 'div',
             'label' => 'Label',
             'attributes' => [],
         ], $config);
@@ -223,11 +222,22 @@ class RecordEditor extends BaseFormWidget
         if (!strlen($requestData = request()->header('X-IGNITER-RECORD-EDITOR-REQUEST-DATA')))
             return;
 
-        if (!strlen($recordId = array_get(json_decode($requestData, TRUE), $this->alias.'.recordId')))
+        if (!strlen($recordId = array_get(json_decode($requestData, true), $this->alias.'.recordId')))
             return;
 
         $model = $this->findFormModel($recordId);
 
         $this->makeRecordFormWidget($model);
+    }
+
+    protected function makeFormField()
+    {
+        $field = clone $this->formField;
+
+        $field->options(function () {
+            return $this->getRecordEditorOptions();
+        });
+
+        return $this->clonedFormField = $field;
     }
 }

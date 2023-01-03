@@ -25,7 +25,6 @@ use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
@@ -35,8 +34,6 @@ use Main\Classes\Customer;
 use System\Classes\ErrorHandler;
 use System\Classes\ExtensionManager;
 use System\Classes\MailManager;
-use System\Helpers\ValidationHelper;
-use System\Libraries\Assets;
 use System\Models\Settings_model;
 use System\Template\Extension\BladeExtension;
 
@@ -64,7 +61,6 @@ class ServiceProvider extends AppServiceProvider
         $this->registerPagicParser();
         $this->registerMailer();
         $this->registerPaginator();
-        $this->registerAssets();
 
         // Register admin and main module providers
         collect(Config::get('system.modules', []))->each(function ($module) {
@@ -148,13 +144,7 @@ class ServiceProvider extends AppServiceProvider
         });
 
         App::singleton('country', function ($app) {
-            $country = new Libraries\Country;
-
-            $country->setDefaultFormat("{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}", [
-                '{address_1}', '{address_2}', '{city}', '{postcode}', '{state}', '{country}',
-            ]);
-
-            return $country;
+            return new Libraries\Country;
         });
 
         App::instance('path.uploads', base_path(Config::get('system.assets.media.path', 'assets/media/uploads')));
@@ -229,12 +219,6 @@ class ServiceProvider extends AppServiceProvider
             return !(!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
                 && !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
         });
-
-        Event::listen('validator.beforeMake', function ($args) {
-            $rules = ValidationHelper::prepareRules($args->rules);
-            $args->rules = Arr::get($rules, 'rules', $args->rules);
-            $args->customAttributes = Arr::get($rules, 'attributes', $args->customAttributes);
-        });
     }
 
     protected function registerMailer()
@@ -285,7 +269,7 @@ class ServiceProvider extends AppServiceProvider
 
         Paginator::currentPageResolver(function ($pageName = 'page') {
             $page = Request::get($pageName);
-            if (filter_var($page, FILTER_VALIDATE_INT) !== FALSE && (int)$page >= 1) {
+            if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int)$page >= 1) {
                 return $page;
             }
 
@@ -314,7 +298,7 @@ class ServiceProvider extends AppServiceProvider
         $this->app->resolving('translator.localization', function ($localization, $app) {
             $app['config']->set('localization.locale', setting('default_language', $app['config']['app.locale']));
             $app['config']->set('localization.supportedLocales', setting('supported_languages', []) ?: ['en']);
-            $app['config']->set('localization.detectBrowserLocale', (bool)setting('detect_language', FALSE));
+            $app['config']->set('localization.detectBrowserLocale', (bool)setting('detect_language', false));
         });
 
         $this->app->resolving('geocoder', function ($geocoder, $app) {
@@ -330,30 +314,6 @@ class ServiceProvider extends AppServiceProvider
 
         Event::listen(CommandStarting::class, function () {
             config()->set('system.activityRecordsTTL', (int)setting('activity_log_timeout', 60));
-        });
-    }
-
-    protected function registerAssets()
-    {
-        Assets::registerCallback(function (Assets $manager) {
-            $manager->registerSourcePath(app_path('system/assets'));
-        });
-
-        Assets::registerCallback(function (Assets $manager) {
-            $manager->registerBundle('js', [
-                '~/app/admin/assets/node_modules/jquery/dist/jquery.min.js',
-                '~/app/admin/assets/node_modules/popper.js/dist/umd/popper.min.js',
-                '~/app/admin/assets/node_modules/bootstrap/dist/js/bootstrap.min.js',
-                '~/app/admin/assets/node_modules/sweetalert/dist/sweetalert.min.js',
-                '~/app/system/assets/ui/js/vendor/waterfall.min.js',
-                '~/app/system/assets/ui/js/vendor/transition.js',
-                '~/app/system/assets/ui/js/app.js',
-                '~/app/system/assets/ui/js/loader.bar.js',
-                '~/app/system/assets/ui/js/loader.progress.js',
-                '~/app/system/assets/ui/js/flashmessage.js',
-                '~/app/system/assets/ui/js/toggler.js',
-                '~/app/system/assets/ui/js/trigger.js',
-            ], '~/app/system/assets/ui/flame.js', 'admin');
         });
     }
 
@@ -394,6 +354,40 @@ class ServiceProvider extends AppServiceProvider
         \Illuminate\Database\Eloquent\Builder::macro('toRawSql', function () {
             return $this->getQuery()->toRawSql();
         });
+
+        \Illuminate\Database\Schema\Blueprint::macro('dropForeignKeyIfExists', function ($key) {
+            $foreignKeys = array_map(function ($key) {
+                return $key->getName();
+            }, \Illuminate\Support\Facades\Schema::getConnection()
+                ->getDoctrineSchemaManager()
+                ->listTableForeignKeys($this->table)
+            );
+
+            if (!starts_with($key, $this->prefix))
+                $key = sprintf('%s%s_%s_foreign', $this->prefix, $this->table, $key);
+
+            if (!in_array($key, $foreignKeys))
+                return;
+
+            return $this->dropForeign($key);
+        });
+
+        \Illuminate\Database\Schema\Blueprint::macro('dropIndexIfExists', function ($key) {
+            $indexes = array_map(function ($key) {
+                return $key->getName();
+            }, \Illuminate\Support\Facades\Schema::getConnection()
+                ->getDoctrineSchemaManager()
+                ->listTableIndexes($this->table)
+            );
+
+            if (!starts_with($key, $this->prefix))
+                $key = sprintf('%s%s_%s_foreign', $this->prefix, $this->table, $key);
+
+            if (!in_array($key, $indexes))
+                return;
+
+            return $this->dropIndex($key);
+        });
     }
 
     protected function registerSchedule()
@@ -401,7 +395,7 @@ class ServiceProvider extends AppServiceProvider
         Event::listen('console.schedule', function (Schedule $schedule) {
             // Check for system updates every 12 hours
             $schedule->call(function () {
-                Classes\UpdateManager::instance()->requestUpdateList(TRUE);
+                Classes\UpdateManager::instance()->requestUpdateList(true);
             })->name('System Updates Checker')->cron('0 */12 * * *')->evenInMaintenanceMode();
 
             // Cleanup activity log
@@ -456,24 +450,37 @@ class ServiceProvider extends AppServiceProvider
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/general'),
                     'form' => '~/app/system/models/config/general_settings',
+                    'request' => 'System\Requests\GeneralSettings',
+                ],
+                'site' => [
+                    'label' => 'system::lang.settings.text_tab_site',
+                    'description' => 'system::lang.settings.text_tab_desc_site',
+                    'icon' => 'fa fa-globe',
+                    'priority' => 2,
+                    'permission' => ['Site.Settings'],
+                    'url' => admin_url('settings/edit/site'),
+                    'form' => '~/app/system/models/config/site_settings',
+                    'request' => 'System\Requests\SiteSettings',
                 ],
                 'mail' => [
                     'label' => 'lang:system::lang.settings.text_tab_mail',
                     'description' => 'lang:system::lang.settings.text_tab_desc_mail',
                     'icon' => 'fa fa-envelope',
-                    'priority' => 5,
+                    'priority' => 4,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/mail'),
                     'form' => '~/app/system/models/config/mail_settings',
+                    'request' => 'System\Requests\MailSettings',
                 ],
                 'advanced' => [
                     'label' => 'lang:system::lang.settings.text_tab_server',
                     'description' => 'lang:system::lang.settings.text_tab_desc_server',
                     'icon' => 'fa fa-cog',
-                    'priority' => 6,
+                    'priority' => 7,
                     'permission' => ['Site.Settings'],
                     'url' => admin_url('settings/edit/advanced'),
                     'form' => '~/app/system/models/config/advanced_settings',
+                    'request' => 'System\Requests\AdvancedSettings',
                 ],
             ]);
         });

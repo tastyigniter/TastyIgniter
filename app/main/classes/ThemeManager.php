@@ -9,6 +9,7 @@ use Igniter\Flame\Traits\Singleton;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Lang;
+use System\Classes\ComposerManager;
 use System\Libraries\Assets;
 use System\Models\Themes_model;
 use ZipArchive;
@@ -48,7 +49,9 @@ class ThemeManager
 
     protected $loadedCustomizerConfig;
 
-    protected $booted = FALSE;
+    protected $booted = false;
+
+    protected static $directories = [];
 
     public function initialize()
     {
@@ -57,6 +60,11 @@ class ThemeManager
             $this->loadInstalled();
             $this->loadThemes();
         }
+    }
+
+    public static function addDirectory($directory)
+    {
+        self::$directories[] = $directory;
     }
 
     public static function addAssetsFromActiveThemeManifest(Assets $manager)
@@ -142,7 +150,7 @@ class ThemeManager
      */
     public function loadTheme($themeCode, $path)
     {
-        if (!$this->checkName($themeCode)) return FALSE;
+        if (!$this->checkName($themeCode)) return false;
 
         if (isset($this->themes[$themeCode])) {
             return $this->themes[$themeCode];
@@ -154,7 +162,6 @@ class ThemeManager
         $themeObject->active = $this->isActive($themeCode);
 
         $this->themes[$themeCode] = $themeObject;
-        $this->paths[$themeCode] = $path;
 
         return $themeObject;
     }
@@ -168,7 +175,7 @@ class ThemeManager
             $theme->boot();
         }
 
-        $this->booted = TRUE;
+        $this->booted = true;
     }
 
     //
@@ -185,7 +192,7 @@ class ThemeManager
     {
         $activeTheme = trim(params('default_themes.main', config('system.defaultTheme')), '/');
 
-        if (!is_null($apiResult = Event::fire('theme.getActiveTheme', [], TRUE)))
+        if (!is_null($apiResult = Event::fire('theme.getActiveTheme', [], true)))
             $activeTheme = $apiResult;
 
         return $activeTheme;
@@ -253,13 +260,20 @@ class ThemeManager
      */
     public function paths()
     {
-        $themes = [];
-        foreach (File::directories(App::themesPath()) as $path) {
-            $themeDir = basename($path);
-            $themes[$themeDir] = $path;
+        if ($this->paths)
+            return $this->paths;
+
+        $paths = [];
+
+        $directories = array_merge([App::themesPath()], self::$directories);
+        foreach ($directories as $directory) {
+            foreach (File::directories($directory) as $path) {
+                $themeDir = basename($path);
+                $paths[$themeDir] = $path;
+            }
         }
 
-        return $themes;
+        return $this->paths = $paths;
     }
 
     /**
@@ -272,7 +286,7 @@ class ThemeManager
     public function isActive($themeCode)
     {
         if (!$this->checkName($themeCode)) {
-            return FALSE;
+            return false;
         }
 
         return rtrim($themeCode, '/') == $this->getActiveThemeCode();
@@ -289,7 +303,7 @@ class ThemeManager
     {
         traceLog('Deprecated. Use $instance::isActive($themeCode) instead');
 
-        return !$this->checkName($name) || !array_get($this->installedThemes, $name, FALSE);
+        return !$this->checkName($name) || !array_get($this->installedThemes, $name, false);
     }
 
     /**
@@ -342,10 +356,10 @@ class ThemeManager
     {
         foreach ($this->themes as $code => $theme) {
             if ($theme->hasParent() && $theme->getParentName() == $themeCode)
-                return TRUE;
+                return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     public function isLockedPath($path)
@@ -406,7 +420,7 @@ class ThemeManager
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -440,7 +454,7 @@ class ThemeManager
             throw new ApplicationException("Theme template file already exists: $filePath");
 
         if (!File::exists($path))
-            File::makeDirectory(File::dirname($path), 0777, TRUE, TRUE);
+            File::makeDirectory(File::dirname($path), 0777, true, true);
 
         File::put($path, "\n");
     }
@@ -535,11 +549,11 @@ class ThemeManager
 
         $themesFolder = App::themesPath();
 
-        if ($zip->open($zipPath) === TRUE) {
+        if ($zip->open($zipPath) === true) {
             $themeDir = $zip->getNameIndex(0);
 
-            if ($zip->locateName($themeDir.'theme.json') === FALSE)
-                return FALSE;
+            if ($zip->locateName($themeDir.'theme.json') === false)
+                return false;
 
             if (file_exists($themesFolder.'/'.$themeDir)) {
                 throw new SystemException(lang('system::lang.themes.error_theme_exists'));
@@ -560,7 +574,7 @@ class ThemeManager
             return $themeCode;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -573,12 +587,12 @@ class ThemeManager
     public function removeTheme($themeCode)
     {
         if (!is_dir($themePath = $this->findPath($themeCode)))
-            return FALSE;
+            return false;
 
         // Delete the specified admin and main language folder.
         File::deleteDirectory($themePath);
 
-        return TRUE;
+        return true;
     }
 
     public function installTheme($code, $version = null)
@@ -586,15 +600,15 @@ class ThemeManager
         $model = Themes_model::firstOrNew(['code' => $code]);
 
         if (!$themeObj = $this->findTheme($model->code))
-            return FALSE;
+            return false;
 
         $model->name = $themeObj->label ?? title_case($code);
         $model->code = $code;
-        $model->version = $version ?? $model->version;
+        $model->version = $version ?? ComposerManager::instance()->getPackageVersion($code) ?? $model->version;
         $model->description = $themeObj->description ?? '';
         $model->save();
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -604,9 +618,6 @@ class ThemeManager
      */
     public function createChildTheme($model)
     {
-        if ($this->checkParent($model->code))
-            throw new ApplicationException('Child theme already exists.');
-
         $parentTheme = $this->findTheme($model->code);
         if ($parentTheme->hasParent())
             throw new ApplicationException('Can not create a child theme from another child theme');
@@ -615,8 +626,8 @@ class ThemeManager
         $childThemePath = dirname($parentTheme->getPath()).'/'.$childThemeCode;
 
         $themeConfig = [
-            'name' => $parentTheme->label.' [child]',
             'code' => $childThemeCode,
+            'name' => $parentTheme->label.' [child]',
             'description' => $parentTheme->description,
         ];
 
@@ -640,12 +651,20 @@ class ThemeManager
      */
     public function getMetaFromFile($themeCode)
     {
-        $config = [];
         if (isset($this->loadedConfig[$themeCode]))
             return $this->loadedConfig[$themeCode];
 
-        if ($metaPath = $this->findFile('theme.json', $themeCode))
-            $config = $this->validateMetaFile($metaPath, $themeCode);
+        if ($metaPath = $this->findFile('theme.json', $themeCode)) {
+            $config = json_decode(File::get($metaPath), true);
+        }
+        elseif ($metaPath = $this->findFile('composer.json', $themeCode)) {
+            $config = ComposerManager::instance()->getConfig(dirname($metaPath), 'theme');
+        }
+        else {
+            throw new SystemException('Theme ['.$themeCode.'] does not have a registration file.');
+        }
+
+        $config = $this->validateMetaFile($config, $metaPath);
 
         $this->loadedConfig[$themeCode] = $config;
 
@@ -673,17 +692,12 @@ class ThemeManager
      * @throws \Igniter\Flame\Exception\SystemException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    protected function validateMetaFile($path, $themeCode)
+    protected function validateMetaFile($config, $path)
     {
-        if (!$config = json_decode(File::get($path), TRUE)) {
-            throw new SystemException('Theme ['.$themeCode.'] does not have a registration file.');
-        }
-
         foreach ([
             'code',
             'name',
             'description',
-            'version',
             'author',
         ] as $item) {
             if (!array_key_exists($item, $config)) {
@@ -697,7 +711,7 @@ class ThemeManager
         return $config;
     }
 
-    protected function writeChildThemeMetaFile($path, $parentTheme, $themeConfig): string
+    protected function writeChildThemeMetaFile($path, $parentTheme, $themeConfig)
     {
         $config = array_merge($parentTheme->config, $themeConfig);
         $config['parent'] = $parentTheme->name;
@@ -706,11 +720,20 @@ class ThemeManager
         if (File::isDirectory($path))
             throw new ApplicationException('Child theme path already exists.');
 
-        File::makeDirectory($path, 0777, FALSE, TRUE);
+        File::makeDirectory($path, 0777, false, true);
 
-        $manifestFile = $path.'/theme.json';
-        File::put($manifestFile, json_encode($config, JSON_PRETTY_PRINT));
+        if (File::exists($parentTheme->path.'/theme.json')) {
+            File::put($path.'/theme.json', json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        }
+        elseif (File::exists($metaPath = $parentTheme->path.'/composer.json')) {
+            $composer = json_decode(File::get($metaPath), true) ?? [];
 
-        return $manifestFile;
+            $composer['extra']['tastyigniter-theme'] = array_merge(
+                array_except($composer['extra']['tastyigniter-theme'], ['locked']),
+                array_except($config, ['description'])
+            );
+
+            File::put($path.'/composer.json', json_encode($composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        }
     }
 }

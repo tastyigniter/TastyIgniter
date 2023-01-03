@@ -79,7 +79,7 @@ class ThemeRemove extends Command
     protected function getDefaultConfirmCallback()
     {
         return function () {
-            return TRUE;
+            return true;
         };
     }
 }

@@ -45,6 +45,7 @@ return [
         'button_new' => 'Add Component',
         'button_edit' => 'Edit Component',
         'button_delete' => 'Delete Component',
+        'button_copy_partial' => 'Override Component Partial',
     ],
 
     'media_manager' => [
@@ -59,6 +60,7 @@ return [
         'text_choose' => 'Choose',
         'text_attach' => 'Attach',
         'text_sort_by' => 'Sort By',
+        'text_filter_by' => 'Filter By',
         'text_filter_search' => 'Search files and folders...',
         'text_new_folder' => 'New Folder',
         'text_rename_folder' => 'Rename Folder',
@@ -67,7 +69,8 @@ return [
         'text_items_selected' => 'Items Selected',
         'text_folder_name' => 'Folder name',
         'text_file_name' => 'File name',
-        'text_destination_folder' => 'Destination folder',
+        'text_copy_destination_folder' => 'Select the destination folder to copy to',
+        'text_move_destination_folder' => 'Select the destination folder to move to',
 
         'button_upload' => 'Upload',
         'button_preview' => 'Preview',
@@ -87,6 +90,11 @@ return [
         'label_modified_date' => 'Modified Date',
         'label_extension' => 'Extension',
         'label_permission' => 'Permission',
+        'label_filter_all' => 'Everything',
+        'label_filter_image' => 'Images',
+        'label_filter_video' => 'Videos',
+        'label_filter_audio' => 'Audios',
+        'label_filter_document' => 'Documents',
 
         'label_attachment_title' => 'Title',
         'label_attachment_description' => 'Description',
@@ -126,6 +134,7 @@ return [
         'alert_success_delete' => 'File (s) deleted successfully',
         'alert_select_item_to_attach' => 'Select an item to attach.',
         'alert_only_attach_to_saved' => 'You can only attach media to a saved form.',
+        'alert_missing_mediable' => 'You must define a media tag %s within $mediable property in %s to attach a media.', get_called_class(),
     ],
 
     'home' => [

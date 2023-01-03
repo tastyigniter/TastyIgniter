@@ -40,7 +40,7 @@ class Page extends Model
             return;
 
         $theme = ThemeManager::instance()->getActiveTheme();
-        $references = self::getDropdownOptions($theme, TRUE);
+        $references = self::getDropdownOptions($theme, true);
 
         return [
             'references' => $references,
@@ -60,7 +60,7 @@ class Page extends Model
             return;
 
         $controller = MainController::getController() ?: new MainController;
-        $pageUrl = $controller->pageUrl($item->reference, [], FALSE);
+        $pageUrl = $controller->pageUrl($item->reference, [], false);
 
         return [
             'url' => $pageUrl,

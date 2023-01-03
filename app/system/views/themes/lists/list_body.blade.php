@@ -3,14 +3,14 @@
         {!! $this->makePartial('lists/not_found', ['theme' => $theme]) !!}
     @else
         <div class="row mb-3">
-            <div class="media align-items-center bg-light p-4 w-100">
+            <div class="d-flex align-items-center bg-light p-4 w-100">
                 @if ($theme->getTheme()->hasParent())
                     {!! $this->makePartial('lists/child_theme', ['theme' => $theme]) !!}
                 @else
                     <a
                         class="media-left mr-4 preview-thumb"
-                        data-toggle="modal"
-                        data-target="#theme-preview-{{ $theme->code }}"
+                        data-bs-toggle="modal"
+                        data-bs-target="#theme-preview-{{ $theme->code }}"
                         data-img-src="{{ URL::asset($theme->screenshot) }}"
                         style="width:200px;">
                         <img

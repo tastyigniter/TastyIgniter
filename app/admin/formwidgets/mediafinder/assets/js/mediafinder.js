@@ -53,7 +53,7 @@
     }
 
     MediaFinder.prototype.onClickConfigButton = function (event) {
-        var self = this,
+        var self = this, modal,
             $container = $(event.target).closest('.media-finder'),
             $mediaIdentifier = $('[data-find-identifier]', $container).val(),
             $modalElement = $('<div/>', {
@@ -66,10 +66,11 @@
             })
 
         $modalElement.html(this.$configTemplate.innerHTML)
-        $modalElement.modal({backdrop: 'static', keyboard: false})
+        modal = new bootstrap.Modal($modalElement, {backdrop: 'static', keyboard: false})
+        modal.show()
 
         $modalElement.one('shown.bs.modal', function (event) {
-            $.request(self.options.alias + '::onLoadAttachmentConfig', {
+            $.request(self.options.alias+'::onLoadAttachmentConfig', {
                 data: {media_id: $mediaIdentifier}
             }).done(function () {
                 $modalElement.find('form').on('ajaxDone', function () {
@@ -184,11 +185,13 @@
         var $findIdentifier = $template.find('[data-find-identifier]'),
             $findName = $template.find('[data-find-name]'),
             $findImage = $template.find('[data-find-image]'),
+            $findFile = $template.find('[data-find-file]'),
             $findValue = $template.find('[data-find-value]')
 
         if ($findIdentifier.length) $findIdentifier.val(item.identifier)
         if ($findName.length) $findName.text(item.path)
         if ($findImage.length) $findImage.attr('src', item.publicUrl)
+        if ($findFile.length) $findFile.removeClass('fa-file').addClass('fa-'+item.fileType)
         if ($findValue.length) $findValue.val(item.path)
     }
 

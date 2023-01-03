@@ -81,7 +81,7 @@ class Router
         $this->url = $url;
         $url = RouterHelper::normalizeUrl($url);
 
-        $apiResult = Event::fire('router.beforeRoute', [$url, $this], TRUE);
+        $apiResult = Event::fire('router.beforeRoute', [$url, $this], true);
         if ($apiResult !== null)
             return $apiResult;
 
@@ -205,9 +205,9 @@ class Router
     protected function loadUrlMap()
     {
         $cacheable = Config::get('system.enableRoutesCache');
-        $cached = $cacheable ? Cache::get($this->getUrlMapCacheKey(), FALSE) : FALSE;
+        $cached = $cacheable ? Cache::get($this->getUrlMapCacheKey(), false) : false;
 
-        if (!$cached || ($unSerialized = @unserialize(@base64_decode($cached))) === FALSE) {
+        if (!$cached || ($unSerialized = @unserialize(@base64_decode($cached))) === false) {
             // The item doesn't exist in the cache, create the map
             $pages = $this->theme->listPages();
             $map = [];
@@ -227,12 +227,12 @@ class Router
                 );
             }
 
-            return FALSE;
+            return false;
         }
 
         $this->urlMap = $unSerialized;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -332,7 +332,7 @@ class Router
     protected function getCachedUrlFileName($url, &$urlList)
     {
         $key = $this->getUrlListCacheKey();
-        $urlList = Cache::get($key, FALSE);
+        $urlList = Cache::get($key, false);
 
         if (
             $urlList &&

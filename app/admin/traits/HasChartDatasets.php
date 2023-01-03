@@ -14,11 +14,12 @@ trait HasChartDatasets
 
     public function loadAssets()
     {
-        $this->addJs('~/app/system/assets/ui/js/vendor/moment.min.js', 'moment-js');
+        $this->addJs('~/app/admin/assets/src/js/vendor/moment.min.js', 'moment-js');
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.js', 'daterangepicker-js');
         $this->addCss('~/app/admin/dashboardwidgets/charts/assets/vendor/daterange/daterangepicker.css', 'daterangepicker-css');
 
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/Chart.min.js', 'chartsjs-js');
+        $this->addJs('~/app/admin/dashboardwidgets/charts/assets/vendor/chartjs/chartjs-adapter-moment.min.js', 'chartsjs-adapter-js');
         $this->addCss('~/app/admin/dashboardwidgets/charts/assets/css/charts.css', 'charts-css');
         $this->addJs('~/app/admin/dashboardwidgets/charts/assets/js/charts.js', 'charts-js');
     }
@@ -88,7 +89,7 @@ trait HasChartDatasets
     protected function getPointsArray($dateRanges, Collection $result)
     {
         $points = [];
-        $keyedResult = $result->keyBy('x');
+        $keyedResult = $result->pluck('y', 'x');
         foreach ($dateRanges as $date) {
             $x = $date->format('Y-m-d');
             $points[] = [

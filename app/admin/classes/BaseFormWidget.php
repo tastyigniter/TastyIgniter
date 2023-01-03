@@ -32,12 +32,12 @@ class BaseFormWidget extends BaseWidget
     /**
      * @var bool Render this form with uneditable preview data.
      */
-    public $previewMode = FALSE;
+    public $previewMode = false;
 
     /**
      * @var bool Determines if this form field should display comments and labels.
      */
-    public $showLabels = TRUE;
+    public $showLabels = true;
 
     //
     // Object properties

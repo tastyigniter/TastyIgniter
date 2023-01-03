@@ -35,13 +35,13 @@ class Repeater extends BaseFormWidget
     /**
      * @var bool Items can be sorted.
      */
-    public $sortable = FALSE;
+    public $sortable = false;
 
     public $sortColumnName = 'priority';
 
-    public $showAddButton = TRUE;
+    public $showAddButton = true;
 
-    public $showRemoveButton = TRUE;
+    public $showRemoveButton = true;
 
     public $emptyMessage = 'lang:admin::lang.text_empty';
 

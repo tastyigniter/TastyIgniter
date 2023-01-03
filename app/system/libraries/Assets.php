@@ -66,7 +66,7 @@ class Assets
         if (!File::exists($assetsConfigPath))
             return;
 
-        $content = json_decode(File::get($assetsConfigPath), TRUE);
+        $content = json_decode(File::get($assetsConfigPath), true) ?: [];
         if ($bundles = array_get($content, 'bundles')) {
             foreach ($bundles as $bundle) {
                 $this->registerBundle(
@@ -296,7 +296,7 @@ class Assets
                 continue;
             }
 
-            $pathCache[$realPath] = TRUE;
+            $pathCache[$realPath] = true;
         }
 
         return $collection;
@@ -307,7 +307,7 @@ class Assets
         $path = $this->getAssetPath($path);
 
         if (!is_null($suffix))
-            $suffix = (strpos($path, '?') === FALSE) ? '?'.$suffix : '&'.$suffix;
+            $suffix = (strpos($path, '?') === false) ? '?'.$suffix : '&'.$suffix;
 
         return $path.$suffix;
     }

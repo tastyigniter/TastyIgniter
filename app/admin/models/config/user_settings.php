@@ -6,7 +6,7 @@ return [
             'buttons' => [
                 'back' => [
                     'label' => 'lang:admin::lang.button_icon_back',
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-outline-secondary',
                     'href' => 'settings',
                 ],
                 'save' => [
@@ -21,7 +21,7 @@ return [
             'allow_registration' => [
                 'label' => 'lang:system::lang.settings.label_allow_registration',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'comment' => 'lang:system::lang.settings.help_allow_registration',
             ],
             'registration_email' => [
@@ -33,10 +33,6 @@ return [
                 ],
                 'comment' => 'lang:system::lang.settings.help_registration_email',
             ],
-        ],
-        'rules' => [
-            ['allow_registration', 'lang:system::lang.settings.label_allow_registration', 'required|integer'],
-            ['registration_email.*', 'lang:system::lang.settings.label_registration_email', 'required|alpha'],
         ],
     ],
 ];

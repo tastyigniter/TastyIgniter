@@ -15,16 +15,17 @@ $config['form']['fields'] = [
         'type' => 'radiotoggle',
         'default' => 'radio',
     ],
-    'option_values' => [
+    'values' => [
         'label' => 'lang:admin::lang.menu_options.text_tab_values',
         'type' => 'repeater',
+        'valueFrom' => 'option_values',
         'form' => 'menu_option_values_model',
-        'sortable' => TRUE,
+        'sortable' => true,
     ],
     'update_related_menu_item' => [
         'label' => 'lang:admin::lang.menu_options.label_update_related_menu_item',
         'type' => 'switch',
-        'default' => FALSE,
+        'default' => false,
         'context' => ['edit'],
         'on' => 'lang:admin::lang.text_yes',
         'off' => 'lang:admin::lang.text_no',

@@ -18,15 +18,9 @@ class BaseExtension extends ServiceProvider
     protected $config;
 
     /**
-     * @todo: link with controller autoload property
-     * @var array Autoload libraries, models, helpers, and languages
-     */
-    public $autoload = [];
-
-    /**
      * @var bool Determine if this extension should be loaded (false) or not (true).
      */
-    public $disabled = FALSE;
+    public $disabled = false;
 
     /**
      * Register method called when the extension is first installed.
@@ -177,10 +171,10 @@ class BaseExtension extends ServiceProvider
         $configPath = realpath(dirname(File::fromClass($className)));
 
         if (File::exists($configFile = $configPath.'/extension.json')) {
-            $config = json_decode(File::get($configFile), TRUE) ?? [];
+            $config = json_decode(File::get($configFile), true) ?? [];
         }
         elseif (File::exists($configFile = $configPath.'/composer.json')) {
-            $config = $this->getConfigFromComposerJson($configFile);
+            $config = ComposerManager::instance()->getConfig($configPath);
         }
         else {
             throw new SystemException("The configuration file for extension <b>{$className}</b> does not exist. ".
@@ -201,7 +195,7 @@ class BaseExtension extends ServiceProvider
 
     protected function getConfigFromComposerJson($configFile)
     {
-        $composer = json_decode(File::get($configFile), TRUE) ?? [];
+        $composer = json_decode(File::get($configFile), true) ?? [];
 
         if (!$config = array_get($composer, 'extra.tastyigniter-extension', []))
             return $config;

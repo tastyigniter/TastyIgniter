@@ -16,13 +16,13 @@ $config['form']['fields'] = [
         'label' => 'lang:admin::lang.menus.label_option_name',
         'type' => 'text',
         'span' => 'left',
-        'disabled' => TRUE,
+        'disabled' => true,
     ],
     'option[display_type]' => [
         'label' => 'lang:admin::lang.menus.label_option_display_type',
         'type' => 'text',
         'span' => 'right',
-        'disabled' => TRUE,
+        'disabled' => true,
     ],
     'required' => [
         'label' => 'lang:admin::lang.menus.label_option_required',
@@ -44,7 +44,7 @@ $config['form']['fields'] = [
     'menu_option_values' => [
         'type' => 'repeater',
         'form' => 'menu_item_option_values_model',
-        'sortable' => TRUE,
+        'sortable' => true,
     ],
 ];
 

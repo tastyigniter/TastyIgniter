@@ -6,7 +6,7 @@ return [
             'buttons' => [
                 'back' => [
                     'label' => 'lang:admin::lang.button_icon_back',
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-outline-secondary',
                     'href' => 'settings',
                 ],
                 'save' => [
@@ -25,7 +25,7 @@ return [
             'enable_request_log' => [
                 'label' => 'lang:system::lang.settings.label_enable_request_log',
                 'type' => 'switch',
-                'default' => TRUE,
+                'default' => true,
                 'comment' => 'lang:system::lang.settings.help_enable_request_log',
             ],
             'maintenance' => [
@@ -57,12 +57,6 @@ return [
                 'default' => '60',
                 'comment' => 'lang:system::lang.settings.help_activity_log_timeout',
             ],
-        ],
-        'rules' => [
-            ['enable_request_log', 'lang:system::lang.settings.label_enable_request_log', 'required|integer'],
-            ['maintenance_mode', 'lang:system::lang.settings.label_maintenance_mode', 'required|integer'],
-            ['maintenance_message', 'lang:system::lang.settings.label_maintenance_message', 'required'],
-            ['activity_log_timeout', 'lang:system::lang.settings.label_activity_log_timeout', 'required|integer'],
         ],
     ],
 ];

@@ -23,12 +23,12 @@ class DashboardContainer extends BaseWidget
     /**
      * @var string Determines whether widgets could be added and deleted.
      */
-    public $canManage = TRUE;
+    public $canManage = true;
 
     /**
      * @var string Determines whether widgets could be set as default.
      */
-    public $canSetDefault = FALSE;
+    public $canSetDefault = false;
 
     /**
      * @var array A list of default widgets to load.
@@ -65,7 +65,7 @@ class DashboardContainer extends BaseWidget
     /**
      * @var bool Determines if dashboard widgets have been created.
      */
-    protected $widgetsDefined = FALSE;
+    protected $widgetsDefined = false;
 
     /**
      * Constructor.
@@ -212,7 +212,7 @@ class DashboardContainer extends BaseWidget
 
         $widget->initialize();
 
-        $this->widgetsDefined = FALSE;
+        $this->widgetsDefined = false;
 
         return $this->onRenderWidgets();
     }
@@ -324,7 +324,7 @@ class DashboardContainer extends BaseWidget
 
         $this->dashboardWidgets = $result;
 
-        $this->widgetsDefined = TRUE;
+        $this->widgetsDefined = true;
     }
 
     protected function makeDashboardWidget($alias, $widgetInfo)
@@ -347,7 +347,7 @@ class DashboardContainer extends BaseWidget
     {
         $this->resetWidgetsUserPreferences();
 
-        $this->widgetsDefined = FALSE;
+        $this->widgetsDefined = false;
 
         $this->defineDashboardWidgets();
     }

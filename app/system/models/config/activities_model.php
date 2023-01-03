@@ -3,17 +3,17 @@ $config['list']['columns'] = [
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'message' => [
         'label' => 'lang:system::lang.activities.column_message',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'status_for_name' => [
         'label' => 'lang:admin::lang.label_type',
         'type' => 'text',
-        'searchable' => TRUE,
+        'searchable' => true,
     ],
     'notify_customer' => [
         'label' => 'lang:system::lang.activities.column_notify',
@@ -21,7 +21,7 @@ $config['list']['columns'] = [
     ],
     'activity_id' => [
         'label' => 'lang:admin::lang.column_id',
-        'invisible' => TRUE,
+        'invisible' => true,
     ],
 
 ];

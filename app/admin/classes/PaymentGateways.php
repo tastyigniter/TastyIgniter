@@ -183,7 +183,9 @@ class PaymentGateways
     public static function createPartials()
     {
         $themeManager = ThemeManager::instance();
-        $theme = $themeManager->getActiveTheme();
+        if (!$theme = $themeManager->getActiveTheme())
+            return;
+
         $partials = $theme->listPartials()->pluck('baseFileName', 'baseFileName')->all();
         $paymentMethods = Payments_model::isEnabled()->get();
 
@@ -197,7 +199,7 @@ class PaymentGateways
             $partialPath = $theme->getPath().'/_partials/'.$partialName.'.blade.php';
 
             if (!File::isDirectory(dirname($partialPath)))
-                File::makeDirectory(dirname($partialPath), null, TRUE);
+                File::makeDirectory(dirname($partialPath), null, true);
 
             if (!array_key_exists($partialName, $partials)) {
                 File::put($partialPath, self::getFileContent($class));

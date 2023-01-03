@@ -21,7 +21,7 @@ class Request_logs_model extends Model
     /**
      * @var array The model table column to convert to dates on insert/update
      */
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     protected $casts = [
         'referrer' => 'json',
@@ -32,7 +32,7 @@ class Request_logs_model extends Model
         if (!App::hasDatabase())
             return;
 
-        if (!setting('enable_request_log', TRUE))
+        if (!setting('enable_request_log', true))
             return;
 
         $url = Request::fullUrl();

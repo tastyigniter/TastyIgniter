@@ -61,14 +61,16 @@ class Connector extends BaseFormWidget
     /**
      * @var bool Items can be sorted.
      */
-    public $sortable = FALSE;
+    public $sortable = false;
 
     /**
      * @var bool Items can be edited.
      */
-    public $editable = TRUE;
+    public $editable = true;
 
     public $popupSize;
+
+    public $hideNewButton = true;
 
     public function initialize()
     {
@@ -85,13 +87,14 @@ class Connector extends BaseFormWidget
             'descriptionFrom',
             'partial',
             'popupSize',
+            'hideNewButton',
         ]);
 
-        $fieldName = $this->formField->getName(FALSE);
+        $fieldName = $this->formField->getName(false);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
 
         if ($this->formField->disabled || $this->formField->readOnly) {
-            $this->previewMode = TRUE;
+            $this->previewMode = true;
         }
     }
 
@@ -136,6 +139,7 @@ class Connector extends BaseFormWidget
         $this->vars['partial'] = $this->partial;
         $this->vars['descriptionFrom'] = $this->descriptionFrom;
         $this->vars['sortableInputName'] = $this->sortableInputName;
+        $this->vars['newRecordTitle'] = sprintf($this->newRecordTitle, lang($this->formName));
 
         $this->vars['emptyMessage'] = $this->emptyMessage;
         $this->vars['confirmMessage'] = $this->confirmMessage;
@@ -167,7 +171,7 @@ class Connector extends BaseFormWidget
         return $this->makePartial('recordeditor/form', [
             'formRecordId' => $recordId,
             'formTitle' => sprintf($formTitle, lang($this->formName)),
-            'formWidget' => $this->makeItemFormWidget($model, 'edit'),
+            'formWidget' => $this->makeItemFormWidget($model),
         ]);
     }
 
@@ -178,7 +182,7 @@ class Connector extends BaseFormWidget
         if (strlen($recordId = post('recordId')))
             $model = $model->find($recordId);
 
-        $form = $this->makeItemFormWidget($model, 'edit');
+        $form = $this->makeItemFormWidget($model);
 
         $this->validateFormWidget($form, $saveData = $form->getSaveData());
 
@@ -201,7 +205,7 @@ class Connector extends BaseFormWidget
     public function onDeleteRecord()
     {
         if (!strlen($recordId = post('recordId')))
-            return FALSE;
+            return false;
 
         $model = $this->getRelationModel()->find($recordId);
         if (!$model)
@@ -250,13 +254,13 @@ class Connector extends BaseFormWidget
         return $results;
     }
 
-    protected function makeItemFormWidget($model, $context)
+    protected function makeItemFormWidget($model)
     {
         $widgetConfig = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $widgetConfig['model'] = $model;
         $widgetConfig['alias'] = $this->alias.'FormConnector';
         $widgetConfig['arrayName'] = $this->formField->arrayName.'[connectorData]';
-        $widgetConfig['context'] = $context;
+        $widgetConfig['context'] = $model->exists ? 'edit' : 'create';
         $widget = $this->makeWidget(Form::class, $widgetConfig);
 
         $widget->bindToController();

@@ -85,7 +85,7 @@ class OnboardingSteps
 
     protected function stepIsCompleted($callable)
     {
-        return is_callable($callable) ? $callable() : FALSE;
+        return is_callable($callable) ? $callable() : false;
     }
 
     //

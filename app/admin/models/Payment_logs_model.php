@@ -26,7 +26,7 @@ class Payment_logs_model extends Model
 
     protected $appends = ['date_added_since'];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public $dates = ['refunded_at'];
 
@@ -56,7 +56,7 @@ class Payment_logs_model extends Model
         'is_refundable' => 'boolean',
     ];
 
-    public static function logAttempt($order, $message, $isSuccess, $request = [], $response = [], $isRefundable = FALSE)
+    public static function logAttempt($order, $message, $isSuccess, $request = [], $response = [], $isRefundable = false)
     {
         $record = new static;
         $record->message = $message;
@@ -87,6 +87,6 @@ class Payment_logs_model extends Model
             Event::fire('admin.paymentLog.refundProcessed', [$this]);
         }
 
-        return TRUE;
+        return true;
     }
 }

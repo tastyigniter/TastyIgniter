@@ -2,6 +2,7 @@
 
 namespace Admin\Models;
 
+use Admin\Traits\Stockable;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Database\Traits\Sortable;
 
@@ -11,6 +12,7 @@ use Igniter\Flame\Database\Traits\Sortable;
 class Menu_option_values_model extends Model
 {
     use Sortable;
+    use Stockable;
 
     /**
      * @var string The database table name
@@ -42,7 +44,7 @@ class Menu_option_values_model extends Model
 
     public $sortable = [
         'sortOrderColumn' => 'priority',
-        'sortWhenCreating' => TRUE,
+        'sortWhenCreating' => true,
     ];
 
     public static function getDropDownOptions()
@@ -56,6 +58,16 @@ class Menu_option_values_model extends Model
             return self::$allergensOptionsCache;
 
         return self::$allergensOptionsCache = Allergens_model::dropdown('name')->all();
+    }
+
+    public function getStockableName()
+    {
+        return $this->value;
+    }
+
+    public function getStockableLocations()
+    {
+        return optional($this->option)->locations;
     }
 
     //
@@ -77,7 +89,7 @@ class Menu_option_values_model extends Model
     public function addMenuAllergens(array $allergenIds = [])
     {
         if (!$this->exists)
-            return FALSE;
+            return false;
 
         $this->allergens()->sync($allergenIds);
     }

@@ -17,7 +17,7 @@ class Location_tables_model extends Model
 
     protected $primaryKey = 'table_id';
 
-    public $incrementing = FALSE;
+    public $incrementing = false;
 
     protected $casts = [
         'location_id' => 'integer',

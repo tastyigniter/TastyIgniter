@@ -9,7 +9,7 @@ class BlankComponent extends BaseComponent
     /**
      * @var bool This component is hidden from the admin UI.
      */
-    public $isHidden = TRUE;
+    public $isHidden = true;
 
     /**
      * @var string Error message that is shown with this error component.

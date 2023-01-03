@@ -1,6 +1,6 @@
 <div
     id="{{ $this->getId() }}"
-    class="mediafinder {{ $mode }}-mode{{ $isMulti ? ' is-multi' : '' }}{{ $mode == 'picker' ? ' is-picker' : '' }}{{ $value ? ' is-populated' : '' }}"
+    class="mediafinder {{ $mode }}-mode{{ $isMulti ? ' is-multi' : '' }}{{ $value ? ' is-populated' : '' }}"
     data-control="mediafinder"
     data-alias="{{ $this->alias }}"
     data-mode="{{ $mode }}"
@@ -16,7 +16,7 @@
                     <div class="modal-content">
                         <div class="modal-body text-center">
                             <div class="progress-indicator">
-                                <span class="spinner"><span class="ti-loading fa-3x fa-fw"></span></span>
+                                <span class="ti-loading spinner-border fa-3x fa-fw"></span>
                                 @lang('admin::lang.text_loading')
                             </div>
                         </div>

@@ -89,7 +89,7 @@ class AssigneeController extends ControllerAction
     {
         if ($this->controller->isClassExtendedWith('Admin\Actions\ListController')) {
             Event::listen('admin.list.extendQuery', function ($listWidget, $query) {
-                if (!(bool)$this->getConfig('applyScopeOnListQuery', TRUE))
+                if (!(bool)$this->getConfig('applyScopeOnListQuery', true))
                     return;
 
                 $this->assigneeApplyScope($query);
@@ -109,8 +109,8 @@ class AssigneeController extends ControllerAction
     protected function assigneeBindFormEvents()
     {
         if ($this->controller->isClassExtendedWith('Admin\Actions\FormController')) {
-            $this->controller->bindEvent('controller.form.extendQuery', function ($query) {
-                if (!(bool)$this->getConfig('applyScopeOnFormQuery', TRUE))
+            $this->controller->bindEvent('admin.controller.extendFormQuery', function ($query) {
+                if (!(bool)$this->getConfig('applyScopeOnFormQuery', true))
                     return;
 
                 $this->assigneeApplyScope($query);

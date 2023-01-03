@@ -13,22 +13,24 @@ class AddForeignKeyConstraintsToTables extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
-        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
-            foreach ($constraints as $options) {
-                $this->addForeignKey($tableName, $options);
-            }
-        }
+        // Commented out so foreign keys are not added on new installations.
+        // For existing installations, another migration has been added to drop all foreign keys.
+//        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
+//            foreach ($constraints as $options) {
+//                $this->addForeignKey($tableName, $options);
+//            }
+//        }
 
         Schema::enableForeignKeyConstraints();
     }
 
     public function down()
     {
-        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
-            foreach ($constraints as $options) {
-                $this->dropForeignKey($tableName, $options);
-            }
-        }
+//        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
+//            foreach ($constraints as $options) {
+//                $this->dropForeignKey($tableName, $options);
+//            }
+//        }
     }
 
     protected function addForeignKey($tableName, $options)
@@ -42,21 +44,16 @@ class AddForeignKeyConstraintsToTables extends Migration
 
             $blueprint = $table->foreignId($foreignKey);
 
-            if (array_get($options, 'nullable', TRUE))
+            if (array_get($options, 'nullable', true))
                 $blueprint->nullable();
 
             $blueprint->change();
 
-            $blueprint = $table->foreign($foreignKey)->references($parentKey)->on($foreignTableName);
-
-            if (array_get($options, 'nullOnDelete'))
-                $blueprint->nullOnDelete();
-
-            if (array_get($options, 'cascadeOnDelete'))
-                $blueprint->nullOnDelete();
-
-            if (array_get($options, 'cascadeOnUpdate', TRUE))
-                $blueprint->cascadeOnUpdate();
+            $table->foreign($foreignKey)
+                ->references($parentKey)
+                ->on($foreignTableName)
+                ->nullOnDelete()
+                ->cascadeOnUpdate();
         });
     }
 
@@ -79,13 +76,13 @@ class AddForeignKeyConstraintsToTables extends Migration
     {
         return [
             'currencies' => [
-                ['countries', 'country_id', 'nullOnDelete' => TRUE],
+                ['countries', 'country_id', 'nullOnDelete' => true],
             ],
             'mail_layouts' => [
-                ['languages', 'language_id', 'nullOnDelete' => TRUE],
+                ['languages', 'language_id', 'nullOnDelete' => true],
             ],
             'mail_templates' => [
-                ['mail_layouts', 'layout_id', 'nullOnDelete' => TRUE],
+                ['mail_layouts', 'layout_id', 'nullOnDelete' => true],
             ],
         ];
     }

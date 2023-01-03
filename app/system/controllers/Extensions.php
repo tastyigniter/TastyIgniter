@@ -30,7 +30,7 @@ class Extensions extends \Admin\Classes\AdminController
             'emptyMessage' => 'lang:system::lang.extensions.text_empty',
             'pageLimit' => 50,
             'defaultSort' => ['name', 'ASC'],
-            'showCheckboxes' => FALSE,
+            'showCheckboxes' => false,
             'configFile' => 'extensions_model',
         ],
     ];
@@ -199,8 +199,8 @@ class Extensions extends \Admin\Classes\AdminController
 
         $this->initFormWidget($model, $action);
 
-        if ($this->formValidate($model, $this->formWidget) === FALSE)
-            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : FALSE;
+        if ($this->formValidate($model, $this->formWidget) === false)
+            return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
 
         $saved = $model->set($this->formWidget->getSaveData());
         if ($saved) {
@@ -240,15 +240,12 @@ class Extensions extends \Admin\Classes\AdminController
         if ($column->type != 'button')
             return null;
 
-        $attributes = $column->attributes;
+        if (($column->columnName == 'delete' && $record->status) || ($column->columnName != 'delete' && !$record->class)) {
+            $attributes = $column->attributes;
+            $attributes['class'] .= ' disabled';
 
-        if ($column->columnName == 'delete' && $record->status)
-            $attributes['class'] = $attributes['class'].' disabled';
-
-        if ($column->columnName != 'delete' && !$record->class)
-            $attributes['class'] = $attributes['class'].' disabled';
-
-        return $attributes;
+            return $attributes;
+        }
     }
 
     protected function initFormWidget($model, $context = null)
@@ -300,11 +297,14 @@ class Extensions extends \Admin\Classes\AdminController
 
     protected function formValidate($model, $form)
     {
-        $rules = [];
-        if (isset($form->config['rules']))
-            $rules = $form->config['rules'];
+        if (!isset($form->config['rules']))
+            return;
 
-        return $this->validatePasses($form->getSaveData(), $rules);
+        return $this->validatePasses($form->getSaveData(),
+            $form->config['rules'],
+            array_get($form->config, 'validationMessages', []),
+            array_get($form->config, 'validationAttributes', [])
+        );
     }
 
     protected function checkDependencies($extension)
@@ -332,7 +332,7 @@ class Extensions extends \Admin\Classes\AdminController
             return count($extensionManager->files($extension, 'database/migrations')) > 0;
         }
         catch (Exception $ex) {
-            return FALSE;
+            return false;
         }
     }
 }

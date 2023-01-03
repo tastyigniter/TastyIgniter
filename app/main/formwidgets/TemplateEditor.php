@@ -108,8 +108,11 @@ class TemplateEditor extends BaseFormWidget
     public function onChooseFile()
     {
         $this->validate(post('Theme.source.template'), [
-            ['type', 'Source Type', 'required|in:_pages,_partials,_layouts,_content'],
-            ['file', 'Source File', 'sometimes|nullable|string'],
+            'type' => ['required', 'in:_pages,_partials,_layouts,_content'],
+            'file' => ['sometimes', 'nullable', 'string'],
+        ], [], [
+            'type' => 'Source Type',
+            'file' => 'Source File',
         ]);
 
         $this->controller->setTemplateValue('type', post('Theme.source.template.type'));
@@ -124,8 +127,11 @@ class TemplateEditor extends BaseFormWidget
             throw new ApplicationException(lang('system::lang.themes.alert_theme_locked'));
 
         $this->validate(post(), [
-            ['action', 'Source Action', 'required|in:delete,rename,new'],
-            ['name', 'Source Name', 'present|regex:/^[a-zA-Z-_\/]+$/'],
+            'action' => ['required', 'in:delete,rename,new'],
+            'name' => ['present', 'regex:/^[a-zA-Z-_\/]+$/'],
+        ], [], [
+            'action' => 'Source Action',
+            'name' => 'Source Name',
         ]);
 
         $fileAction = post('action');
@@ -156,6 +162,9 @@ class TemplateEditor extends BaseFormWidget
         if ($this->manager->isLocked($this->model->code))
             throw new ApplicationException(lang('system::lang.themes.alert_theme_locked'));
 
+        if (!$this->templateWidget)
+            return;
+
         $fileName = sprintf('%s/%s', $this->templateType, $this->templateFile);
         $data = post('Theme.source');
 
@@ -165,7 +174,9 @@ class TemplateEditor extends BaseFormWidget
         });
 
         $this->validate($data,
-            array_get($this->templateWidget->config ?? [], 'rules', [])
+            array_get($this->templateWidget->config ?? [], 'rules', []),
+            array_get($this->templateWidget->config ?? [], 'validationMessages', []),
+            array_get($this->templateWidget->config ?? [], 'validationAttributes', [])
         );
 
         $this->manager->writeFile($fileName,
@@ -215,7 +226,7 @@ class TemplateEditor extends BaseFormWidget
         /** @var \Main\Template\Model $templateClass */
         $templateClass = $themeObject->getTemplateClass($type);
 
-        return $templateClass::getDropdownOptions($themeObject, TRUE);
+        return $templateClass::getDropdownOptions($themeObject, true);
     }
 
     protected function getTemplateTypes()
@@ -253,6 +264,9 @@ class TemplateEditor extends BaseFormWidget
 
     protected function getTemplateModifiedTime()
     {
+        if (!$this->templateWidget)
+            return null;
+
         return optional($this->templateWidget->data)->fileSource->mTime;
     }
 }

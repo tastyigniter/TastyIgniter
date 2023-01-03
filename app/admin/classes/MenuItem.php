@@ -48,7 +48,7 @@ class MenuItem
     /**
      * @var bool Specify if the item is disabled or not.
      */
-    public $disabled = FALSE;
+    public $disabled = false;
 
     /**
      * @var array Contains a list of attributes specified in the item configuration.
@@ -205,7 +205,7 @@ class MenuItem
      *
      * @return array|string
      */
-    public function getAttributes($htmlBuild = TRUE)
+    public function getAttributes($htmlBuild = true)
     {
         $attributes = $this->attributes;
 

@@ -39,7 +39,7 @@ class Staff_groups_model extends Model
         'auto_assign_availability' => 'boolean',
     ];
 
-    public $timestamps = TRUE;
+    public $timestamps = true;
 
     public static function getDropdownOptions()
     {

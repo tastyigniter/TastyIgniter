@@ -13,7 +13,7 @@ class User extends Manager
 
     protected $model = 'Admin\Models\Users_model';
 
-    protected $isSuperUser = FALSE;
+    protected $isSuperUser = false;
 
     public function isLogged()
     {
@@ -50,7 +50,7 @@ class User extends Manager
         $query
             ->with(['staff', 'staff.role', 'staff.groups', 'staff.locations'])
             ->whereHas('staff', function ($query) {
-                $query->where('staff_status', TRUE);
+                $query->where('staff_status', true);
             });
     }
 
@@ -83,7 +83,7 @@ class User extends Manager
         return $this->staff()->staff_email;
     }
 
-    public function register(array $attributes, $activate = FALSE)
+    public function register(array $attributes, $activate = false)
     {
         $model = $this->createModel();
 
@@ -92,11 +92,11 @@ class User extends Manager
         $staff->staff_name = $attributes['staff_name'];
         $staff->language_id = $attributes['language_id'] ?? null;
         $staff->staff_role_id = $attributes['staff_role_id'] ?? null;
-        $staff->staff_status = $attributes['staff_status'] ?? TRUE;
+        $staff->staff_status = $attributes['staff_status'] ?? true;
         $staff->user = [
             'username' => $attributes['username'],
             'password' => $attributes['password'],
-            'super_user' => $attributes['super_user'] ?? FALSE,
+            'super_user' => $attributes['super_user'] ?? false,
             'activate' => $activate,
         ];
 

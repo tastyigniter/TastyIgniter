@@ -18,10 +18,17 @@ return [
                         'alias' => [
                             'label' => 'lang:system::lang.themes.label_component_alias',
                             'type' => 'text',
-                            'context' => 'edit',
+                            'context' => ['edit', 'partial'],
+                            'comment' => 'lang:system::lang.themes.help_component_alias',
                             'attributes' => [
                                 'data-toggle' => 'disabled',
                             ],
+                        ],
+                        'partial' => [
+                            'label' => 'lang:system::lang.themes.label_override_partial',
+                            'type' => 'select',
+                            'context' => 'partial',
+                            'placeholder' => 'lang:admin::lang.text_please_select',
                         ],
                     ],
                 ],
@@ -47,10 +54,16 @@ return [
             ],
         ],
         'rules' => [
-            ['markup', 'lang:system::lang.themes.text_tab_markup', 'sometimes'],
-            ['codeSection', 'lang:system::lang.themes.text_tab_php_section', 'sometimes'],
-            ['settings.components.*.alias', 'lang:system::lang.themes.label_component_alias', 'sometimes|required|regex:/^[a-zA-Z\s]+$/'],
-            ['settings.description', 'lang:admin::lang.label_description', 'sometimes|max:255'],
+            'markup' => ['sometimes'],
+            'codeSection' => ['sometimes'],
+            'settings.components.*.alias' => ['sometimes', 'required', 'regex:/^[a-zA-Z\s]+$/'],
+            'settings.description' => ['sometimes', 'max:255'],
+        ],
+        'validationAttributes' => [
+            'markup' => lang('system::lang.themes.text_tab_markup'),
+            'codeSection' => lang('system::lang.themes.text_tab_php_section'),
+            'settings.components.*.alias' => lang('system::lang.themes.label_component_alias'),
+            'settings.description' => lang('admin::lang.label_description'),
         ],
     ],
 ];

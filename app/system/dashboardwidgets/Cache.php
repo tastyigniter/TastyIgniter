@@ -6,6 +6,7 @@ use Admin\Classes\BaseDashboardWidget;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use System\Helpers\CacheHelper;
 
 class Cache extends BaseDashboardWidget
 {
@@ -20,15 +21,15 @@ class Cache extends BaseDashboardWidget
             'color' => '#2980b9',
         ],
         [
-            'path'  => 'system/cache',
+            'path' => 'system/cache',
             'color' => '#16a085',
         ],
         [
-            'path'  => 'framework/cache',
+            'path' => 'framework/cache',
             'color' => '#8e44ad',
         ],
         [
-            'path'  => 'system/combiner',
+            'path' => 'system/combiner',
             'color' => '#c0392b',
         ],
     ];
@@ -44,9 +45,9 @@ class Cache extends BaseDashboardWidget
     {
         return [
             'title' => [
-                'label'   => 'admin::lang.dashboard.label_widget_title',
+                'label' => 'admin::lang.dashboard.label_widget_title',
                 'default' => 'admin::lang.dashboard.text_cache_usage',
-                'type'    => 'text',
+                'type' => 'text',
             ],
         ];
     }
@@ -56,13 +57,12 @@ class Cache extends BaseDashboardWidget
         $totalCacheSize = 0;
         $cacheSizes = [];
         foreach (self::$caches as $cacheInfo) {
-
             $size = $this->folderSize(storage_path().'/'.$cacheInfo['path']);
 
             $cacheSizes[] = (object)[
-                'label'         => $cacheInfo['path'],
-                'color'         => $cacheInfo['color'],
-                'size'          => $size,
+                'label' => $cacheInfo['path'],
+                'color' => $cacheInfo['color'],
+                'size' => $size,
                 'formattedSize' => $this->formatSize($size),
             ];
 
@@ -76,9 +76,8 @@ class Cache extends BaseDashboardWidget
 
     public function onClearCache()
     {
-        \Artisan::call('cache:clear');
         try {
-            \Artisan::call('view:clear');
+            CacheHelper::clear();
         }
         catch (Exception $ex) {
             // ...

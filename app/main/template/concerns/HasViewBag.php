@@ -15,7 +15,7 @@ trait HasViewBag
     /**
      * @var mixed Cache store for the getViewBag method.
      */
-    protected $viewBagCache = FALSE;
+    protected $viewBagCache = false;
 
     /**
      * Boot the sortable trait for this model.
@@ -42,7 +42,7 @@ trait HasViewBag
      */
     public function getViewBag()
     {
-        if ($this->viewBagCache !== FALSE) {
+        if ($this->viewBagCache !== false) {
             return $this->viewBagCache;
         }
 

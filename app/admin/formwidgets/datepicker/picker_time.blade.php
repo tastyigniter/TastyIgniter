@@ -12,7 +12,5 @@
         {!! $field->getAttributes() !!}
         @if ($this->previewMode) readonly="readonly" @endif
     />
-    <div class="input-group-append">
-        <span class="input-group-icon"><i class="fa fa-clock-o"></i></span>
-    </div>
+    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
 </div>

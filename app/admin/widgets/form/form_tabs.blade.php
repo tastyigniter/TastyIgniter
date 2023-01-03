@@ -1,5 +1,5 @@
 @php
-$activeTab = $activeTab ? $activeTab : '#'.$tabs->section.'tab-1';
+    $activeTab = $activeTab ? $activeTab : '#'.$tabs->section.'tab-1';
 @endphp
 <div class="tab-heading">
     <ul class="form-nav nav nav-tabs">
@@ -8,7 +8,7 @@ $activeTab = $activeTab ? $activeTab : '#'.$tabs->section.'tab-1';
                 <a
                     class="nav-link{{ (('#'.$tabs->section.'tab-'.$loop->iteration) == $activeTab) ? ' active' : '' }}"
                     href="{{ '#'.$tabs->section.'tab-'.$loop->iteration }}"
-                    data-toggle="tab"
+                    data-bs-toggle="tab"
                 >@lang($name)</a>
             </li>
         @endforeach

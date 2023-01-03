@@ -8,6 +8,8 @@ use Admin\Models\Payments_model;
 use Exception;
 use Igniter\Flame\Database\Model;
 use Igniter\Flame\Exception\ApplicationException;
+use Illuminate\Support\Arr;
+use System\Helpers\ValidationHelper;
 
 class Payments extends \Admin\Classes\AdminController
 {
@@ -84,6 +86,7 @@ class Payments extends \Admin\Classes\AdminController
 
         // Prepare query and find model record
         $query = $model->newQuery();
+        $this->fireEvent('admin.controller.extendFormQuery', [$query]);
         $this->formExtendQuery($query);
         $result = $query->whereCode($paymentCode)->first();
 
@@ -126,7 +129,7 @@ class Payments extends \Admin\Classes\AdminController
 
         if ($form->context != 'create') {
             $field = $form->getField('code');
-            $field->disabled = TRUE;
+            $field->disabled = true;
         }
     }
 
@@ -143,18 +146,40 @@ class Payments extends \Admin\Classes\AdminController
     public function formValidate($model, $form)
     {
         $rules = [
-            ['payment', 'lang:admin::lang.payments.label_payments', 'sometimes|required|alpha_dash'],
-            ['name', 'lang:admin::lang.label_name', 'required|min:2|max:128'],
-            ['code', 'lang:admin::lang.payments.label_code', 'sometimes|required|alpha_dash|unique:payments,code'],
-            ['priority', 'lang:admin::lang.payments.label_priority', 'required|integer'],
-            ['description', 'lang:admin::lang.label_description', 'max:255'],
-            ['is_default', 'lang:admin::lang.payments.label_default', 'required|integer'],
-            ['status', 'lang:admin::lang.label_status', 'required|integer'],
+            'payment' => ['sometimes', 'required', 'alpha_dash'],
+            'name' => ['required', 'min:2', 'max:128'],
+            'code' => ['sometimes', 'required', 'alpha_dash', 'unique:payments,code'],
+            'priority' => ['required', 'integer'],
+            'description' => ['max:255'],
+            'is_default' => ['required', 'integer'],
+            'status' => ['required', 'integer'],
         ];
 
-        if ($form->model->exists && ($mergeRules = $form->model->getConfigRules()))
-            array_push($rules, ...$mergeRules);
+        $messages = [];
 
-        return $this->validatePasses($form->getSaveData(), $rules);
+        $attributes = [
+            'payment' => lang('admin::lang.payments.label_payments'),
+            'name' => lang('admin::lang.label_name'),
+            'code' => lang('admin::lang.payments.label_code'),
+            'priority' => lang('admin::lang.payments.label_priority'),
+            'description' => lang('admin::lang.label_description'),
+            'is_default' => lang('admin::lang.payments.label_default'),
+            'status' => lang('lang:admin::lang.label_status'),
+        ];
+
+        if ($form->model->exists) {
+            $parsedRules = ValidationHelper::prepareRules($form->model->getConfigRules());
+
+            if ($mergeRules = Arr::get($parsedRules, 'rules', $parsedRules))
+                $rules = array_merge($rules, $mergeRules);
+
+            if ($mergeMessages = $form->model->getConfigValidationMessages())
+                $messages = array_merge($messages, $mergeMessages);
+
+            if ($mergeAttributes = Arr::get($parsedRules, 'attributes', $form->model->getConfigValidationAttributes()))
+                $attributes = array_merge($attributes, $mergeAttributes);
+        }
+
+        return $this->validatePasses($form->getSaveData(), $rules, $messages, $attributes);
     }
 }
