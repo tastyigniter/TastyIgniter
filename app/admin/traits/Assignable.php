@@ -72,14 +72,17 @@ trait Assignable
         if (is_null($group) && !is_null($assignee))
             $group = $assignee->groups()->first();
 
-        if (!is_null($group))
-            $this->assignee_group()->associate($group);
+        $oldGroup = $this->assignee_group;
+        !is_null($group)
+            ? $this->assignee_group()->associate($group)
+            : $this->assignee_group()->dissociate();
 
         $oldAssignee = $this->assignee;
-        if (!is_null($assignee))
-            $this->assignee()->associate($assignee);
+        !is_null($assignee)
+            ? $this->assignee()->associate($assignee)
+            : $this->assignee()->dissociate();
 
-        $this->fireSystemEvent('admin.assignable.beforeAssignTo', [$group, $assignee, $oldAssignee]);
+        $this->fireSystemEvent('admin.assignable.beforeAssignTo', [$group, $assignee, $oldAssignee, $oldGroup]);
 
         $this->save();
 

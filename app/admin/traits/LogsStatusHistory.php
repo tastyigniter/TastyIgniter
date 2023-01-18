@@ -86,4 +86,11 @@ trait LogsStatusHistory
             return $q->where('status_id', $statusId);
         });
     }
+
+    public function scopeDoesntHaveStatusInHistory($query, $statusId)
+    {
+        return $query->whereDoesntHave('status_history', function ($q) use ($statusId) {
+            return $q->where('status_id', $statusId);
+        });
+    }
 }

@@ -250,8 +250,8 @@ class Assets
             return File::localToPublic(File::symbolizePath($name));
 
         foreach (static::$registeredPaths as $path) {
-            if (File::exists($path = realpath($path.'/'.$name)))
-                return File::localToPublic($path);
+            if (File::exists($file = str_replace('//', '/', $path.'/'.$name)))
+                return File::localToPublic($file);
         }
 
         return $name;

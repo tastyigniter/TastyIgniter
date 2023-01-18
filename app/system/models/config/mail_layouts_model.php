@@ -1,4 +1,5 @@
 <?php
+
 $config['list']['toolbar'] = [
     'buttons' => [
         'create' => [
@@ -107,16 +108,16 @@ $config['form']['tabs'] = [
             'tab' => 'lang:system::lang.mail_templates.label_body',
             'type' => 'codeeditor',
         ],
-        'layout_css' => [
-            'tab' => 'lang:system::lang.mail_templates.label_layout_css',
-            'type' => 'codeeditor',
-        ],
         'plain_layout' => [
             'tab' => 'lang:system::lang.mail_templates.label_plain',
             'type' => 'textarea',
             'attributes' => [
                 'rows' => 10,
             ],
+        ],
+        'layout_css' => [
+            'tab' => 'lang:system::lang.mail_templates.label_layout_css',
+            'type' => 'codeeditor',
         ],
     ],
 ];

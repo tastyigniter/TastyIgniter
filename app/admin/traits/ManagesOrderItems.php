@@ -222,7 +222,7 @@ trait ManagesOrderItems
             ->where('is_summable', true)
             ->sum('value');
 
-        $orderTotal = $subtotal + $total;
+        $orderTotal = max(0, $subtotal + $total);
 
         $totalItems = $this->orderMenusQuery()
             ->where('order_id', $this->getKey())

@@ -10,6 +10,11 @@
 
         this.options = $.extend({}, RecordEditorModal.DEFAULTS, options)
 
+        this.options.attributes = $.extend({}, {
+            id: this.options.alias+'-record-editor-modal',
+            ariaLabelled: '#'+this.options.alias+'-record-editor-modal'
+        }, this.options.attributes)
+
         this.init()
         this.show()
     }
@@ -114,11 +119,9 @@
         onFail: undefined,
         onClose: undefined,
         attributes: {
-            id: 'record-editor-modal',
-            class: 'record-modal modal fade',
+            class: 'record-editor-modal modal fade',
             role: 'dialog',
             tabindex: -1,
-            ariaLabelled: '#record-editor-modal',
             ariaHidden: true,
         },
         recordDataCache: {}
