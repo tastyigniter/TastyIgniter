@@ -403,7 +403,7 @@ return [
         'text_log_file' => 'Log file',
         'text_mailgun' => 'Mailgun',
         'text_postmark' => 'Postmark (Requires the Third-Party Drivers Extension)',
-        'text_ses' => 'SES',
+        'text_ses' => 'SES (Requires the Third-Party Drivers Extension)',
         'text_mail_no_encryption' => 'No encryption',
         'text_mail_tls_encryption' => 'TLS',
         'text_mail_ssl_encryption' => 'SSL',
