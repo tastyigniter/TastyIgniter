@@ -1,6 +1,25 @@
 <?php
 
 return [
+    'list' => [
+        'columns' => [
+            'staff_name' => [
+                'title' => 'lang:admin::lang.stocks.column_staff_name',
+            ],
+            'order_id' => [
+                'title' => 'lang:admin::lang.orders.label_order_id',
+            ],
+            'state_text' => [
+                'title' => 'lang:admin::lang.stocks.label_stock_action',
+            ],
+            'quantity' => [
+                'title' => 'lang:admin::lang.stocks.column_quantity',
+            ],
+            'created_at_since' => [
+                'title' => 'lang:admin::lang.stocks.column_created_at',
+            ],
+        ],
+    ],
     'form' => [
         'toolbar' => [
 
