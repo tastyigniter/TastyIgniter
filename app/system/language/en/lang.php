@@ -227,6 +227,7 @@ return [
         'text_reservation_alert' => 'Reservation alert to admin',
         'text_order_update' => 'Order status update email to customer',
         'text_reservation_update' => 'Reservation status update email to customer',
+        'text_low_stock_alert' => 'Low stock alert email to location',
 
         'button_test_message' => 'Send test message',
 
@@ -315,6 +316,12 @@ return [
 
         'text_status_name' => 'Status name',
         'text_status_comment' => 'Status comment',
+
+        'text_group_stock' => 'Stock variables',
+        'text_stock_name' => 'Stock name',
+        'text_stock_quantity' => 'Stock quantity',
+        'text_low_stock_threshold' => 'Low stock threshold',
+        'text_stock_object' => 'Stock model object',
 
         'text_group_contact' => 'Contact variables',
         'text_full_name' => 'Contact full name',
