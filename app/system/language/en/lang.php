@@ -227,6 +227,8 @@ return [
         'text_reservation_alert' => 'Reservation alert to admin',
         'text_order_update' => 'Order status update email to customer',
         'text_reservation_update' => 'Reservation status update email to customer',
+        'text_invite' => 'Invite email to staff to access the TastyIgniter Admin',
+        'text_invite_customer' => 'Invite email to customer to place an order',
         'text_low_stock_alert' => 'Low stock alert email to location',
 
         'button_test_message' => 'Send test message',
