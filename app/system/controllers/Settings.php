@@ -95,6 +95,7 @@ class Settings extends \Admin\Classes\AdminController
 
     public function edit_onSave($context, $settingCode = null)
     {
+        $this->settingCode = $settingCode;
         [$model, $definition] = $this->findSettingDefinitions($settingCode);
         if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
