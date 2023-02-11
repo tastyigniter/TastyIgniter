@@ -769,6 +769,7 @@ return [
         'label_date_added' => 'Date Added',
         'label_order_total' => 'Order Total',
         'label_comment' => 'Notes',
+        'label_delivery_comment' => 'Delivery Notes',
         'label_date_modified' => 'Date Modified',
         'label_user_agent' => 'User Agent',
         'label_ip_address' => 'IP Address',
