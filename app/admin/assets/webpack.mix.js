@@ -104,14 +104,6 @@ mix.copy(
 );
 
 mix.copy(
-    'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css',
-    '../formwidgets/colorpicker/assets/vendor/colorpicker/css/bootstrap-colorpicker.min.css'
-).copy(
-    'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
-    '../formwidgets/colorpicker/assets/vendor/colorpicker/js/bootstrap-colorpicker.min.js'
-);
-
-mix.copy(
     'node_modules/clockpicker/dist/bootstrap-clockpicker.min.css',
     '../formwidgets/datepicker/assets/vendor/clockpicker/bootstrap-clockpicker.min.css'
 ).copy(
