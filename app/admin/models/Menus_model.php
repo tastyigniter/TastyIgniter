@@ -77,6 +77,11 @@ class Menus_model extends Model
         })->min('price') ?: 0;
     }
 
+    public function getMinimumQtyAttribute($value)
+    {
+        return $value ?: 1;
+    }
+
     //
     // Scopes
     //
