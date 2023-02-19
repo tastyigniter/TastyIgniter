@@ -1,6 +1,6 @@
 @php
     $fieldOptions = $field->options();
-    $useSearch = $field->getConfig('showSearch', false);
+    $useSearch = $field->getConfig('showSearch', count($fieldOptions) > 10);
     $multiOption = $field->getConfig('multiOption', false);
     $fieldValue = is_null($field->value) ? [] : $field->value;
     $fieldValue = !is_array($fieldValue) ? [$fieldValue] : $fieldValue;
@@ -13,12 +13,14 @@
     <select
         id="{{ $field->getId() }}"
         name="{!! $field->getName().($multiOption ? '[]' : '') !!}"
-        class="form-select"
+        data-control="selectlist"
+        @if ($field->placeholder)data-placeholder-text="@lang($field->placeholder)" @endif
+        data-show-search="{{ $useSearch }}"
         {!! $multiOption ? 'multiple="multiple"' : '' !!}
         {!! $field->getAttributes() !!}>
 
-        @if ($field->placeholder)
-            <option value="">@lang($field->placeholder)</option>
+        @if (!$multiOption && $field->placeholder)
+            <option data-placeholder="true"></option>
         @endif
         @foreach ($fieldOptions as $value => $option)
             @php

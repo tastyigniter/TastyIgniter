@@ -6,9 +6,8 @@
 
     var SelectList = function (element, options) {
         this.$el = $(element)
-        this.$container = null
-
         this.options = options
+        this.slimSelect = null
 
         this.init()
     }
@@ -16,43 +15,25 @@
     SelectList.prototype.constructor = SelectList
 
     SelectList.prototype.init = function () {
-        this.options.onInitialized = $.proxy(this.onInitialized, this)
-        this.options.onDropdownShown = $.proxy(this.onDropdownShown, this)
-        this.options.onDropdownHide = $.proxy(this.onDropdownHidden, this)
-
-        this.$el.multiselect(this.options)
+        this.slimSelect = new SlimSelect({
+            select: this.$el.get(0),
+            settings: this.options,
+            events: {
+                afterChange: (newVal) => {
+                    console.log(newVal, this.$el.val())
+                    this.$el.trigger('change')
+                }
+            }
+        })
     }
 
-    SelectList.prototype.onInitialized = function (select, container) {
-        this.$container = $(container);
-
-        this.$container.find('.multiselect').removeClass('text-center')
-    }
-
-    SelectList.prototype.onDropdownShown = function (event) {
-        this.$el.parents('.form-group').css({ zIndex: 1000 });
-    }
-
-    SelectList.prototype.onDropdownHidden = function (event) {
-        this.$el.parents('.form-group').css({ zIndex: '' });
-    }
-
-    // MEDIA MANAGER PLUGIN DEFINITION
+    // SELECTLIST PLUGIN DEFINITION
     // ============================
 
     SelectList.DEFAULTS = {
-        numberDisplayed: 5,
-        includeSelectAllOption: true,
-        maxHeight: 200,
-        enableFiltering: false,
-        enableCaseInsensitiveFiltering: true,
-        selectAllText: 'Select all/none',
-        optionClass: function (element) {
-            return 'dropdown-item multiselect-item'
-        },
-        templates: {
-            button: '<button type="button" class="multiselect dropdown-toggle form-select" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>',
-        }
+        maxValuesShown: 5,
+        showSearch: false,
+
     }
 
     var old = $.fn.selectList

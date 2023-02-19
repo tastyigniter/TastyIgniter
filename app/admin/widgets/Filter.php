@@ -71,12 +71,6 @@ class Filter extends BaseWidget
 
         // date picker
         $this->addJs('js/datepicker.js', 'datepicker-js');
-
-        // selectlist
-        $this->addJs('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
-        $this->addCss('~/app/admin/widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
-        $this->addJs('~/app/admin/widgets/form/assets/js/selectlist.js', 'selectlist-js');
-        $this->addCss('~/app/admin/widgets/form/assets/css/selectlist.css', 'selectlist-css');
     }
 
     public function initialize()

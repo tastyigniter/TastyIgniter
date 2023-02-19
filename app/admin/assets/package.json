@@ -29,9 +29,10 @@
     "jquery-sortablejs": "^1.0.1",
     "js-cookie": "^2.2.0",
     "metismenu": "2.7.7",
-    "sweetalert2": "^11.4.8",
+    "slim-select": "^2.4.2",
     "sortablejs": "^1.14.0",
     "summernote": "^0.8.20",
+    "sweetalert2": "^11.4.8",
     "tempusdominus-bootstrap-4": "^5.39.0"
   },
   "devDependencies": {

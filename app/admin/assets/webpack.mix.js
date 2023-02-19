@@ -31,6 +31,7 @@ mix.scripts(
         'node_modules/sweetalert2/dist/sweetalert2.min.js',
         'node_modules/js-cookie/src/js.cookie.js',
         'node_modules/metismenu/dist/metisMenu.min.js',
+        'node_modules/slim-select/dist/slimselect.min.js',
         'src/js/vendor/waterfall.min.js',
         'src/js/request.js',
         'src/js/loader.bar.js',
@@ -172,14 +173,6 @@ mix.copy(
 ).copy(
     'node_modules/fullcalendar/locales-all.min.js',
     '../widgets/calendar/assets/vendor/fullcalendar/locales-all.min.js'
-);
-
-mix.copy(
-    'node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css',
-    '../widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css'
-).copy(
-    'node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js',
-    '../widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js'
 );
 
 mix.copy(
