@@ -14,9 +14,11 @@ jobs:
           node-version: 16
 
       - name: Install NPM dependencies
+        working-directory: ./app/admin/assets
         run: npm ci
 
       - name: Compile assets
+        working-directory: ./app/admin/assets
         run: npm run prod
 
       - name: Commit compiled files

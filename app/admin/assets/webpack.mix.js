@@ -39,6 +39,7 @@ mix.scripts(
         'src/js/flashmessage.js',
         'src/js/toggler.js',
         'src/js/trigger.js',
+        'src/js/selectlist.js',
         'src/js/app.js',
     ],
     'js/admin.js'
