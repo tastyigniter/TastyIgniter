@@ -150,14 +150,7 @@ class Form extends BaseWidget
 
     public function loadAssets()
     {
-        $this->addJs('vendor/bootstrap-multiselect/bootstrap-multiselect.js', 'bootstrap-multiselect-js');
-        $this->addCss('vendor/bootstrap-multiselect/bootstrap-multiselect.css', 'bootstrap-multiselect-css');
-
         $this->addJs('vendor/inputmask/jquery.inputmask.min.js', 'inputmask-js');
-
-        $this->addJs('js/selectlist.js', 'selectlist-js');
-        $this->addCss('css/selectlist.css', 'selectlist-css');
-
         $this->addJs('js/form.js', 'form-js');
     }
 

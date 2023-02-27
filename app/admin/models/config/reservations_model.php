@@ -19,7 +19,7 @@ $config['list']['filter'] = [
         'location' => [
             'label' => 'lang:admin::lang.text_filter_location',
             'type' => 'selectlist',
-            'conditions' => 'location_id = :filtered',
+            'scope' => 'whereHasLocation',
             'modelClass' => 'Admin\Models\Locations_model',
             'nameFrom' => 'location_name',
             'locationAware' => true,

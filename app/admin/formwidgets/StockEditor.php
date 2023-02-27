@@ -134,27 +134,10 @@ class StockEditor extends BaseFormWidget
         $field = clone $this->formField;
 
         $stockIds = $this->model->stocks->pluck('id')->all();
-        $field->value = Stock_history_model::whereIn('stock_id', $stockIds)->get();
+        $field->value = Stock_history_model::whereIn('stock_id', $stockIds)->orderBy('id', 'desc')->get();
 
-        $widgetConfig = [
-            'columns' => [
-                'staff_name' => [
-                    'title' => 'lang:admin::lang.stocks.column_staff_name',
-                ],
-                'order_id' => [
-                    'title' => 'lang:admin::lang.orders.label_order_id',
-                ],
-                'state_text' => [
-                    'title' => 'lang:admin::lang.stocks.label_stock_action',
-                ],
-                'quantity' => [
-                    'title' => 'lang:admin::lang.stocks.column_quantity',
-                ],
-                'created_at_since' => [
-                    'title' => 'lang:admin::lang.stocks.column_created_at',
-                ],
-            ],
-        ];
+        $widgetConfig = $this->loadConfig($this->form, ['list'], 'list');
+
         $widgetConfig['model'] = $this->model;
         $widgetConfig['data'] = [];
         $widgetConfig['alias'] = $this->alias.'FormStockHistory';

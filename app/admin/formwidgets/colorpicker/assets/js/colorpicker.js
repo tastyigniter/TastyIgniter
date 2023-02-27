@@ -13,72 +13,27 @@
     var ColorPicker = function (element, options) {
         this.options = options
         this.$el = $(element)
-        this.picker = null
 
         // Init
         this.init()
     }
 
     ColorPicker.DEFAULTS = {
-        customClass: 'colorpicker-2x',
-        addon: '.input-group-icon',
-        format: 'hex',
-        swatchesColors: undefined,
-        useAlpha: false,
-        sliders: {
-            saturation: {
-                maxLeft: 200, maxTop: 200
-            },
-            hue: {
-                maxTop: 200
-            },
-            alpha: {
-                maxTop: 200
-            }
-        },
-        extensions: [
-            {
-                name: 'swatches',
-                options: {
-                    colors: {}
-                }
-            }
-        ]
     }
 
     ColorPicker.prototype.init = function () {
-        var $input = this.$el.find('input');
-        $input.on('focus', $.proxy(this.onInputFocused, this))
-
-        this.options.extensions[0].options.colors = this.options.swatchesColors
-
-        this.picker = this.$el.colorpicker(this.options)
-
-        if ($input.is(':read-only'))
-            this.$el.colorpicker('colorpicker').disable()
-
-        // this.picker.on('create', $.proxy(this.watchComponent, this))
-        // this.picker.on('changeColor', $.proxy(this.watchComponent, this))
+        this.$el.find('[data-swatches-color]').on('click', $.proxy(this.onPresetClick, this))
     }
 
     ColorPicker.prototype.unbind = function () {
-        this.$el.colorpicker('destroy')
         this.$el.removeData('ti.colorpicker')
         this.picker = null
     }
 
-    ColorPicker.prototype.watchComponent = function () {
-        var $component = this.$el.data('colorpicker').component
-        $component.find('i')
-            .css('color', this.$el.data('colorpicker').color)
-            .css('background-color', 'transparent')
-    }
+    ColorPicker.prototype.onPresetClick = function (event) {
+        var $button = $(event.currentTarget)
 
-    ColorPicker.prototype.onInputFocused = function () {
-        if (!this.picker)
-            return
-
-        this.$el.colorpicker('show')
+        this.$el.find('input[type="color"]').val($button.data('swatchesColor'))
     }
 
     // FIELD ColorPicker PLUGIN DEFINITION

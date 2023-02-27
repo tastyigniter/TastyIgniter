@@ -74,6 +74,9 @@ class ServiceProvider extends AppServiceProvider
                 'admin::_mail.reservation_update' => 'lang:system::lang.mail_templates.text_reservation_update',
                 'admin::_mail.password_reset' => 'lang:system::lang.mail_templates.text_password_reset_alert',
                 'admin::_mail.password_reset_request' => 'lang:system::lang.mail_templates.text_password_reset_request_alert',
+                'admin::_mail.invite' => 'lang:system::lang.mail_templates.text_invite',
+                'admin::_mail.invite_customer' => 'lang:system::lang.mail_templates.text_invite_customer',
+                'admin::_mail.low_stock_alert' => 'lang:system::lang.mail_templates.text_low_stock_alert',
             ]);
         });
     }

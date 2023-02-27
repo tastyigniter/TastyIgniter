@@ -58,6 +58,7 @@ trait CombinesAssets
         if (app()->runningInAdmin())
             $this->assetsCombinerUri = config('system.adminUri', '/admin').$this->assetsCombinerUri;
 
+        $this->registerFilter('js', new \Igniter\Flame\Assetic\Filter\JSScopeFilter);
         $this->registerFilter('css', new \Igniter\Flame\Assetic\Filter\CssImportFilter);
         $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssRewriteFilter);
 
@@ -196,9 +197,13 @@ trait CombinesAssets
             if (!file_exists($path))
                 continue;
 
+            $source = str_starts_with($path, public_path())
+                ? public_path()
+                : dirname($path);
+
             $asset = starts_with($path, ['//', 'http://', 'https://'])
                 ? new HttpAsset($path, $filters)
-                : new FileAsset($path, $filters, public_path());
+                : new FileAsset($path, $filters, $source);
 
             $files[] = $asset;
         }

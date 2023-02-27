@@ -87,7 +87,7 @@ class Theme
     public function __construct($path, array $config = [])
     {
         $this->path = realpath($path);
-        $this->publicPath = File::localToPublic($this->path);
+        $this->publicPath = File::localToPublic($path);
         $this->config = $config;
     }
 

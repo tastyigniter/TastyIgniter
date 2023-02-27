@@ -1,5 +1,4 @@
 subject = "Invitation to access {{ $site_name }}"
-description = "Invite a new customer to access the website"
 ==
 {{ $full_name }}, you've been invited to access {{ $site_name }}
 

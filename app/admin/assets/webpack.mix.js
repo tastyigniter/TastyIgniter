@@ -31,6 +31,7 @@ mix.scripts(
         'node_modules/sweetalert2/dist/sweetalert2.min.js',
         'node_modules/js-cookie/src/js.cookie.js',
         'node_modules/metismenu/dist/metisMenu.min.js',
+        'node_modules/slim-select/dist/slimselect.min.js',
         'src/js/vendor/waterfall.min.js',
         'src/js/request.js',
         'src/js/loader.bar.js',
@@ -38,6 +39,7 @@ mix.scripts(
         'src/js/flashmessage.js',
         'src/js/toggler.js',
         'src/js/trigger.js',
+        'src/js/selectlist.js',
         'src/js/app.js',
     ],
     'js/admin.js'
@@ -101,14 +103,6 @@ mix.copy(
 ).copy(
     'node_modules/codemirror/mode/xml/xml.js',
     '../formwidgets/codeeditor/assets/vendor/codemirror/xml/xml.js'
-);
-
-mix.copy(
-    'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css',
-    '../formwidgets/colorpicker/assets/vendor/colorpicker/css/bootstrap-colorpicker.min.css'
-).copy(
-    'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
-    '../formwidgets/colorpicker/assets/vendor/colorpicker/js/bootstrap-colorpicker.min.js'
 );
 
 mix.copy(
@@ -180,14 +174,6 @@ mix.copy(
 ).copy(
     'node_modules/fullcalendar/locales-all.min.js',
     '../widgets/calendar/assets/vendor/fullcalendar/locales-all.min.js'
-);
-
-mix.copy(
-    'node_modules/bootstrap-multiselect/dist/css/bootstrap-multiselect.css',
-    '../widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css'
-).copy(
-    'node_modules/bootstrap-multiselect/dist/js/bootstrap-multiselect.js',
-    '../widgets/form/assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js'
 );
 
 mix.copy(

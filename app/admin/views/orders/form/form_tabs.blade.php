@@ -44,6 +44,14 @@
                                     </div>
                                 </div>
                             @endif
+                            @if($formModel->delivery_comment)
+                                <div class="card bg-light shadow-sm mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@lang('admin::lang.orders.label_delivery_comment')</h5>
+                                        <p class="mb-0">{{ $formModel->delivery_comment }}</p>
+                                    </div>
+                                </div>
+                            @endif
                             <div class="card bg-light shadow-sm mb-2">
                                 @isset($fields['customer'])
                                     {!! $this->renderFieldElement($fields['customer']) !!}
