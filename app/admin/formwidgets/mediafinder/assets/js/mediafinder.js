@@ -92,7 +92,7 @@
             $findValue = $('[data-find-value]', $button.closest('.media-finder'))
 
         if ($.ti.mediaManager === undefined) {
-            $.ti.flashMessage({text: 'Media manager widget is not loaded', class:'danger'})
+            $.ti.flashMessage({text: 'Media manager widget is not loaded, ensure you have the right access', class:'danger'})
             return
         }
 

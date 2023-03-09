@@ -78,6 +78,13 @@ return [
         '{{ $reservation_view_url }}' => 'system::lang.mail_variables.text_reservation_view_url',
         '{{ $reservation }}' => 'system::lang.mail_variables.text_reservation_object',
     ],
+    'system::lang.mail_variables.text_group_stock' => [
+        '{{ $stock_name }}' => 'system::lang.mail_variables.text_stock_name',
+        '{{ $location_name }}' => 'system::lang.mail_variables.text_location_name',
+        '{{ $quantity }}' => 'system::lang.mail_variables.text_stock_quantity',
+        '{{ $low_stock_threshold }}' => 'system::lang.mail_variables.text_low_stock_threshold',
+        '{{ $stock }}' => 'system::lang.mail_variables.text_stock_object',
+    ],
     'system::lang.mail_variables.text_group_contact' => [
         '{{ $full_name }}' => 'system::lang.mail_variables.text_full_name',
         '{{ $contact_email }}' => 'system::lang.mail_variables.text_contact_email',

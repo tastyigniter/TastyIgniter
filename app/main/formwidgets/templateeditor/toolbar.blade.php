@@ -3,7 +3,7 @@
         <select
             id="{{ $field->getId('type') }}"
             name="{{ $field->getName() }}[type]"
-            class="form-select"
+            data-control="selectlist"
             data-template-control="choose-type"
             data-request="{{ $this->getEventHandler('onChooseFile') }}"
             data-progress-indicator="@lang('admin::lang.text_loading')"
@@ -26,11 +26,11 @@
                     data-template-control="choose-file"
                     data-request="{{ $this->getEventHandler('onChooseFile') }}"
                     data-progress-indicator="@lang('admin::lang.text_loading')"
+                    data-placeholder-text="{{ sprintf(lang($this->placeholder), strtolower($selectedTypeLabel)) }}"
+                    data-show-search="true"
                 >
                     @if ($this->placeholder)
-                        <option
-                            value=""
-                        >{{ sprintf(lang($this->placeholder), strtolower($selectedTypeLabel)) }}</option>
+                        <option data-placeholder="true"></option>
                     @endif
                     @foreach ($fieldOptions as $value => $option)
                         @php if (!is_array($option)) $option = [$option]; @endphp

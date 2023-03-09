@@ -1,5 +1,4 @@
 subject = "Invitation to access {{ $site_name }}"
-description = "Invite a new staff to access the TastyIgniter Admin"
 ==
 {{ $staff_name }}, you've been invited to access {{ $site_name }}
 

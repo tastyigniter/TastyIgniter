@@ -69,12 +69,17 @@ class Menus_model extends Model
 
     public function getMenuPriceFromAttribute()
     {
-        if ($this->menu_price > 0)
+        if (!$this->menu_options)
             return $this->menu_price;
 
         return $this->menu_options->mapWithKeys(function ($option) {
             return $option->menu_option_values->keyBy('menu_option_value_id');
-        })->min('price');
+        })->min('price') ?: 0;
+    }
+
+    public function getMinimumQtyAttribute($value)
+    {
+        return $value ?: 1;
     }
 
     //

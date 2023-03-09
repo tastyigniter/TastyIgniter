@@ -148,6 +148,6 @@ trait Locationable
             return !is_null($this->{$relationName});
         }
 
-        return count($this->{$relationName}) > 0;
+        return count($this->{$relationName} ?? []) > 0;
     }
 }

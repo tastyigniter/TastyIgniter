@@ -3,23 +3,22 @@
     $isCheckboxMode = $field->config['mode'] ?? 'checkbox';
     $selectMultiple = $isCheckboxMode == 'checkbox';
     $checkedValues = (array)$field->value;
-    $enableFilter = (count($fieldOptions) > 20);
+    $enableSearch = (count($fieldOptions) > 10);
 @endphp
 <div class="control-selectlist">
     <select
         data-control="selectlist"
         id="{{ $field->getId() }}"
         name="{!! $field->getName().($selectMultiple ? '[]' : '') !!}"
-        @if ($field->placeholder)data-non-selected-text="@lang($field->placeholder)" @endif
+        @if ($field->placeholder)data-placeholder-text="@lang($field->placeholder)" @endif
+        data-show-search="{{ $enableSearch }}"
         {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
         {!! $selectMultiple ? 'multiple="multiple"' : '' !!}
-        data-enable-filtering="{{ $enableFilter }}"
-        data-enable-case-insensitive-filtering="{{ $enableFilter }}"
         {!! $field->getAttributes() !!}
     >
 
-        @if ($field->placeholder)
-            <option value="">@lang($field->placeholder)</option>
+        @if (!$selectMultiple && $field->placeholder)
+            <option data-placeholder="true"></option>
         @endif
 
         @foreach ($fieldOptions as $value => $option)
