@@ -141,7 +141,8 @@ class LanguageManager
             if (strlen($term)) {
                 if (stripos(strtolower(array_get($value, 'source')), $term) !== false
                     || stripos(strtolower(array_get($value, 'translation')), $term) !== false
-                    || stripos(strtolower($key), $term) !== false) {
+                    || stripos(strtolower($key), $term) !== false
+                ) {
                     $result[$key] = $value;
                 }
             }
