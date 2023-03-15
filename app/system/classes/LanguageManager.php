@@ -115,9 +115,9 @@ class LanguageManager
 
             if ($stringFilter === 'unchanged' && array_has($translationLines, $key)) continue;
 
-            if ((!is_null($sourceLine) && !is_string($sourceLine))) continue;
+            if (!is_null($sourceLine) && !is_string($sourceLine)) continue;
 
-            if ((!is_null($translationLine) && !is_string($translationLine))) continue;
+            if (!is_null($translationLine) && !is_string($translationLine)) continue;
 
             $namespacedKey = sprintf('%s::%s.%s', $file['namespace'], $file['group'], $key);
 
