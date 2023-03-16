@@ -11,7 +11,6 @@ use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Database\Casts\Serialize;
 use Igniter\Flame\Database\Model;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
 use Main\Classes\MainController;
 use System\Traits\SendsMailTemplate;
@@ -229,9 +228,23 @@ class Orders_model extends Model
         if (!$this->isPaymentProcessed())
             return false;
 
-        return $this->status_history()->where(
-            'status_id', setting('completed_order_status')
-        )->exists();
+        return $this->hasStatus(setting('completed_order_status'));
+    }
+
+    public function isCanceled()
+    {
+        return $this->hasStatus(setting('canceled_order_status'));
+    }
+
+    public function isCancelable()
+    {
+        if (!$timeout = $this->location->getOrderCancellationTimeout($this->order_type))
+            return false;
+
+        if (!$this->order_datetime->isFuture())
+            return false;
+
+        return $this->order_datetime->diffInRealMinutes() > $timeout;
     }
 
     /**
@@ -266,15 +279,27 @@ class Orders_model extends Model
         return $this->pluckDates('created_at');
     }
 
+    public function markAsCanceled()
+    {
+        $canceled = false;
+        if ($this->addStatusHistory(setting('canceled_order_status'))) {
+            $canceled = true;
+
+            $this->fireSystemEvent('admin.order.canceled');
+        }
+
+        return $canceled;
+    }
+
     public function markAsPaymentProcessed()
     {
         if (!$this->processed) {
-            Event::fire('admin.order.beforePaymentProcessed', [$this]);
+            $this->fireSystemEvent('admin.order.beforePaymentProcessed');
 
             $this->processed = 1;
             $this->save();
 
-            Event::fire('admin.order.paymentProcessed', [$this]);
+            $this->fireSystemEvent('admin.order.paymentProcessed');
         }
 
         return $this->processed;

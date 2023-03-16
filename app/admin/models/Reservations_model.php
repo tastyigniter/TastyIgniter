@@ -272,9 +272,35 @@ class Reservations_model extends Model
 
     public function isCompleted()
     {
-        return $this->status_history()->where(
-            'status_id', setting('confirmed_reservation_status')
-        )->exists();
+        return $this->hasStatus(setting('confirmed_reservation_status'));
+    }
+
+    public function isCanceled()
+    {
+        return $this->hasStatus(setting('canceled_reservation_status'));
+    }
+
+    public function isCancelable()
+    {
+        if (!$timeout = $this->location->getReservationCancellationTimeout())
+            return false;
+
+        if (!$this->reservation_datetime->isFuture())
+            return false;
+
+        return $this->reservation_datetime->diffInRealMinutes() > $timeout;
+    }
+
+    public function markAsCanceled()
+    {
+        $canceled = false;
+        if ($this->addStatusHistory(setting('canceled_reservation_status'))) {
+            $canceled = true;
+
+            $this->fireSystemEvent('admin.reservation.canceled');
+        }
+
+        return $canceled;
     }
 
     public static function findReservedTables($location, $dateTime)
