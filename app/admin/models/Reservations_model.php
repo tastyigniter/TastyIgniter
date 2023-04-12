@@ -254,7 +254,7 @@ class Reservations_model extends Model
     public function getTableNameAttribute()
     {
         return ($this->tables && $this->tables->isNotEmpty())
-            ? implode(', ', $this->tables->pluck('name')->all())
+            ? implode(', ', $this->tables->pluck('table_name')->all())
             : '';
     }
 
