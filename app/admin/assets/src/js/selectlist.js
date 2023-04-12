@@ -20,7 +20,6 @@
             settings: this.options,
             events: {
                 afterChange: (newVal) => {
-                    console.log(newVal, this.$el.val())
                     this.$el.trigger('change')
                 }
             }
