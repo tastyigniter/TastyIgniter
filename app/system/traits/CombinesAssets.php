@@ -58,7 +58,6 @@ trait CombinesAssets
         if (app()->runningInAdmin())
             $this->assetsCombinerUri = config('system.adminUri', '/admin').$this->assetsCombinerUri;
 
-        $this->registerFilter('js', new \Igniter\Flame\Assetic\Filter\JSScopeFilter);
         $this->registerFilter('css', new \Igniter\Flame\Assetic\Filter\CssImportFilter);
         $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssRewriteFilter);
 
