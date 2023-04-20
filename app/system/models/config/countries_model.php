@@ -85,12 +85,12 @@ $config['list']['columns'] = [
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
         'invisible' => true,
-        'type' => 'timesense',
+        'type' => 'datetime',
     ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
         'invisible' => true,
-        'type' => 'timesense',
+        'type' => 'datetime',
     ],
 ];
 

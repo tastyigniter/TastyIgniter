@@ -191,6 +191,11 @@ $config['form']['fields'] = [
 $config['form']['tabs'] = [
     'defaultTab' => 'lang:admin::lang.reservations.text_tab_general',
     'fields' => [
+        'tables' => [
+            'label' => 'lang:admin::lang.reservations.label_table_name',
+            'type' => 'relation',
+            'nameFrom' => 'table_name',
+        ],
         'guest_num' => [
             'label' => 'lang:admin::lang.reservations.label_guest',
             'type' => 'number',
