@@ -36,13 +36,6 @@ return [
             'throw' => true,
         ],
 
-        'media' => [
-            'driver' => 'local',
-            'root' => public_path('media'),
-            'url' => env('APP_URL').'/media',
-            'throw' => true,
-        ],
-
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
