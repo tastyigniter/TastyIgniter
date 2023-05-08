@@ -250,7 +250,7 @@ class Assets
             return File::localToPublic(File::symbolizePath($name));
 
         foreach (static::$registeredPaths as $path) {
-            if (File::exists($file = str_replace('//', '/', $path.'/'.$name)))
+            if (File::isFile($file = str_replace('//', '/', $path.'/'.$name)))
                 return File::localToPublic($file);
         }
 
@@ -336,8 +336,7 @@ class Assets
                 'src' => asset($file),
             ], $attributes);
             $html = '<script'.Html::attributes($attributes).'></script>'.PHP_EOL;
-        }
-        else {
+        } else {
             $attributes = array_merge([
                 'rel' => 'stylesheet',
                 'type' => 'text/css',

@@ -125,7 +125,7 @@ trait ViewMaker
 
         $layoutPath = $this->getViewPath($layout, $this->layoutPath);
 
-        if (!File::exists($layoutPath)) {
+        if (!File::isFile($layoutPath)) {
             if ($throwException)
                 throw new SystemException(Lang::get('system::lang.not_found.layout', ['name' => $layoutPath]));
 
@@ -174,7 +174,7 @@ trait ViewMaker
 
         $partialPath = $this->getViewPath($partial, $this->partialPath);
 
-        if (!File::exists($partialPath)) {
+        if (!File::isFile($partialPath)) {
             if ($throwException)
                 throw new SystemException(Lang::get('system::lang.not_found.partial', ['name' => $partialPath]));
 
@@ -223,11 +223,9 @@ trait ViewMaker
         // an exception is thrown. This prevents any partial views from leaking.
         try {
             include $filePath;
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->handleViewException($e, $obLevel);
-        }
-        catch (Throwable $e) {
+        } catch (Throwable $e) {
             $this->handleViewException(new ErrorException($e), $obLevel);
         }
 
