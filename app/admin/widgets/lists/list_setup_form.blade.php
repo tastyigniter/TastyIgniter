@@ -21,6 +21,11 @@
                                 name="visible_columns[]"
                                 value="{{ $column->columnName }}"
                             />
+                            <input
+                                type="hidden"
+                                name="column_order[]"
+                                value="{{ $column->columnName }}"
+                            />
                         @else
                             <div class="list-group-item bg-transparent px-2">
                                 <div class="btn btn-handle form-check-handle mr-2">
