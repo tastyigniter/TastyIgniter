@@ -128,8 +128,7 @@ class Reservations_model extends Model
 
         if (is_null($status)) {
             $query->where('status_id', '>=', 1);
-        }
-        else {
+        } else {
             if (!is_array($status))
                 $status = [$status];
 
@@ -138,15 +137,13 @@ class Reservations_model extends Model
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
-        }
-        elseif (strlen($location)) {
+        } elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof Customers_model) {
             $query->where('customer_id', $customer->getKey());
-        }
-        elseif (strlen($customer)) {
+        } elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 
@@ -291,10 +288,10 @@ class Reservations_model extends Model
         return $this->reservation_datetime->diffInRealMinutes() > $timeout;
     }
 
-    public function markAsCanceled()
+    public function markAsCanceled(array $statusData = [])
     {
         $canceled = false;
-        if ($this->addStatusHistory(setting('canceled_reservation_status'))) {
+        if ($this->addStatusHistory(setting('canceled_reservation_status'), $statusData)) {
             $canceled = true;
 
             $this->fireSystemEvent('admin.reservation.canceled');

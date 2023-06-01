@@ -126,8 +126,7 @@ class Orders_model extends Model
 
         if (is_null($status)) {
             $query->where('status_id', '>=', 1);
-        }
-        else {
+        } else {
             if (!is_array($status))
                 $status = [$status];
 
@@ -136,15 +135,13 @@ class Orders_model extends Model
 
         if ($location instanceof Locations_model) {
             $query->where('location_id', $location->getKey());
-        }
-        elseif (strlen($location)) {
+        } elseif (strlen($location)) {
             $query->where('location_id', $location);
         }
 
         if ($customer instanceof User) {
             $query->where('customer_id', $customer->getKey());
-        }
-        elseif (strlen($customer)) {
+        } elseif (strlen($customer)) {
             $query->where('customer_id', $customer);
         }
 
@@ -279,10 +276,10 @@ class Orders_model extends Model
         return $this->pluckDates('created_at');
     }
 
-    public function markAsCanceled()
+    public function markAsCanceled(array $statusData = [])
     {
         $canceled = false;
-        if ($this->addStatusHistory(setting('canceled_order_status'))) {
+        if ($this->addStatusHistory(setting('canceled_order_status'), $statusData)) {
             $canceled = true;
 
             $this->fireSystemEvent('admin.order.canceled');
