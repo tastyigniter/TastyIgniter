@@ -77,7 +77,7 @@ class Countries_model extends Model
             ->first();
 
         if (!$defaultCountry) {
-            if ($defaultCountry = self::whereIsEnabled()->first()) {
+            if ($defaultCountry = self::isEnabled()->first()) {
                 $defaultCountry->makeDefault();
             }
         }
