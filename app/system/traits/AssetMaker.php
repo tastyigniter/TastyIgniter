@@ -45,7 +45,7 @@ trait AssetMaker
         foreach ($assetPath as $path) {
             $_fileName = File::symbolizePath($path).'/'.$fileName;
             if (File::isFile($_fileName)) {
-                return File::localToPublic($_fileName);
+                return $_fileName;
             }
         }
 
