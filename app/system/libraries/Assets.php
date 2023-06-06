@@ -249,6 +249,9 @@ class Assets
         if (File::isPathSymbol($name))
             return File::localToPublic(File::symbolizePath($name));
 
+        if (File::isFile($name))
+            return File::localToPublic($name);
+
         foreach (static::$registeredPaths as $path) {
             if (File::isFile($file = str_replace('//', '/', $path.'/'.$name)))
                 return File::localToPublic($file);
