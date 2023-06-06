@@ -49,6 +49,8 @@ class Widgets
      */
     protected $dashboardWidgetCallbacks = [];
 
+    protected $dashboardWidgetHints;
+
     /**
      * @var ExtensionManager
      */
@@ -275,7 +277,14 @@ class Widgets
      */
     public function registerDashboardWidget($className, $widgetInfo)
     {
+        $widgetCode = $widgetInfo['code'] ?? null;
+
+        if (!$widgetCode) {
+            $widgetInfo['code'] = $widgetCode = get_class_id($className);
+        }
+
         $this->dashboardWidgets[$className] = $widgetInfo;
+        $this->dashboardWidgetHints[$widgetCode] = $className;
     }
 
     /**
@@ -295,5 +304,25 @@ class Widgets
     public function registerDashboardWidgets(callable $definitions)
     {
         $this->dashboardWidgetCallbacks[] = $definitions;
+    }
+
+    public function resolveDashboardWidget($name)
+    {
+        if ($this->dashboardWidgets === null) {
+            $this->listDashboardWidgets();
+        }
+
+        $hints = $this->dashboardWidgetHints;
+
+        if (isset($hints[$name])) {
+            return $hints[$name];
+        }
+
+        $_name = normalize_class_name($name);
+        if (isset($this->dashboardWidgets[$_name])) {
+            return $_name;
+        }
+
+        return $name;
     }
 }

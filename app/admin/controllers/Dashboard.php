@@ -12,6 +12,8 @@ class Dashboard extends \Admin\Classes\AdminController
 {
     public $containerConfig = [];
 
+    protected $callbacks = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -38,59 +40,57 @@ class Dashboard extends \Admin\Classes\AdminController
         $this->containerConfig['canSetDefault'] = array_get($this->containerConfig, 'canSetDefault', AdminAuth::isSuperUser());
         $this->containerConfig['defaultWidgets'] = array_get($this->containerConfig, 'defaultWidgets', $this->getDefaultWidgets());
 
-        new DashboardContainer($this, $this->containerConfig);
+        $widget = new DashboardContainer($this, $this->containerConfig);
+
+        foreach ($this->callbacks as $callback) {
+            $callback($widget);
+        }
+
+        $widget->bindToController();
     }
 
     protected function getDefaultWidgets()
     {
         return [
             'onboarding' => [
-                'class' => \Admin\DashboardWidgets\Onboarding::class,
-                'priority' => 1,
-                'config' => [
-                    'title' => 'admin::lang.dashboard.onboarding.title',
-                    'width' => '6',
-                ],
+                'priority' => 10,
+                'width' => '6',
             ],
             'news' => [
-                'class' => \System\DashboardWidgets\News::class,
-                'priority' => 2,
-                'config' => [
-                    'title' => 'admin::lang.dashboard.text_news',
-                    'width' => '6',
-                ],
+                'priority' => 10,
+                'width' => '6',
             ],
             'order_stats' => [
-                'class' => \Admin\DashboardWidgets\Statistics::class,
-                'priority' => 3,
-                'config' => [
-                    'context' => 'sale',
-                    'width' => '4',
-                ],
+                'widget' => 'stats',
+                'priority' => 20,
+                'card' => 'sale',
+                'width' => '4',
             ],
             'reservation_stats' => [
-                'class' => \Admin\DashboardWidgets\Statistics::class,
-                'priority' => 4,
-                'config' => [
-                    'context' => 'lost_sale',
-                    'width' => '4',
-                ],
+                'widget' => 'stats',
+                'priority' => 20,
+                'card' => 'lost_sale',
+                'width' => '4',
             ],
             'customer_stats' => [
-                'class' => \Admin\DashboardWidgets\Statistics::class,
-                'priority' => 5,
-                'config' => [
-                    'context' => 'cash_payment',
-                    'width' => '4',
-                ],
+                'widget' => 'stats',
+                'priority' => 20,
+                'card' => 'cash_payment',
+                'width' => '4',
             ],
-            'charts' => [
-                'class' => \Admin\DashboardWidgets\Charts::class,
-                'priority' => 6,
-                'config' => [
-                    'title' => 'admin::lang.dashboard.text_reports_chart',
-                    'width' => '12',
-                ],
+            'reports' => [
+                'widget' => 'charts',
+                'priority' => 30,
+                'width' => '12',
+            ],
+            'recent-activities' => [
+                'widget' => 'recent-activities',
+                'priority' => 40,
+                'width' => '6',
+            ],
+            'cache' => [
+                'priority' => 90,
+                'width' => '6',
             ],
         ];
     }
@@ -98,5 +98,10 @@ class Dashboard extends \Admin\Classes\AdminController
     protected function canManageWidgets()
     {
         return $this->getUser()->hasPermission('Admin.Dashboard');
+    }
+
+    public function extendDashboard(callable $callback)
+    {
+        $this->callbacks[] = $callback;
     }
 }

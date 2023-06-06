@@ -1,7 +1,6 @@
-@foreach ($widgets as $widgetAlias => $widgetInfo)
+@foreach ($widgets as $widgetAlias => $widget)
     {!! $this->makePartial('widget_item', [
         'widgetAlias' => $widgetAlias,
-        'widget'      => $widgetInfo['widget'],
-        'priority'    => $widgetInfo['priority'],
+        'widget' => $widget,
     ]) !!}
 @endforeach

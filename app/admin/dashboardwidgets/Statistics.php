@@ -7,7 +7,7 @@ use Admin\Models\Customers_model;
 use Admin\Models\Orders_model;
 use Admin\Models\Reservations_model;
 use Admin\Traits\LocationAwareWidget;
-use Carbon\Carbon;
+use Igniter\Flame\Exception\SystemException;
 
 /**
  * Statistic dashboard widget.
@@ -20,6 +20,15 @@ class Statistics extends BaseDashboardWidget
      * @var string A unique alias to identify this widget.
      */
     protected $defaultAlias = 'statistics';
+
+    protected $cardDefinition;
+
+    protected static $registeredCards = [];
+
+    public static function registerCards($callback)
+    {
+        static::$registeredCards[] = $callback;
+    }
 
     /**
      * Renders the widget.
@@ -34,27 +43,293 @@ class Statistics extends BaseDashboardWidget
     public function defineProperties()
     {
         return [
-            'context' => [
-                'label' => 'admin::lang.dashboard.text_context',
+            'card' => [
+                'label' => 'admin::lang.dashboard.text_stats_card',
                 'default' => 'sale',
                 'type' => 'select',
-                'options' => $this->getContextOptions(),
-            ],
-            'range' => [
-                'label' => 'admin::lang.dashboard.text_range',
-                'default' => 'week',
-                'type' => 'select',
-                'options' => [
-                    'day' => 'lang:admin::lang.dashboard.text_today',
-                    'week' => 'lang:admin::lang.dashboard.text_week',
-                    'month' => 'lang:admin::lang.dashboard.text_month',
-                    'year' => 'lang:admin::lang.dashboard.text_year',
-                ],
+                'placeholder' => 'lang:admin::lang.text_please_select',
+                'options' => $this->getCardOptions(),
             ],
         ];
     }
 
-    public function listContext()
+    public function loadAssets()
+    {
+        $this->addCss('css/statistics.css', 'statistics-css');
+    }
+
+    public function getActiveCard()
+    {
+        return $this->property('card', 'sale');
+    }
+
+    protected function getCardOptions()
+    {
+        return array_map(function ($context) {
+            return array_get($context, 'label');
+        }, $this->listCards());
+    }
+
+    protected function prepareVars()
+    {
+        $this->vars['statsContext'] = $context = $this->getActiveCard();
+        $this->vars['statsLabel'] = $this->getCardDefinition('label', '--');
+        $this->vars['statsColor'] = $this->getCardDefinition('color', 'success');
+        $this->vars['statsIcon'] = $this->getCardDefinition('icon', 'fa fa-bar-chart-o');
+        $this->vars['statsCount'] = $this->getValue($context);
+    }
+
+    protected function listCards()
+    {
+        $result = $this->getDefaultCards();
+
+        foreach (static::$registeredCards as $callback) {
+            foreach ($callback() as $code => $config) {
+                $result[$code] = $config;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getCardDefinition($key, $default = null)
+    {
+        if (is_null($this->cardDefinition))
+            $this->cardDefinition = array_get($this->listCards(), $this->getActiveCard());
+
+        return array_get($this->cardDefinition, $key, $default);
+    }
+
+    protected function getValue(string $cardCode): string
+    {
+        $start = $this->property('startDate', now()->subMonth());
+        $end = $this->property('endDate', now());
+
+        if ($dataFromCallable = $this->getCardDefinition('valueFrom')) {
+            return $dataFromCallable($cardCode, $start, $end);
+        }
+
+        return $this->getValueForDefaultCard($cardCode, $start, $end);
+    }
+
+    protected function getValueForDefaultCard(string $cardCode, $start, $end)
+    {
+        $contextMethod = 'getTotal'.studly_case($cardCode).'Sum';
+
+        throw_unless($this->methodExists($contextMethod), new SystemException(sprintf(
+            'The card [%s] does must have a defined method in [%s]',
+            $cardCode, get_class($this).'::'.$contextMethod
+        )));
+
+        $count = $this->$contextMethod(function ($query) use ($start, $end) {
+            $this->locationApplyScope($query);
+            $query->whereBetween('created_at', [$start, $end]);
+        });
+
+        return empty($count) ? 0 : $count;
+    }
+
+    /**
+     * Return the total amount of order sales
+     *
+     * @return string
+     */
+    protected function getTotalSaleSum(callable $callback)
+    {
+        $query = Orders_model::query();
+        $query->where('status_id', '>', '0')
+            ->where('status_id', '!=', setting('canceled_order_status'));
+
+        $callback($query);
+
+        return currency_format($query->sum('order_total') ?? 0);
+    }
+
+    /**
+     * Return the total amount of lost order sales
+     * @return string
+     */
+    protected function getTotalLostSaleSum(callable $callback)
+    {
+        $query = Orders_model::query();
+        $query->where(function ($query) {
+            $query->where('status_id', '<=', '0');
+            $query->orWhere('status_id', setting('canceled_order_status'));
+        });
+
+        $callback($query);
+
+        return currency_format($query->sum('order_total') ?? 0);
+    }
+
+    /**
+     * Return the total amount of cash payment order sales
+     *
+     * @return string
+     */
+    protected function getTotalCashPaymentSum(callable $callback)
+    {
+        $query = Orders_model::query();
+        $query->where(function ($query) {
+            $query->where('status_id', '>', '0');
+            $query->where('status_id', '!=', setting('canceled_order_status'));
+        })->where('payment', 'cod');
+
+        $callback($query);
+
+        return currency_format($query->sum('order_total') ?? 0);
+    }
+
+    /**
+     * Return the total number of customers
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalCustomerSum(callable $callback)
+    {
+        $query = Customers_model::query();
+
+        $callback($query);
+
+        return $query->count();
+    }
+
+    /**
+     * Return the total number of orders placed
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalOrderSum(callable $callback)
+    {
+        $query = Orders_model::query();
+
+        $callback($query);
+
+        return $query->count();
+    }
+
+    /**
+     * Return the total number of completed orders
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalCompletedOrderSum(callable $callback)
+    {
+        $query = Orders_model::query();
+        $query->whereIn('status_id', setting('completed_order_status') ?? []);
+
+        $callback($query);
+
+        return $query->count();
+    }
+
+    /**
+     * Return the total number of delivery orders
+     *
+     * @param string $range
+     *
+     * @return int
+     */
+    protected function getTotalDeliveryOrderSum(callable $callback)
+    {
+        $query = Orders_model::query();
+        $query->where(function ($query) {
+            $query->where('order_type', '1');
+            $query->orWhere('order_type', 'delivery');
+        });
+
+        $callback($query);
+
+        return currency_format($query->sum('order_total') ?? 0);
+    }
+
+    /**
+     * Return the total number of collection orders
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalCollectionOrderSum(callable $callback)
+    {
+        $query = Orders_model::query();
+        $query->where(function ($query) {
+            $query->where('order_type', '2');
+            $query->orWhere('order_type', 'collection');
+        });
+
+        $callback($query);
+
+        return currency_format($query->sum('order_total') ?? 0);
+    }
+
+    /**
+     * Return the total number of reserved tables
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalReservedTableSum(callable $callback)
+    {
+        $query = Reservations_model::with('tables');
+        $query->where('status_id', setting('confirmed_reservation_status'));
+
+        $callback($query);
+
+        return $query->get()->pluck('tables')->flatten()->count();
+    }
+
+    /**
+     * Return the total number of reserved table guests
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalReservedGuestSum(callable $callback)
+    {
+        $query = Reservations_model::query();
+        $query->where('status_id', setting('confirmed_reservation_status'));
+
+        $callback($query);
+
+        return $query->sum('guest_num') ?? 0;
+    }
+
+    /**
+     * Return the total number of reservations
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalReservationSum(callable $callback)
+    {
+        $query = Reservations_model::query();
+        $query->where('status_id', '!=', setting('canceled_reservation_status'));
+
+        $callback($query);
+
+        return $query->count();
+    }
+
+    /**
+     * Return the total number of completed reservations
+     *
+     * @param callable $callback
+     * @return int
+     */
+    protected function getTotalCompletedReservationSum(callable $callback)
+    {
+        $query = Reservations_model::query();
+        $query->where('status_id', setting('confirmed_reservation_status'));
+
+        $callback($query);
+
+        return $query->count();
+    }
+
+    protected function getDefaultCards(): array
     {
         return [
             'sale' => [
@@ -106,287 +381,5 @@ class Statistics extends BaseDashboardWidget
                 'icon' => ' bg-success text-white fa fa-table',
             ],
         ];
-    }
-
-    public function getContextOptions()
-    {
-        return array_map(function ($context) {
-            return array_get($context, 'label');
-        }, $this->listContext());
-    }
-
-    public function getContextLabel($context)
-    {
-        return array_get(array_get($this->listContext(), $context, []), 'label', '--');
-    }
-
-    public function getContextColor($context)
-    {
-        return array_get(array_get($this->listContext(), $context, []), 'color', 'success');
-    }
-
-    public function getContextIcon($context)
-    {
-        return array_get(array_get($this->listContext(), $context, []), 'icon', 'fa fa-bar-chart-o');
-    }
-
-    public function loadAssets()
-    {
-        $this->addCss('css/statistics.css', 'statistics-css');
-    }
-
-    protected function prepareVars()
-    {
-        $this->vars['statsContext'] = $context = $this->property('context');
-        $this->vars['statsLabel'] = $this->getContextLabel($context);
-        $this->vars['statsIcon'] = $this->getContextIcon($context);
-        $this->vars['statsCount'] = $this->callContextCountMethod($context);
-    }
-
-    protected function callContextCountMethod($context)
-    {
-        $count = 0;
-        $contextMethod = 'getTotal'.studly_case($context).'Sum';
-        if (method_exists($this, $contextMethod))
-            $count = $this->$contextMethod($this->property('range'));
-
-        return empty($count) ? 0 : $count;
-    }
-
-    protected function applyRangeQuery($query, $range)
-    {
-        if ($range === 'week') {
-            $start = Carbon::now()->subWeek();
-        }
-        elseif ($range === 'month') {
-            $start = Carbon::now()->subMonth();
-        }
-        elseif ($range === 'year') {
-            $start = Carbon::now()->startOfYear();
-        }
-        else {
-            $start = Carbon::now()->today();
-        }
-
-        $query->whereBetween('created_at', [
-            $start,
-            Carbon::now(),
-        ]);
-    }
-
-    /**
-     * Return the total amount of order sales
-     *
-     * @param $range
-     *
-     * @return string
-     */
-    protected function getTotalSaleSum($range)
-    {
-        $query = Orders_model::query();
-        $query->where('status_id', '>', '0')
-            ->where('status_id', '!=', setting('canceled_order_status'));
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return currency_format($query->sum('order_total') ?? 0);
-    }
-
-    /**
-     * Return the total amount of lost order sales
-     *
-     * @param $range
-     * @return string
-     */
-    protected function getTotalLostSaleSum($range)
-    {
-        $query = Orders_model::query();
-        $query->where(function ($query) {
-            $query->where('status_id', '<=', '0');
-            $query->orWhere('status_id', setting('canceled_order_status'));
-        });
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return currency_format($query->sum('order_total') ?? 0);
-    }
-
-    /**
-     * Return the total amount of cash payment order sales
-     *
-     * @param $range
-     * @return string
-     */
-    protected function getTotalCashPaymentSum($range)
-    {
-        $query = Orders_model::query();
-        $query->where(function ($query) {
-            $query->where('status_id', '>', '0');
-            $query->where('status_id', '!=', setting('canceled_order_status'));
-        })->where('payment', 'cod');
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return currency_format($query->sum('order_total') ?? 0);
-    }
-
-    /**
-     * Return the total number of customers
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalCustomerSum($range)
-    {
-        $query = Customers_model::query();
-        $this->applyRangeQuery($query, $range);
-
-        return $query->count();
-    }
-
-    /**
-     * Return the total number of orders placed
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalOrderSum($range)
-    {
-        $query = Orders_model::query();
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return $query->count();
-    }
-
-    /**
-     * Return the total number of completed orders
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalCompletedOrderSum($range)
-    {
-        $query = Orders_model::query();
-        $query->whereIn('status_id', setting('completed_order_status') ?? []);
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return $query->count();
-    }
-
-    /**
-     * Return the total number of delivery orders
-     *
-     * @param string $range
-     *
-     * @return int
-     */
-    protected function getTotalDeliveryOrderSum($range)
-    {
-        $query = Orders_model::query();
-        $query->where(function ($query) {
-            $query->where('order_type', '1');
-            $query->orWhere('order_type', 'delivery');
-        });
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return currency_format($query->sum('order_total') ?? 0);
-    }
-
-    /**
-     * Return the total number of collection orders
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalCollectionOrderSum($range)
-    {
-        $query = Orders_model::query();
-        $query->where(function ($query) {
-            $query->where('order_type', '2');
-            $query->orWhere('order_type', 'collection');
-        });
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return currency_format($query->sum('order_total') ?? 0);
-    }
-
-    /**
-     * Return the total number of reserved tables
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalReservedTableSum($range)
-    {
-        $query = Reservations_model::with('tables');
-        $query->where('status_id', setting('confirmed_reservation_status'));
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-        $result = $query->get();
-
-        $result->pluck('tables')->flatten();
-
-        return $result->count();
-    }
-
-    /**
-     * Return the total number of reserved table guests
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalReservedGuestSum($range)
-    {
-        $query = Reservations_model::query();
-        $query->where('status_id', setting('confirmed_reservation_status'));
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return $query->sum('guest_num') ?? 0;
-    }
-
-    /**
-     * Return the total number of reservations
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalReservationSum($range)
-    {
-        $query = Reservations_model::query();
-        $query->where('status_id', '!=', setting('canceled_reservation_status'));
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return $query->count();
-    }
-
-    /**
-     * Return the total number of completed reservations
-     *
-     * @param $range
-     * @return int
-     */
-    protected function getTotalCompletedReservationSum($range)
-    {
-        $query = Reservations_model::query();
-        $query->where('status_id', setting('confirmed_reservation_status'));
-
-        $this->applyRangeQuery($query, $range);
-        $this->locationApplyScope($query);
-
-        return $query->count();
     }
 }

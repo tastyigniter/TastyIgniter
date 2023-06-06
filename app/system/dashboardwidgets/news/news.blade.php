@@ -1,5 +1,5 @@
 <div class="dashboard-widget widget-news">
-    <h6 class="widget-title">@lang($this->property('title'))</h6>
+    <h6 class="widget-title">@lang('admin::lang.dashboard.text_news')</h6>
     <div class="row">
         <div class="list-group list-group-flush w-100">
             @forelse($newsFeed as $feed)
