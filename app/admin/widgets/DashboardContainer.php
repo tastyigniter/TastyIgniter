@@ -134,7 +134,7 @@ class DashboardContainer extends BaseWidget
 
         $this->vars['widgets'] = $this->dashboardWidgets;
 
-        return ['#'.$this->getId('container') => $this->makePartial('dashboardcontainer/widget_container')];
+        return ['#' . $this->getId('container') => $this->makePartial('dashboardcontainer/widget_container')];
     }
 
     public function onLoadAddPopup()
@@ -142,7 +142,7 @@ class DashboardContainer extends BaseWidget
         $this->vars['gridColumns'] = $this->getWidgetPropertyWidthOptions();
         $this->vars['widgets'] = collect(Widgets::instance()->listDashboardWidgets())->pluck('label', 'code');
 
-        return ['#'.$this->getId('new-widget-modal-content') => $this->makePartial('new_widget_popup')];
+        return ['#' . $this->getId('new-widget-modal-content') => $this->makePartial('new_widget_popup')];
     }
 
     public function onLoadUpdatePopup()
@@ -156,7 +156,7 @@ class DashboardContainer extends BaseWidget
         $this->vars['widget'] = $widget = $this->findWidgetByAlias($widgetAlias);
         $this->vars['widgetForm'] = $this->getFormWidget($widgetAlias, $widget);
 
-        return ['#'.$widgetAlias.'-modal-content' => $this->makePartial('widget_form')];
+        return ['#' . $widgetAlias . '-modal-content' => $this->makePartial('widget_form')];
     }
 
     public function onAddWidget()
@@ -177,11 +177,11 @@ class DashboardContainer extends BaseWidget
             new ApplicationException(lang('admin::lang.dashboard.alert_invalid_widget'))
         );
 
-        $widgetAlias = $widgetCode.'_'.str_random(5);
+        $widgetAlias = $widgetCode . '_' . str_random(5);
         $this->addWidget($widgetAlias, $widget, array_get($validated, 'size'));
 
         return [
-            '@#'.$this->getId('container-list') => $this->makePartial('widget_item', [
+            '@#' . $this->getId('container-list') => $this->makePartial('widget_item', [
                 'widget' => $widget,
                 'widgetAlias' => $widgetAlias,
             ]),
@@ -200,7 +200,7 @@ class DashboardContainer extends BaseWidget
 
         flash()->success(lang('admin::lang.dashboard.alert_reset_layout_success'));
 
-        return ['#'.$this->getId('container-list') => $this->makePartial('widget_list')];
+        return ['#' . $this->getId('container-list') => $this->makePartial('widget_list')];
     }
 
     public function onSetAsDefault()
@@ -225,9 +225,11 @@ class DashboardContainer extends BaseWidget
         $alias = post('alias');
         $widget = $this->findWidgetByAlias($alias);
 
-        $this->validate($validated = request()->post($alias.'_fields'), [
+        [$rules, $attributes] = $widget->getPropertyRules();
+
+        $validated = $this->validate(request()->post($alias . '_fields'), array_merge([
             'width' => ['numeric'],
-        ]);
+        ], $rules), $attributes);
 
         $widget->mergeProperties($validated);
 
@@ -267,7 +269,7 @@ class DashboardContainer extends BaseWidget
         $widget->setProperty('width', $size);
         $widget->setProperty('priority', $nextPriority);
 
-        $widgets[$widgetAlias] = $widget->getProperties();
+        $widgets[$widgetAlias] = $widget->getPropertiesToSave();
 
         $this->setWidgetsToUserPreferences($widgets);
     }
@@ -407,8 +409,8 @@ class DashboardContainer extends BaseWidget
         $formConfig['model'] = User_preferences_model::onUser();
         $formConfig['data'] = $this->getWidgetPropertyValues($widget);
         $formConfig['previewMode'] = $this->previewMode;
-        $formConfig['alias'] = $this->alias.studly_case('Form_'.$alias);
-        $formConfig['arrayName'] = $alias.'_fields';
+        $formConfig['alias'] = $this->alias . studly_case('Form_' . $alias);
+        $formConfig['arrayName'] = $alias . '_fields';
 
         $formWidget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
         $formWidget->bindToController();
@@ -517,7 +519,10 @@ class DashboardContainer extends BaseWidget
     {
         return in_array($type, [
             'text',
+            'textarea',
             'number',
+            'checkbox',
+            'radio',
             'select',
             'selectlist',
             'switch',
@@ -565,12 +570,12 @@ class DashboardContainer extends BaseWidget
 
     protected function getUserPreferencesKey()
     {
-        return 'admin_dashboardwidgets_'.$this->context;
+        return 'admin_dashboardwidgets_' . $this->context;
     }
 
     protected function getSystemParametersKey()
     {
-        return 'admin_dashboardwidgets_default_'.$this->context;
+        return 'admin_dashboardwidgets_default_' . $this->context;
     }
 
     protected function getUniqueAlias($widgets)
@@ -578,7 +583,7 @@ class DashboardContainer extends BaseWidget
         $num = count($widgets);
         do {
             $num++;
-            $alias = 'dashboard_container_'.$this->context.'_'.$num;
+            $alias = 'dashboard_container_' . $this->context . '_' . $num;
         } while (array_key_exists($alias, $widgets));
 
         return $alias;

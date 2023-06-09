@@ -29,6 +29,7 @@ class Charts extends BaseDashboardWidget
                 'type' => 'select',
                 'placeholder' => 'lang:admin::lang.text_please_select',
                 'options' => $this->getDatasetOptions(),
+                'validationRule' => 'required|alpha_dash',
             ],
         ];
     }

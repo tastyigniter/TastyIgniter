@@ -27,6 +27,19 @@ class BaseDashboardWidget extends BaseWidget
         return array_except($this->properties, ['startDate', 'endDate']);
     }
 
+    public function getPropertyRules()
+    {
+        $rules = $attributes = [];
+        foreach ($this->defineProperties() as $name => $params) {
+            if (strlen($rule = array_get($params, 'validationRule', ''))) {
+                $rules[$name] = $rule;
+                $attributes[$name] = array_get($params, 'label', $name);
+            }
+        }
+
+        return [$rules, $attributes];
+    }
+
     public function getWidth()
     {
         return $this->property('width');

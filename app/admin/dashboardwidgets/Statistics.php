@@ -49,6 +49,7 @@ class Statistics extends BaseDashboardWidget
                 'type' => 'select',
                 'placeholder' => 'lang:admin::lang.text_please_select',
                 'options' => $this->getCardOptions(),
+                'validationRule' => 'required|alpha_dash',
             ],
         ];
     }
@@ -114,11 +115,11 @@ class Statistics extends BaseDashboardWidget
 
     protected function getValueForDefaultCard(string $cardCode, $start, $end)
     {
-        $contextMethod = 'getTotal'.studly_case($cardCode).'Sum';
+        $contextMethod = 'getTotal' . studly_case($cardCode) . 'Sum';
 
         throw_unless($this->methodExists($contextMethod), new SystemException(sprintf(
             'The card [%s] does must have a defined method in [%s]',
-            $cardCode, get_class($this).'::'.$contextMethod
+            $cardCode, get_class($this) . '::' . $contextMethod
         )));
 
         $count = $this->$contextMethod(function ($query) use ($start, $end) {
