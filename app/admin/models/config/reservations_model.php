@@ -126,6 +126,14 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.statuses.label_comment',
         'invisible' => true,
     ],
+    'telephone' => [
+        'label' => 'lang:admin::lang.customers.label_telephone',
+        'invisible' => true,
+    ],
+    'email' => [
+        'label' => 'lang:admin::lang.label_email',
+        'invisible' => true,
+    ],
 ];
 
 $config['calendar']['toolbar'] = [
