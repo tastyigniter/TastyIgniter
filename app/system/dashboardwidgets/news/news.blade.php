@@ -3,7 +3,7 @@
     <div class="row">
         <div class="list-group list-group-flush w-100">
             @forelse($newsFeed as $feed)
-                <a class="list-group-item" target="_blank" href="{{ $feed['link'] }}">
+                <a class="list-group-item" target="_blank" href="{{ $feed['link'] }}?ref=tastyigniter-dashboard">
                     <b class="d-block text-truncate">{{ $feed['title'] }}</b>
                     <span class="text-muted d-block text-truncate">{{ strip_tags($feed['description']) }}</span>
                 </a>

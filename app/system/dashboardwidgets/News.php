@@ -15,7 +15,7 @@ class News extends BaseDashboardWidget
      */
     protected $defaultAlias = 'news';
 
-    public $newsRss = 'https://tastyigniter.com/feed?ref=dashboard';
+    public $newsRss = 'https://tastyigniter.com/feed';
 
     public function render()
     {
