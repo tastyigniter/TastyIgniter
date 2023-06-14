@@ -128,10 +128,12 @@ $config['list']['columns'] = [
     ],
     'telephone' => [
         'label' => 'lang:admin::lang.customers.label_telephone',
+        'searchable' => true,
         'invisible' => true,
     ],
     'email' => [
         'label' => 'lang:admin::lang.label_email',
+        'searchable' => true,
         'invisible' => true,
     ],
 ];
