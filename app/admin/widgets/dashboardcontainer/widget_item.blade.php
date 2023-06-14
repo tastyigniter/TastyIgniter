@@ -1,7 +1,7 @@
 <div
-    class="col col-sm-{{ $widget->property('width') }} my-3"
+    class="col col-sm-{{ $widget->getWidth() }} my-3"
 >
-    <div class="widget-item card {{ $widget->property('cssClass', 'bg-light') }} p-3 shadow-sm">
+    <div class="widget-item card {{ $widget->getCssClass() }} p-3 shadow-sm">
         <div class="widget-item-action">
             <a class="btn handle pull-left"><i class="fa fa-arrows-alt"></i></a>
             @if ($this->canManage)
@@ -23,7 +23,7 @@
         <div id="{{ $widgetAlias }}">{!! $widget->render() !!}</div>
 
         <input type="hidden" data-widget-alias name="widgetAliases[]" value="{{ $widgetAlias }}"/>
-        <input type="hidden" data-widget-priority name="widgetPriorities[]" value="{{ $priority }}"/>
+        <input type="hidden" data-widget-priority name="widgetPriorities[]" value="{{ $widget->getPriority() }}"/>
     </div>
 
     <div

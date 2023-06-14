@@ -102,33 +102,33 @@ class ServiceProvider extends AppServiceProvider
     {
         Widgets::instance()->registerDashboardWidgets(function (Widgets $manager) {
             $manager->registerDashboardWidget(\System\DashboardWidgets\Activities::class, [
+                'code' => 'recent-activities',
                 'label' => 'Recent activities',
-                'context' => 'dashboard',
             ]);
 
             $manager->registerDashboardWidget(\System\DashboardWidgets\Cache::class, [
+                'code' => 'cache',
                 'label' => 'Cache Usage',
-                'context' => 'dashboard',
             ]);
 
             $manager->registerDashboardWidget(\System\DashboardWidgets\News::class, [
+                'code' => 'news',
                 'label' => 'Latest News',
-                'context' => 'dashboard',
             ]);
 
             $manager->registerDashboardWidget(\Admin\DashboardWidgets\Statistics::class, [
+                'code' => 'stats',
                 'label' => 'Statistics widget',
-                'context' => 'dashboard',
             ]);
 
             $manager->registerDashboardWidget(\Admin\DashboardWidgets\Onboarding::class, [
+                'code' => 'onboarding',
                 'label' => 'Onboarding widget',
-                'context' => 'dashboard',
             ]);
 
             $manager->registerDashboardWidget(\Admin\DashboardWidgets\Charts::class, [
+                'code' => 'charts',
                 'label' => 'Charts widget',
-                'context' => 'dashboard',
             ]);
         });
     }

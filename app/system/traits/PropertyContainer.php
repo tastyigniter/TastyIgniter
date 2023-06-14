@@ -29,9 +29,7 @@ trait PropertyContainer
             }
         }
 
-        $properties = array_merge($defaultProperties, $properties);
-
-        return $properties;
+        return array_merge($defaultProperties, $properties);
     }
 
     /**
@@ -51,6 +49,16 @@ trait PropertyContainer
     public function setProperties($properties)
     {
         $this->properties = $this->validateProperties($properties);
+    }
+
+    /**
+     * Merge multiple properties.
+     *
+     * @param array $properties
+     */
+    public function mergeProperties($properties)
+    {
+        $this->properties = array_merge($this->properties, $this->validateProperties($properties));
     }
 
     /**

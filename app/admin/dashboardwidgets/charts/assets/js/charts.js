@@ -15,74 +15,59 @@
         this.$el = $(element)
         this.$rangeEl = $(options.rangeSelector)
         this.chartJs = null
-        this.rangePicker = null
 
         // Init
+        console.log('initChartJs')
         this.initChartJs();
-        this.initDateRange();
     }
 
     ChartControl.DEFAULTS = {
         alias: undefined,
-        rangeFormat: 'MMMM D, YYYY',
-        rangeSelector: '[data-control="daterange"]',
-        rangeParentSelector: '.chart-toolbar',
-        responsive: true,
         type: 'line',
+        rangeSelector: '[data-control="daterange"]',
         options: {
+            responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function (value) {
-                            if (value % 1 === 0) {
-                                return value;
-                            }
+        }
+    }
+
+    ChartControl.LINE_TYPE_OPTIONS = {
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function (value) {
+                        if (value % 1 === 0) {
+                            return value;
                         }
                     }
+                }
+            },
+            x: {
+                type: 'time',
+                time: {
+                    unit: 'day'
                 },
-                x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day'
-                    },
-                    gridLines: {
-                        display: false
-                    }
+                gridLines: {
+                    display: false
                 }
             }
         }
     }
 
-    ChartControl.DATE_RANGE_DEFAULTS = {
-        opens: 'left',
-        parentEl: '.chart-toolbar',
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment(),
-        timePicker: true,
-        ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    ChartControl.PIE_TYPE_OPTIONS = {
+        plugins: {
+            legend: {
+                display: false,
+            },
         },
     }
 
     ChartControl.prototype.initChartJs = function () {
+        var chartOptions = (this.options.type === 'line') ? ChartControl.LINE_TYPE_OPTIONS : ChartControl.PIE_TYPE_OPTIONS
+        this.options.options = $.extend({}, this.options.options, chartOptions)
         this.chartJs = new Chart(this.$el.find('canvas'), this.options)
-        this.chartJs.resize()
-    }
-
-    ChartControl.prototype.initDateRange = function () {
-        var options = ChartControl.DATE_RANGE_DEFAULTS
-        options.parentEl = this.options.rangeParentSelector
-        this.$rangeEl.daterangepicker(options, $.proxy(this.onRangeSelected, this))
-        this.rangePicker = this.$rangeEl.data('daterangepicker');
-
-        this.onRangeSelected(ChartControl.DATE_RANGE_DEFAULTS.startDate, ChartControl.DATE_RANGE_DEFAULTS.endDate)
+        this.chartJs.update()
     }
 
     ChartControl.prototype.unbind = function () {
@@ -91,31 +76,6 @@
         this.chartJs = null
 
         this.$rangeEl.daterangepicker('destroy')
-    }
-
-    ChartControl.prototype.fetchChartData = function (start, end) {
-        $.request(this.options.alias + '::onFetchDatasets', {
-            data: {start: start, end: end},
-            success: $.proxy(this.onUpdateChart, this)
-        })
-    }
-
-    ChartControl.prototype.onRangeSelected = function (start, end, label) {
-        $('span', this.$rangeEl).html(start.format(this.options.rangeFormat)
-            + ' - ' + end.format(this.options.rangeFormat));
-
-        this.onApplyChart()
-    }
-
-    ChartControl.prototype.onApplyChart = function () {
-        this.fetchChartData(this.rangePicker.startDate.toISOString(), this.rangePicker.endDate.toISOString());
-    }
-
-    ChartControl.prototype.onUpdateChart = function (json) {
-        this.chartJs.data.datasets = json
-
-        this.chartJs.update();
-        this.chartJs.resize()
     }
 
     // FIELD CHART CONTROL PLUGIN DEFINITION

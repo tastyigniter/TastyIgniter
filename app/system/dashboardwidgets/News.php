@@ -15,7 +15,7 @@ class News extends BaseDashboardWidget
      */
     protected $defaultAlias = 'news';
 
-    public $newsRss = 'https://tastyigniter.com/feed?ref=dashboard';
+    public $newsRss = 'https://tastyigniter.com/feed';
 
     public function render()
     {
@@ -27,15 +27,12 @@ class News extends BaseDashboardWidget
     public function defineProperties()
     {
         return [
-            'title' => [
-                'label' => 'admin::lang.dashboard.label_widget_title',
-                'default' => 'admin::lang.dashboard.text_news',
-            ],
             'newsCount' => [
                 'label' => 'admin::lang.dashboard.text_news_count',
                 'default' => 6,
                 'type' => 'select',
-                'options' => [1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10],
+                'options' => range(1, 10),
+                'validationRule' => 'required|integer',
             ],
         ];
     }

@@ -279,7 +279,7 @@ class ComponentManager
             return $alias;
         }
 
-        return $alias.'/components/'.ucfirst($alias);
+        return $alias . '/components/' . ucfirst($alias);
     }
 
     //
@@ -326,7 +326,7 @@ class ComponentManager
             ];
 
             if (!in_array($propertyType, ['text', 'number']) && !array_key_exists('options', $params)) {
-                $methodName = 'get'.studly_case($name).'Options';
+                $methodName = 'get' . studly_case($name) . 'Options';
                 $property['options'] = [get_class($component), $methodName];
             }
 
@@ -345,8 +345,7 @@ class ComponentManager
                     array_walk($property[$propertyName], function (&$_propertyValue) {
                         $_propertyValue = lang($_propertyValue);
                     });
-                }
-                else {
+                } else {
                     $property[$propertyName] = lang($propertyValue);
                 }
             }
@@ -397,6 +396,7 @@ class ComponentManager
     {
         return in_array($type, [
             'text',
+            'textarea',
             'number',
             'checkbox',
             'radio',

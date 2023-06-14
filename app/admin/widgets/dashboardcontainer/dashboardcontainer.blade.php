@@ -3,6 +3,7 @@
     data-control="dashboard-container"
     data-alias="{{ $this->alias }}"
     data-sortable-container="#{{ $this->getId('container-list') }}"
+    data-date-range-format="{{ $dateRangeFormat }}"
 >
     <div
         id="{{ $this->getId('container-toolbar') }}"
@@ -11,7 +12,7 @@
         {!! $this->makePartial('widget_toolbar') !!}
     </div>
 
-    <div id="{{ $this->getId('container') }}" class="dashboard-widgets page-x-spacer">
+    <div class="dashboard-widgets page-x-spacer">
         <div class="progress-indicator vh-100 d-flex flex-column">
             <div class="align-self-center text-center m-auto">
                 <i class="d-block" style="width: 256px;height: 256px;">
@@ -39,5 +40,6 @@
                 <span class="spinner-border"></span>&nbsp;&nbsp;@lang('admin::lang.text_loading')
             </div>
         </div>
+        <div id="{{ $this->getId('container') }}"></div>
     </div>
 </div>

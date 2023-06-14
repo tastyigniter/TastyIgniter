@@ -289,11 +289,9 @@ class Filter extends BaseWidget
             }
 
             $options = $model->$methodName();
-        }
-        elseif (is_callable($options)) {
+        } elseif (is_callable($options)) {
             return $options();
-        }
-        elseif (!is_array($options)) {
+        } elseif (!is_array($options)) {
             $options = [];
         }
 
@@ -483,14 +481,12 @@ class Filter extends BaseWidget
                         $filtered = implode(',', array_map(function ($key) {
                             return DB::getPdo()->quote($key);
                         }, $value));
-                    }
-                    else {
+                    } else {
                         $filtered = DB::getPdo()->quote($value);
                     }
 
                     $query->whereRaw(strtr($scopeConditions, [':filtered' => $filtered]));
-                }
-                elseif ($scopeMethod = $scope->scope) {
+                } elseif ($scopeMethod = $scope->scope) {
                     $query->$scopeMethod($value);
                 }
 
