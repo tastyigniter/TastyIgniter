@@ -279,7 +279,7 @@ class ComponentManager
             return $alias;
         }
 
-        return $alias . '/components/' . ucfirst($alias);
+        return $alias.'/components/'.ucfirst($alias);
     }
 
     //
@@ -326,7 +326,7 @@ class ComponentManager
             ];
 
             if (!in_array($propertyType, ['text', 'number']) && !array_key_exists('options', $params)) {
-                $methodName = 'get' . studly_case($name) . 'Options';
+                $methodName = 'get'.studly_case($name).'Options';
                 $property['options'] = [get_class($component), $methodName];
             }
 
