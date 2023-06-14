@@ -19,7 +19,7 @@ class BaseDashboardWidget extends BaseWidget
         parent::__construct($controller, $properties);
 
         $this->properties = $this->validateProperties($properties);
-        $this->fillFromConfig($properties);
+        $this->fillFromConfig();
     }
 
     public function getPropertiesToSave()
