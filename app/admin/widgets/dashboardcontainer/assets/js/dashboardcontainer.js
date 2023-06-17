@@ -39,6 +39,9 @@
         startDate: moment().subtract(29, 'days'),
         endDate: moment(),
         timePicker: true,
+        locale: {
+            format: 'MM/DD/YYYY'
+        },
         ranges: {
             'Today': [moment(), moment()],
             'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -61,7 +64,7 @@
                 return false;
 
             $.ti.loadingIndicator.show()
-            self.$form.request(self.options.alias+'::onRemoveWidget', {
+            self.$form.request(self.options.alias + '::onRemoveWidget', {
                 data: {
                     'alias': $('[data-widget-alias]', $btn.closest('div.widget-item')).val()
                 }
@@ -106,7 +109,7 @@
             sortOrders.push($(this).val())
         })
 
-        this.$form.request(self.options.alias+'::onSetWidgetPriorities', {
+        this.$form.request(self.options.alias + '::onSetWidgetPriorities', {
             data: {
                 'aliases': aliases,
                 'priorities': sortOrders
@@ -116,11 +119,11 @@
 
     DashboardContainer.prototype.onDateRangeSelected = function (start, end, label) {
         $('span', this.$dateRangeEl).html(start.format(this.options.dateRangeFormat)
-            +' - '+end.format(this.options.dateRangeFormat));
+            + ' - ' + end.format(this.options.dateRangeFormat));
 
         $('.dashboard-widgets .progress-indicator').show()
 
-        this.$dateRangeEl.request(this.options.alias+'::onSetDateRange', {
+        this.$dateRangeEl.request(this.options.alias + '::onSetDateRange', {
             data: {start: start.toISOString(), end: end.toISOString()}
         }).always(function () {
             $('.dashboard-widgets .progress-indicator').attr('style', 'display: none !important;');
@@ -128,7 +131,7 @@
     }
 
     DashboardContainer.prototype.fetchWidgets = function () {
-        $.request(this.options.alias+'::onRenderWidgets').always(function () {
+        $.request(this.options.alias + '::onRenderWidgets').always(function () {
             $('.dashboard-widgets .progress-indicator').attr('style', 'display: none !important;');
         })
     }
