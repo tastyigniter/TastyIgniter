@@ -19,7 +19,7 @@ trait LocationAwareWidget
      */
     protected function locationApplyScope($query)
     {
-        if (is_null($ids = AdminLocation::getAll()))
+        if (is_null($ids = AdminLocation::getIdOrAll()))
             return;
 
         $model = $query->getModel();
