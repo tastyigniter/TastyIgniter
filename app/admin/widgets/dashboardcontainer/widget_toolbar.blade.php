@@ -64,8 +64,8 @@
             id="{{ $this->alias }}-daterange"
             class="btn btn-outline-default pull-right"
             data-control="daterange"
-            data-start-date="{{ $startDate }}"
-            data-end-date="{{ $endDate }}"
+            data-start-date="{{ $startDate->format('m/d/Y') }}"
+            data-end-date="{{ $endDate->format('m/d/Y') }}"
         >
             <i class="fa fa-calendar"></i>&nbsp;&nbsp;
             <span>{{$startDate->isoFormat($dateRangeFormat).' - '.$endDate->isoFormat($dateRangeFormat)}}</span>&nbsp;&nbsp;
