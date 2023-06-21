@@ -17,7 +17,6 @@
         this.chartJs = null
 
         // Init
-        console.log('initChartJs')
         this.initChartJs();
     }
 
