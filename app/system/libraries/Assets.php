@@ -62,7 +62,7 @@ class Assets
 
     public function addFromManifest($path)
     {
-        $assetsConfigPath = base_path().$this->getAssetPath($path);
+        $assetsConfigPath = $this->getAssetPath($path);
         if (!File::exists($assetsConfigPath))
             return;
 
@@ -247,11 +247,14 @@ class Assets
             return $name;
 
         if (File::isPathSymbol($name))
-            return File::localToPublic(File::symbolizePath($name));
+            return File::symbolizePath($name);
+
+        if (File::isFile($name))
+            return $name;
 
         foreach (static::$registeredPaths as $path) {
-            if (File::exists($file = str_replace('//', '/', $path.'/'.$name)))
-                return File::localToPublic($file);
+            if (File::isFile($file = str_replace('//', '/', $path.'/'.$name)))
+                return $file;
         }
 
         return $name;
@@ -304,7 +307,7 @@ class Assets
 
     protected function prepUrl($path, $suffix = null)
     {
-        $path = $this->getAssetPath($path);
+        $path = File::localToPublic($this->getAssetPath($path)) ?? $path;
 
         if (!is_null($suffix))
             $suffix = (strpos($path, '?') === false) ? '?'.$suffix : '&'.$suffix;
@@ -336,8 +339,7 @@ class Assets
                 'src' => asset($file),
             ], $attributes);
             $html = '<script'.Html::attributes($attributes).'></script>'.PHP_EOL;
-        }
-        else {
+        } else {
             $attributes = array_merge([
                 'rel' => 'stylesheet',
                 'type' => 'text/css',

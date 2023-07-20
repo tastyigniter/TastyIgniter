@@ -20,33 +20,56 @@
 @if ($this->canManage || $this->canSetDefault)
     <div class="toolbar-action pt-3">
         @if ($this->canManage)
-            <button
-                type="button"
-                class="btn btn-outline-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#newWidgetModal"
-                data-request="{{ $this->getEventHandler('onLoadAddPopup') }}"
-                tabindex="-1"
-            ><i class="fa fa-plus"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_add_widget')</button>
-            <button
-                type="button"
-                class="btn btn-outline-danger"
-                data-request="{{ $this->getEventHandler('onResetWidgets') }}"
-                data-request-confirm="@lang('admin::lang.alert_warning_confirm')"
-                data-attach-loading
-                title="@lang('admin::lang.dashboard.button_reset_widgets')"
-                tabindex="-1"
-            ><i class="fa fa-refresh"></i></button>
+            <div class="btn-group">
+                <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#newWidgetModal"
+                    data-request="{{ $this->getEventHandler('onLoadAddPopup') }}"
+                    tabindex="-1"
+                ><i class="fa fa-plus"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_add_widget')</button>
+                <button
+                    type="button"
+                    class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown"
+                    data-bs-display="static"
+                    aria-expanded="false"
+                ><span class="visually-hidden">Toggle Dropdown</span></button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <button
+                            type="button"
+                            class="dropdown-item text-danger"
+                            data-request="{{ $this->getEventHandler('onResetWidgets') }}"
+                            data-request-confirm="@lang('admin::lang.alert_warning_confirm')"
+                            data-attach-loading
+                            tabindex="-1"
+                        >@lang('admin::lang.dashboard.button_reset_widgets')</button>
+                    </li>
+                </ul>
+            </div>
         @endif
         @if ($this->canSetDefault)
             <button
                 type="button"
-                class="btn btn-outline-default pull-right"
+                class="btn btn-outline-default"
                 data-request="{{ $this->getEventHandler('onSetAsDefault') }}"
                 data-request-confirm="@lang('admin::lang.dashboard.alert_set_default_confirm')"
                 data-attach-loading
                 tabindex="-1"
             ><i class="fa fa-save"></i>&nbsp;&nbsp;@lang('admin::lang.dashboard.button_set_default')</button>
         @endif
+        <button
+            id="{{ $this->alias }}-daterange"
+            class="btn btn-outline-default pull-right"
+            data-control="daterange"
+            data-start-date="{{ $startDate->format('m/d/Y') }}"
+            data-end-date="{{ $endDate->format('m/d/Y') }}"
+        >
+            <i class="fa fa-calendar"></i>&nbsp;&nbsp;
+            <span>{{$startDate->isoFormat($dateRangeFormat).' - '.$endDate->isoFormat($dateRangeFormat)}}</span>&nbsp;&nbsp;
+            <i class="fa fa-caret-down"></i>
+        </button>
     </div>
 @endif

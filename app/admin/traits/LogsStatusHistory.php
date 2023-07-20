@@ -4,6 +4,7 @@ namespace Admin\Traits;
 
 use Admin\Models\Reservations_model;
 use Admin\Models\Status_history_model;
+use Admin\Models\Statuses_model;
 
 trait LogsStatusHistory
 {
@@ -45,6 +46,9 @@ trait LogsStatusHistory
     {
         if (!$this->exists || !$status)
             return false;
+
+        if (!is_object($status))
+            $status = Statuses_model::find($status);
 
         $this->status()->associate($status);
 

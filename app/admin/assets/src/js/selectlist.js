@@ -20,7 +20,6 @@
             settings: this.options,
             events: {
                 afterChange: (newVal) => {
-                    console.log(newVal, this.$el.val())
                     this.$el.trigger('change')
                 }
             }
@@ -33,7 +32,7 @@
     SelectList.DEFAULTS = {
         maxValuesShown: 5,
         showSearch: false,
-
+        allowDeselect: true
     }
 
     var old = $.fn.selectList

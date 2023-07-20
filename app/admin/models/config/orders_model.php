@@ -148,6 +148,16 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.orders.column_total',
         'type' => 'currency',
     ],
+    'telephone' => [
+        'label' => 'lang:admin::lang.customers.label_telephone',
+        'searchable' => true,
+        'invisible' => true,
+    ],
+    'email' => [
+        'label' => 'lang:admin::lang.label_email',
+        'searchable' => true,
+        'invisible' => true,
+    ],
     'updated_at' => [
         'label' => 'lang:admin::lang.column_date_updated',
         'type' => 'datesince',

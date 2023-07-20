@@ -345,8 +345,7 @@ class ComponentManager
                     array_walk($property[$propertyName], function (&$_propertyValue) {
                         $_propertyValue = lang($_propertyValue);
                     });
-                }
-                else {
+                } else {
                     $property[$propertyName] = lang($propertyValue);
                 }
             }
@@ -397,6 +396,7 @@ class ComponentManager
     {
         return in_array($type, [
             'text',
+            'textarea',
             'number',
             'checkbox',
             'radio',

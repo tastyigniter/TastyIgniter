@@ -66,8 +66,7 @@ class MediaLibrary
 
         if (array_has($cached, $cachedKey)) {
             $folderContents = array_get($cached, $cachedKey);
-        }
-        else {
+        } else {
             $folderContents = $this->scanFolderContents($fullPath, $methodName, $recursive);
 
             $cached[$cacheSuffix][$methodName][$fullPath] = $folderContents;
@@ -236,6 +235,9 @@ class MediaLibrary
 
     public function getMediaUrl($path)
     {
+        if (starts_with($path, ['http://', 'https://', '//']))
+            return $path;
+
         $path = $this->validatePath($path);
 
         return $this->storagePath.$path;

@@ -6,12 +6,10 @@
 <div class="modal-body">
     <div class="form-group">
         <label class="form-label">@lang('admin::lang.dashboard.label_widget')</label>
-        <select class="form-select" name="className">
+        <select class="form-select" name="widget">
             <option value="">@lang('admin::lang.dashboard.text_select_widget')</option>
-            @foreach ($widgets as $className => $widgetInfo)
-                <option
-                    value="{{ $className }}"
-                >{{ isset($widgetInfo['label']) ? lang($widgetInfo['label']) : $className }}</option>
+            @foreach ($widgets as $code => $label)
+                <option value="{{ $code }}">@lang($label)</option>
             @endforeach
         </select>
     </div>

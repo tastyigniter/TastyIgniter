@@ -20,16 +20,6 @@ class Onboarding extends BaseDashboardWidget
         $this->setProperty('cssClass', 'bg-light widget-item-onboarding');
     }
 
-    public function defineProperties()
-    {
-        return [
-            'title' => [
-                'label' => 'admin::lang.dashboard.label_widget_title',
-                'default' => 'admin::lang.dashboard.onboarding.title',
-            ],
-        ];
-    }
-
     /**
      * Renders the widget.
      */
