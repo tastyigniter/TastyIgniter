@@ -1,11 +1,6 @@
 name: Split Modules
 
-on:
-  push:
-    branches:
-      - '*'
-    tags:
-      - '*'
+on: [ push ]
 
 jobs:
   split_modules:
