@@ -33,7 +33,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
           branch: ${GITHUB_REF#refs/heads/}
-
           package_directory: 'app/${{ matrix.package.path }}'
           repository_organization: 'tastyigniter'
           repository_name: '${{ matrix.package.repository }}'
@@ -49,7 +48,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
           tag: ${GITHUB_REF#refs/tags/}
-
           package_directory: 'app/${{ matrix.package.path }}'
           repository_organization: 'tastyigniter'
           repository_name: '${{ matrix.package.repository }}'
