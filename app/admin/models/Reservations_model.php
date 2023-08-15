@@ -455,6 +455,12 @@ class Reservations_model extends Model
             return false;
 
         $this->tables()->sync($tableIds);
+
+        if ($tableStayTime = DiningTable::whereIn('id', $tableIds)->sum('stay_time')) {
+            $this->newQuery()->where($this->getKeyName(), $this->getKey())->update([
+                'duration' => $tableStayTime,
+            ]);
+        }
     }
 
     /**

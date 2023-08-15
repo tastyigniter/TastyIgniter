@@ -1158,9 +1158,11 @@ return [
         'label_extra_capacity' => 'Extra Capacity',
         'label_priority' => 'Priority',
         'label_joinable' => 'Is Joinable',
+        'label_stay_time' => 'Stay Time',
 
         'help_tables' => 'Select a table to attach to this location.',
         'help_extra_capacity' => 'Used internally by the staff to determine table convenience/inconvenience.',
+        'help_stay_time' => 'The maximum time in minutes a customer can stay at this table. Leave empty to use the default stay time.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
         'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',

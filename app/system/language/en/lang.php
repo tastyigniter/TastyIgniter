@@ -524,7 +524,7 @@ return [
         'help_invoice_prefix' => 'Set the invoice prefix (e.g. <b>INV-2015-00</b>1123). Leave blank to use no prefix. The following macros are available: {year} {month} {day} {hour} {minute} {second}',
         'help_default_reservation_status' => 'Select the default reservation status when new reservation received',
         'help_canceled_reservation_status' => 'Select the reservation status when a reservation is marked as canceled or suspected of fraudulent activity',
-        'help_confirmed_reservation_status' => 'Select the reservation status to mark a reservation as confirmed before table is reserved',
+        'help_confirmed_reservation_status' => 'Select the reservation status when a reservation is confirmed and table marked as reserved',
         'help_delete_thumbs' => 'This will delete all created thumbs. Note thumbs are automatically created.',
         'help_media_max_size' => 'The maximum size (in kilobytes) limit for file when uploading.',
         'help_media_extensions' => 'The allowed file extensions for uploaded files. Multiple extensions can be separated by commas.',

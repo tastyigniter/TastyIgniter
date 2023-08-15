@@ -55,11 +55,17 @@ return [
                 ],
                 'comment' => 'lang:admin::lang.dining_tables.help_table_shape',
             ],
+            'stay_time' => [
+                'label' => 'lang:admin::lang.dining_tables.label_stay_time',
+                'type' => 'number',
+                'span' => 'left',
+                'comment' => 'lang:admin::lang.dining_tables.help_stay_time',
+            ],
             'is_enabled' => [
                 'label' => 'lang:admin::lang.dining_tables.label_is_enabled',
                 'type' => 'switch',
                 'default' => true,
-                'span' => 'left',
+                'span' => 'right',
             ],
         ],
     ],
