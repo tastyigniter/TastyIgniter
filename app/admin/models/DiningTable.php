@@ -144,7 +144,7 @@ class DiningTable extends \Igniter\Flame\Database\Model
             ->orderBy('dining_sections.priority', 'desc')
             ->orderBy('dining_tables.priority', 'desc');
 
-        $this->fireEvent('model.extendDiningTableReservableQuery', [$query]);
+        $this->fireEvent('model.extendDiningTableReservableQuery', [$query, $options]);
 
         return $query;
     }
