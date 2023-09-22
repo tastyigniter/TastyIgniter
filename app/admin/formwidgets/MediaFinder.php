@@ -238,7 +238,12 @@ class MediaFinder extends BaseFormWidget
             ));
         }
 
-        $items = post('items');
+        $items = $this->validate(request()->input(), [
+            'items' => ['required', 'array'],
+            'items.*.name' => ['required', 'string'],
+            'items.*.path' => ['required', 'string'],
+        ]);
+
         if (!is_array($items))
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_item_to_attach'));
 
@@ -248,6 +253,8 @@ class MediaFinder extends BaseFormWidget
 
         $manager = MediaLibrary::instance();
         foreach ($items as &$item) {
+            $item['path'] = strip_tags($item['path']);
+
             $media = $model->newMediaInstance();
             $media->addFromRaw(
                 $manager->get(array_get($item, 'path'), true),
