@@ -38,7 +38,7 @@ class Menu extends FormRequest
             'order_restriction.*' => ['nullable', 'string'],
             'menu_status' => ['boolean'],
             'mealtime_id' => ['nullable', 'integer'],
-            'menu_priority' => ['nullable', 'integer'],
+            'menu_priority' => ['min:0', 'integer'],
         ];
     }
 }
