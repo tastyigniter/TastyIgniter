@@ -29,7 +29,7 @@ class UpdateDashboardWidgetPropertiesOnUserPreferencesTable extends Migration
             ->value('value');
 
         $widgets = collect(json_decode($widgets, true))->mapWithKeys(function ($properties, $alias) {
-            if ($options = array_get($this->widgetsMap, array_pull($properties, 'class'))) {
+            if ($options = array_get($this->widgetsMap, array_pull($properties, 'class', ''))) {
                 $properties['widget'] = $options[0];
 
                 $props = array_pull($properties, 'config');

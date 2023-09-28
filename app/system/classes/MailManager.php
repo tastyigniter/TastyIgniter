@@ -71,8 +71,7 @@ class MailManager
     {
         if (isset($this->templateCache[$code])) {
             $template = $this->templateCache[$code];
-        }
-        else {
+        } else {
             $this->templateCache[$code] = $template = Mail_templates_model::findOrMakeTemplate($code);
         }
 
@@ -100,9 +99,6 @@ class MailManager
         $config->set('mail.from.address', $settings->get('sender_email'));
 
         switch ($settings->get('protocol')) {
-            case 'sendmail':
-                $config->set('mail.mailers.sendmail.path', $settings->get('sendmail_path'));
-                break;
             case 'smtp':
                 $config->set('mail.mailers.smtp.host', $settings->get('smtp_host'));
                 $config->set('mail.mailers.smtp.port', $settings->get('smtp_port'));
@@ -273,7 +269,7 @@ class MailManager
 
         $code = array_pop($this->partialStack);
         if (!$partial = Mail_partials_model::findOrMakePartial($code))
-            return '<!-- Missing partial: '.$code.' -->';
+            return '<!-- Missing partial: ' . $code . ' -->';
 
         $currentPartial = count($this->partialStack);
         $params = $this->partialData[$currentPartial];

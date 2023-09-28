@@ -14,7 +14,6 @@ class MailSettings extends FormRequest
             'protocol' => lang('system::lang.settings.label_protocol'),
 
             'mail_logo' => lang('system::lang.settings.label_mail_logo'),
-            'sendmail_path' => lang('system::lang.settings.label_sendmail_path'),
 
             'smtp_host' => lang('system::lang.settings.label_smtp_host'),
             'smtp_port' => lang('system::lang.settings.label_smtp_port'),
@@ -41,7 +40,6 @@ class MailSettings extends FormRequest
             'protocol' => ['required'],
 
             'mail_logo' => ['string'],
-            'sendmail_path' => ['required_if:protocol,sendmail', 'string'],
 
             'smtp_host' => ['string'],
             'smtp_port' => ['string'],

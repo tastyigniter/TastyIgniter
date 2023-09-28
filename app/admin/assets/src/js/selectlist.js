@@ -32,7 +32,7 @@
     SelectList.DEFAULTS = {
         maxValuesShown: 5,
         showSearch: false,
-
+        allowDeselect: true
     }
 
     var old = $.fn.selectList
