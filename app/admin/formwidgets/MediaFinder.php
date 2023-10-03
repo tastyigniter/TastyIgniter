@@ -131,8 +131,7 @@ class MediaFinder extends BaseFormWidget
 
         try {
             return MediaLibrary::instance()->getMediaRelativePath(trim($media, '/'));
-        }
-        catch (SystemException $ex) {
+        } catch (SystemException $ex) {
             return $media;
         }
     }
@@ -238,13 +237,13 @@ class MediaFinder extends BaseFormWidget
             ));
         }
 
-        $items = $this->validate(request()->input(), [
+        $data = $this->validate(request()->input(), [
             'items' => ['required', 'array'],
             'items.*.name' => ['required', 'string'],
             'items.*.path' => ['required', 'string'],
         ]);
 
-        if (!is_array($items))
+        if (!is_array($items = array_get($data, 'items')))
             throw new ApplicationException(lang('main::lang.media_manager.alert_select_item_to_attach'));
 
         $model = $this->model;
