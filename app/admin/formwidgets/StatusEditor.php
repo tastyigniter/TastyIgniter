@@ -162,15 +162,13 @@ class StatusEditor extends BaseFormWidget
                 throw new ApplicationException(sprintf(lang('admin::lang.statuses.alert_already_added'), $context, $context));
 
             $this->validateFormWidget($form, $saveData);
-        }
-        catch (ValidationException $ex) {
+        } catch (ValidationException $ex) {
             throw new ApplicationException($ex->getMessage());
         }
 
         if ($this->saveRecord($saveData, $keyFrom)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->getModeConfig('formName')).' '.'updated'))->now();
-        }
-        else {
+        } else {
             flash()->error(lang('admin::lang.alert_error_try_again'))->now();
         }
 
@@ -207,7 +205,7 @@ class StatusEditor extends BaseFormWidget
         $formField = $form->getField($this->assigneeKeyFrom);
 
         return [
-            '#'.$formField->getId() => $form->renderField($formField, [
+            '#'.$formField->getId('group') => $form->renderField($formField, [
                 'useContainer' => false,
             ]),
         ];
@@ -335,8 +333,7 @@ class StatusEditor extends BaseFormWidget
             $staff = Staffs_model::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->updateAssignTo($group, $staff))
                 AssigneeUpdated::log($record, $this->getController()->getUser());
-        }
-        else {
+        } else {
             $status = Statuses_model::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->addStatusHistory($status, $saveData))
                 StatusUpdated::log($record, $this->getController()->getUser());
