@@ -7,6 +7,7 @@ use Admin\ActivityTypes\StatusUpdated;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
 use Admin\Models\Orders_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staffs_model;
@@ -234,9 +235,15 @@ class StatusEditor extends BaseFormWidget
         if (!strlen($groupId = post('groupId', $form->getField('assignee_group_id')->value)))
             return [];
 
-        return Staffs_model::whereHas('groups', function ($query) use ($groupId) {
+        $query = Staffs_model::whereHas('groups', function ($query) use ($groupId) {
             $query->where('staff_groups.staff_group_id', $groupId);
-        })->isEnabled()->dropdown('staff_name');
+        });
+
+        if ($locationId = AdminLocation::getId()) {
+            $query->whereHasLocation($locationId);
+        }
+
+        return $query->isEnabled()->dropdown('staff_name');
     }
 
     public static function getAssigneeGroupOptions()
