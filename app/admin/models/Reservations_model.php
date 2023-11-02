@@ -472,7 +472,8 @@ class Reservations_model extends Model
             ->with(['dining_section'])
             ->withCount(['reservations' => function ($query) {
                 $query->where('reserve_date', $this->reserve_date)
-                    ->where('status_id', setting('confirmed_reservation_status'));
+                    ->whereNotIn('status_id', [0, setting('canceled_reservation_status')])
+                    ->orWhereNull('status_id');
             }])
             ->reservable([
                 'locationId' => $this->location_id,
