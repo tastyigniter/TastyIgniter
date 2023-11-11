@@ -35,7 +35,7 @@
     "tempusdominus-bootstrap-4": "^5.39.0"
   },
   "devDependencies": {
-    "axios": "^0.25",
+    "axios": "^1.6",
     "laravel-mix": "^6.0.6",
     "lodash": "^4.17.19",
     "sass": "^1.49.9",
