@@ -249,8 +249,8 @@ class Assets
         if (File::isPathSymbol($name))
             return File::symbolizePath($name);
 
-        if (File::isFile($name))
-            return $name;
+        if (File::isFile('.' . $name))
+            return '.' . $name;
 
         foreach (static::$registeredPaths as $path) {
             if (File::isFile($file = str_replace('//', '/', $path.'/'.$name)))
