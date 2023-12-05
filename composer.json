@@ -23,7 +23,7 @@
     "paid": "https://tastyigniter.com/premium-support",
     "issues": "https://github.com/tastyigniter/TastyIgniter/issues",
     "forum": "https://forum.tastyigniter.com",
-    "discord": "https/tastyigniter.com/discord",
+    "discord": "https/tastyigniter.com/chat",
     "docs": "https://tastyigniter.com/docs",
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
@@ -72,11 +72,15 @@
       "dont-discover": []
     }
   },
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/installers": true,
+      "php-http/discovery": true
+    }
   }
 }
