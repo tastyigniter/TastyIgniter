@@ -372,10 +372,13 @@ class DashboardContainer extends BaseWidget
         $widgetConfig['widget'] = $widgetCode = $widgetConfig['widget'] ?? $widgetConfig['class'] ?? $alias;
         $widgetClass = Widgets::instance()->resolveDashboardWidget($widgetCode);
 
-        $widget = $this->makeWidget($widgetClass, $widgetConfig);
-        $widget->bindToController();
 
-        return $widget;
+        return rescue(function () use ($widgetClass, $widgetConfig) {
+            $widget = $this->makeWidget($widgetClass, $widgetConfig);
+            $widget->bindToController();
+
+            return $widget;
+        });
     }
 
     protected function resetWidgets()

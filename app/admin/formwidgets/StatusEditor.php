@@ -7,6 +7,7 @@ use Admin\ActivityTypes\StatusUpdated;
 use Admin\Classes\BaseFormWidget;
 use Admin\Classes\FormField;
 use Admin\Facades\AdminAuth;
+use Admin\Facades\AdminLocation;
 use Admin\Models\Orders_model;
 use Admin\Models\Staff_groups_model;
 use Admin\Models\Staffs_model;
@@ -162,15 +163,13 @@ class StatusEditor extends BaseFormWidget
                 throw new ApplicationException(sprintf(lang('admin::lang.statuses.alert_already_added'), $context, $context));
 
             $this->validateFormWidget($form, $saveData);
-        }
-        catch (ValidationException $ex) {
+        } catch (ValidationException $ex) {
             throw new ApplicationException($ex->getMessage());
         }
 
         if ($this->saveRecord($saveData, $keyFrom)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->getModeConfig('formName')).' '.'updated'))->now();
-        }
-        else {
+        } else {
             flash()->error(lang('admin::lang.alert_error_try_again'))->now();
         }
 
@@ -207,7 +206,7 @@ class StatusEditor extends BaseFormWidget
         $formField = $form->getField($this->assigneeKeyFrom);
 
         return [
-            '#'.$formField->getId() => $form->renderField($formField, [
+            '#'.$formField->getId('group') => $form->renderField($formField, [
                 'useContainer' => false,
             ]),
         ];
@@ -236,9 +235,15 @@ class StatusEditor extends BaseFormWidget
         if (!strlen($groupId = post('groupId', $form->getField('assignee_group_id')->value)))
             return [];
 
-        return Staffs_model::whereHas('groups', function ($query) use ($groupId) {
+        $query = Staffs_model::whereHas('groups', function ($query) use ($groupId) {
             $query->where('staff_groups.staff_group_id', $groupId);
-        })->isEnabled()->dropdown('staff_name');
+        });
+
+        if ($locationId = AdminLocation::getId()) {
+            $query->whereHasLocation($locationId);
+        }
+
+        return $query->isEnabled()->dropdown('staff_name');
     }
 
     public static function getAssigneeGroupOptions()
@@ -335,8 +340,7 @@ class StatusEditor extends BaseFormWidget
             $staff = Staffs_model::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->updateAssignTo($group, $staff))
                 AssigneeUpdated::log($record, $this->getController()->getUser());
-        }
-        else {
+        } else {
             $status = Statuses_model::find(array_get($saveData, $keyFrom));
             if ($record = $this->model->addStatusHistory($status, $saveData))
                 StatusUpdated::log($record, $this->getController()->getUser());
