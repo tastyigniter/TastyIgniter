@@ -390,8 +390,7 @@ class UpdateManager
                 $update['installedVer'] = params('ti_version');
                 if ($this->disableCoreUpdates)
                     continue;
-            }
-            else {
+            } else {
                 if ($this->isMarkedAsIgnored($update['code'])) {
                     $ignoredItems[] = $update;
                     continue;
@@ -516,10 +515,12 @@ class UpdateManager
         $configBackup = base_path('/config-backup');
         File::moveDirectory($configDir, $configBackup);
 
-        $result = $this->extractFile($fileCode);
-
-        File::copyDirectory($configBackup, $configDir);
-        File::deleteDirectory($configBackup);
+        try {
+            $result = $this->extractFile($fileCode);
+        } finally {
+            File::copyDirectory($configBackup, $configDir);
+            File::deleteDirectory($configBackup);
+        }
 
         return $result;
     }
