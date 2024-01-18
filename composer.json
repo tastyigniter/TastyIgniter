@@ -28,7 +28,7 @@
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
   "require": {
-    "php": "^8.1",
+    "php": "^8.2",
     "tastyigniter/core": "dev-master",
     "tastyigniter/ti-ext-api": "v4.x-dev as v4.0",
     "tastyigniter/ti-ext-automation": "v4.x-dev as v4.0",
