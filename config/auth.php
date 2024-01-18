@@ -64,12 +64,6 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-//        'igniter-admin' => [
-//            'driver' => 'igniter-admin',
-//        ],
-//        'igniter-customers' => [
-//            'driver' => 'igniter-customer',
-//        ],
 
         // 'users' => [
         //     'driver' => 'database',
