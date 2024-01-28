@@ -14,7 +14,7 @@ class Country
     const ISO_CODE_3 = 3;
 
     protected $defaultFormat = [
-        "{address_1}\n{address_2}\n{city} {postcode}\n{state}\n{country}",
+        "{address_1} \n{address_2} \n{city} {postcode}\n{state}\n{country}",
     ];
 
     protected $requiredAddressKeys = [
