@@ -16,7 +16,7 @@
         </div>
         <input type="hidden" name="areaId" value="{{ $formAreaId }}">
         <input type="hidden" data-map-shape {!! $this->getMapShapeAttributes($formWidget->model) !!}>
-        @if($this->isTopArea($formWidget->model))
+        @if($this->getTopAreaModel() && ($this->getTopAreaModel()->area_id != $formWidget->model->area_id))
             <input type="hidden" data-map-shape {!! $this->getTopMapShapeAttributes() !!}>
         @endif
         <div class="modal-body">

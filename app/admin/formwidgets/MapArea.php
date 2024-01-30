@@ -202,10 +202,10 @@ class MapArea extends BaseFormWidget
                 $areaCircleBounds = new Bounds($areaCircleBoundaries->bounds->south, $areaCircleBoundaries->bounds->west,
                     $areaCircleBoundaries->bounds->north,  $areaCircleBoundaries->bounds->east);
                 if (!$topAreaPolygon->pointInPolygon($areaCircleBounds->getSouthWest())) {
-                    throw new ApplicationException("Polygon out of bounds");
+                    throw new ApplicationException("Circle out of bounds");
                 }
                 if (!$topAreaPolygon->pointInPolygon($areaCircleBounds->getNorthEast())) {
-                    throw new ApplicationException("Polygon out of bounds");
+                    throw new ApplicationException("Circle out of bounds");
                 }
             }
         } else if ($this->topArea->type == 'circle') {
@@ -218,7 +218,7 @@ class MapArea extends BaseFormWidget
                 $areaVertices = json_decode($area->boundaries['vertices']);
                 foreach($areaVertices as $areaVertex) {
                     if (!$topAreaCircle->pointInRadius(new Coordinates($areaVertex->lat, $areaVertex->lng))) {
-                        throw new ApplicationException("Circle polygon out of bounds");
+                        throw new ApplicationException("Polygon out of bounds");
                     }
                 }
             } else if ($area->type == 'circle') {
@@ -227,10 +227,10 @@ class MapArea extends BaseFormWidget
                     $areaCircleBoundaries->bounds->north,  $areaCircleBoundaries->bounds->east);
 
                 if (!$topAreaCircle->pointInRadius($areaCircleBounds->getSouthWest())) {
-                    throw new ApplicationException("Circle out of bounds south west", );
+                    throw new ApplicationException("Circle out of bounds", );
                 }
                 if (!$topAreaCircle->pointInRadius($areaCircleBounds->getNorthEast())) {
-                    throw new ApplicationException("Circle out of bounds north east");
+                    throw new ApplicationException("Circle out of bounds");
                 }
             }
         }
