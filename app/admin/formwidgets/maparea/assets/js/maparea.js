@@ -32,7 +32,7 @@
 
     MapArea.prototype.onModalShown = function (event, $modalEl) {
         var $typeInput = $modalEl.find('[data-toggle="map-shape"]'),
-        $checkedTypeInput = $modalEl.find('[data-toggle="map-shape"]:checked')
+            $checkedTypeInput = $modalEl.find('[data-toggle="map-shape"]:checked')
 
         this.$mapView = $modalEl.find('[data-control="map-view"]')
 
@@ -140,7 +140,6 @@
                 polygon = shapeData[shapeId].polygon,
                 vertices = shapeData[shapeId].vertices,
                 color = $modalForm.find('[data-map-shape]').data('color')
-
             $modalForm.find('[data-shape-value="color"]').val(color)
             $modalForm.find('[data-shape-value="circle"]').val(JSON.stringify(circle))
             $modalForm.find('[data-shape-value="polygon"]').val(polygon)

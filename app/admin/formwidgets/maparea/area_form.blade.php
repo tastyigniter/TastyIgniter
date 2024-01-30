@@ -16,6 +16,9 @@
         </div>
         <input type="hidden" name="areaId" value="{{ $formAreaId }}">
         <input type="hidden" data-map-shape {!! $this->getMapShapeAttributes($formWidget->model) !!}>
+        @if($this->isTopArea($formWidget->model))
+            <input type="hidden" data-map-shape {!! $this->getTopMapShapeAttributes() !!}>
+        @endif
         <div class="modal-body">
             <div class="form-fields p-0">
                 @foreach ($formWidget->getFields() as $field)

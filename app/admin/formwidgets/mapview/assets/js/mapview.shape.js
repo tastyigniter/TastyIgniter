@@ -79,7 +79,7 @@
             circleInfoWindow.setContent("<b>Radius: " + (Math.round(this.radius * (distanceUnit == 'mi' ? 0.621371 : 1)/100))/10 + distanceUnit + "</b>"); // set content
             circleInfoWindow.open(drawOptions.map, circleMarker); // open at marker's location
             circleMarker.setVisible(false); // hide the marker
-	    });
+        });
 
         google.maps.event.addListener(drawing, 'mouseout', function () {
             circleInfoWindow.close();
@@ -113,7 +113,7 @@
         var drawing = new google.maps.Polygon(drawOptions)
 
         google.maps.event.addListener(drawing.getPath(), 'insert_at', function () {
-            self.onEventTriggered('insert_at')
+            self.onEventTriggered('insert_at', e)
         })
 
         google.maps.event.addListener(drawing.getPath(), 'set_at', function () {
@@ -135,8 +135,8 @@
         drawing.addListener('mouseout', function () {
             self.onEventTriggered('mouseout')
         })
-        drawing.addListener('dragend', function () {
-            self.onEventTriggered('dragend')
+        drawing.addListener('dragend', function (e) {
+            self.onEventTriggered('dragend', e.latLng)
         })
 
         drawing.type = type
@@ -171,7 +171,7 @@
         if (!shapeObj) return
 
         shapeObj.setOptions({
-            editable: true,
+            editable: shapeObj.draggable,
             fillOpacity: this.drawOptions.fillOpacity * 4,
             zIndex: this.drawOptions.zIndex * 100
         })
@@ -384,6 +384,7 @@
                 break
             case 'drag':
                 this.$mapView.trigger('dragging.shape.ti.mapview', [visibleMapObject, this])
+                console.log("dem dey drag me o");
                 break
             case 'dragend':
                 this.$mapView.trigger('dragged.shape.ti.mapview', [visibleMapObject, this])
