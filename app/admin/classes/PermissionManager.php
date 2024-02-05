@@ -74,6 +74,10 @@ class PermissionManager
                 $grouped[$group] = [];
             }
 
+            if (isset($permission->group)) {
+                $permission->group = $group;
+            }
+
             $grouped[$group][] = $permission;
         }
 
