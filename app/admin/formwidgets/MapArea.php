@@ -89,7 +89,7 @@ class MapArea extends BaseFormWidget
         $this->areaColors = Location_areas_model::$areaColors;
 
         $fieldName = $this->formField->getName(false);
-        $this->sortableInputName = self::SORT_PREFIX . $fieldName;
+        $this->sortableInputName = self::SORT_PREFIX.$fieldName;
     }
 
     public function loadAssets()
@@ -162,7 +162,7 @@ class MapArea extends BaseFormWidget
 
         return $this->makePartial('maparea/area_form', [
             'formAreaId' => $areaId,
-            'formTitle' => ($model->exists ? $this->editLabel : $this->addLabel) . ' ' . lang($this->formName),
+            'formTitle' => ($model->exists ? $this->editLabel : $this->addLabel).' '.lang($this->formName),
             'formWidget' => $this->makeAreaFormWidget($model, 'edit')
         ]);
     }
@@ -176,23 +176,25 @@ class MapArea extends BaseFormWidget
         return null;
     }
 
-    public function isTopArea($area): bool {
+    public function isTopArea($area): bool
+    {
         return ($this->topArea == null) || ($this->topArea->area_id == $area->area_id);
     }
 
-    private function isAreaWithinTopAreaBoundaries($area): bool {
+    private function isAreaWithinTopAreaBoundaries($area): bool
+    {
         if ($this->isTopArea($area)) {
             return true;
         }
         $geolite = new Geolite();
         if ($this->topArea->type == 'polygon') {
-            $topAreaCoordinates = collect(json_decode($this->topArea->boundaries['vertices']))->map(function($coordinate) {
+            $topAreaCoordinates = collect(json_decode($this->topArea->boundaries['vertices']))->map(function ($coordinate) {
                 return [$coordinate->lat, $coordinate->lng];
             })->toArray();
             $topAreaPolygon = $geolite->polygon($topAreaCoordinates);
             if ($area->type == 'polygon') {
                 $areaVertices = json_decode($area->boundaries['vertices']);
-                foreach($areaVertices as $areaVertex) {
+                foreach ($areaVertices as $areaVertex) {
                     if (!$topAreaPolygon->pointInPolygon(new Coordinates($areaVertex->lat, $areaVertex->lng))) {
                         throw new ApplicationException("Polygon out of bounds");
                     }
@@ -200,7 +202,7 @@ class MapArea extends BaseFormWidget
             } else if ($area->type == 'circle') {
                 $areaCircleBoundaries = json_decode($area->boundaries['circle']);
                 $areaCircleBounds = new Bounds($areaCircleBoundaries->bounds->south, $areaCircleBoundaries->bounds->west,
-                    $areaCircleBoundaries->bounds->north,  $areaCircleBoundaries->bounds->east);
+                    $areaCircleBoundaries->bounds->north, $areaCircleBoundaries->bounds->east);
                 if (!$topAreaPolygon->pointInPolygon($areaCircleBounds->getSouthWest())) {
                     throw new ApplicationException("Circle out of bounds");
                 }
@@ -216,7 +218,7 @@ class MapArea extends BaseFormWidget
 
             if ($area->type == 'polygon') {
                 $areaVertices = json_decode($area->boundaries['vertices']);
-                foreach($areaVertices as $areaVertex) {
+                foreach ($areaVertices as $areaVertex) {
                     if (!$topAreaCircle->pointInRadius(new Coordinates($areaVertex->lat, $areaVertex->lng))) {
                         throw new ApplicationException("Polygon out of bounds");
                     }
@@ -224,10 +226,10 @@ class MapArea extends BaseFormWidget
             } else if ($area->type == 'circle') {
                 $areaCircleBoundaries = json_decode($area->boundaries['circle']);
                 $areaCircleBounds = new Bounds($areaCircleBoundaries->bounds->south, $areaCircleBoundaries->bounds->west,
-                    $areaCircleBoundaries->bounds->north,  $areaCircleBoundaries->bounds->east);
+                    $areaCircleBoundaries->bounds->north, $areaCircleBoundaries->bounds->east);
 
                 if (!$topAreaCircle->pointInRadius($areaCircleBounds->getSouthWest())) {
-                    throw new ApplicationException("Circle out of bounds", );
+                    throw new ApplicationException("Circle out of bounds",);
                 }
                 if (!$topAreaCircle->pointInRadius($areaCircleBounds->getNorthEast())) {
                     throw new ApplicationException("Circle out of bounds");
@@ -258,7 +260,7 @@ class MapArea extends BaseFormWidget
         });
 
         flash()->success(sprintf(lang('admin::lang.alert_success'),
-            'Area ' . ($form->context == 'create' ? 'created' : 'updated')
+            'Area '.($form->context == 'create' ? 'created' : 'updated')
         ))->now();
 
         $this->formField->value = null;
@@ -283,7 +285,7 @@ class MapArea extends BaseFormWidget
 
         $model->delete();
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName) . ' deleted'))->now();
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();
 
         $this->prepareVars();
 
@@ -292,22 +294,11 @@ class MapArea extends BaseFormWidget
         ];
     }
 
-    public function getMapShapeAttributes($area)
+    public function getMapAreaShapes($area)
     {
-        return $this->getAttributes($area);
-    }
-
-    public function getTopMapShapeAttributes()
-    {
-        return $this->getAttributes($this->getTopAreaModel(), true);
-    }
-
-    private function getAttributes($area, $isTop = false)
-    {
-
         $areaColor = $area->color;
 
-        $attributes = [
+        $attributes = collect([
             'data-id' => $area->area_id ?? 1,
             'data-name' => $area->name ?? '',
             'data-default' => $area->type ?? 'address',
@@ -320,12 +311,12 @@ class MapArea extends BaseFormWidget
                 'fillColor' => $areaColor,
                 'strokeColor' => $areaColor,
                 'distanceUnit' => setting('distance_unit'),
-                'draggable' => !$isTop,
-                'clickable' => !$isTop
             ]),
-        ];
+        ]);
 
-        return Html::attributes($attributes);
+        $this->fireSystemEvent('maparea.extendMapAreaShapes', [$area, $attributes]);
+
+        return $attributes;
     }
 
     protected function getMapAreas()
@@ -365,8 +356,8 @@ class MapArea extends BaseFormWidget
         $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $config['context'] = $context;
         $config['model'] = $model;
-        $config['alias'] = $this->alias . 'Form';
-        $config['arrayName'] = $this->formField->arrayName . '[areaData]';
+        $config['alias'] = $this->alias.'Form';
+        $config['arrayName'] = $this->formField->arrayName.'[areaData]';
 
         $widget = $this->makeWidget('Admin\Widgets\Form', $config);
         $widget->bindToController();

@@ -15,10 +15,9 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
         <input type="hidden" name="areaId" value="{{ $formAreaId }}">
-        <input type="hidden" data-map-shape {!! $this->getMapShapeAttributes($formWidget->model) !!}>
-        @if($this->getTopAreaModel() && ($this->getTopAreaModel()->area_id != $formWidget->model->area_id))
-            <input type="hidden" data-map-shape {!! $this->getTopMapShapeAttributes() !!}>
-        @endif
+        @foreach($this->getMapAreaShapes($formWidget->model) as $mapShape)
+            <input type="hidden" data-map-shape {!! Html::attributes($mapShape) !!}>
+        @endforeach
         <div class="modal-body">
             <div class="form-fields p-0">
                 @foreach ($formWidget->getFields() as $field)
@@ -28,13 +27,13 @@
         </div>
         <div class="modal-footer text-right">
             <button
-                type="button"
-                class="btn btn-link"
-                data-bs-dismiss="modal"
+                    type="button"
+                    class="btn btn-link"
+                    data-bs-dismiss="modal"
             >@lang('admin::lang.button_close')</button>
             <button
-                type="submit"
-                class="btn btn-primary"
+                    type="submit"
+                    class="btn btn-primary"
             >@lang('admin::lang.button_save')</button>
         </div>
     </div>
