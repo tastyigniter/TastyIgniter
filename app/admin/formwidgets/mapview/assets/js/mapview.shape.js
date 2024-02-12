@@ -384,7 +384,6 @@
                 break
             case 'drag':
                 this.$mapView.trigger('dragging.shape.ti.mapview', [visibleMapObject, this])
-                console.log("dem dey drag me o");
                 break
             case 'dragend':
                 this.$mapView.trigger('dragged.shape.ti.mapview', [visibleMapObject, this])

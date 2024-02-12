@@ -8,10 +8,6 @@ use Admin\Models\Location_areas_model;
 use Admin\Traits\FormModelWidget;
 use Admin\Traits\ValidatesForm;
 use Igniter\Flame\Exception\ApplicationException;
-use Igniter\Flame\Geolite\Geolite;
-use Igniter\Flame\Geolite\Model\Bounds;
-use Igniter\Flame\Geolite\Model\Coordinates;
-use Igniter\Flame\Html\HtmlFacade as Html;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -54,7 +50,6 @@ class MapArea extends BaseFormWidget
     protected $defaultAlias = 'maparea';
 
     protected $areaColors;
-    protected $topArea;
 
     protected $shapeDefaultProperties = [
         'id' => null,
@@ -85,11 +80,10 @@ class MapArea extends BaseFormWidget
             'deleteLabel',
             'sortable',
         ]);
-        $this->topArea = $this->getTopAreaModel();
         $this->areaColors = Location_areas_model::$areaColors;
 
         $fieldName = $this->formField->getName(false);
-        $this->sortableInputName = self::SORT_PREFIX.$fieldName;
+        $this->sortableInputName = self::SORT_PREFIX . $fieldName;
     }
 
     public function loadAssets()
@@ -162,81 +156,9 @@ class MapArea extends BaseFormWidget
 
         return $this->makePartial('maparea/area_form', [
             'formAreaId' => $areaId,
-            'formTitle' => ($model->exists ? $this->editLabel : $this->addLabel).' '.lang($this->formName),
+            'formTitle' => ($model->exists ? $this->editLabel : $this->addLabel) . ' ' . lang($this->formName),
             'formWidget' => $this->makeAreaFormWidget($model, 'edit')
         ]);
-    }
-
-    public function getTopAreaModel()
-    {
-        $mapAreas = collect($this->getMapAreas());
-        if ($mapAreas->count() > 1) {
-            return $mapAreas->sortBy('priority')->first();
-        }
-        return null;
-    }
-
-    public function isTopArea($area): bool
-    {
-        return ($this->topArea == null) || ($this->topArea->area_id == $area->area_id);
-    }
-
-    private function isAreaWithinTopAreaBoundaries($area): bool
-    {
-        if ($this->isTopArea($area)) {
-            return true;
-        }
-        $geolite = new Geolite();
-        if ($this->topArea->type == 'polygon') {
-            $topAreaCoordinates = collect(json_decode($this->topArea->boundaries['vertices']))->map(function ($coordinate) {
-                return [$coordinate->lat, $coordinate->lng];
-            })->toArray();
-            $topAreaPolygon = $geolite->polygon($topAreaCoordinates);
-            if ($area->type == 'polygon') {
-                $areaVertices = json_decode($area->boundaries['vertices']);
-                foreach ($areaVertices as $areaVertex) {
-                    if (!$topAreaPolygon->pointInPolygon(new Coordinates($areaVertex->lat, $areaVertex->lng))) {
-                        throw new ApplicationException("Polygon out of bounds");
-                    }
-                }
-            } else if ($area->type == 'circle') {
-                $areaCircleBoundaries = json_decode($area->boundaries['circle']);
-                $areaCircleBounds = new Bounds($areaCircleBoundaries->bounds->south, $areaCircleBoundaries->bounds->west,
-                    $areaCircleBoundaries->bounds->north, $areaCircleBoundaries->bounds->east);
-                if (!$topAreaPolygon->pointInPolygon($areaCircleBounds->getSouthWest())) {
-                    throw new ApplicationException("Circle out of bounds");
-                }
-                if (!$topAreaPolygon->pointInPolygon($areaCircleBounds->getNorthEast())) {
-                    throw new ApplicationException("Circle out of bounds");
-                }
-            }
-        } else if ($this->topArea->type == 'circle') {
-            $topAreaCircleBoundaries = json_decode($this->topArea->boundaries['circle']);
-            $topAreaCircle = $geolite->circle(
-                new Coordinates($topAreaCircleBoundaries->lat, $topAreaCircleBoundaries->lng),
-                $topAreaCircleBoundaries->radius);
-
-            if ($area->type == 'polygon') {
-                $areaVertices = json_decode($area->boundaries['vertices']);
-                foreach ($areaVertices as $areaVertex) {
-                    if (!$topAreaCircle->pointInRadius(new Coordinates($areaVertex->lat, $areaVertex->lng))) {
-                        throw new ApplicationException("Polygon out of bounds");
-                    }
-                }
-            } else if ($area->type == 'circle') {
-                $areaCircleBoundaries = json_decode($area->boundaries['circle']);
-                $areaCircleBounds = new Bounds($areaCircleBoundaries->bounds->south, $areaCircleBoundaries->bounds->west,
-                    $areaCircleBoundaries->bounds->north, $areaCircleBoundaries->bounds->east);
-
-                if (!$topAreaCircle->pointInRadius($areaCircleBounds->getSouthWest())) {
-                    throw new ApplicationException("Circle out of bounds",);
-                }
-                if (!$topAreaCircle->pointInRadius($areaCircleBounds->getNorthEast())) {
-                    throw new ApplicationException("Circle out of bounds");
-                }
-            }
-        }
-        return true;
     }
 
     public function onSaveRecord()
@@ -253,14 +175,13 @@ class MapArea extends BaseFormWidget
 
         DB::transaction(function () use ($modelsToSave) {
             foreach ($modelsToSave as $modelToSave) {
-                if ($this->isAreaWithinTopAreaBoundaries($modelToSave)) {
-                    $modelToSave->saveOrFail();
-                }
+                $this->fireSystemEvent('maparea.extraValidation', [$modelToSave]);
+                $modelToSave->saveOrFail();
             }
         });
 
         flash()->success(sprintf(lang('admin::lang.alert_success'),
-            'Area '.($form->context == 'create' ? 'created' : 'updated')
+            'Area ' . ($form->context == 'create' ? 'created' : 'updated')
         ))->now();
 
         $this->formField->value = null;
@@ -285,7 +206,7 @@ class MapArea extends BaseFormWidget
 
         $model->delete();
 
-        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName).' deleted'))->now();
+        flash()->success(sprintf(lang('admin::lang.alert_success'), lang($this->formName) . ' deleted'))->now();
 
         $this->prepareVars();
 
@@ -298,7 +219,7 @@ class MapArea extends BaseFormWidget
     {
         $areaColor = $area->color;
 
-        $attributes = collect([
+        $attributes = collect([[
             'data-id' => $area->area_id ?? 1,
             'data-name' => $area->name ?? '',
             'data-default' => $area->type ?? 'address',
@@ -312,7 +233,7 @@ class MapArea extends BaseFormWidget
                 'strokeColor' => $areaColor,
                 'distanceUnit' => setting('distance_unit'),
             ]),
-        ]);
+        ]]);
 
         $this->fireSystemEvent('maparea.extendMapAreaShapes', [$area, $attributes]);
 
@@ -356,8 +277,8 @@ class MapArea extends BaseFormWidget
         $config = is_string($this->form) ? $this->loadConfig($this->form, ['form'], 'form') : $this->form;
         $config['context'] = $context;
         $config['model'] = $model;
-        $config['alias'] = $this->alias.'Form';
-        $config['arrayName'] = $this->formField->arrayName.'[areaData]';
+        $config['alias'] = $this->alias . 'Form';
+        $config['arrayName'] = $this->formField->arrayName . '[areaData]';
 
         $widget = $this->makeWidget('Admin\Widgets\Form', $config);
         $widget->bindToController();

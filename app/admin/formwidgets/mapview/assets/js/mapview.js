@@ -234,7 +234,6 @@
         var shapeObj;
 
         shapeObj = this.getShape(shape);
-        console.log(shapeObj);
 
         if (!shapeObj)
             return
