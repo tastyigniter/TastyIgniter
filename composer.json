@@ -30,14 +30,14 @@
   "require": {
     "php": "^8.2",
     "tastyigniter/core": "dev-master",
-    "tastyigniter/ti-ext-api": "v4.x-dev as v4.0",
-    "tastyigniter/ti-ext-automation": "v4.x-dev as v4.0",
-    "tastyigniter/ti-ext-broadcast": "v4.x-dev as v4.0",
-    "tastyigniter/ti-ext-socialite": "v4.x-dev as v4.0",
-    "tastyigniter/ti-theme-orange": "v4.x-dev as v4.0"
+    "tastyigniter/ti-ext-api": "*",
+    "tastyigniter/ti-ext-automation": "*",
+    "tastyigniter/ti-ext-broadcast": "*",
+    "tastyigniter/ti-ext-socialite": "*",
+    "tastyigniter/ti-theme-orange": "*"
   },
   "require-dev": {
-    "tastyigniter/ti-ext-debugbar": "v4.x-dev as v4.0"
+    "tastyigniter/ti-ext-debugbar": "*"
   },
   "autoload": {
     "psr-4": {
