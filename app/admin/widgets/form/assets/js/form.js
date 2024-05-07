@@ -34,4 +34,4 @@ $(function () {
         $('[data-form-save-action]').attr('name', $selectedAction).attr('value', '1')
         Cookies.set('ti_activeFormSaveAction', JSON.stringify($selectedAction))
     })
-})
+});
