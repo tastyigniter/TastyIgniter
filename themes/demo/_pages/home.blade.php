@@ -16,7 +16,7 @@ permalink: /
             <p class="mb-4">Learn more on themes and extension, see the <a href="https://tastyigniter.com/docs/master/customize/themes">Themes documentation</a>.</p>
 
             <p class="mb-4 img-holder">
-                <img class="img-fluid rounded" src="https://tastyigniter.com/assets/ui/images/mockups/Menus-v2.png" alt="TastyIgniter Frontend">
+                <img class="img-fluid rounded" src="https://tastyigniter.com/images/mockups/Menus-v2.png" alt="TastyIgniter Frontend">
             </p>
         </div>
     </div>
