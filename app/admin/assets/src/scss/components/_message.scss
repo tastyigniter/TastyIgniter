@@ -1,27 +1,31 @@
 .message-folders {
-    min-height: 100%;
+  min-height: 100%;
 
-    .panel-header {
-        padding: 15px;
-        background-color: $table-head-bg;
-        border-bottom: (2 * $table-border-width) solid $table-border-color;
-    }
+  .panel-header {
+    padding: 15px;
+    background-color: $table-head-bg;
+    border-bottom: calc(2 * var(--bs-border-width)) solid $table-border-color;
+  }
 }
+
 .message.unread a {
-	font-weight: 500;
+  font-weight: 500;
 }
+
 .conversation-heading {
-	padding: 15px 20px;
-	background-color: $gray-200;
-	border-bottom: 1px solid $gray-300;
+  padding: 15px 20px;
+  background-color: $gray-200;
+  border-bottom: 1px solid $gray-300;
 }
+
 .conversation-message {
-	border-radius: 0;
-	margin-bottom: 0;
-	background-color: $light;
+  border-radius: 0;
+  margin-bottom: 0;
+  background-color: $light;
 }
+
 .conversation-message-heading {
-	background-color: $gray-200;
-	border-bottom: 1px solid $gray-300;
-	padding: 10px 20px;
+  background-color: $gray-200;
+  border-bottom: 1px solid $gray-300;
+  padding: 10px 20px;
 }
