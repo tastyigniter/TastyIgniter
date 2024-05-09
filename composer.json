@@ -33,11 +33,11 @@
     "tastyigniter/ti-ext-api": "*",
     "tastyigniter/ti-ext-automation": "*",
     "tastyigniter/ti-ext-broadcast": "*",
-    "tastyigniter/ti-ext-socialite": "*",
-    "tastyigniter/ti-theme-orange": "*"
+    "tastyigniter/ti-ext-socialite": "v4.x-dev as 4.0",
+    "tastyigniter/ti-theme-orange": "v4.x-dev as 4.0"
   },
   "require-dev": {
-    "tastyigniter/ti-ext-debugbar": "*"
+    "tastyigniter/ti-ext-debugbar": "v4.x-dev as 4.0"
   },
   "autoload": {
     "psr-4": {
