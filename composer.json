@@ -31,12 +31,7 @@
     "php": "^8.2",
     "laravel/framework": "^11.9",
     "laravel/tinker": "^2.9",
-    "tastyigniter/core": "dev-master",
-    "tastyigniter/ti-ext-api": "*",
-    "tastyigniter/ti-ext-automation": "*",
-    "tastyigniter/ti-ext-broadcast": "*",
-    "tastyigniter/ti-ext-socialite": "v4.x-dev as 4.0",
-    "tastyigniter/ti-theme-orange": "v4.x-dev as 4.0"
+    "tastyigniter/core": "dev-master"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",
@@ -44,8 +39,7 @@
     "laravel/sail": "^1.26",
     "mockery/mockery": "^1.6",
     "nunomaduro/collision": "^8.0",
-    "phpunit/phpunit": "^11.0.1",
-    "tastyigniter/ti-ext-debugbar": "v4.x-dev as 4.0"
+    "phpunit/phpunit": "^11.0.1"
   },
   "autoload": {
     "psr-4": {
@@ -86,6 +80,7 @@
     "preferred-install": "dist",
     "sort-packages": true,
     "allow-plugins": {
+      "composer/installers": true,
       "pestphp/pest-plugin": true,
       "php-http/discovery": true
     }

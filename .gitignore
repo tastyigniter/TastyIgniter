@@ -12,3 +12,5 @@ composer.lock
 node_modules
 
 /public/vendor
+/lang
+/storage/clockwork
