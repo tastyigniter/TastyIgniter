@@ -99,12 +99,12 @@ class MapArea extends BaseFormWidget
         $this->addJs('js/maparea.js', 'maparea-js');
 
         // Make the mapview assets available (if api-key appears valid)
-        if( strlen(setting('maps_api_key'))>35 ){
+        if(strlen(setting('maps_api_key')) > 35){
             $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry,places';
             $this->addJs(sprintf($url, setting('maps_api_key')),
                 ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
                 );
-        }            
+        }
 
         $this->addJs('../../mapview/assets/js/mapview.js', 'mapview-js');
         $this->addJs('../../mapview/assets/js/mapview.shape.js', 'mapview-shape-js');
