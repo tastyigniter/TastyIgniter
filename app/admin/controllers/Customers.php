@@ -58,6 +58,15 @@ class Customers extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('customers', 'users');
+        
+        // auto-complete for filling in street info
+        if( strlen(setting('maps_api_key'))>35 ){
+            $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=places';
+            $this->addJs(sprintf($url, setting('maps_api_key')),
+                ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
+                );
+            $this->addJs('/assets/static/autocomplete.js', 'autocomplete-js');
+        }
     }
 
     public function onImpersonate($context, $recordId = null)

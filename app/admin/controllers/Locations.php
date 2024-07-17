@@ -59,6 +59,10 @@ class Locations extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('locations', 'restaurant');
+
+        // auto-complete for filling in street info (only if google-maps key avail)
+        if( strlen(setting('maps_api_key'))>35 )
+            $this->addJs('/assets/static/autocomplete.js', 'autocomplete-js');
     }
 
     public function remap($action, $params)
