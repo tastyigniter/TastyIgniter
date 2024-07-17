@@ -42,7 +42,7 @@ class MapView extends BaseFormWidget
     public function loadAssets()
     {
         if (strlen($key = setting('maps_api_key'))) {
-            $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry';
+            $url = 'https://maps.googleapis.com/maps/api/js?key=%s&libraries=geometry,places';
             $this->addJs(sprintf($url, $key),
                 ['name' => 'google-maps-js', 'async' => null, 'defer' => null]
             );

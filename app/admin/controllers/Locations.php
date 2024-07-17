@@ -59,6 +59,9 @@ class Locations extends \Admin\Classes\AdminController
         parent::__construct();
 
         AdminMenu::setContext('locations', 'restaurant');
+
+        // auto-complete for filling in street info
+        $this->addJs('/assets/static/autocomplete.js', 'autocomplete-js');
     }
 
     public function remap($action, $params)
