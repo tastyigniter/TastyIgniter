@@ -369,7 +369,8 @@ class ExtensionManager
         $class = $namespace.'Extension';
 
         if (!class_exists($class)) {
-            throw new SystemException("Missing Extension class '{$class}' in '{$identifier}', create the Extension class to override extensionMeta() method.");
+		return false;
+		// throw new SystemException("Missing Extension class '{$class}' in '{$identifier}', create the Extension class to override extensionMeta() method.");
         }
 
         $classObj = new $class($this->app);
