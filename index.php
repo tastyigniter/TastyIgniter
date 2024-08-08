@@ -7,6 +7,9 @@
  * @author   Samuel Adepoyigi
  */
 
+// Require HTTPS:// calls when loading pages (GET calls)
+require __DIR__.'/bootstrap/https.php';
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto ClassLoader
