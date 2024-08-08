@@ -1,6 +1,6 @@
 /********************************
  * Written by Filipe Laborde / fil@rezox.com
- * version 1.0, June-2024
+ * version 1.1, June-2024
  * 
  * Painless auto-complete form for TastyIgniter to auto-complete address locations
  * 
@@ -16,12 +16,12 @@ function _getElement( field,type='id' ){
 // function to attach google autocomplete to some html element (and fill it's associated form fields)
 function attachAutocomplete( input, type='id', namePrefix='' ) {
     if( !google || !google.maps || !google.maps.places ){
-      console.log( `[autocomplete-js] GoogleMaps 'places' library not loaded, aborting.` );
+      console.log( `[autocomplete-js] v1.1: GoogleMaps 'places' library not loaded, aborting.` );
       if(intervalAutocomplete) clearInterval(intervalAutocomplete);
       intervalAutocomplete = null;
       return false;
     }
-    console.log( `[autocomplete-js] attaching(${type=='id'?'id='+input.id:'name='+input.name})`);
+    console.log( `[autocomplete-js] v1.1: attaching(${type=='id'?'id='+input.id:'name='+input.name})`);
 
     try {
       const autocomplete = new google.maps.places.Autocomplete(input);
@@ -43,8 +43,8 @@ function attachAutocomplete( input, type='id', namePrefix='' ) {
           country: '',
           postcode: '',
           locationId: place.place_id,
-          latitude: place.geometry.location.lat(),
-          longitude: place.geometry.location.lng()
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng()
         };
 
         // decode google's info block to an addressDetails block we can map to form fields
@@ -72,10 +72,17 @@ function attachAutocomplete( input, type='id', namePrefix='' ) {
           }
         });
         // console.log( ` .. extracted from google addressComponents: `, addressComponents ) // if debugging see Google's fields here
+        
+        // disable auto-lat-long
+        const elAutoLL = document.getElementById('form-field-location-options-auto-lat-lng')
+        if( elAutoLL && elAutoLL.checked ){
+          console.log( `[autocomplete-js] auto lat-long was enabled, disabling.` );
+          elAutoLL.click();
+        }
 
         // fill in details on the form
         input.value = addressDetails.street;
-        ['city','state','postcode'].forEach( name=>{
+        ['city','state','postcode','lat','lng'].forEach( name=>{
           const el = _getElement(namePrefix+name,type); // type=='id' ? document.getElementById(namePrefix+name) : document.getElementByName(namePrefix+name+']');
           if( el ){
             console.log( `[autocomplete-js] field[${type=='id'?'id='+el.id:'name='+el.name}]='${addressDetails[name]}'` );
@@ -84,7 +91,7 @@ function attachAutocomplete( input, type='id', namePrefix='' ) {
             console.log( `[autocomplete-js] invalid element for ${name}!`)
           }
         })
-        
+
         const elSelect = type=='id' && namePrefix=='' && document.getElementById('country') ? document.getElementById('country') :
                         _getElement(namePrefix+'country-id',type)
         if( elSelect ){
@@ -99,7 +106,7 @@ function attachAutocomplete( input, type='id', namePrefix='' ) {
             }
         }
 
-        console.log( `[autocomplete-js] Autocomplete finished; Location: ${addressDetails.latitude},${addressDetails.longitude}` );
+        console.log( `[autocomplete-js] Autocomplete finished; Location: id#${addressDetails.locationId}; (${addressDetails.lat},${addressDetails.lng})` );
       });
     } catch( e ){
       console.log( `[autocomplete-js] Problem with autocomplete:`, e );
