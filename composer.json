@@ -31,7 +31,7 @@
     "php": "^8.2",
     "laravel/framework": "^11.9",
     "laravel/tinker": "^2.9",
-    "tastyigniter/core": "dev-master"
+    "tastyigniter/core": "^v4.0@beta"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",
