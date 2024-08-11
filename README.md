@@ -57,7 +57,7 @@ these awesome [backers](#contributing). If you'd like to help support the future
 
 ## Sponsors
 
-Become a sponsor and get your logo on our README on Github with a link to your site.
+Become a sponsor and get your logo on our README on GitHub with a link to your site.
 
 ### via Open Collective
 
@@ -72,7 +72,7 @@ Become a sponsor and get your logo on our README on Github with a link to your s
 ## Built With :heart:
 
 - Laravel full-stack PHP framework
-- Bootstrap 4 front-end framework
+- Bootstrap 5 front-end framework
 
 ## Author
 
