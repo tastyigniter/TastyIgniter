@@ -1,6 +1,6 @@
 {
   "name": "tastyigniter/tastyigniter",
-  "description": "TastyIgniter is a free open source online ordering and restaurant management system",
+  "description": "Seamless platform for modern restaurants",
   "type": "project",
   "keywords": [
     "tastyigniter",
@@ -23,19 +23,23 @@
     "paid": "https://tastyigniter.com/premium-support",
     "issues": "https://github.com/tastyigniter/TastyIgniter/issues",
     "forum": "https://forum.tastyigniter.com",
-    "discord": "https/tastyigniter.com/discord",
+    "discord": "https/tastyigniter.com/chat",
     "docs": "https://tastyigniter.com/docs",
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://satis.tastyigniter.com"
-    }
-  ],
   "require": {
-    "php": "^8.0",
-    "tastyigniter/flame": "~2.0"
+    "php": "^8.2",
+    "laravel/framework": "^11.9",
+    "laravel/tinker": "^2.9",
+    "tastyigniter/core": "^v4.0@beta"
+  },
+  "require-dev": {
+    "fakerphp/faker": "^1.23",
+    "laravel/pint": "^1.13",
+    "laravel/sail": "^1.26",
+    "mockery/mockery": "^1.6",
+    "nunomaduro/collision": "^8.0",
+    "phpunit/phpunit": "^11.0.1"
   },
   "autoload": {
     "psr-4": {
@@ -52,11 +56,10 @@
   "scripts": {
     "post-autoload-dump": [
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-      "@php artisan package:discover --ansi",
-      "@php artisan igniter:package-discover --ansi"
+      "@php artisan package:discover --ansi"
     ],
     "post-update-cmd": [
-      "@php artisan vendor:publish --tag=igniter-assets --ansi --force"
+      "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -75,6 +78,11 @@
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/installers": true,
+      "pestphp/pest-plugin": true,
+      "php-http/discovery": true
+    }
   }
 }

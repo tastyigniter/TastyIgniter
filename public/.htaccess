@@ -1,9 +1,17 @@
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
+        # Options +FollowSymlinks
     </IfModule>
 
+    ## Turn on URL rewriting
+    ##
     RewriteEngine On
+
+    ## !IMPORTANT! You may need to uncomment the following line for some hosting environments,
+    ## If your installation resides in a subdirectory, enter the name here also
+    ##
+    # RewriteBase /
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
