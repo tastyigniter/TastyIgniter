@@ -28,7 +28,7 @@ class Country
 
     protected $countriesCollection = [];
 
-    public function addressFormat($address, $useLineBreaks = true)
+    public function addressFormat($address, $useLineBreaks = true, $useDefaultFormat = false)
     {
         $format = $this->getDefaultFormat();
 
@@ -37,6 +37,9 @@ class Country
         // Override format if present in address array
         if (!empty($address['format']))
             $format = $address['format'];
+
+        if ($useDefaultFormat)
+            $format = $this->defaultFormat;
 
         $formattedAddress = str_replace(['\r\n', '\r', '\n'], '<br />',
             preg_replace(['/\s\s+/', '/\r\r+/', '/\n\n+/'], '<br />',
@@ -110,8 +113,7 @@ class Country
         foreach ($this->requiredAddressKeys as $key) {
             if ($key == 'country') {
                 $this->processCountryValue($address[$key], $result);
-            }
-            else {
+            } else {
                 $result[$key] = $address[$key] ?? '';
             }
         }
@@ -124,8 +126,7 @@ class Country
         if (!is_string($country) && isset($country['country_name'])) {
             $result['country'] = $country['country_name'];
             $result['format'] = $country['format'];
-        }
-        elseif (is_numeric($country)) {
+        } elseif (is_numeric($country)) {
             $this->loadCountries();
 
             if ($countryModel = $this->countriesCollection->find($country)) {
