@@ -74,7 +74,7 @@
     }
   },
   "minimum-stability": "dev",
-  "prefer-stable": true,
+  "prefer-stable": false,
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
