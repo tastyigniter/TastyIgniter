@@ -145,14 +145,12 @@ class IgniterInstall extends Command
         DatabaseSeeder::$siteUrl = $this->ask('Site URL', Config::get('app.url'));
 
         DatabaseSeeder::$seedDemo = $this->confirm('Install demo data?', DatabaseSeeder::$seedDemo);
-
-        DatabaseSeeder::$siteEmail = $this->ask('Admin Email', DatabaseSeeder::$siteEmail);
-        DatabaseSeeder::$staffName = $this->ask('Admin Name', DatabaseSeeder::$staffName);
     }
 
     protected function createSuperUser()
     {
-        $email = $this->output->ask('Admin Email', DatabaseSeeder::$siteEmail, function ($answer) {
+        $staffName = $this->ask('Admin Name', DatabaseSeeder::$staffName);
+        $email = $this->output->ask('Admin Email', DatabaseSeeder::$siteEmail, function($answer) {
             if (Staffs_model::whereStaffEmail($answer)->first()) {
                 throw new \RuntimeException('An administrator with that email already exists, please choose a different email.');
             }
@@ -160,7 +158,7 @@ class IgniterInstall extends Command
             return $answer;
         });
 
-        $username = $this->output->ask('Admin Username', 'admin', function ($answer) {
+        $username = $this->output->ask('Admin Username', 'admin', function($answer) {
             if (Users_model::whereUsername($answer)->first()) {
                 throw new \RuntimeException('An administrator with that username already exists, please choose a different username.');
             }
@@ -168,7 +166,7 @@ class IgniterInstall extends Command
             return $answer;
         });
 
-        $password = $this->output->ask('Admin Password', '123456', function ($answer) {
+        $password = $this->output->ask('Admin Password', '123456', function($answer) {
             if (!is_string($answer) || strlen($answer) < 6 || strlen($answer) > 32) {
                 throw new \RuntimeException('Please specify the administrator password, at least 6 characters and not more than 32 characters.');
             }
@@ -178,7 +176,7 @@ class IgniterInstall extends Command
 
         $user = AdminAuth::register([
             'staff_email' => $email,
-            'staff_name' => DatabaseSeeder::$staffName,
+            'staff_name' => $staffName,
             'language_id' => Languages_model::first()->language_id,
             'staff_role_id' => Staff_roles_model::first()->staff_role_id,
             'staff_status' => true,

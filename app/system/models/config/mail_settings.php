@@ -50,18 +50,6 @@ return [
                 'comment' => 'lang:system::lang.settings.help_mail_logo',
             ],
 
-            'sendmail_path' => [
-                'label' => 'lang:system::lang.settings.label_sendmail_path',
-                'comment' => 'lang:system::lang.settings.help_sendmail_path',
-                'type' => 'text',
-                'default' => '/usr/sbin/sendmail -bs',
-                'trigger' => [
-                    'action' => 'show',
-                    'field' => 'protocol',
-                    'condition' => 'value[sendmail]',
-                ],
-            ],
-
             'smtp_host' => [
                 'label' => 'lang:system::lang.settings.label_smtp_host',
                 'type' => 'text',

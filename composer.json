@@ -60,7 +60,8 @@
   },
   "config": {
     "allow-plugins": {
-      "composer/installers": true
+      "composer/installers": true,
+      "wikimedia/composer-merge-plugin": true
     }
   }
 }

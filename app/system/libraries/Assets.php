@@ -249,6 +249,10 @@ class Assets
         if (File::isPathSymbol($name))
             return File::symbolizePath($name);
 
+        // Resolve temporarily open_basedir issue https://github.com/tastyigniter/TastyIgniter/pull/1061
+        if (File::isFile('.'.$name))
+            return '.'.$name;
+
         if (File::isFile($name))
             return $name;
 

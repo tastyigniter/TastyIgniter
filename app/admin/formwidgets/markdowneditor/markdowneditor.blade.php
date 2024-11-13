@@ -12,6 +12,6 @@
             rows="20"
             class="form-control"
             {!! $this->previewMode ? 'disabled="disabled"' : '' !!}
-        >{!! $value !!}</textarea>
+        >{{$value}}</textarea>
     </div>
 @endif

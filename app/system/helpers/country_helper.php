@@ -5,9 +5,9 @@
  */
 if (!function_exists('format_address')) {
 
-    function format_address($address, $useLineBreaks = true)
+    function format_address($address, $useLineBreaks = true, $useDefaultFormat = false)
     {
-        return Country::addressFormat($address, $useLineBreaks);
+        return Country::addressFormat($address, $useLineBreaks, $useDefaultFormat);
     }
 }
 

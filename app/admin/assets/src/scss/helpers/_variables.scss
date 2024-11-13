@@ -38,8 +38,8 @@ $theme-colors: map-merge((
 //
 $enable-shadows: true !default;
 $enable-negative-margins: true !default;
-$images-path: '../../../admin/assets/images/';
-$icon-font-path: '../../../admin/assets/fonts/';
+$images-path: '/app/admin/assets/images/';
+$icon-font-path: '/app/admin/assets/fonts/';
 $fa-font-path: $icon-font-path+'FontAwesome';
 // Body
 //
