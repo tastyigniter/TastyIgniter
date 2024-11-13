@@ -102,7 +102,6 @@ $config['list']['columns'] = [
         'label' => 'lang:admin::lang.reservations.column_table',
         'type' => 'partial',
         'path' => 'reservations/form/table_name_column',
-        'searchable' => true,
     ],
     'status_name' => [
         'label' => 'lang:admin::lang.label_status',
