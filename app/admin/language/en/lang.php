@@ -533,11 +533,13 @@ return [
         'label_priority' => 'Priority',
         'label_table_shape' => 'Table Shape',
         'label_is_enabled' => 'Reservable',
+        'label_stay_time' => 'Stay Time',
 
         'help_tables' => 'Select a table to attach to this location.',
         'help_extra_capacity' => 'Extra capacity is used internally by the staff to determine table convenience/inconvenience.',
         'help_table_priority' => 'High priority tables will be reserved before low priority tables. With 10 being the highest priority, 0 being the lowest priority.',
         'help_table_shape' => 'Select a shape to represent the table on the floor plan.',
+        'help_stay_time' => 'The maximum time in minutes a customer can stay at this table. Leave empty to use the default stay time.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
         'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
@@ -1139,33 +1141,5 @@ return [
 
         'help_is_tracked' => 'When enabled, ordered menu and/or options quantities are automatically subtracted.',
         'help_low_stock_alert' => 'Enable automated low stock alerts so that you receive emails when the stock quantity falls below or equals the specified threshold.',
-    ],
-
-    'tables' => [
-        'text_title' => 'Tables',
-        'text_form_name' => 'Table',
-        'text_empty' => 'There are no tables available.',
-        'text_filter_search' => 'Search by name or capacity.',
-
-        'column_min_capacity' => 'Minimum Capacity',
-        'column_capacity' => 'Maximum Capacity',
-        'column_extra_capacity' => 'Extra Capacity',
-        'column_priority' => 'Priority',
-        'column_joinable' => 'Is Joinable',
-
-        'label_min_capacity' => 'Minimum Capacity',
-        'label_capacity' => 'Maximum Capacity',
-        'label_extra_capacity' => 'Extra Capacity',
-        'label_priority' => 'Priority',
-        'label_joinable' => 'Is Joinable',
-        'label_stay_time' => 'Stay Time',
-
-        'help_tables' => 'Select a table to attach to this location.',
-        'help_extra_capacity' => 'Used internally by the staff to determine table convenience/inconvenience.',
-        'help_stay_time' => 'The maximum time in minutes a customer can stay at this table. Leave empty to use the default stay time.',
-
-        'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
-        'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
-        'error_table_widget_data_class_not_found' => 'The Table widget data source class "%s" could not be found.',
     ],
 ];
