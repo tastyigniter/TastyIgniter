@@ -56,13 +56,13 @@ class Table extends BaseWidget
 
         $dataSourceClass = $this->getConfig('dataSource');
         if (!strlen($dataSourceClass)) {
-            throw new Exception(lang('admin::lang.tables.error_table_widget_data_not_specified'));
+            throw new Exception(lang('admin::lang.alert_table_widget_data_not_specified'));
         }
 
         $dataSourceClass = $this->dataSourceAliases;
 
         if (!class_exists($dataSourceClass)) {
-            throw new Exception(sprintf(lang('admin::lang.tables.error_table_widget_data_class_not_found'), $dataSourceClass));
+            throw new Exception(sprintf(lang('admin::lang.alert_table_widget_data_class_not_found'), $dataSourceClass));
         }
 
         $this->dataSource = new $dataSourceClass($this->recordsKeyFrom);
@@ -70,8 +70,7 @@ class Table extends BaseWidget
         if (Request::method() == 'post' && $this->isClientDataSource()) {
             if (strpos($this->fieldName, '[') === false) {
                 $requestDataField = $this->fieldName.'TableData';
-            }
-            else {
+            } else {
                 $requestDataField = $this->fieldName.'[TableData]';
             }
 
