@@ -106,6 +106,8 @@ return [
     'alert_invalid_ajax_handler_name' => 'Invalid ajax handler name: %s',
     'alert_invalid_ajax_partial_name' => 'Invalid partial name: %s',
     'alert_widget_not_bound_to_controller' => "A widget with class name '%s' has not been bound to the controller",
+    'alert_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
+    'alert_table_widget_data_class_not_found' => 'The Table widget data source class "%s" could not be found.',
     'alert_user_not_logged' => 'User is not logged in',
     'alert_access_denied' => 'Access denied.',
     'alert_invalid_csrf_token' => 'Invalid security token, please reload the page and try again.',
@@ -542,8 +544,6 @@ return [
         'help_stay_time' => 'The maximum time in minutes a customer can stay at this table. Leave empty to use the default stay time.',
 
         'error_capacity' => 'The Maximum capacity value must be greater than minimum capacity value.',
-        'error_table_widget_data_not_specified' => 'The Table widget data source is not specified in the configuration.',
-        'error_table_widget_data_class_not_found' => 'The Table widget data source class "%s" could not be found.',
         'error_cannot_delete_has_parent' => 'Cannot delete this table, it belongs to a combo',
         'error_cannot_delete_has_children' => 'Cannot delete this table, it has tables combined to it',
     ],
