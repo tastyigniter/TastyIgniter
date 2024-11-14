@@ -96,8 +96,8 @@
         this.$mapView.css('height', this.options.mapHeight)
 
         var mapCenter = new google.maps.LatLng(
-            parseFloat(this.options.mapCenter.lat),
-            parseFloat(this.options.mapCenter.lng)
+                parseFloat(this.options.mapCenter.lat),
+                parseFloat(this.options.mapCenter.lng)
             ),
             mapOptions = {
                 zoom: this.options.mapZoom,
