@@ -8,6 +8,7 @@
 <a href="https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square" alt="License"></a>
 <a href="https://crowdin.com/project/tastyigniter"><img src="https://badges.crowdin.net/tastyigniter/localized.svg" alt="Crowdin"></a>
 <a href="https://twitter.com/TastyIgniter"><img src="https://img.shields.io/twitter/follow/TastyIgniter.svg?label=Follow" alt="Twitter"></a>
+<a href="https://gurubase.io/g/tastyigniter"><img src="https://img.shields.io/badge/Gurubase-Ask%20TastyIgniter%20Guru-006BFF" alt="Gurubase"></a>
 </p>
 
 [TastyIgniter](https://tastyigniter.com/) provides a professional and reliable platform for restaurants wanting to offer
