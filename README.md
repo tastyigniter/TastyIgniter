@@ -10,7 +10,7 @@
 <a href="https://twitter.com/TastyIgniter"><img src="https://img.shields.io/twitter/follow/TastyIgniter.svg?label=Follow" alt="Twitter"></a>
 </p>
 
-[Tastival](https://github.com/your-username/tastival) provides a professional and reliable platform for restaurants wanting to offer
+[Tastival](https://github.com/mkesim/tastival) provides a professional and reliable platform for restaurants wanting to offer
 online food ordering and table reservation to their customers.
 
 ![screenshot](https://tastyigniter.com/images/mockups/Menus-v2.png)
