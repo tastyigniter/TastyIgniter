@@ -23,13 +23,15 @@ trait SendsMailTemplate
 
     public function mailSend($view, $recipientType = null)
     {
-        $vars = $this->mailGetData();
-
-        $result = $this->fireEvent('model.mailGetData', [$view, $recipientType]);
-        if ($result && is_array($result))
-            $vars = array_merge(...$result) + $vars;
-
-        Mail::queue($view, $vars, $this->mailBuildMessage($recipientType));
+        if(!empty($recipientType) && !empty($this->mailGetRecipients($recipientType))) {
+            $vars = $this->mailGetData();
+            
+            $result = $this->fireEvent('model.mailGetData', [$view, $recipientType]);
+            if ($result && is_array($result))
+                $vars = array_merge(...$result) + $vars;
+            
+            Mail::queue($view, $vars, $this->mailBuildMessage($recipientType));
+        }        
     }
 
     protected function mailBuildMessage($recipientType = null)
