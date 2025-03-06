@@ -4,8 +4,8 @@
 <a href="https://packagist.org/packages/tastyigniter/TastyIgniter"><img src="https://img.shields.io/packagist/v/tastyigniter/TastyIgniter.svg?label=Stable&style=flat-square" alt="Stable"></a>
 <a href="https://packagist.org/packages/tastyigniter/TastyIgniter"><img src="https://poser.pugx.org/tastyigniter/flame/downloads" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/tastyigniter/TastyIgniter"><img src="https://img.shields.io/github/actions/workflow/status/tastyigniter/TastyIgniter/tests.yml?branch=master&label=Tests" alt="GitHub Workflow Status"></a>
-<a href="https://github.styleci.io/repos/16455664"><img src="https://github.styleci.io/repos/7548986/shield?style=flat" alt="Build Status"></a>
 <a href="https://github.com/tastyigniter/TastyIgniter/blob/master/LICENSE.txt"><img src="https://img.shields.io/github/license/tastyigniter/TastyIgniter.svg?label=License&style=flat-square" alt="License"></a>
+<a href="https://github.com/tastyigniter/TastyIgniter" title="PHP Versions Supported"><img alt="PHP Versions Supported" src="https://img.shields.io/badge/php-8.3%20to%208.4-777bb3.svg?logo=php&logoColor=white&labelColor=555555"></a>
 <a href="https://crowdin.com/project/tastyigniter"><img src="https://badges.crowdin.net/tastyigniter/localized.svg" alt="Crowdin"></a>
 <a href="https://twitter.com/TastyIgniter"><img src="https://img.shields.io/twitter/follow/TastyIgniter.svg?label=Follow" alt="Twitter"></a>
 </p>
