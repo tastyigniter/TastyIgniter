@@ -11,7 +11,9 @@
 |
 */
 
-$app = new Igniter\Flame\Foundation\Application(dirname(__DIR__));
+$app = new Illuminate\Foundation\Application(
+    $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -26,17 +28,17 @@ $app = new Igniter\Flame\Foundation\Application(dirname(__DIR__));
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
-    Igniter\Flame\Foundation\Http\Kernel::class
+    App\Http\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
-    Igniter\Flame\Foundation\Console\Kernel::class
+    App\Console\Kernel::class
 );
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    Igniter\Flame\Foundation\Exceptions\Handler::class
+    App\Exceptions\Handler::class
 );
 
 /*

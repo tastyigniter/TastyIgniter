@@ -17,9 +17,6 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
-        $app['cache']->setDefaultDriver('array');
-        $app->setLocale('en');
-
         return $app;
     }
 }

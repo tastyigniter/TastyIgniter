@@ -1,1 +1,0 @@
-{!! $this->makeFormFieldWidget($field)->render() !!}
