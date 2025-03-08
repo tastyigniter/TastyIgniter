@@ -12,7 +12,7 @@
 [TastyIgniter](https://tastyigniter.com/) provides a professional and reliable platform for restaurants wanting to offer
 online food ordering and table reservation to their customers.
 
-![screenshot](https://tastyigniter.com/images/mockups/Menus-v2.png)
+![screenshot](https://tastyigniter.com/images/mockups/v4/Menus.png)
 
 ### Documentation
 The best place to learn TastyIgniter is by reading the [documentation](https://tastyigniter.com/docs)
