@@ -1,0 +1,22 @@
+{
+  "name": "tastyigniter/ti-ext-demo",
+  "type": "tastyigniter-package",
+  "description": "Provides block component for demonstration",
+  "license": "MIT",
+  "extra": {
+    "tastyigniter-extension": {
+      "code": "igniter.demo",
+      "name": "Demo Extension",
+      "icon": {
+        "class": "fa fa-plug",
+        "color": "#fff",
+        "backgroundColor": "#000"
+      }
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Igniter\\Demo\\": "/"
+    }
+  }
+}

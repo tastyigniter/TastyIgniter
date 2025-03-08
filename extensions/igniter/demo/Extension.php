@@ -6,7 +6,7 @@ use Igniter\System\Classes\BaseExtension;
 
 class Extension extends BaseExtension
 {
-    public function registerComponents()
+    public function registerComponents(): array
     {
         return [
             \Igniter\Demo\Components\Block::class => [
