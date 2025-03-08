@@ -19,12 +19,12 @@ description: Default layout
 </header>
 
 <div id="page-wrapper" class="pt-4">
-    @page
+    @themePage
 </div>
 
 <footer id="page-footer mt-auto">
     @themePartial('footer')
 </footer>
-@scripts
+@themeScripts
 </body>
 </html>
