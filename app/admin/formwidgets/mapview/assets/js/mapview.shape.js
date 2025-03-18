@@ -398,6 +398,7 @@
         editable: false,
         visible: false,
         draggable: true,
+        savable: true,
         strokeColor: '#F16745',
         fillColor: '#F16745',
         strokeOpacity: 0.8,
