@@ -107,12 +107,12 @@ class Reservations extends \Admin\Classes\AdminController
         return $this->redirectBack();
     }
 
-    public function edit_onDelete()
+    public function edit_onDelete($context, $recordId)
     {
         if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
-        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete();
+        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete($context, $recordId);
     }
 
     public function calendarGenerateEvents($startAt, $endAt)
