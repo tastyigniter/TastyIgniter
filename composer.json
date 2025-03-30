@@ -27,12 +27,12 @@
     "docs": "https://tastyigniter.com/docs",
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
-  "repositories": [
-    {
+  "repositories": {
+    "tastyigniter": {
       "type": "composer",
       "url": "https://satis.tastyigniter.com"
     }
-  ],
+  },
   "require": {
     "php": "^8.3",
     "laravel/framework": "^11.0",
