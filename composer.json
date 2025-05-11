@@ -27,12 +27,12 @@
     "docs": "https://tastyigniter.com/docs",
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
-  "repositories": [
-    {
+  "repositories": {
+    "tastyigniter": {
       "type": "composer",
       "url": "https://satis.tastyigniter.com"
     }
-  ],
+  },
   "require": {
     "php": "^8.3",
     "laravel/framework": "^11.0",
@@ -66,7 +66,7 @@
       "@php artisan package:discover --ansi"
     ],
     "post-update-cmd": [
-      "@php artisan vendor:publish --tag=igniter-assets --ansi --force"
+      "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
