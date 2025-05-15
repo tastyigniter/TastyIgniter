@@ -3,6 +3,7 @@
 namespace Admin\Controllers;
 
 use Admin\ActivityTypes\StatusUpdated;
+use Admin\Facades\AdminLocation;
 use Admin\Facades\AdminMenu;
 use Admin\Models\Reservations_model;
 use Admin\Models\Statuses_model;
@@ -107,18 +108,18 @@ class Reservations extends \Admin\Classes\AdminController
         return $this->redirectBack();
     }
 
-    public function edit_onDelete()
+    public function edit_onDelete($context, $recordId)
     {
         if (!$this->getUser()->hasPermission('Admin.DeleteReservations'))
             throw new ApplicationException(lang('admin::lang.alert_user_restricted'));
 
-        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete();
+        return $this->asExtension('Admin\Actions\FormController')->edit_onDelete($context, $recordId);
     }
 
     public function calendarGenerateEvents($startAt, $endAt)
     {
         return Reservations_model::listCalendarEvents(
-            $startAt, $endAt, $this->getLocationId()
+            $startAt, $endAt, AdminLocation::getIdOrAll(),
         );
     }
 
@@ -140,7 +141,7 @@ class Reservations extends \Admin\Classes\AdminController
     public function formExtendQuery($query)
     {
         $query->with([
-            'status_history' => function ($q) {
+            'status_history' => function($q) {
                 $q->orderBy('created_at', 'desc');
             },
             'status_history.staff',
