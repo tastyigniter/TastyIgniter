@@ -22,6 +22,7 @@ trait HasLocationOptions
     {
         $options = $this->options;
         array_set($options, $key, $value);
+        $this->optionsCache = $options; // Update optionsCache
         $this->options = $options;
     }
 
