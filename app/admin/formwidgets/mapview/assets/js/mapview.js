@@ -148,16 +148,18 @@
             var circle = shape.getMapObject('circle')
 
             if (circle) {
+                if (!circle.savable) continue;
                 innerData.circle = {
                     lat: circle.getCenter().lat(),
                     lng: circle.getCenter().lng(),
-                    radius: circle.getRadius(),
+                    radius: circle.getRadius()
                 }
             }
 
             var polygon = shape.getMapObject('polygon')
 
             if (polygon) {
+                if (!polygon.savable) continue;
                 var vertices = polygon.getPath(),
                     encodedPath = google.maps.geometry.encoding.encodePath(vertices)
 
