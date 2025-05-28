@@ -13,3 +13,6 @@ node_modules
 
 /public/vendor
 /public/storage
+
+/storage/clockwork
+/_ide_helper.php
