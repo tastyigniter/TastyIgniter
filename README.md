@@ -65,5 +65,5 @@ TastyIgniter was created by [Samuel Adepoyigi](https://github.com/sampoyigi).
 If you discover a security vulnerability within TastyIgniter, please send an e-mail to support@tastyigniter.com.
 
 ## License
-Starting with version 3.0.0 TastyIgniter is licensed under the [The MIT License (MIT)](https://tastyigniter.com/licence/). Older versions were GPL-licensed.
+TastyIgniter is open-source software licensed under the [MIT license](https://tastyigniter.com/licence/).
 
