@@ -62,7 +62,8 @@
   },
   "scripts": {
     "post-autoload-dump": [
-      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan config:clear",
+      "@php artisan clear-compiled",
       "@php artisan package:discover --ansi"
     ],
     "post-update-cmd": [
@@ -72,7 +73,12 @@
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
     ],
     "post-create-project-cmd": [
-      "@php artisan key:generate --ansi"
+      "@php artisan key:generate --ansi",
+      "@php artisan migrate --graceful --ansi"
+    ],
+    "test": [
+      "@php artisan config:clear --ansi",
+      "@php artisan test"
     ]
   },
   "extra": {
