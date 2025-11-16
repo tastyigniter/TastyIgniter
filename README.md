@@ -43,6 +43,15 @@ TastyIgniter is an MIT-licensed community-driven project with its continuous dev
 2. Spreading the word about TastyIgniter.
 3. Becoming a sponsor by donating funds (see below).
 
+### Additional Setup Note
+
+If you are running TastyIgniter for the first time, ensure that:
+- Your PHP version meets the minimum requirements.
+- All necessary PHP extensions (intl, mbstring, openssl) are enabled.
+- You have created a database and updated the `.env` file accordingly.
+
+This small checklist helps new developers avoid common installation issues.
+
 ## Sponsors
 Become a sponsor and get your logo on our README on Github with a link to your site. 
 
