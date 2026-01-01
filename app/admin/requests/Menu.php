@@ -43,7 +43,7 @@ class Menu extends FormRequest
             'menu_priority' => ['min:0', 'integer'],
         ];
 
-        if ($method == 'post') {
+        if ($method === 'POST') {
             $rules['menu_name'][] = 'required';
             $rules['menu_price'][] = 'required';
             $rules['categories.*'][] = 'required';

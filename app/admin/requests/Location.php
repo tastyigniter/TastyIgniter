@@ -53,7 +53,7 @@ class Location extends FormRequest
             'gallery.description' => ['max:255'],
         ];
 
-        if ($method == 'post') {
+        if ($method == 'POST') {
             $rules['location_name'][] = 'required';
             $rules['location_email'][] = 'required';
             $rules['options.auto_lat_lng'][] = 'required';

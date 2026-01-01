@@ -36,7 +36,7 @@ class Reservation extends FormRequest
             'duration' => ['integer', 'min:1'],
         ];
 
-        if ($method == 'post') {
+        if ($method === 'POST') {
             $rules['location_id'][] = 'required';
             $rules['first_name'][] = 'required';
             $rules['last_name'][] = 'required';
