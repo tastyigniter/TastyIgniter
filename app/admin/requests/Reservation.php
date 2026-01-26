@@ -22,16 +22,29 @@ class Reservation extends FormRequest
 
     public function rules()
     {
-        return [
-            'location_id' => ['sometimes', 'required', 'integer'],
-            'first_name' => ['required', 'between:1,48'],
-            'last_name' => ['required', 'between:1,48'],
+        $method = Request::method();
+
+        $rules = [
+            'location_id' => ['integer'],
+            'first_name' => ['between:1,48'],
+            'last_name' => ['between:1,48'],
             'email' => ['email:filter', 'max:96'],
             'telephone' => ['sometimes'],
-            'reserve_date' => ['required', 'valid_date'],
-            'reserve_time' => ['required', 'valid_time'],
-            'guest_num' => ['required', 'integer', 'min:1'],
+            'reserve_date' => ['valid_date'],
+            'reserve_time' => ['valid_time'],
+            'guest_num' => ['integer', 'min:1'],
             'duration' => ['integer', 'min:1'],
         ];
+
+        if ($method === 'POST') {
+            $rules['location_id'][] = 'required';
+            $rules['first_name'][] = 'required';
+            $rules['last_name'][] = 'required';
+            $rules['reserve_date'][] = 'required';
+            $rules['reserve_time'][] = 'required';
+            $rules['guest_num'][] = 'required';
+        }
+
+        return $rules;
     }
 }

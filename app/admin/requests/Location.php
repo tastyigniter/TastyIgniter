@@ -31,17 +31,19 @@ class Location extends FormRequest
 
     public function rules()
     {
-        return [
-            'location_name' => ['sometimes', 'required', 'between:2,32'],
-            'location_email' => ['sometimes', 'required', 'email:filter', 'max:96'],
+        $method = Request::method();
+
+        $rules = [
+            'location_name' => ['between:2,32'],
+            'location_email' => ['email:filter', 'max:96'],
             'location_telephone' => ['sometimes'],
-            'location_address_1' => ['sometimes', 'required', 'between:2,128'],
+            'location_address_1' => ['between:2,128'],
             'location_address_2' => ['max:128'],
             'location_city' => ['max:128'],
             'location_state' => ['max:128'],
             'location_postcode' => ['max:10'],
-            'location_country_id' => ['sometimes', 'required', 'integer'],
-            'options.auto_lat_lng' => ['sometimes', 'required', 'boolean'],
+            'location_country_id' => ['integer'],
+            'options.auto_lat_lng' => ['boolean'],
             'location_lat' => ['sometimes', 'numeric'],
             'location_lng' => ['sometimes', 'numeric'],
             'description' => ['max:3028'],
@@ -50,5 +52,15 @@ class Location extends FormRequest
             'gallery.title' => ['max:128'],
             'gallery.description' => ['max:255'],
         ];
+
+        if ($method == 'POST') {
+            $rules['location_name'][] = 'required';
+            $rules['location_email'][] = 'required';
+            $rules['options.auto_lat_lng'][] = 'required';
+            $rules['location_lng'][] = 'required';
+            $rules['location_country_id'][] = 'required';
+        }
+
+        return $rules;
     }
 }

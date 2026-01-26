@@ -26,19 +26,31 @@ class Menu extends FormRequest
 
     public function rules()
     {
-        return [
-            'menu_name' => ['required', 'between:2,255'],
+        $method = Request::method();
+
+        $rules = [
+            'menu_name' => ['between:2,255'],
             'menu_description' => ['between:2,1028'],
-            'menu_price' => ['required', 'numeric', 'min:0'],
-            'categories.*' => ['sometimes', 'required', 'integer'],
+            'menu_price' => ['numeric', 'min:0'],
+            'categories.*' => ['sometimes', 'integer'],
             'locations.*' => ['integer'],
             'stock_qty' => ['nullable', 'integer'],
-            'minimum_qty' => ['sometimes', 'required', 'integer', 'min:1'],
-            'subtract_stock' => ['sometimes', 'required', 'boolean'],
+            'minimum_qty' => ['sometimes', 'integer', 'min:1'],
+            'subtract_stock' => ['sometimes', 'boolean'],
             'order_restriction.*' => ['nullable', 'string'],
             'menu_status' => ['boolean'],
             'mealtime_id' => ['nullable', 'integer'],
             'menu_priority' => ['min:0', 'integer'],
         ];
+
+        if ($method === 'POST') {
+            $rules['menu_name'][] = 'required';
+            $rules['menu_price'][] = 'required';
+            $rules['categories.*'][] = 'required';
+            $rules['minimum_qty'][] = 'required';
+            $rules['subtract_stock'][] = 'required';
+        }
+
+        return $rules;
     }
 }
