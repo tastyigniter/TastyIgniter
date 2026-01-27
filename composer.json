@@ -30,7 +30,7 @@
   "repositories": {
     "tastyigniter": {
       "type": "composer",
-      "url": "https://satis.tastyigniter.com"
+      "url": "https://composer.tastyigniter.com"
     }
   },
   "require": {
