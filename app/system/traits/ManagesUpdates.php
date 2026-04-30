@@ -306,7 +306,7 @@ trait ManagesUpdates
         return $this->validate(post(), [
             'items.*.name' => ['required'],
             'items.*.type' => ['required', 'in:core,extension,theme,language'],
-            'items.*.ver' => ['required'],
+            'items.*.ver' => ['required_if:items.*.action,update'],
             'items.*.action' => ['required', 'in:install,update'],
         ], [], [
             'items.*.name' => lang('system::lang.updates.label_meta_code'),

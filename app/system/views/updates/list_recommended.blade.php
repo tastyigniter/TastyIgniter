@@ -45,7 +45,6 @@
                         </div>
                         <input type="hidden" name="items[{{ $index }}][name]" value="{{ $item['code'] }}">
                         <input type="hidden" name="items[{{ $index }}][type]" value="{{ $item['type'] }}">
-                        <input type="hidden" name="items[{{ $index }}][ver]" value="{{ $item['version'] }}">
                         <input type="hidden" name="items[{{ $index }}][action]" value="install">
                     </div>
                 @endforeach
