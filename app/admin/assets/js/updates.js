@@ -128,12 +128,15 @@
             installedItems = this.options.installedItems
 
         this.$itemModal.find('.item-details').html(bodyHtml)
-        if (context.require.length && context.require.data.length) {
-            context.require = context.require.data.map(function (require) {
+        var requireData = context.require && context.require.data
+        if (requireData && requireData.length) {
+            context.require = requireData.map(function (require) {
                 return $.extend(require, {installed: ($.inArray(require.code, installedItems) > -1)})
             })
 
             this.$itemModal.find('.item-details').after(Mustache.render(Updates.TEMPLATES.modalRequire, context))
+        } else {
+            context.require = []
         }
 
         this.$itemModal.find('.modal-footer').html(footerHtml)
@@ -147,29 +150,29 @@
     }
 
     Updates.prototype.applyItemInModal = function ($modal) {
-        var self = this
+        var self = this,
+            action = this.options.itemInModal.action
 
         // push require first
-        if (this.options.itemInModal.require.length) {
-            this.options.itemInModal.require.map(function (require) {
+        var requires = this.options.itemInModal.require || []
+        if (requires.length) {
+            requires.map(function (require) {
                 if ($modal.find('[data-control="require-item"][data-item-code="' + require.code + '"].active').length < 1)
                     return
 
-                self.options.itemsToApply.push({
-                    name: require.code,
-                    type: require.type,
-                    ver: require.version,
-                    action: self.options.itemInModal.action
-                })
+                var item = {name: require.code, type: require.type, action: action}
+                if (action === 'update') item.ver = require.version
+                self.options.itemsToApply.push(item)
             })
         }
 
-        this.options.itemsToApply.push({
+        var item = {
             name: this.options.itemInModal.code,
             type: this.options.itemInModal.type,
-            ver: this.options.itemInModal.version,
-            action: this.options.itemInModal.action
-        })
+            action: action
+        }
+        if (action === 'update') item.ver = this.options.itemInModal.version
+        this.options.itemsToApply.push(item)
     }
 
     Updates.prototype.showProgressBar = function () {
