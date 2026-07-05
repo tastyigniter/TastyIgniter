@@ -38,7 +38,6 @@ rsync -a \
   --exclude 'composer-dev.lock' \
   --exclude 'auth.json' \
   --exclude '.env' \
-  --exclude '.env.*' \
   --exclude 'phpunit.xml' \
   --exclude 'phpunit.xml.dist' \
   --exclude '.phpunit.result.cache' \
