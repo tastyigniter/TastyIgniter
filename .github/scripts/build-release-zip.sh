@@ -42,9 +42,15 @@ rsync -a \
   --exclude 'phpunit.xml.dist' \
   --exclude '.phpunit.result.cache' \
   --exclude 'storage/logs/' \
-  --exclude 'storage/framework/cache/' \
-  --exclude 'storage/framework/sessions/' \
-  --exclude 'storage/framework/views/' \
+  --filter '+ storage/framework/cache/.gitignore' \
+  --filter '+ storage/framework/cache/data/' \
+  --filter '+ storage/framework/cache/data/.gitignore' \
+  --filter '- storage/framework/cache/data/**' \
+  --filter '- storage/framework/cache/*' \
+  --filter '+ storage/framework/sessions/.gitignore' \
+  --filter '- storage/framework/sessions/**' \
+  --filter '+ storage/framework/views/.gitignore' \
+  --filter '- storage/framework/views/**' \
   --exclude 'storage/temp/' \
   --exclude 'storage/debugbar/' \
   --exclude 'storage/clockwork/' \
