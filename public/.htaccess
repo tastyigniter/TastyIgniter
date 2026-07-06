@@ -5,6 +5,11 @@
 
     RewriteEngine On
 
+    # Block script execution in media storage directories
+    RewriteCond %{REQUEST_URI} ^/storage/media/ [NC]
+    RewriteCond %{REQUEST_URI} \.(php|php\d*|phtml|phar|cgi|pl|py|asp|aspx|sh)$ [NC]
+    RewriteRule ^ - [F,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

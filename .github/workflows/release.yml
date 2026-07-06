@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 4.2.5, without v prefix)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    name: Build release ZIP
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: dom, curl, xml, mbstring, zip, pdo, bcmath, gd
+          tools: composer:v2
+          coverage: none
+
+      - name: Build release ZIP
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            export VERSION="${GITHUB_REF_NAME#v}"
+          else
+            export VERSION="${{ inputs.version }}"
+          fi
+          bash .github/scripts/build-release-zip.sh
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
+          name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
+          files: tastyigniter-*.zip
+          generate_release_notes: true
