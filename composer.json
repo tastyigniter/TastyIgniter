@@ -23,7 +23,7 @@
     "paid": "https://tastyigniter.com/premium-support",
     "issues": "https://github.com/tastyigniter/TastyIgniter/issues",
     "forum": "https://forum.tastyigniter.com",
-    "discord": "https/tastyigniter.com/discord",
+    "discord": "https://tastyigniter.com/discord",
     "docs": "https://tastyigniter.com/docs",
     "source": "https://github.com/tastyigniter/TastyIgniter"
   },
@@ -36,17 +36,17 @@
   "require": {
     "php": "^8.3",
     "laravel/framework": "^12.0",
-    "laravel/tinker": "^2.10.1",
-    "tastyigniter/core": "^4.0"
+    "laravel/tinker": "^3.0",
+    "tastyigniter/core": "^4.3"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23",
-    "laravel/pail": "^1.2.2",
-    "laravel/pint": "^1.13",
+    "laravel/pail": "^1.2.5",
+    "laravel/pint": "^1.27",
     "laravel/sail": "^1.41",
     "mockery/mockery": "^1.6",
     "nunomaduro/collision": "^8.6",
-    "phpunit/phpunit": "^11.5.3"
+    "phpunit/phpunit": "^12.5.12"
   },
   "autoload": {
     "psr-4": {
@@ -62,8 +62,7 @@
   },
   "scripts": {
     "post-autoload-dump": [
-      "@php artisan config:clear",
-      "@php artisan clear-compiled",
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
       "@php artisan package:discover --ansi"
     ],
     "post-update-cmd": [
@@ -75,6 +74,9 @@
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi"
     ],
+    "pre-package-uninstall": [
+      "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
+    ],
     "test": [
       "@php artisan config:clear --ansi",
       "@php artisan test"
@@ -85,11 +87,15 @@
       "dont-discover": []
     }
   },
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "prefer-stable": true,
   "config": {
     "optimize-autoloader": true,
     "preferred-install": "dist",
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true,
+      "php-http/discovery": true
+    }
   }
 }
