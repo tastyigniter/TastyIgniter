@@ -1,31 +1,221 @@
---- a/src/System/Database/Migrations/2021_09_06_010000_add_timestamps_to_tables.php
-+++ b/src/System/Database/Migrations/2021_09_06_010000_add_timestamps_to_tables.php
-@@ -3,42 +3,100 @@
- namespace Igniter\System\Database\Migrations;
- 
+diff --git a/database/migrations/admin/2021_09_06_010000_add_timestamps_to_tables.php b/database/migrations/admin/2021_09_06_010000_add_timestamps_to_tables.php
+index 77653820..ff13c143 100644
+--- a/database/migrations/admin/2021_09_06_010000_add_timestamps_to_tables.php
++++ b/database/migrations/admin/2021_09_06_010000_add_timestamps_to_tables.php
+@@ -1,7 +1,6 @@
+ <?php
+
  use Illuminate\Database\Migrations\Migration;
 -use Illuminate\Database\Schema\Blueprint;
-+use Illuminate\Support\Facades\DB;
  use Illuminate\Support\Facades\Schema;
-+use RuntimeException;
- 
- class AddTimestampsToTables extends Migration
+
+ return new class extends Migration
+@@ -25,79 +24,96 @@ return new class extends Migration
+             'tables',
+             'admin_users',
+         ] as $table) {
+-            if (!Schema::hasColumn($table, 'created_at')) {
+-                Schema::table($table, function(Blueprint $table) {
+-                    $table->timestamps();
+-                });
+-            }
++            $this->ensureNullableTimestamp($table, 'created_at');
++            $this->ensureNullableTimestamp($table, 'updated_at');
+         }
+
+-        Schema::table('customers', function(Blueprint $table) {
+-            $table->renameColumn('date_added', 'created_at');
+-        });
+-
+-        Schema::table('customers', function(Blueprint $table) {
+-            $table->timestamp('created_at')->change();
+-            $table->timestamp('updated_at');
+-        });
+-
+-        Schema::table('orders', function(Blueprint $table) {
+-            $table->timestamp('date_added')->change();
+-            $table->timestamp('date_modified')->change();
+-        });
+-
+-        Schema::table('orders', function(Blueprint $table) {
+-            $table->renameColumn('date_added', 'created_at');
+-            $table->renameColumn('date_modified', 'updated_at');
+-        });
+-
+-        Schema::table('payments', function(Blueprint $table) {
+-            $table->timestamp('date_added')->change();
+-            $table->timestamp('date_updated')->change();
+-        });
+-
+-        Schema::table('payments', function(Blueprint $table) {
+-            $table->renameColumn('date_added', 'created_at');
+-            $table->renameColumn('date_updated', 'updated_at');
+-        });
+-
+-        Schema::table('payment_logs', function(Blueprint $table) {
+-            $table->timestamp('date_added')->change();
+-            $table->timestamp('date_updated')->change();
+-        });
+-
+-        Schema::table('payment_logs', function(Blueprint $table) {
+-            $table->renameColumn('date_added', 'created_at');
+-            $table->renameColumn('date_updated', 'updated_at');
+-        });
+-
+-        Schema::table('reservations', function(Blueprint $table) {
+-            $table->timestamp('date_added')->change();
+-            $table->timestamp('date_modified')->change();
+-        });
+-
+-        Schema::table('reservations', function(Blueprint $table) {
+-            $table->renameColumn('date_added', 'created_at');
+-            $table->renameColumn('date_modified', 'updated_at');
+-        });
+-
+-        Schema::table('staffs', function(Blueprint $table) {
+-            $table->renameColumn('date_added', 'created_at');
+-        });
+-
+-        Schema::table('staffs', function(Blueprint $table) {
+-            $table->timestamp('created_at')->change();
+-            $table->timestamp('updated_at');
+-        });
+-
+-        Schema::table('status_history', function(Blueprint $table) {
+-            $table->renameColumn('date_added', 'created_at');
+-        });
+-
+-        Schema::table('status_history', function(Blueprint $table) {
+-            $table->timestamp('created_at')->change();
+-            $table->timestamp('updated_at');
+-        });
++        $this->convertLegacyTimestamp('customers', 'date_added', 'created_at');
++        $this->ensureNullableTimestamp('customers', 'updated_at');
++
++        $this->convertLegacyTimestamp('orders', 'date_added', 'created_at');
++        $this->convertLegacyTimestamp('orders', 'date_modified', 'updated_at');
++
++        $this->convertLegacyTimestamp('payments', 'date_added', 'created_at');
++        $this->convertLegacyTimestamp('payments', 'date_updated', 'updated_at');
++
++        $this->convertLegacyTimestamp('payment_logs', 'date_added', 'created_at');
++        $this->convertLegacyTimestamp('payment_logs', 'date_updated', 'updated_at');
++
++        $this->convertLegacyTimestamp('reservations', 'date_added', 'created_at');
++        $this->convertLegacyTimestamp('reservations', 'date_modified', 'updated_at');
++
++        $this->convertLegacyTimestamp('staffs', 'date_added', 'created_at');
++        $this->ensureNullableTimestamp('staffs', 'updated_at');
++
++        $this->convertLegacyTimestamp('status_history', 'date_added', 'created_at');
++        $this->ensureNullableTimestamp('status_history', 'updated_at');
++    }
++
++    private function ensureNullableTimestamp(string $table, string $column): void
++    {
++        if (!Schema::hasTable($table)) {
++            return;
++        }
++
++        $connection = Schema::getConnection();
++        $qualifiedTable = $this->quoteIdentifier($connection->getTablePrefix().$table);
++        $quotedColumn = $this->quoteIdentifier($column);
++
++        if (!Schema::hasColumn($table, $column)) {
++            $connection->statement("ALTER TABLE {$qualifiedTable} ADD {$quotedColumn} TIMESTAMP NULL DEFAULT NULL");
++
++            return;
++        }
++
++        $connection->statement("ALTER TABLE {$qualifiedTable} MODIFY {$quotedColumn} TIMESTAMP NULL DEFAULT NULL");
++    }
++
++    private function convertLegacyTimestamp(string $table, string $legacyColumn, string $newColumn): void
++    {
++        if (!Schema::hasTable($table)) {
++            return;
++        }
++
++        $hasLegacyColumn = Schema::hasColumn($table, $legacyColumn);
++        $hasNewColumn = Schema::hasColumn($table, $newColumn);
++
++        if ($hasLegacyColumn && $hasNewColumn) {
++            throw new \RuntimeException(sprintf(
++                'Ambiguous timestamp migration for table [%s]: both [%s] and [%s] exist.',
++                $table,
++                $legacyColumn,
++                $newColumn,
++            ));
++        }
++
++        if (!$hasLegacyColumn) {
++            $this->ensureNullableTimestamp($table, $newColumn);
++
++            return;
++        }
++
++        $connection = Schema::getConnection();
++        $qualifiedTable = $this->quoteIdentifier($connection->getTablePrefix().$table);
++        $quotedLegacyColumn = $this->quoteIdentifier($legacyColumn);
++        $quotedNewColumn = $this->quoteIdentifier($newColumn);
++
++        $connection->statement(
++            "ALTER TABLE {$qualifiedTable} MODIFY {$quotedLegacyColumn} TIMESTAMP NULL DEFAULT NULL",
++        );
++        $connection->statement(
++            "UPDATE {$qualifiedTable} SET {$quotedLegacyColumn} = NULL "
++            ."WHERE CAST({$quotedLegacyColumn} AS CHAR) IN ('', '0000-00-00 00:00:00')",
++        );
++        $connection->statement(
++            "ALTER TABLE {$qualifiedTable} CHANGE {$quotedLegacyColumn} {$quotedNewColumn} "
++            .'TIMESTAMP NULL DEFAULT NULL',
++        );
++    }
++
++    private function quoteIdentifier(string $identifier): string
++    {
++        return '`'.str_replace('`', '``', $identifier).'`';
+     }
+
+     public function down() {}
+diff --git a/database/migrations/system/2021_09_06_010000_add_timestamps_to_tables.php b/database/migrations/system/2021_09_06_010000_add_timestamps_to_tables.php
+index 91784d54..42ef4215 100644
+--- a/database/migrations/system/2021_09_06_010000_add_timestamps_to_tables.php
++++ b/database/migrations/system/2021_09_06_010000_add_timestamps_to_tables.php
+@@ -1,56 +1,95 @@
+ <?php
+
+ use Illuminate\Database\Migrations\Migration;
+-use Illuminate\Database\Schema\Blueprint;
+ use Illuminate\Support\Facades\Schema;
+
+ return new class extends Migration
  {
      public function up()
      {
 -        Schema::table('countries', function(Blueprint $table) {
--            $table->timestamp('created_at')->nullable();
--            $table->timestamp('updated_at')->nullable();
+-            $table->timestamps();
 -        });
 -
 -        Schema::table('currencies', function(Blueprint $table) {
--            $table->timestamp('created_at')->nullable();
+-            $table->timestamp('date_modified')->change();
+-        });
+-
+-        Schema::table('currencies', function(Blueprint $table) {
 -            $table->renameColumn('date_modified', 'updated_at');
 -        });
 -
+-        Schema::table('currencies', function(Blueprint $table) {
+-            $table->timestamp('created_at');
+-        });
+-
 -        Schema::table('languages', function(Blueprint $table) {
--            $table->timestamp('created_at')->nullable();
--            $table->timestamp('updated_at')->nullable();
+-            $table->timestamps();
+-        });
+-
+-        Schema::table('mail_layouts', function(Blueprint $table) {
+-            $table->timestamp('date_added')->change();
+-            $table->timestamp('date_updated')->change();
 -        });
 -
 -        Schema::table('mail_layouts', function(Blueprint $table) {
@@ -34,24 +224,33 @@
 -        });
 -
 -        Schema::table('mail_templates', function(Blueprint $table) {
+-            $table->timestamp('date_added')->change();
+-            $table->timestamp('date_updated')->change();
+-        });
+-
+-        Schema::table('mail_templates', function(Blueprint $table) {
 -            $table->renameColumn('date_added', 'created_at');
 -            $table->renameColumn('date_updated', 'updated_at');
 -        });
 -
 -        Schema::table('themes', function(Blueprint $table) {
--            $table->timestamp('created_at')->nullable();
--            $table->timestamp('updated_at')->nullable();
+-            $table->timestamps();
 -        });
 +        $this->ensureNullableTimestamp('countries', 'created_at');
 +        $this->ensureNullableTimestamp('countries', 'updated_at');
-+        $this->ensureNullableTimestamp('currencies', 'created_at');
++
 +        $this->convertLegacyTimestamp('currencies', 'date_modified', 'updated_at');
++        $this->ensureNullableTimestamp('currencies', 'created_at');
++
 +        $this->ensureNullableTimestamp('languages', 'created_at');
 +        $this->ensureNullableTimestamp('languages', 'updated_at');
++
 +        $this->convertLegacyTimestamp('mail_layouts', 'date_added', 'created_at');
 +        $this->convertLegacyTimestamp('mail_layouts', 'date_updated', 'updated_at');
++
 +        $this->convertLegacyTimestamp('mail_templates', 'date_added', 'created_at');
 +        $this->convertLegacyTimestamp('mail_templates', 'date_updated', 'updated_at');
++
 +        $this->ensureNullableTimestamp('themes', 'created_at');
 +        $this->ensureNullableTimestamp('themes', 'updated_at');
 +    }
@@ -62,72 +261,64 @@
 +            return;
 +        }
 +
++        $connection = Schema::getConnection();
++        $qualifiedTable = $this->quoteIdentifier($connection->getTablePrefix().$table);
++        $quotedColumn = $this->quoteIdentifier($column);
++
 +        if (!Schema::hasColumn($table, $column)) {
-+            Schema::table($table, function($blueprint) use ($column) {
-+                $blueprint->timestamp($column)->nullable()->default(null);
-+            });
++            $connection->statement("ALTER TABLE {$qualifiedTable} ADD {$quotedColumn} TIMESTAMP NULL DEFAULT NULL");
++
++            return;
 +        }
 +
-+        if (Schema::hasTable($table) && Schema::hasColumn($table, $column)) {
-+            DB::statement(sprintf(
-+                'ALTER TABLE `%s` MODIFY `%s` TIMESTAMP NULL DEFAULT NULL',
-+                $this->quoteIdentifier($this->tablePrefix().$table),
-+                $this->quoteIdentifier($column),
-+            ));
-+        }
++        $connection->statement("ALTER TABLE {$qualifiedTable} MODIFY {$quotedColumn} TIMESTAMP NULL DEFAULT NULL");
 +    }
 +
-+    private function convertLegacyTimestamp(string $table, string $oldColumn, string $newColumn): void
++    private function convertLegacyTimestamp(string $table, string $legacyColumn, string $newColumn): void
 +    {
 +        if (!Schema::hasTable($table)) {
 +            return;
 +        }
 +
-+        $hasOld = Schema::hasColumn($table, $oldColumn);
-+        $hasNew = Schema::hasColumn($table, $newColumn);
++        $hasLegacyColumn = Schema::hasColumn($table, $legacyColumn);
++        $hasNewColumn = Schema::hasColumn($table, $newColumn);
 +
-+        if ($hasOld && $hasNew) {
-+            throw new RuntimeException(sprintf(
++        if ($hasLegacyColumn && $hasNewColumn) {
++            throw new \RuntimeException(sprintf(
 +                'Ambiguous timestamp migration for table [%s]: both [%s] and [%s] exist.',
 +                $table,
-+                $oldColumn,
++                $legacyColumn,
 +                $newColumn,
 +            ));
 +        }
 +
-+        if (!$hasOld) {
++        if (!$hasLegacyColumn) {
 +            $this->ensureNullableTimestamp($table, $newColumn);
++
 +            return;
 +        }
 +
-+        if (Schema::hasTable($table) && Schema::hasColumn($table, $oldColumn)) {
-+            DB::statement(sprintf(
-+                'ALTER TABLE `%s` MODIFY `%s` TIMESTAMP NULL DEFAULT NULL',
-+                $this->quoteIdentifier($this->tablePrefix().$table),
-+                $this->quoteIdentifier($oldColumn),
-+            ));
-+        }
++        $connection = Schema::getConnection();
++        $qualifiedTable = $this->quoteIdentifier($connection->getTablePrefix().$table);
++        $quotedLegacyColumn = $this->quoteIdentifier($legacyColumn);
++        $quotedNewColumn = $this->quoteIdentifier($newColumn);
 +
-+        if (Schema::hasTable($table)
-+            && Schema::hasColumn($table, $oldColumn)
-+            && !Schema::hasColumn($table, $newColumn)) {
-+            DB::statement(sprintf(
-+                'ALTER TABLE `%s` CHANGE `%s` `%s` TIMESTAMP NULL DEFAULT NULL',
-+                $this->quoteIdentifier($this->tablePrefix().$table),
-+                $this->quoteIdentifier($oldColumn),
-+                $this->quoteIdentifier($newColumn),
-+            ));
-+        }
-+    }
-+
-+    private function tablePrefix(): string
-+    {
-+        return Schema::getConnection()->getTablePrefix();
++        $connection->statement(
++            "ALTER TABLE {$qualifiedTable} MODIFY {$quotedLegacyColumn} TIMESTAMP NULL DEFAULT NULL",
++        );
++        $connection->statement(
++            "UPDATE {$qualifiedTable} SET {$quotedLegacyColumn} = NULL "
++            ."WHERE CAST({$quotedLegacyColumn} AS CHAR) IN ('', '0000-00-00 00:00:00')",
++        );
++        $connection->statement(
++            "ALTER TABLE {$qualifiedTable} CHANGE {$quotedLegacyColumn} {$quotedNewColumn} "
++            .'TIMESTAMP NULL DEFAULT NULL',
++        );
 +    }
 +
 +    private function quoteIdentifier(string $identifier): string
 +    {
-+        return str_replace('`', '``', $identifier);
++        return '`'.str_replace('`', '``', $identifier).'`';
      }
- 
-     public function down()
+
+     public function down() {}
