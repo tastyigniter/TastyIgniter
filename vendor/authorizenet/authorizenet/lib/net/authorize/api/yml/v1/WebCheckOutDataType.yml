@@ -1,0 +1,42 @@
+net\authorize\api\contract\v1\WebCheckOutDataType:
+    properties:
+        type:
+            expose: true
+            access_type: public_method
+            serialized_name: type
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getType
+                setter: setType
+            type: string
+        id:
+            expose: true
+            access_type: public_method
+            serialized_name: id
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getId
+                setter: setId
+            type: string
+        token:
+            expose: true
+            access_type: public_method
+            serialized_name: token
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getToken
+                setter: setToken
+            type: net\authorize\api\contract\v1\WebCheckOutDataTypeTokenType
+        bankToken:
+            expose: true
+            access_type: public_method
+            serialized_name: bankToken
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBankToken
+                setter: setBankToken
+            type: net\authorize\api\contract\v1\BankAccountType

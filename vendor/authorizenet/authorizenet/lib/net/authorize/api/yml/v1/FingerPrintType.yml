@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\FingerPrintType:
+    properties:
+        hashValue:
+            expose: true
+            access_type: public_method
+            serialized_name: hashValue
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getHashValue
+                setter: setHashValue
+            type: string
+        sequence:
+            expose: true
+            access_type: public_method
+            serialized_name: sequence
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSequence
+                setter: setSequence
+            type: string
+        timestamp:
+            expose: true
+            access_type: public_method
+            serialized_name: timestamp
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTimestamp
+                setter: setTimestamp
+            type: string
+        currencyCode:
+            expose: true
+            access_type: public_method
+            serialized_name: currencyCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCurrencyCode
+                setter: setCurrencyCode
+            type: string
+        amount:
+            expose: true
+            access_type: public_method
+            serialized_name: amount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmount
+                setter: setAmount
+            type: string

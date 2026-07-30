@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\ArbTransactionType:
+    properties:
+        transId:
+            expose: true
+            access_type: public_method
+            serialized_name: transId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransId
+                setter: setTransId
+            type: string
+        response:
+            expose: true
+            access_type: public_method
+            serialized_name: response
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getResponse
+                setter: setResponse
+            type: string
+        submitTimeUTC:
+            expose: true
+            access_type: public_method
+            serialized_name: submitTimeUTC
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubmitTimeUTC
+                setter: setSubmitTimeUTC
+            type: GoetasWebservices\Xsd\XsdToPhp\XMLSchema\DateTime
+        payNum:
+            expose: true
+            access_type: public_method
+            serialized_name: payNum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayNum
+                setter: setPayNum
+            type: integer
+        attemptNum:
+            expose: true
+            access_type: public_method
+            serialized_name: attemptNum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAttemptNum
+                setter: setAttemptNum
+            type: integer

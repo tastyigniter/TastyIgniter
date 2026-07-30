@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://phpunit.de/phpunit.xsd"
+    bootstrap="./tests/bootstrap.php" backupGlobals="false"
+    verbose="true" colors="true">
+
+    <testsuites>
+        <testsuite name="AuthorizeNet Integration Tests">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <logging>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"
+            lowUpperBound="50" highLowerBound="80" />
+        <log type="coverage-clover" target="./build/logs/clover.xml" />
+    </logging>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./lib</directory>
+            <exclude>
+                <directory>./vendor</directory>
+                <directory>./tests</directory>
+                <directory>./build</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <php>
+        <const name="PHPUNIT_TESTSUITE" value="true" />
+        
+        <!-- Enter your test account credentials to run tests against sandbox. -->
+        <const name="AUTHORIZENET_API_LOGIN_ID" value="5KP3u95bQpv" />
+        <const name="AUTHORIZENET_TRANSACTION_KEY" value="346HZ32z3fP4hTG2" />
+        <const name="AUTHORIZENET_MD5_SETTING" value="" />
+        
+        <!-- Enter your live account credentials to run tests against production gateway. -->
+        <const name="MERCHANT_LIVE_API_LOGIN_ID" value="" />
+        <const name="MERCHANT_LIVE_TRANSACTION_KEY" value="" />
+        
+        <!-- Card Present Sandbox Credentials -->
+        <const name="CP_API_LOGIN_ID" value="" />
+        <const name="CP_TRANSACTION_KEY" value="" />
+        
+        <const name="AUTHORIZENET_LOG_FILE" value="./tests/log" />
+    </php>
+
+</phpunit>

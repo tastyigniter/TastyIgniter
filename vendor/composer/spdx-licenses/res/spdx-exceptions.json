@@ -1,0 +1,254 @@
+{
+    "389-exception": [
+        "389 Directory Server Exception"
+    ],
+    "Asterisk-exception": [
+        "Asterisk exception"
+    ],
+    "Asterisk-linking-protocols-exception": [
+        "Asterisk linking protocols exception"
+    ],
+    "Autoconf-exception-2.0": [
+        "Autoconf exception 2.0"
+    ],
+    "Autoconf-exception-3.0": [
+        "Autoconf exception 3.0"
+    ],
+    "Autoconf-exception-generic": [
+        "Autoconf generic exception"
+    ],
+    "Autoconf-exception-generic-3.0": [
+        "Autoconf generic exception for GPL-3.0"
+    ],
+    "Autoconf-exception-macro": [
+        "Autoconf macro exception"
+    ],
+    "Bison-exception-1.24": [
+        "Bison exception 1.24"
+    ],
+    "Bison-exception-2.2": [
+        "Bison exception 2.2"
+    ],
+    "Bootloader-exception": [
+        "Bootloader Distribution Exception"
+    ],
+    "CGAL-linking-exception": [
+        "CGAL Linking Exception"
+    ],
+    "Classpath-exception-2.0": [
+        "Classpath exception 2.0"
+    ],
+    "Classpath-exception-2.0-short": [
+        "Classpath exception 2.0 - short"
+    ],
+    "CLISP-exception-2.0": [
+        "CLISP exception 2.0"
+    ],
+    "cryptsetup-OpenSSL-exception": [
+        "cryptsetup OpenSSL exception"
+    ],
+    "Digia-Qt-LGPL-exception-1.1": [
+        "Digia Qt LGPL Exception version 1.1"
+    ],
+    "DigiRule-FOSS-exception": [
+        "DigiRule FOSS License Exception"
+    ],
+    "eCos-exception-2.0": [
+        "eCos exception 2.0"
+    ],
+    "erlang-otp-linking-exception": [
+        "Erlang/OTP Linking Exception"
+    ],
+    "Fawkes-Runtime-exception": [
+        "Fawkes Runtime Exception"
+    ],
+    "FLTK-exception": [
+        "FLTK exception"
+    ],
+    "fmt-exception": [
+        "fmt exception"
+    ],
+    "Font-exception-2.0": [
+        "Font exception 2.0"
+    ],
+    "freertos-exception-2.0": [
+        "FreeRTOS Exception 2.0"
+    ],
+    "GCC-exception-2.0": [
+        "GCC Runtime Library exception 2.0"
+    ],
+    "GCC-exception-2.0-note": [
+        "GCC    Runtime Library exception 2.0 - note variant"
+    ],
+    "GCC-exception-3.1": [
+        "GCC Runtime Library exception 3.1"
+    ],
+    "Gmsh-exception": [
+        "Gmsh exception"
+    ],
+    "GNAT-exception": [
+        "GNAT exception"
+    ],
+    "GNOME-examples-exception": [
+        "GNOME examples exception"
+    ],
+    "GNU-compiler-exception": [
+        "GNU Compiler Exception"
+    ],
+    "gnu-javamail-exception": [
+        "GNU JavaMail exception"
+    ],
+    "GPL-3.0-389-ds-base-exception": [
+        "GPL-3.0 389 DS Base Exception"
+    ],
+    "GPL-3.0-interface-exception": [
+        "GPL-3.0 Interface Exception"
+    ],
+    "GPL-3.0-linking-exception": [
+        "GPL-3.0 Linking Exception"
+    ],
+    "GPL-3.0-linking-source-exception": [
+        "GPL-3.0 Linking Exception (with Corresponding Source)"
+    ],
+    "GPL-CC-1.0": [
+        "GPL Cooperation Commitment 1.0"
+    ],
+    "GStreamer-exception-2005": [
+        "GStreamer Exception (2005)"
+    ],
+    "GStreamer-exception-2008": [
+        "GStreamer Exception (2008)"
+    ],
+    "harbour-exception": [
+        "harbour exception"
+    ],
+    "i2p-gpl-java-exception": [
+        "i2p GPL+Java Exception"
+    ],
+    "Independent-modules-exception": [
+        "Independent Module Linking exception"
+    ],
+    "KiCad-libraries-exception": [
+        "KiCad Libraries Exception"
+    ],
+    "kvirc-openssl-exception": [
+        "kvirc OpenSSL Exception"
+    ],
+    "LGPL-3.0-linking-exception": [
+        "LGPL-3.0 Linking Exception"
+    ],
+    "libpri-OpenH323-exception": [
+        "libpri OpenH323 exception"
+    ],
+    "Libtool-exception": [
+        "Libtool Exception"
+    ],
+    "Linux-syscall-note": [
+        "Linux Syscall Note"
+    ],
+    "LLGPL": [
+        "LLGPL Preamble"
+    ],
+    "LLVM-exception": [
+        "LLVM Exception"
+    ],
+    "LZMA-exception": [
+        "LZMA exception"
+    ],
+    "mif-exception": [
+        "Macros and Inline Functions Exception"
+    ],
+    "mxml-exception": [
+        "mxml Exception"
+    ],
+    "Nokia-Qt-exception-1.1": [
+        "Nokia Qt LGPL exception 1.1"
+    ],
+    "OCaml-LGPL-linking-exception": [
+        "OCaml LGPL Linking Exception"
+    ],
+    "OCCT-exception-1.0": [
+        "Open CASCADE Exception 1.0"
+    ],
+    "OpenJDK-assembly-exception-1.0": [
+        "OpenJDK Assembly exception 1.0"
+    ],
+    "openvpn-openssl-exception": [
+        "OpenVPN OpenSSL Exception"
+    ],
+    "PCRE2-exception": [
+        "PCRE2 exception"
+    ],
+    "polyparse-exception": [
+        "Polyparse Exception"
+    ],
+    "PS-or-PDF-font-exception-20170817": [
+        "PS/PDF font exception (2017-08-17)"
+    ],
+    "QPL-1.0-INRIA-2004-exception": [
+        "INRIA QPL 1.0 2004 variant exception"
+    ],
+    "Qt-GPL-exception-1.0": [
+        "Qt GPL exception 1.0"
+    ],
+    "Qt-LGPL-exception-1.1": [
+        "Qt LGPL exception 1.1"
+    ],
+    "Qwt-exception-1.0": [
+        "Qwt exception 1.0"
+    ],
+    "romic-exception": [
+        "Romic Exception"
+    ],
+    "RRDtool-FLOSS-exception-2.0": [
+        "RRDtool FLOSS exception 2.0"
+    ],
+    "rsync-linking-exception": [
+        "rsync Linking Exception"
+    ],
+    "SANE-exception": [
+        "SANE Exception"
+    ],
+    "SHL-2.0": [
+        "Solderpad Hardware License v2.0"
+    ],
+    "SHL-2.1": [
+        "Solderpad Hardware License v2.1"
+    ],
+    "Simple-Library-Usage-exception": [
+        "Simple Library Usage Exception"
+    ],
+    "sqlitestudio-OpenSSL-exception": [
+        "sqlitestudio OpenSSL exception"
+    ],
+    "stunnel-exception": [
+        "stunnel Exception"
+    ],
+    "SWI-exception": [
+        "SWI exception"
+    ],
+    "Swift-exception": [
+        "Swift Exception"
+    ],
+    "Texinfo-exception": [
+        "Texinfo exception"
+    ],
+    "u-boot-exception-2.0": [
+        "U-Boot exception 2.0"
+    ],
+    "UBDL-exception": [
+        "Unmodified Binary Distribution exception"
+    ],
+    "Universal-FOSS-exception-1.0": [
+        "Universal FOSS Exception, Version 1.0"
+    ],
+    "vsftpd-openssl-exception": [
+        "vsftpd OpenSSL exception"
+    ],
+    "WxWindows-exception-3.1": [
+        "WxWindows Library Exception 3.1"
+    ],
+    "x11vnc-openssl-exception": [
+        "x11vnc OpenSSL Exception"
+    ]
+}

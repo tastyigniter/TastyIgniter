@@ -1,0 +1,42 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "mix",
+    "watch": "mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "mix --production"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.1.1",
+    "@popperjs/core": "^2.10.2",
+    "alpinejs": "^3.1.1",
+    "animate.css": "^4.1.1",
+    "bootstrap": "^5.3.3",
+    "bootstrap-table": "^1.19.1",
+    "chart.js": "^3.7.1",
+    "chartjs-adapter-moment": "^1.0.0",
+    "choices.js": "^10.2.0",
+    "codemirror": "^5.65.2",
+    "daterangepicker": "^3.1.0",
+    "dropzone": "^6.0.0-beta.2",
+    "easymde": "^2.16.1",
+    "fullcalendar": "^5.10.2",
+    "inputmask": "^5.0.7",
+    "jquery": "^3.5.1",
+    "jquery-sortablejs": "^1.0.1",
+    "js-cookie": "^2.2.0",
+    "mustache": "^4.2.0",
+    "phantomjs-prebuilt": "2.1.14",
+    "sortablejs": "^1.14.0",
+    "summernote": "^0.8.20",
+    "sweetalert2": "^11.4.8"
+  },
+  "devDependencies": {
+    "axios": "^1.6.7",
+    "laravel-mix": "^6.0.6",
+    "lodash": "^4.17.19",
+    "sass": "^1.49.9",
+    "sass-loader": "^12.6.0"
+  }
+}

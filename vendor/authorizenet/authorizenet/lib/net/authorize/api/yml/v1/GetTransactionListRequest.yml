@@ -1,0 +1,34 @@
+net\authorize\api\contract\v1\GetTransactionListRequest:
+    xml_root_name: getTransactionListRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        batchId:
+            expose: true
+            access_type: public_method
+            serialized_name: batchId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBatchId
+                setter: setBatchId
+            type: string
+        sorting:
+            expose: true
+            access_type: public_method
+            serialized_name: sorting
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSorting
+                setter: setSorting
+            type: net\authorize\api\contract\v1\TransactionListSortingType
+        paging:
+            expose: true
+            access_type: public_method
+            serialized_name: paging
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaging
+                setter: setPaging
+            type: net\authorize\api\contract\v1\PagingType

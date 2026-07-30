@@ -1,0 +1,14 @@
+name: Features
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ably/features/.github/workflows/sdk-features.yml@main
+    with:
+      repository-name: ably-php
+    secrets: inherit

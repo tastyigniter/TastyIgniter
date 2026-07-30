@@ -1,0 +1,844 @@
+.fa-address-book-o {
+  @extend .fa-address-book;
+}
+.fa-address-card-o {
+  @extend .fa-address-card;
+}
+.fa-area-chart {
+  @extend .fa-chart-area;
+}
+.fa-arrow-circle-o-down {
+  @extend .fa-arrow-alt-circle-down;
+}
+.fa-arrow-circle-o-left {
+  @extend .fa-arrow-alt-circle-left;
+}
+.fa-arrow-circle-o-right {
+  @extend .fa-arrow-alt-circle-right;
+}
+.fa-arrow-circle-o-up {
+  @extend .fa-arrow-alt-circle-up;
+}
+.fa-arrows-alt {
+  @extend .fa-expand-arrows-alt;
+}
+.fa-arrows-h {
+  @extend .fa-arrows-alt-h;
+}
+.fa-arrows-v {
+  @extend .fa-arrows-alt-v;
+}
+.fa-arrows {
+  @extend .fa-arrows-alt;
+}
+.fa-asl-interpreting {
+  @extend .fa-american-sign-language-interpreting;
+}
+.fa-automobile {
+  @extend .fa-car;
+}
+.fa-bank {
+  @extend .fa-university;
+}
+.fa-bar-chart-o {
+  @extend .fa-chart-bar;
+}
+.fa-bar-chart {
+  @extend .fa-chart-bar;
+}
+.fa-bathtub {
+  @extend .fa-bath;
+}
+.fa-battery-0 {
+  @extend .fa-battery-empty;
+}
+.fa-battery-1 {
+  @extend .fa-battery-quarter;
+}
+.fa-battery-2 {
+  @extend .fa-battery-half;
+}
+.fa-battery-3 {
+  @extend .fa-battery-three-quarters;
+}
+.fa-battery-4 {
+  @extend .fa-battery-full;
+}
+.fa-battery {
+  @extend .fa-battery-full;
+}
+.fa-bell-o {
+  @extend .fa-bell;
+}
+.fa-bell-slash-o {
+  @extend .fa-bell-slash;
+}
+.fa-bitbucket-square {
+  @extend .fa-bitbucket;
+}
+.fa-bitcoin {
+  @extend .fa-btc;
+}
+.fa-bookmark-o {
+  @extend .fa-bookmark;
+}
+.fa-building-o {
+  @extend .fa-building;
+}
+.fa-cab {
+  @extend .fa-taxi;
+}
+.fa-calendar-check-o {
+  @extend .fa-calendar-check;
+}
+.fa-calendar-minus-o {
+  @extend .fa-calendar-minus;
+}
+.fa-calendar-o {
+  @extend .fa-calendar;
+}
+.fa-calendar-plus-o {
+  @extend .fa-calendar-plus;
+}
+.fa-calendar-times-o {
+  @extend .fa-calendar-times;
+}
+.fa-calendar {
+  @extend .fa-calendar-alt;
+}
+.fa-caret-square-o-down {
+  @extend .fa-caret-square-down;
+}
+.fa-caret-square-o-left {
+  @extend .fa-caret-square-left;
+}
+.fa-caret-square-o-right {
+  @extend .fa-caret-square-right;
+}
+.fa-caret-square-o-up {
+  @extend .fa-caret-square-up;
+}
+.fa-cc {
+  @extend .fa-closed-captioning;
+}
+.fa-chain-broken {
+  @extend .fa-unlink;
+}
+.fa-chain {
+  @extend .fa-link;
+}
+.fa-check-circle-o {
+  @extend .fa-check-circle;
+}
+.fa-check-square-o {
+  @extend .fa-check-square;
+}
+.fa-circle-o-notch {
+  @extend .fa-circle-notch;
+}
+.fa-circle-o {
+  @extend .fa-circle;
+}
+.fa-circle-thin {
+  @extend .fa-circle;
+}
+.fa-clock-o {
+  @extend .fa-clock;
+}
+.fa-close {
+  @extend .fa-times;
+}
+.fa-cloud-download {
+  @extend .fa-cloud-download-alt;
+}
+.fa-cloud-upload {
+  @extend .fa-cloud-upload-alt;
+}
+.fa-cny {
+  @extend .fa-yen-sign;
+}
+.fa-code-fork {
+  @extend .fa-code-branch;
+}
+.fa-comment-o {
+  @extend .fa-comment;
+}
+.fa-commenting-o {
+  @extend .fa-comment-alt;
+}
+.fa-commenting {
+  @extend .fa-comment-alt;
+}
+.fa-comments-o {
+  @extend .fa-comments;
+}
+.fa-credit-card-alt {
+  @extend .fa-credit-card;
+}
+.fa-cutlery {
+  @extend .fa-utensils;
+}
+.fa-dashboard {
+  @extend .fa-tachometer-alt;
+}
+.fa-deafness {
+  @extend .fa-deaf;
+}
+.fa-dedent {
+  @extend .fa-outdent;
+}
+.fa-diamond {
+  @extend .fa-gem;
+}
+.fa-dollar {
+  @extend .fa-dollar-sign;
+}
+.fa-dot-circle-o {
+  @extend .fa-dot-circle;
+}
+.fa-drivers-license-o {
+  @extend .fa-id-card;
+}
+.fa-drivers-license {
+  @extend .fa-id-card;
+}
+.fa-eercast {
+  @extend .fa-sellcast;
+}
+.fa-envelope-o {
+  @extend .fa-envelope;
+}
+.fa-envelope-open-o {
+  @extend .fa-envelope-open;
+}
+.fa-eur {
+  @extend .fa-euro-sign;
+}
+.fa-euro {
+  @extend .fa-euro-sign;
+}
+.fa-exchange {
+  @extend .fa-exchange-alt;
+}
+.fa-external-link-square {
+  @extend .fa-external-link-square-alt;
+}
+.fa-external-link {
+  @extend .fa-external-link-alt;
+}
+.fa-eyedropper {
+  @extend .fa-eye-dropper;
+}
+.fa-fa {
+  @extend .fa-font-awesome;
+}
+.fa-facebook-f {
+  @extend .fa-facebook-f;
+}
+.fa-facebook-official {
+  @extend .fa-facebook;
+}
+.fa-facebook {
+  @extend .fa-facebook-f;
+}
+.fa-feed {
+  @extend .fa-rss;
+}
+.fa-file-archive-o {
+  @extend .fa-file-archive;
+}
+.fa-file-audio-o {
+  @extend .fa-file-audio;
+}
+.fa-file-code-o {
+  @extend .fa-file-code;
+}
+.fa-file-excel-o {
+  @extend .fa-file-excel;
+}
+.fa-file-image-o {
+  @extend .fa-file-image;
+}
+.fa-file-movie-o {
+  @extend .fa-file-video;
+}
+.fa-file-o {
+  @extend .fa-file;
+}
+.fa-file-pdf-o {
+  @extend .fa-file-pdf;
+}
+.fa-file-photo-o {
+  @extend .fa-file-image;
+}
+.fa-file-picture-o {
+  @extend .fa-file-image;
+}
+.fa-file-powerpoint-o {
+  @extend .fa-file-powerpoint;
+}
+.fa-file-sound-o {
+  @extend .fa-file-audio;
+}
+.fa-file-text-o {
+  @extend .fa-file-alt;
+}
+.fa-file-text {
+  @extend .fa-file-alt;
+}
+.fa-file-video-o {
+  @extend .fa-file-video;
+}
+.fa-file-word-o {
+  @extend .fa-file-word;
+}
+.fa-file-zip-o {
+  @extend .fa-file-archive;
+}
+.fa-files-o {
+  @extend .fa-copy;
+}
+.fa-flag-o {
+  @extend .fa-flag;
+}
+.fa-flash {
+  @extend .fa-bolt;
+}
+.fa-floppy-o {
+  @extend .fa-save;
+}
+.fa-folder-o {
+  @extend .fa-folder;
+}
+.fa-folder-open-o {
+  @extend .fa-folder-open;
+}
+.fa-frown-o {
+  @extend .fa-frown;
+}
+.fa-futbol-o {
+  @extend .fa-futbol;
+}
+.fa-gbp {
+  @extend .fa-pound-sign;
+}
+.fa-ge {
+  @extend .fa-empire;
+}
+.fa-gear {
+  @extend .fa-cog;
+}
+.fa-gears {
+  @extend .fa-cogs;
+}
+.fa-gittip {
+  @extend .fa-gratipay;
+}
+.fa-glass {
+  @extend .fa-glass-martini;
+}
+.fa-google-plus-circle {
+  @extend .fa-google-plus;
+}
+.fa-google-plus-official {
+  @extend .fa-google-plus;
+}
+.fa-google-plus {
+  @extend .fa-google-plus-g;
+}
+.fa-group {
+  @extend .fa-users;
+}
+.fa-hand-grab-o {
+  @extend .fa-hand-rock;
+}
+.fa-hand-lizard-o {
+  @extend .fa-hand-lizard;
+}
+.fa-hand-o-down {
+  @extend .fa-hand-point-down;
+}
+.fa-hand-o-left {
+  @extend .fa-hand-point-left;
+}
+.fa-hand-o-right {
+  @extend .fa-hand-point-right;
+}
+.fa-hand-o-up {
+  @extend .fa-hand-point-up;
+}
+.fa-hand-paper-o {
+  @extend .fa-hand-paper;
+}
+.fa-hand-peace-o {
+  @extend .fa-hand-peace;
+}
+.fa-hand-pointer-o {
+  @extend .fa-hand-pointer;
+}
+.fa-hand-rock-o {
+  @extend .fa-hand-rock;
+}
+.fa-hand-scissors-o {
+  @extend .fa-hand-scissors;
+}
+.fa-hand-spock-o {
+  @extend .fa-hand-spock;
+}
+.fa-hand-stop-o {
+  @extend .fa-hand-paper;
+}
+.fa-handshake-o {
+  @extend .fa-handshake;
+}
+.fa-hard-of-hearing {
+  @extend .fa-deaf;
+}
+.fa-hdd-o {
+  @extend .fa-hdd;
+}
+.fa-header {
+  @extend .fa-heading;
+}
+.fa-heart-o {
+  @extend .fa-heart;
+}
+.fa-hospital-o {
+  @extend .fa-hospital;
+}
+.fa-hotel {
+  @extend .fa-bed;
+}
+.fa-hourglass-1 {
+  @extend .fa-hourglass-start;
+}
+.fa-hourglass-2 {
+  @extend .fa-hourglass-half;
+}
+.fa-hourglass-3 {
+  @extend .fa-hourglass-end;
+}
+.fa-hourglass-o {
+  @extend .fa-hourglass;
+}
+.fa-id-card-o {
+  @extend .fa-id-card;
+}
+.fa-ils {
+  @extend .fa-shekel-sign;
+}
+.fa-image {
+  @extend .fa-image;
+}
+.fa-inr {
+  @extend .fa-rupee-sign;
+}
+.fa-institution {
+  @extend .fa-university;
+}
+.fa-intersex {
+  @extend .fa-transgender;
+}
+.fa-jpy {
+  @extend .fa-yen-sign;
+}
+.fa-keyboard-o {
+  @extend .fa-keyboard;
+}
+.fa-krw {
+  @extend .fa-won-sign;
+}
+.fa-legal {
+  @extend .fa-gavel;
+}
+.fa-lemon-o {
+  @extend .fa-lemon;
+}
+.fa-level-down {
+  @extend .fa-level-down-alt;
+}
+.fa-level-up {
+  @extend .fa-level-up-alt;
+}
+.fa-life-bouy {
+  @extend .fa-life-ring;
+}
+.fa-life-buoy {
+  @extend .fa-life-ring;
+}
+.fa-life-saver {
+  @extend .fa-life-ring;
+}
+.fa-lightbulb-o {
+  @extend .fa-lightbulb;
+}
+.fa-line-chart {
+  @extend .fa-chart-line;
+}
+.fa-linkedin-square {
+  @extend .fa-linkedin;
+}
+.fa-linkedin {
+  @extend .fa-linkedin-in;
+}
+.fa-long-arrow-down {
+  @extend .fa-long-arrow-alt-down;
+}
+.fa-long-arrow-left {
+  @extend .fa-long-arrow-alt-left;
+}
+.fa-long-arrow-right {
+  @extend .fa-long-arrow-alt-right;
+}
+.fa-long-arrow-up {
+  @extend .fa-long-arrow-alt-up;
+}
+.fa-mail-forward {
+  @extend .fa-share;
+}
+.fa-mail-reply-all {
+  @extend .fa-reply-all;
+}
+.fa-mail-reply {
+  @extend .fa-reply;
+}
+.fa-map-marker {
+  @extend .fa-map-marker-alt;
+}
+.fa-map-o {
+  @extend .fa-map;
+}
+.fa-meanpath {
+  @extend .fa-font-awesome;
+}
+.fa-meh-o {
+  @extend .fa-meh;
+}
+.fa-minus-square-o {
+  @extend .fa-minus-square;
+}
+.fa-mobile-phone {
+  @extend .fa-mobile-alt;
+}
+.fa-mobile {
+  @extend .fa-mobile-alt;
+}
+.fa-money {
+  @extend .fa-money-bill-alt;
+}
+.fa-moon-o {
+  @extend .fa-moon;
+}
+.fa-mortar-board {
+  @extend .fa-graduation-cap;
+}
+.fa-navicon {
+  @extend .fa-bars;
+}
+.fa-newspaper-o {
+  @extend .fa-newspaper;
+}
+.fa-paper-plane-o {
+  @extend .fa-paper-plane;
+}
+.fa-paste {
+  @extend .fa-clipboard;
+}
+.fa-pause-circle-o {
+  @extend .fa-pause-circle;
+}
+.fa-pencil-square-o {
+  @extend .fa-edit;
+}
+.fa-pencil-square {
+  @extend .fa-pen-square;
+}
+.fa-pencil {
+  @extend .fa-pencil-alt;
+}
+.fa-photo {
+  @extend .fa-image;
+}
+.fa-picture-o {
+  @extend .fa-image;
+}
+.fa-pie-chart {
+  @extend .fa-chart-pie;
+}
+.fa-play-circle-o {
+  @extend .fa-play-circle;
+}
+.fa-plus-square-o {
+  @extend .fa-plus-square;
+}
+.fa-question-circle-o {
+  @extend .fa-question-circle;
+}
+.fa-ra {
+  @extend .fa-rebel;
+}
+.fa-refresh {
+  @extend .fa-redo;
+}
+.fa-remove {
+  @extend .fa-times;
+}
+.fa-reorder {
+  @extend .fa-bars;
+}
+.fa-repeat {
+  @extend .fa-redo;
+}
+.fa-resistance {
+  @extend .fa-rebel;
+}
+.fa-rmb {
+  @extend .fa-yen-sign;
+}
+.fa-rotate-left {
+  @extend .fa-undo;
+}
+.fa-rotate-right {
+  @extend .fa-redo;
+}
+.fa-rouble {
+  @extend .fa-ruble-sign;
+}
+.fa-rub {
+  @extend .fa-ruble-sign;
+}
+.fa-ruble {
+  @extend .fa-ruble-sign;
+}
+.fa-rupee {
+  @extend .fa-rupee-sign;
+}
+.fa-s15 {
+  @extend .fa-bath;
+}
+.fa-scissors {
+  @extend .fa-cut;
+}
+.fa-send-o {
+  @extend .fa-paper-plane;
+}
+.fa-send {
+  @extend .fa-paper-plane;
+}
+.fa-share-square-o {
+  @extend .fa-share-square;
+}
+.fa-shekel {
+  @extend .fa-shekel-sign;
+}
+.fa-sheqel {
+  @extend .fa-shekel-sign;
+}
+.fa-shield {
+  @extend .fa-shield-alt;
+}
+.fa-sign-in {
+  @extend .fa-sign-in-alt;
+}
+.fa-sign-out {
+  @extend .fa-sign-out-alt;
+}
+.fa-signing {
+  @extend .fa-sign-language;
+}
+.fa-sliders {
+  @extend .fa-sliders-h;
+}
+.fa-smile-o {
+  @extend .fa-smile;
+}
+.fa-snowflake-o {
+  @extend .fa-snowflake;
+}
+.fa-soccer-ball-o {
+  @extend .fa-futbol;
+}
+.fa-sort-alpha-asc {
+  @extend .fa-sort-alpha-down;
+}
+.fa-sort-alpha-desc {
+  @extend .fa-sort-alpha-up;
+}
+.fa-sort-amount-asc {
+  @extend .fa-sort-amount-down;
+}
+.fa-sort-amount-desc {
+  @extend .fa-sort-amount-up;
+}
+.fa-sort-asc {
+  @extend .fa-sort-up;
+}
+.fa-sort-desc {
+  @extend .fa-sort-down;
+}
+.fa-sort-numeric-asc {
+  @extend .fa-sort-numeric-down;
+}
+.fa-sort-numeric-desc {
+  @extend .fa-sort-numeric-up;
+}
+.fa-spoon {
+  @extend .fa-utensil-spoon;
+}
+.fa-square-o {
+  @extend .fa-square;
+}
+.fa-star-half-empty {
+  @extend .fa-star-half;
+}
+.fa-star-half-full {
+  @extend .fa-star-half;
+}
+.fa-star-half-o {
+  @extend .fa-star-half;
+}
+.fa-star-o {
+  @extend .far;
+  @extend .fa-star;
+}
+.fa-sticky-note-o {
+  @extend .fa-sticky-note;
+}
+.fa-stop-circle-o {
+  @extend .fa-stop-circle;
+}
+.fa-sun-o {
+  @extend .fa-sun;
+}
+.fa-support {
+  @extend .fa-life-ring;
+}
+.fa-tablet {
+  @extend .fa-tablet-alt;
+}
+.fa-tachometer {
+  @extend .fa-tachometer-alt;
+}
+.fa-television {
+  @extend .fa-tv;
+}
+.fa-thermometer-0 {
+  @extend .fa-thermometer-empty;
+}
+.fa-thermometer-1 {
+  @extend .fa-thermometer-quarter;
+}
+.fa-thermometer-2 {
+  @extend .fa-thermometer-half;
+}
+.fa-thermometer-3 {
+  @extend .fa-thermometer-three-quarters;
+}
+.fa-thermometer-4 {
+  @extend .fa-thermometer-full;
+}
+.fa-thermometer {
+  @extend .fa-thermometer-full;
+}
+.fa-thumb-tack {
+  @extend .fa-thumbtack;
+}
+.fa-thumbs-o-down {
+  @extend .fa-thumbs-down;
+}
+.fa-thumbs-o-up {
+  @extend .fa-thumbs-up;
+}
+.fa-ticket {
+  @extend .fa-ticket-alt;
+}
+.fa-times-circle-o {
+  @extend .fa-times-circle;
+}
+.fa-times-rectangle-o {
+  @extend .fa-window-close;
+}
+.fa-times-rectangle {
+  @extend .fa-window-close;
+}
+.fa-toggle-down {
+  @extend .fa-caret-square-down;
+}
+.fa-toggle-left {
+  @extend .fa-caret-square-left;
+}
+.fa-toggle-right {
+  @extend .fa-caret-square-right;
+}
+.fa-toggle-up {
+  @extend .fa-caret-square-up;
+}
+.fa-trash-o {
+  @extend .fa-trash;
+}
+.fa-try {
+  @extend .fa-lira-sign;
+}
+.fa-turkish-lira {
+  @extend .fa-lira-sign;
+}
+.fa-unsorted {
+  @extend .fa-sort;
+}
+.fa-usd {
+  @extend .fa-dollar-sign;
+}
+.fa-user-circle-o {
+  @extend .fa-user-circle;
+}
+.fa-user-o {
+  @extend .fa-user;
+}
+.fa-vcard-o {
+  @extend .fa-address-card;
+}
+.fa-vcard {
+  @extend .fa-address-card;
+}
+.fa-video-camera {
+  @extend .fa-video;
+}
+.fa-vimeo {
+  @extend .fa-vimeo-v;
+}
+.fa-volume-control-phone {
+  @extend .fa-phone-volume;
+}
+.fa-warning {
+  @extend .fa-exclamation-triangle;
+}
+.fa-wechat {
+  @extend .fa-weixin;
+}
+.fa-wheelchair-alt {
+  @extend .fa-accessible-icon;
+}
+.fa-window-close-o {
+  @extend .fa-window-close;
+}
+.fa-won {
+  @extend .fa-won-sign;
+}
+.fa-y-combinator-square {
+  @extend .fa-hacker-news;
+}
+.fa-yc-square {
+  @extend .fa-hacker-news;
+}
+.fa-yc {
+  @extend .fa-y-combinator;
+}
+.fa-yen {
+  @extend .fa-yen-sign;
+}
+.fa-youtube-play {
+  @extend .fa-youtube;
+}
+.fa-youtube-square {
+  @extend .fa-youtube;
+}

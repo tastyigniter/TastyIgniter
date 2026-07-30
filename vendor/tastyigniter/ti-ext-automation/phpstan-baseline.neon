@@ -1,0 +1,91 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$staff_group_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/AutomationRules/Actions/AssignToGroup.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$custom\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/AutomationRules/Actions/SendMailTemplate.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$customer_group\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/AutomationRules/Actions/SendMailTemplate.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$send_to\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/AutomationRules/Actions/SendMailTemplate.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$staff_group\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/AutomationRules/Actions/SendMailTemplate.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$template\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/AutomationRules/Actions/SendMailTemplate.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$operator\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Classes/BaseModelAttributesCondition.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Classes/EventManager.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Admin\\Classes\\BaseWidget\:\:getField\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Automations.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Admin\\Classes\\BaseWidget\:\:renderField\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Automations.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Automation\\Models\\AutomationLog\:\:\$action\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/AutomationLog.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Models/AutomationLog.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Automation\\Models\\AutomationRule\:\:\$actions\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/AutomationRule.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Automation\\Models\\AutomationRule\:\:\$conditions\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/AutomationRule.php
+
+		-
+			message: '#^Binary operation "\." between array and '' \- '' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Models/AutomationRule.php

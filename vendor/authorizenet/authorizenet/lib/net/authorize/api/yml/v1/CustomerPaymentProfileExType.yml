@@ -1,0 +1,12 @@
+net\authorize\api\contract\v1\CustomerPaymentProfileExType:
+    properties:
+        customerPaymentProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileId
+                setter: setCustomerPaymentProfileId
+            type: string

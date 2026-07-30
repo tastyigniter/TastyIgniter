@@ -1,0 +1,16 @@
+net\authorize\api\contract\v1\TransactionResponseType\UserFieldsAType:
+    properties:
+        userField:
+            expose: true
+            access_type: public_method
+            serialized_name: userField
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUserField
+                setter: setUserField
+            xml_list:
+                inline: true
+                entry_name: userField
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\UserFieldType>

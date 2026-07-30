@@ -1,0 +1,377 @@
+net\authorize\api\contract\v1\TransactionRequestType:
+    properties:
+        transactionType:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionType
+                setter: setTransactionType
+            type: string
+        amount:
+            expose: true
+            access_type: public_method
+            serialized_name: amount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmount
+                setter: setAmount
+            type: float
+        currencyCode:
+            expose: true
+            access_type: public_method
+            serialized_name: currencyCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCurrencyCode
+                setter: setCurrencyCode
+            type: string
+        payment:
+            expose: true
+            access_type: public_method
+            serialized_name: payment
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayment
+                setter: setPayment
+            type: net\authorize\api\contract\v1\PaymentType
+        profile:
+            expose: true
+            access_type: public_method
+            serialized_name: profile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfile
+                setter: setProfile
+            type: net\authorize\api\contract\v1\CustomerProfilePaymentType
+        solution:
+            expose: true
+            access_type: public_method
+            serialized_name: solution
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSolution
+                setter: setSolution
+            type: net\authorize\api\contract\v1\SolutionType
+        callId:
+            expose: true
+            access_type: public_method
+            serialized_name: callId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCallId
+                setter: setCallId
+            type: string
+        terminalNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: terminalNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTerminalNumber
+                setter: setTerminalNumber
+            type: string
+        authCode:
+            expose: true
+            access_type: public_method
+            serialized_name: authCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuthCode
+                setter: setAuthCode
+            type: string
+        refTransId:
+            expose: true
+            access_type: public_method
+            serialized_name: refTransId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRefTransId
+                setter: setRefTransId
+            type: string
+        splitTenderId:
+            expose: true
+            access_type: public_method
+            serialized_name: splitTenderId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSplitTenderId
+                setter: setSplitTenderId
+            type: string
+        order:
+            expose: true
+            access_type: public_method
+            serialized_name: order
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOrder
+                setter: setOrder
+            type: net\authorize\api\contract\v1\OrderType
+        lineItems:
+            expose: true
+            access_type: public_method
+            serialized_name: lineItems
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getLineItems
+                setter: setLineItems
+            type: array<net\authorize\api\contract\v1\LineItemType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: lineItem
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        tax:
+            expose: true
+            access_type: public_method
+            serialized_name: tax
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTax
+                setter: setTax
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        duty:
+            expose: true
+            access_type: public_method
+            serialized_name: duty
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDuty
+                setter: setDuty
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        shipping:
+            expose: true
+            access_type: public_method
+            serialized_name: shipping
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShipping
+                setter: setShipping
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        taxExempt:
+            expose: true
+            access_type: public_method
+            serialized_name: taxExempt
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxExempt
+                setter: setTaxExempt
+            type: boolean
+        poNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: poNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPoNumber
+                setter: setPoNumber
+            type: string
+        customer:
+            expose: true
+            access_type: public_method
+            serialized_name: customer
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomer
+                setter: setCustomer
+            type: net\authorize\api\contract\v1\CustomerDataType
+        billTo:
+            expose: true
+            access_type: public_method
+            serialized_name: billTo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBillTo
+                setter: setBillTo
+            type: net\authorize\api\contract\v1\CustomerAddressType
+        shipTo:
+            expose: true
+            access_type: public_method
+            serialized_name: shipTo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShipTo
+                setter: setShipTo
+            type: net\authorize\api\contract\v1\NameAndAddressType
+        customerIP:
+            expose: true
+            access_type: public_method
+            serialized_name: customerIP
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerIP
+                setter: setCustomerIP
+            type: string
+        cardholderAuthentication:
+            expose: true
+            access_type: public_method
+            serialized_name: cardholderAuthentication
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardholderAuthentication
+                setter: setCardholderAuthentication
+            type: net\authorize\api\contract\v1\CcAuthenticationType
+        retail:
+            expose: true
+            access_type: public_method
+            serialized_name: retail
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRetail
+                setter: setRetail
+            type: net\authorize\api\contract\v1\TransRetailInfoType
+        employeeId:
+            expose: true
+            access_type: public_method
+            serialized_name: employeeId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmployeeId
+                setter: setEmployeeId
+            type: string
+        transactionSettings:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionSettings
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionSettings
+                setter: setTransactionSettings
+            type: array<net\authorize\api\contract\v1\SettingType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: setting
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        userFields:
+            expose: true
+            access_type: public_method
+            serialized_name: userFields
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUserFields
+                setter: setUserFields
+            type: array<net\authorize\api\contract\v1\UserFieldType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: userField
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        surcharge:
+            expose: true
+            access_type: public_method
+            serialized_name: surcharge
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSurcharge
+                setter: setSurcharge
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        merchantDescriptor:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantDescriptor
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantDescriptor
+                setter: setMerchantDescriptor
+            type: string
+        subMerchant:
+            expose: true
+            access_type: public_method
+            serialized_name: subMerchant
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubMerchant
+                setter: setSubMerchant
+            type: net\authorize\api\contract\v1\SubMerchantType
+        tip:
+            expose: true
+            access_type: public_method
+            serialized_name: tip
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTip
+                setter: setTip
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        processingOptions:
+            expose: true
+            access_type: public_method
+            serialized_name: processingOptions
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProcessingOptions
+                setter: setProcessingOptions
+            type: net\authorize\api\contract\v1\ProcessingOptionsType
+        subsequentAuthInformation:
+            expose: true
+            access_type: public_method
+            serialized_name: subsequentAuthInformation
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubsequentAuthInformation
+                setter: setSubsequentAuthInformation
+            type: net\authorize\api\contract\v1\SubsequentAuthInformationType
+        otherTax:
+            expose: true
+            access_type: public_method
+            serialized_name: otherTax
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOtherTax
+                setter: setOtherTax
+            type: net\authorize\api\contract\v1\OtherTaxType
+        shipFrom:
+            expose: true
+            access_type: public_method
+            serialized_name: shipFrom
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShipFrom
+                setter: setShipFrom
+            type: net\authorize\api\contract\v1\NameAndAddressType
+        authorizationIndicatorType:
+            expose: true
+            access_type: public_method
+            serialized_name: authorizationIndicatorType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuthorizationIndicatorType
+                setter: setAuthorizationIndicatorType
+            type: net\authorize\api\contract\v1\AuthorizationIndicatorType

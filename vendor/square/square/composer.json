@@ -1,0 +1,57 @@
+{
+    "name": "square/square",
+    "description": "Use Square APIs to manage and run business including payment, customer, product, inventory, and employee management.",
+    "version": "26.0.0.20230419",
+    "type": "library",
+    "keywords": [
+        "Square",
+        "API",
+        "SDK"
+    ],
+    "homepage": "https://squareup.com/developers",
+    "license": [
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Square Developer Platform",
+            "email": "developers@squareup.com",
+            "homepage": "https://squareup.com/developers"
+        }
+    ],
+    "require": {
+        "php": "^7.2 || ^8.0",
+        "ext-json": "*",
+        "apimatic/unirest-php": "^4.0.0",
+        "apimatic/core-interfaces": "~0.1.0",
+        "apimatic/core": "~0.2.0"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.5",
+        "phan/phan": "5.4.2",
+        "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Square\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Square\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html=coverage",
+        "lint-src": "phpcs --standard=phpcs-ruleset.xml src/",
+        "lint-src-fix": "phpcbf --standard=phpcs-ruleset.xml src/",
+        "lint-tests": "phpcs --standard=phpcs-ruleset.xml tests/",
+        "lint-tests-fix": "phpcbf --standard=phpcs-ruleset.xml tests/",
+        "analyze": "phan --allow-polyfill-parser",
+        "lint": [
+            "@lint-src",
+            "@lint-tests"
+        ]
+    }
+}

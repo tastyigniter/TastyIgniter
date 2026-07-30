@@ -1,0 +1,13 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined static method Igniter\\Socialite\\Models\\Settings\:\:instance\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Classes/BaseProvider.php
+
+		-
+			message: '#^Call to an undefined method Laravel\\Socialite\\Contracts\\Provider\:\:scopes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/SocialiteProviders/Facebook.php

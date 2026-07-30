@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\KeyValueType:
+    properties:
+        encoding:
+            expose: true
+            access_type: public_method
+            serialized_name: Encoding
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEncoding
+                setter: setEncoding
+            type: string
+        encryptionAlgorithm:
+            expose: true
+            access_type: public_method
+            serialized_name: EncryptionAlgorithm
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEncryptionAlgorithm
+                setter: setEncryptionAlgorithm
+            type: string
+        scheme:
+            expose: true
+            access_type: public_method
+            serialized_name: Scheme
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getScheme
+                setter: setScheme
+            type: net\authorize\api\contract\v1\KeyManagementSchemeType

@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\SecurePaymentContainerErrorType:
+    properties:
+        code:
+            expose: true
+            access_type: public_method
+            serialized_name: code
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCode
+                setter: setCode
+            type: string
+        description:
+            expose: true
+            access_type: public_method
+            serialized_name: description
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDescription
+                setter: setDescription
+            type: string

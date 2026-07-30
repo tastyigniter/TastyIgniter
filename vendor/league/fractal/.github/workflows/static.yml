@@ -1,0 +1,46 @@
+on: [ pull_request ]
+name: Static analysis
+
+jobs:
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: apcu, redis
+          coverage: none
+          tools: phpstan:1.4.6, cs2pr
+
+      - name: Download dependencies
+        uses: ramsey/composer-install@v1
+
+      - name: PHPStan
+        run: phpstan analyze --no-progress --error-format=checkstyle | cs2pr
+
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: apcu, redis
+          coverage: none
+          tools: vimeo/psalm:4.30.0
+
+      - name: Download dependencies
+        uses: ramsey/composer-install@v1
+
+      - name: Psalm
+        run: psalm --no-progress --output-format=github

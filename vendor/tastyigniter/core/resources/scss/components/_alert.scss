@@ -1,0 +1,108 @@
+#notification {
+  display: none;
+}
+
+body.swal2-toast-shown {
+  .swal2-container {
+    &.swal2-bottom-start {
+      width: 35em;
+      padding-bottom: 38px;
+      padding-left: 50px;
+    }
+  }
+}
+
+body:not(.swal2-toast-shown) {
+  .swal2-container.swal2-backdrop-show.modal-backdrop {
+    background: rgba(var(--bs-black-rgb), 0.7);
+    padding: 1.75rem;
+  }
+}
+
+.swal2-popup {
+  border: 0;
+
+  &.swal2-toast {
+    padding: 0.6em 1em;
+    border-top: 2px solid transparent;
+
+    &.swal2-icon-error, &.swal2-icon-danger {
+      background-color: var(--bs-danger);
+      color: $white;
+    }
+
+    &.swal2-icon-success {
+      background-color: var(--bs-success);
+      color: $white;
+    }
+
+    &.swal2-icon-info {
+      background-color: var(--bs-info);
+      color: $white;
+    }
+
+    &.swal2-icon-warning {
+      background-color: var(--bs-warning);
+      color: $white;
+    }
+
+    .swal2-icon {
+      width: 1.5em;
+      min-width: 1.5em;
+      height: 1.5em;
+      margin: 0;
+      border-width: 0;
+      color: $white;
+    }
+
+    .swal2-html-container {
+      font-size: $font-size-base;
+    }
+  }
+
+  .swal2-styled.swal2-confirm {
+    @each $color, $value in $theme-colors {
+      &.btn-#{$color} {
+        background-color: $value;
+        box-shadow: var(--bs-btn-box-shadow);
+        border: var(--bs-btn-border-color);
+      }
+    }
+  }
+
+  .swal2-styled.swal2-cancel {
+    @each $color, $value in $theme-colors {
+      &.btn-#{$color} {
+        background-color: $value;
+        box-shadow: var(--bs-btn-box-shadow);
+        border: var(--bs-btn-border-color);
+      }
+    }
+  }
+
+  .swal2-select {
+    @extend .form-select;
+  }
+
+  .swal2-select {
+    width: auto !important;
+  }
+}
+
+div:where(.swal2-icon) {
+  &.swal2-success {
+    color: var(--bs-success);
+  }
+
+  &.swal2-error, &.swal2-danger {
+    color: var(--bs-danger);
+  }
+
+  &.swal2-info {
+    color: var(--bs-info);
+  }
+
+  &.swal2-warning {
+    color: var(--bs-warning);
+  }
+}

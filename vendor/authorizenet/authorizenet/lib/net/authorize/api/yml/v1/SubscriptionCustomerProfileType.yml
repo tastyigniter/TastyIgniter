@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\SubscriptionCustomerProfileType:
+    properties:
+        paymentProfile:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentProfile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentProfile
+                setter: setPaymentProfile
+            type: net\authorize\api\contract\v1\CustomerPaymentProfileMaskedType
+        shippingProfile:
+            expose: true
+            access_type: public_method
+            serialized_name: shippingProfile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShippingProfile
+                setter: setShippingProfile
+            type: net\authorize\api\contract\v1\CustomerAddressExType

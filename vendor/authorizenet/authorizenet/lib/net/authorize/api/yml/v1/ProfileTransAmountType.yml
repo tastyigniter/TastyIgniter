@@ -1,0 +1,56 @@
+net\authorize\api\contract\v1\ProfileTransAmountType:
+    properties:
+        amount:
+            expose: true
+            access_type: public_method
+            serialized_name: amount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmount
+                setter: setAmount
+            type: float
+        tax:
+            expose: true
+            access_type: public_method
+            serialized_name: tax
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTax
+                setter: setTax
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        shipping:
+            expose: true
+            access_type: public_method
+            serialized_name: shipping
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShipping
+                setter: setShipping
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        duty:
+            expose: true
+            access_type: public_method
+            serialized_name: duty
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDuty
+                setter: setDuty
+            type: net\authorize\api\contract\v1\ExtendedAmountType
+        lineItems:
+            expose: true
+            access_type: public_method
+            serialized_name: lineItems
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getLineItems
+                setter: setLineItems
+            xml_list:
+                inline: true
+                entry_name: lineItems
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\LineItemType>

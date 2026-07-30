@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\PaymentEmvType:
+    properties:
+        emvData:
+            expose: true
+            access_type: public_method
+            serialized_name: emvData
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmvData
+                setter: setEmvData
+            type: W3\XMLSchema\2001\AnyType
+        emvDescriptor:
+            expose: true
+            access_type: public_method
+            serialized_name: emvDescriptor
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmvDescriptor
+                setter: setEmvDescriptor
+            type: W3\XMLSchema\2001\AnyType
+        emvVersion:
+            expose: true
+            access_type: public_method
+            serialized_name: emvVersion
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmvVersion
+                setter: setEmvVersion
+            type: W3\XMLSchema\2001\AnyType

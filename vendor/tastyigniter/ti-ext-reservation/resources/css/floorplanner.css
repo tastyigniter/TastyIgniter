@@ -1,0 +1,85 @@
+.floorplan .list-table {
+    height: 600px;
+}
+
+.floorplanner-canvas {
+    background-color: transparent;
+    background-image: linear-gradient(0deg, transparent 24%,
+    rgba(var(--bs-dark-rgb), .05) 25%,
+    rgba(var(--bs-dark-rgb), .05) 26%, transparent 27%, transparent 74%,
+    rgba(var(--bs-dark-rgb), .05) 75%,
+    rgba(var(--bs-dark-rgb), .05) 76%, transparent 77%, transparent
+    ),
+    linear-gradient(90deg, transparent 24%,
+            rgba(var(--bs-dark-rgb), .05) 25%,
+            rgba(var(--bs-dark-rgb), .05) 26%, transparent 27%, transparent 74%,
+            rgba(var(--bs-dark-rgb), .05) 75%,
+            rgba(var(--bs-dark-rgb), .05) 76%, transparent 77%, transparent
+    );
+    height: 100%;
+    background-size: 50px 50px;
+}
+
+.dining-table-wrapper {
+    height: 60vh;
+}
+
+.dining-table-layout {
+    position: relative;
+}
+
+.dining-table-layout .dining-table-top {
+    background-color: var(--bs-gray-300);
+    border: 2px solid transparent;
+}
+
+.dining-table.selected .dining-table-top {
+    height: inherit;
+    width: inherit;
+    position: absolute;
+    border: 2px solid var(--bs-blue);
+}
+
+.dining-table-layout .dining-chair {
+    background-color: var(--bs-gray-500);
+    z-index: -10;
+}
+
+.dining-table .dining-table-overlay:hover .btn {
+    text-decoration: underline;
+}
+
+.dining-table .table-controls .rotate {
+    height: 20px;
+    position: relative;
+    top: -10px;
+    cursor: grabbing;
+}
+
+.dining-table .table-controls .rotate::before {
+    background: var(--bs-blue);
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    height: 20px;
+    width: 2px;
+    z-index: 1000;
+}
+
+.dining-table .table-controls .rotate::after {
+    background: var(--bs-white);
+    border: 2px solid var(--bs-blue);
+    border-radius: 50%;
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -7px;
+    right: 0;
+    margin: 0 auto;
+    height: 15px;
+    width: 15px;
+    z-index: 1000;
+}

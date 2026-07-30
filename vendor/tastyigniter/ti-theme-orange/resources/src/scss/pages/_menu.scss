@@ -1,0 +1,66 @@
+.nav-categories {
+    .nav-link {
+        color: $body-color;
+    }
+
+    .nav-link.active,
+    .show > .nav-link {
+        color: $nav-pills-link-active-bg;
+        font-weight: $font-weight-bold;
+    }
+}
+
+.menu-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+
+    .menu-group-item {
+        &:first-child {
+            border-top: 0 none;
+        }
+
+        .image {
+            max-height: 80px;
+            overflow: hidden;
+        }
+    }
+
+    .menu-group-toggle {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        color: $accordion-button-color;
+        cursor: pointer;
+        overflow-anchor: none;
+        @include transition($accordion-transition);
+
+        &:not(.collapsed) {
+            &::after {
+                background-image: escape-svg($accordion-button-active-icon);
+                transform: $accordion-icon-transform;
+            }
+        }
+
+        &::after {
+            flex-shrink: 0;
+            width: $accordion-icon-width;
+            height: $accordion-icon-width;
+            margin-left: auto;
+            content: "";
+            background-image: escape-svg($accordion-button-icon);
+            background-repeat: no-repeat;
+            background-size: $accordion-icon-width;
+            @include transition($accordion-icon-transition);
+        }
+    }
+}
+
+.menu-option-item {
+    .form-check,
+    .form-quantity-label {
+        font-size: 0.945rem;
+    }
+}

@@ -1,0 +1,72 @@
+net\authorize\api\contract\v1\BankAccountType:
+    properties:
+        accountType:
+            expose: true
+            access_type: public_method
+            serialized_name: accountType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAccountType
+                setter: setAccountType
+            type: string
+        routingNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: routingNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRoutingNumber
+                setter: setRoutingNumber
+            type: string
+        accountNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: accountNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAccountNumber
+                setter: setAccountNumber
+            type: string
+        nameOnAccount:
+            expose: true
+            access_type: public_method
+            serialized_name: nameOnAccount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getNameOnAccount
+                setter: setNameOnAccount
+            type: string
+        echeckType:
+            expose: true
+            access_type: public_method
+            serialized_name: echeckType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEcheckType
+                setter: setEcheckType
+            type: string
+        bankName:
+            expose: true
+            access_type: public_method
+            serialized_name: bankName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBankName
+                setter: setBankName
+            type: string
+        checkNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: checkNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCheckNumber
+                setter: setCheckNumber
+            type: string

@@ -1,0 +1,34 @@
+net\authorize\api\contract\v1\GetSettledBatchListRequest:
+    xml_root_name: getSettledBatchListRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        includeStatistics:
+            expose: true
+            access_type: public_method
+            serialized_name: includeStatistics
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIncludeStatistics
+                setter: setIncludeStatistics
+            type: boolean
+        firstSettlementDate:
+            expose: true
+            access_type: public_method
+            serialized_name: firstSettlementDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFirstSettlementDate
+                setter: setFirstSettlementDate
+            type: GoetasWebservices\Xsd\XsdToPhp\XMLSchema\DateTime
+        lastSettlementDate:
+            expose: true
+            access_type: public_method
+            serialized_name: lastSettlementDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getLastSettlementDate
+                setter: setLastSettlementDate
+            type: GoetasWebservices\Xsd\XsdToPhp\XMLSchema\DateTime

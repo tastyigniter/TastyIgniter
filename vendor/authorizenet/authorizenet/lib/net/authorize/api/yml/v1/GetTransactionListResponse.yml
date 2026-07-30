@@ -1,0 +1,29 @@
+net\authorize\api\contract\v1\GetTransactionListResponse:
+    xml_root_name: getTransactionListResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transactions:
+            expose: true
+            access_type: public_method
+            serialized_name: transactions
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactions
+                setter: setTransactions
+            type: array<net\authorize\api\contract\v1\TransactionSummaryType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: transaction
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        totalNumInResultSet:
+            expose: true
+            access_type: public_method
+            serialized_name: totalNumInResultSet
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTotalNumInResultSet
+                setter: setTotalNumInResultSet
+            type: integer

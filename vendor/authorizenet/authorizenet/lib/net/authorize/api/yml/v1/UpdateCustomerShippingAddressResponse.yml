@@ -1,0 +1,4 @@
+net\authorize\api\contract\v1\UpdateCustomerShippingAddressResponse:
+    xml_root_name: updateCustomerShippingAddressResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties: {  }

@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\TransactionResponseType\SecureAcceptanceAType:
+    properties:
+        secureAcceptanceUrl:
+            expose: true
+            access_type: public_method
+            serialized_name: SecureAcceptanceUrl
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSecureAcceptanceUrl
+                setter: setSecureAcceptanceUrl
+            type: string
+        payerID:
+            expose: true
+            access_type: public_method
+            serialized_name: PayerID
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayerID
+                setter: setPayerID
+            type: string
+        payerEmail:
+            expose: true
+            access_type: public_method
+            serialized_name: PayerEmail
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayerEmail
+                setter: setPayerEmail
+            type: string

@@ -7,8 +7,8 @@ phpunit.dusk.xml
 auth.json
 
 # Ignore all vendor files included by composer and the lock file
-/vendor
-composer.lock
+# /vendor
+# composer.lock
 node_modules
 
 /public/vendor

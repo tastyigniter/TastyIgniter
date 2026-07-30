@@ -1,0 +1,27 @@
+net\authorize\api\contract\v1\TransactionResponseType\EmvResponseAType:
+    properties:
+        tlvData:
+            expose: true
+            access_type: public_method
+            serialized_name: tlvData
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTlvData
+                setter: setTlvData
+            type: string
+        tags:
+            expose: true
+            access_type: public_method
+            serialized_name: tags
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTags
+                setter: setTags
+            type: array<net\authorize\api\contract\v1\EmvTagType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: tag
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

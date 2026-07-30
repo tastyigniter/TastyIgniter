@@ -1,0 +1,14 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src/
+        - config/
+        - database/
+        - resources/
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        - "#Called 'env' outside of the config directory which returns null when the config is cached, use 'config'#"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" bootstrap="phpunit.php" colors="true" processIsolation="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <testsuites>
+    <testsuite name="Package Test Suite">
+      <directory suffix=".php">./tests/</directory>
+      <exclude>./tests/data</exclude>
+      <exclude>./tests/models</exclude>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory>./src</directory>
+    </include>
+  </source>
+</phpunit>

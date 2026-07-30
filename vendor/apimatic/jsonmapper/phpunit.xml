@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         beStrictAboutChangesToGlobalState="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutCoversAnnotation="true"
+>
+  <testsuites>
+    <testsuite name="JsonMapper Test Suite">
+      <directory>./tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist>
+        <directory suffix=".php">src</directory>
+    </whitelist>
+  </filter>
+
+  <php>
+    <ini name="date.timezone" value="UTC"/>
+  </php>
+</phpunit>

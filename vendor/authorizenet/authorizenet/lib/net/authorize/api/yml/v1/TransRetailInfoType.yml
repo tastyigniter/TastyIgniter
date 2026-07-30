@@ -1,0 +1,42 @@
+net\authorize\api\contract\v1\TransRetailInfoType:
+    properties:
+        marketType:
+            expose: true
+            access_type: public_method
+            serialized_name: marketType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMarketType
+                setter: setMarketType
+            type: string
+        deviceType:
+            expose: true
+            access_type: public_method
+            serialized_name: deviceType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDeviceType
+                setter: setDeviceType
+            type: string
+        customerSignature:
+            expose: true
+            access_type: public_method
+            serialized_name: customerSignature
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerSignature
+                setter: setCustomerSignature
+            type: string
+        terminalNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: terminalNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTerminalNumber
+                setter: setTerminalNumber
+            type: string

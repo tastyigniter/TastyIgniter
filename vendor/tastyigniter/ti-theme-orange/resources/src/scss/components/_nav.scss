@@ -1,0 +1,53 @@
+.navbar-top {
+  background-color: $navbar-top-bg;
+
+  .navbar-brand {
+    padding: 0;
+
+    .img-logo {
+      height: var(--logo-height);
+    }
+
+    .text-logo {
+      line-height: var(--logo-height);
+    }
+  }
+
+  .navbar-nav {
+    .nav-link {
+      color: $navbar-link-color;
+
+      &.active {
+        font-weight: $font-weight-bold;
+      }
+    }
+
+    .dropdown-menu {
+      right: 0;
+      left: auto;
+    }
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .navbar-top {
+    padding: 0;
+
+    .nav-link,
+    .nav .navbar > li > a {
+      padding: $spacer;
+    }
+  }
+}
+.nav-inline {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 100%;
+
+  .nav-link {
+    white-space: nowrap
+  }
+}

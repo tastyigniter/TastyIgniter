@@ -1,0 +1,27 @@
+net\authorize\api\contract\v1\FraudInformationType:
+    properties:
+        fraudFilterList:
+            expose: true
+            access_type: public_method
+            serialized_name: fraudFilterList
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFraudFilterList
+                setter: setFraudFilterList
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: fraudFilter
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        fraudAction:
+            expose: true
+            access_type: public_method
+            serialized_name: fraudAction
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFraudAction
+                setter: setFraudAction
+            type: string

@@ -1,0 +1,26 @@
+/README.html
+/*.tgz
+/dist/
+/vendor*/
+.buildpath
+.project
+.settings
+/composer*.lock
+/coverage
+/.vscode
+.idea
+coverage-clover.xml
+
+### PHPUnit ###
+# Covers PHPUnit
+# Reference: https://phpunit.de/
+
+# Generated files
+.phpunit.result.cache
+.phpunit.cache
+
+# Build data
+/build/
+
+# Coverage
+/CodeCoverage/

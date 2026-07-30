@@ -1,0 +1,102 @@
+net\authorize\api\contract\v1\PaymentDetailsType:
+    properties:
+        currency:
+            expose: true
+            access_type: public_method
+            serialized_name: currency
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCurrency
+                setter: setCurrency
+            type: string
+        promoCode:
+            expose: true
+            access_type: public_method
+            serialized_name: promoCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPromoCode
+                setter: setPromoCode
+            type: string
+        misc:
+            expose: true
+            access_type: public_method
+            serialized_name: misc
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMisc
+                setter: setMisc
+            type: string
+        giftWrap:
+            expose: true
+            access_type: public_method
+            serialized_name: giftWrap
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getGiftWrap
+                setter: setGiftWrap
+            type: string
+        discount:
+            expose: true
+            access_type: public_method
+            serialized_name: discount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDiscount
+                setter: setDiscount
+            type: string
+        tax:
+            expose: true
+            access_type: public_method
+            serialized_name: tax
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTax
+                setter: setTax
+            type: string
+        shippingHandling:
+            expose: true
+            access_type: public_method
+            serialized_name: shippingHandling
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShippingHandling
+                setter: setShippingHandling
+            type: string
+        subTotal:
+            expose: true
+            access_type: public_method
+            serialized_name: subTotal
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubTotal
+                setter: setSubTotal
+            type: string
+        orderID:
+            expose: true
+            access_type: public_method
+            serialized_name: orderID
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOrderID
+                setter: setOrderID
+            type: string
+        amount:
+            expose: true
+            access_type: public_method
+            serialized_name: amount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmount
+                setter: setAmount
+            type: string

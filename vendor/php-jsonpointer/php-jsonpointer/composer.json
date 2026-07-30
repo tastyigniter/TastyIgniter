@@ -1,0 +1,39 @@
+{
+    "name": "php-jsonpointer/php-jsonpointer",
+    "description": "Implementation of JSON Pointer (http://tools.ietf.org/html/rfc6901)",
+    "keywords": ["json", "json pointer", "json traversal"],
+    "homepage": "https://github.com/raphaelstolt/php-jsonpointer",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Raphael Stolt",
+            "email": "raphael.stolt@gmail.com",
+            "homepage": "http://raphaelstolt.blogspot.com/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/raphaelstolt/php-jsonpointer/issues"
+    },
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.6.*",
+        "friendsofphp/php-cs-fixer": "^1.11"
+    },
+    "autoload": {
+        "psr-0": {
+            "Rs\\Json": "src/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "cs-fix": "php-cs-fixer fix . -vv || true"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}

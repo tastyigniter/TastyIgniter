@@ -1,0 +1,89 @@
+.table {
+  > :not(caption) > * > * {
+    box-shadow: none;
+  }
+
+  .sort-col {
+    cursor: pointer;
+    color: lighten($body-color, 25%);
+    text-decoration: none;
+
+    .fa {
+      color: lighten($body-color, 65%);
+    }
+
+    &:hover .fa,
+    &.active .fa {
+      color: $body-color;
+    }
+
+    .fa-sort-ASC:before {
+      @extend .fa-arrow-down
+    }
+
+    .fa-sort-DESC:before {
+      @extend .fa-arrow-up
+    }
+  }
+
+  > :not(:first-child) {
+    border-top: 2px solid $table-border-color;
+  }
+}
+
+.table-muted .text-muted {
+  filter: alpha(opacity=80);
+  opacity: 0.8;
+}
+
+.table > tbody > tr > td,
+.table > tbody > tr > th,
+.table > tfoot > tr > td,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > thead > tr > th {
+  vertical-align: middle;
+}
+
+.table > thead > tr > th {
+  font-weight: 500;
+  line-height: 2;
+  color: lighten($body-color, 25%);
+  padding: .25rem;
+}
+
+.table .list-action,
+.table .list-setup {
+  width: 1px;
+}
+
+.list-table {
+  .table {
+    th:first-child,
+    td:first-child {
+      padding-left: $page-padding-x;
+      padding-right: 0;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-left: 0;
+      padding-right: $page-padding-x;
+    }
+  }
+
+  .bulk-actions {
+    .btn-select-all {
+      &.active {
+        font-weight: $font-weight-bold;
+      }
+    }
+  }
+}
+
+.table-striped {
+  thead th {
+    background-color: $gray-200;
+    border-bottom: 2px solid $gray-300;
+  }
+}

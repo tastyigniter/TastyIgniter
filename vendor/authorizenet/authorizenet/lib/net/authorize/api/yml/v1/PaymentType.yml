@@ -1,0 +1,82 @@
+net\authorize\api\contract\v1\PaymentType:
+    properties:
+        creditCard:
+            expose: true
+            access_type: public_method
+            serialized_name: creditCard
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCreditCard
+                setter: setCreditCard
+            type: net\authorize\api\contract\v1\CreditCardType
+        bankAccount:
+            expose: true
+            access_type: public_method
+            serialized_name: bankAccount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBankAccount
+                setter: setBankAccount
+            type: net\authorize\api\contract\v1\BankAccountType
+        trackData:
+            expose: true
+            access_type: public_method
+            serialized_name: trackData
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTrackData
+                setter: setTrackData
+            type: net\authorize\api\contract\v1\CreditCardTrackType
+        encryptedTrackData:
+            expose: true
+            access_type: public_method
+            serialized_name: encryptedTrackData
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEncryptedTrackData
+                setter: setEncryptedTrackData
+            type: net\authorize\api\contract\v1\EncryptedTrackDataType
+        payPal:
+            expose: true
+            access_type: public_method
+            serialized_name: payPal
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayPal
+                setter: setPayPal
+            type: net\authorize\api\contract\v1\PayPalType
+        opaqueData:
+            expose: true
+            access_type: public_method
+            serialized_name: opaqueData
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOpaqueData
+                setter: setOpaqueData
+            type: net\authorize\api\contract\v1\OpaqueDataType
+        emv:
+            expose: true
+            access_type: public_method
+            serialized_name: emv
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmv
+                setter: setEmv
+            type: net\authorize\api\contract\v1\PaymentEmvType
+        dataSource:
+            expose: true
+            access_type: public_method
+            serialized_name: dataSource
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDataSource
+                setter: setDataSource
+            type: string

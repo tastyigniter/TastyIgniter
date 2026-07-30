@@ -1,0 +1,34 @@
+net\authorize\api\contract\v1\GetTransactionDetailsResponse:
+    xml_root_name: getTransactionDetailsResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transaction:
+            expose: true
+            access_type: public_method
+            serialized_name: transaction
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransaction
+                setter: setTransaction
+            type: net\authorize\api\contract\v1\TransactionDetailsType
+        clientId:
+            expose: true
+            access_type: public_method
+            serialized_name: clientId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getClientId
+                setter: setClientId
+            type: string
+        transrefId:
+            expose: true
+            access_type: public_method
+            serialized_name: transrefId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransrefId
+                setter: setTransrefId
+            type: string

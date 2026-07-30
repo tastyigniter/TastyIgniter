@@ -1,0 +1,10 @@
+.card-hover {
+  &.shadow-sm {
+    box-shadow: none !important;
+  }
+
+  &:hover,
+  &:focus {
+    border: 1px solid $primary;
+  }
+}

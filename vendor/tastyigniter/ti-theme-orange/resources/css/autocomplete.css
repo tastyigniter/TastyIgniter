@@ -1,0 +1,9 @@
+.autocomplete-suggestions {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.map-container {
+    width: 100%;
+    height: 350px;
+}

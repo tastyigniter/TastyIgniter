@@ -1,0 +1,62 @@
+net\authorize\api\contract\v1\ProfileTransactionType:
+    properties:
+        profileTransAuthCapture:
+            expose: true
+            access_type: public_method
+            serialized_name: profileTransAuthCapture
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileTransAuthCapture
+                setter: setProfileTransAuthCapture
+            type: net\authorize\api\contract\v1\ProfileTransAuthCaptureType
+        profileTransAuthOnly:
+            expose: true
+            access_type: public_method
+            serialized_name: profileTransAuthOnly
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileTransAuthOnly
+                setter: setProfileTransAuthOnly
+            type: net\authorize\api\contract\v1\ProfileTransAuthOnlyType
+        profileTransPriorAuthCapture:
+            expose: true
+            access_type: public_method
+            serialized_name: profileTransPriorAuthCapture
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileTransPriorAuthCapture
+                setter: setProfileTransPriorAuthCapture
+            type: net\authorize\api\contract\v1\ProfileTransPriorAuthCaptureType
+        profileTransCaptureOnly:
+            expose: true
+            access_type: public_method
+            serialized_name: profileTransCaptureOnly
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileTransCaptureOnly
+                setter: setProfileTransCaptureOnly
+            type: net\authorize\api\contract\v1\ProfileTransCaptureOnlyType
+        profileTransRefund:
+            expose: true
+            access_type: public_method
+            serialized_name: profileTransRefund
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileTransRefund
+                setter: setProfileTransRefund
+            type: net\authorize\api\contract\v1\ProfileTransRefundType
+        profileTransVoid:
+            expose: true
+            access_type: public_method
+            serialized_name: profileTransVoid
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileTransVoid
+                setter: setProfileTransVoid
+            type: net\authorize\api\contract\v1\ProfileTransVoidType

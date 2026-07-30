@@ -1,0 +1,87 @@
+net\authorize\api\contract\v1\BatchDetailsType:
+    properties:
+        batchId:
+            expose: true
+            access_type: public_method
+            serialized_name: batchId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBatchId
+                setter: setBatchId
+            type: string
+        settlementTimeUTC:
+            expose: true
+            access_type: public_method
+            serialized_name: settlementTimeUTC
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSettlementTimeUTC
+                setter: setSettlementTimeUTC
+            type: GoetasWebservices\Xsd\XsdToPhp\XMLSchema\DateTime
+        settlementTimeLocal:
+            expose: true
+            access_type: public_method
+            serialized_name: settlementTimeLocal
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSettlementTimeLocal
+                setter: setSettlementTimeLocal
+            type: GoetasWebservices\Xsd\XsdToPhp\XMLSchema\DateTime
+        settlementState:
+            expose: true
+            access_type: public_method
+            serialized_name: settlementState
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSettlementState
+                setter: setSettlementState
+            type: string
+        paymentMethod:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentMethod
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentMethod
+                setter: setPaymentMethod
+            type: string
+        marketType:
+            expose: true
+            access_type: public_method
+            serialized_name: marketType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMarketType
+                setter: setMarketType
+            type: string
+        product:
+            expose: true
+            access_type: public_method
+            serialized_name: product
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProduct
+                setter: setProduct
+            type: string
+        statistics:
+            expose: true
+            access_type: public_method
+            serialized_name: statistics
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getStatistics
+                setter: setStatistics
+            type: array<net\authorize\api\contract\v1\BatchStatisticType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: statistic
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

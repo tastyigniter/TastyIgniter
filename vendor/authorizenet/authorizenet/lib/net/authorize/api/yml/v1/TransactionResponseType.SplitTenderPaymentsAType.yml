@@ -1,0 +1,16 @@
+net\authorize\api\contract\v1\TransactionResponseType\SplitTenderPaymentsAType:
+    properties:
+        splitTenderPayment:
+            expose: true
+            access_type: public_method
+            serialized_name: splitTenderPayment
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSplitTenderPayment
+                setter: setSplitTenderPayment
+            xml_list:
+                inline: true
+                entry_name: splitTenderPayment
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\TransactionResponseType\SplitTenderPaymentsAType\SplitTenderPaymentAType>

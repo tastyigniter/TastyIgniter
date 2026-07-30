@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\CustomerProfileBaseType:
+    properties:
+        merchantCustomerId:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantCustomerId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantCustomerId
+                setter: setMerchantCustomerId
+            type: string
+        description:
+            expose: true
+            access_type: public_method
+            serialized_name: description
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDescription
+                setter: setDescription
+            type: string
+        email:
+            expose: true
+            access_type: public_method
+            serialized_name: email
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmail
+                setter: setEmail
+            type: string

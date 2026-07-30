@@ -1,0 +1,62 @@
+{
+  "name": "apimatic/unirest-php",
+  "description": "Unirest PHP",
+  "keywords": [
+    "rest",
+    "curl",
+    "http",
+    "https",
+    "client"
+  ],
+  "type": "library",
+  "homepage": "https://github.com/apimatic/unirest-php",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mashape",
+      "email": "opensource@mashape.com",
+      "homepage": "https://www.mashape.com",
+      "role": "Developer"
+    },
+    {
+      "name": "APIMATIC",
+      "email": "opensource@apimatic.io",
+      "homepage": "https://www.apimatic.io",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.2 || ^8.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "apimatic/core-interfaces": "^0.1.0"
+  },
+  "require-dev": {
+      "squizlabs/php_codesniffer": "^3.5",
+      "phan/phan": "5.4.2",
+      "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Unirest\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Unirest\\Test\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test-coverage": "phpunit --coverage-html=coverage",
+    "test-coverage-text": "phpunit --coverage-text",
+    "lint": "phpcs --standard=phpcs-ruleset.xml src/",
+    "lint-test": "phpcs --standard=phpcs-ruleset.xml tests/",
+    "lint-fix": "phpcbf --standard=phpcs-ruleset.xml src/",
+    "lint-fix-test": "phpcbf --standard=phpcs-ruleset.xml tests/",
+    "analyze": "phan --allow-polyfill-parser"
+  },
+  "support": {
+    "email": "opensource@apimatic.io"
+  }
+}

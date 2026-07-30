@@ -1,0 +1,54 @@
+net\authorize\api\contract\v1\GetCustomerProfileRequest:
+    xml_root_name: getCustomerProfileRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        merchantCustomerId:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantCustomerId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantCustomerId
+                setter: setMerchantCustomerId
+            type: string
+        email:
+            expose: true
+            access_type: public_method
+            serialized_name: email
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmail
+                setter: setEmail
+            type: string
+        unmaskExpirationDate:
+            expose: true
+            access_type: public_method
+            serialized_name: unmaskExpirationDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUnmaskExpirationDate
+                setter: setUnmaskExpirationDate
+            type: boolean
+        includeIssuerInfo:
+            expose: true
+            access_type: public_method
+            serialized_name: includeIssuerInfo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIncludeIssuerInfo
+                setter: setIncludeIssuerInfo
+            type: boolean

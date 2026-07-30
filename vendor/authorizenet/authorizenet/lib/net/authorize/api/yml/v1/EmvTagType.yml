@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\EmvTagType:
+    properties:
+        name:
+            expose: true
+            access_type: public_method
+            serialized_name: name
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getName
+                setter: setName
+            type: string
+        value:
+            expose: true
+            access_type: public_method
+            serialized_name: value
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getValue
+                setter: setValue
+            type: string
+        formatted:
+            expose: true
+            access_type: public_method
+            serialized_name: formatted
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFormatted
+                setter: setFormatted
+            type: string

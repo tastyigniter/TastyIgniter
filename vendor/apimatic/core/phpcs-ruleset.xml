@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ruleset name="SDK-Standard">
+    <rule ref="PSR12"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+</ruleset>

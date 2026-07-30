@@ -1,0 +1,175 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\<Igniter\\Cart\\Models\\Menu\>\:\:listFrontEnd\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Actions/ListMenuItems.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Concerns\\LocationAction\|Igniter\\Local\\Models\\Location\:\:\$reviews_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Data/LocationData.php
+
+		-
+			message: '#^Method Igniter\\Orange\\Data\\LocationData\:\:orderType\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Data/LocationData.php
+
+		-
+			message: '#^Using nullsafe property access on non\-nullable type Igniter\\Cart\\Models\\Concerns\\LocationAction\|Igniter\\Local\\Models\\Location\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Data/LocationData.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$mealtimes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Data/MenuItemData.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Livewire/Checkout.php
+
+		-
+			message: '#^Property Igniter\\Orange\\Livewire\\FulfillmentModal\:\:\$location \(Igniter\\Local\\Classes\\Location\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: src/Livewire/FulfillmentModal.php
+
+		-
+			message: '#^Property Igniter\\Orange\\Livewire\\LeaveReview\:\:\$customerReview \(Igniter\\Flame\\Database\\Model\|null\) does not accept Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Livewire/LeaveReview.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Orange\\Livewire\\LocalSearch\:\:\$orderType\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Livewire/LocalSearch.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Orange\\Livewire\\LocalSearch\:\:\$showAddressPicker\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Livewire/LocalSearch.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Orange\\Livewire\\LocationList\:\:\$showAddressPicker\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\<Igniter\\Local\\Models\\Location\>\:\:listFrontEnd\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\Local\\Models\\Location\:\:getOrderTypeOptions\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Relation ''country'' is not found in Igniter\\Local\\Models\\Location model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Relation ''delivery_areas'' is not found in Igniter\\Local\\Models\\Location model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Relation ''media'' is not found in Igniter\\Local\\Models\\Location model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Relation ''reviews'' is not found in Igniter\\Local\\Models\\Location model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Relation ''settings'' is not found in Igniter\\Local\\Models\\Location model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Relation ''working_hours'' is not found in Igniter\\Local\\Models\\Location model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Livewire/LocationList.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\User\\Models\\Customer\:\:reservations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Livewire/ReservationList.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\<Igniter\\Local\\Models\\Review\>\:\:isApproved\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Livewire/ReviewList.php
+
+		-
+			message: '#^Relation ''customer'' is not found in Igniter\\Local\\Models\\Review model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Livewire/ReviewList.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\NestedSet\\QueryBuilder\:\:sorted\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/View/Components/CategoryList.php
+
+		-
+			message: '#^Static property Igniter\\Orange\\View\\Components\\CategoryList\:\:\$selectedCategoryCache \(Igniter\\Cart\\Models\\Category\|null\) does not accept Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/View/Components/CategoryList.php
+
+		-
+			message: '#^Relation ''locations'' is not found in Igniter\\Cart\\Models\\Menu model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/View/Components/FeaturedItems.php
+
+		-
+			message: '#^Relation ''media'' is not found in Igniter\\Cart\\Models\\Menu model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/View/Components/FeaturedItems.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\<Igniter\\Local\\Models\\Review\>\:\:isApproved\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/View/Components/LocalHeader.php
+
+		-
+			message: '#^Relation ''customer'' is not found in Igniter\\Local\\Models\\Review model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/View/Components/LocalHeader.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\User\\Models\\Customer\:\:orders\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/View/Components/OrderList.php

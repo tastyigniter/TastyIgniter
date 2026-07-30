@@ -1,0 +1,57 @@
+{
+    "name": "stevebauman/purify",
+    "description": "An HTML Purifier / Sanitizer for Laravel",
+    "keywords": [
+        "purify",
+        "purification",
+        "purifier",
+        "clean",
+        "cleaner",
+        "laravel",
+        "html"
+    ],
+    "authors": [
+        {
+            "name": "Steve Bauman",
+            "email": "steven_bauman@outlook.com"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.4",
+        "ezyang/htmlpurifier": "^4.17",
+        "illuminate/contracts": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0|^9.0|^10.0|^11.5.3|^12.5.12",
+        "orchestra/testbench": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "archive": {
+        "exclude": [
+            "/tests"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Stevebauman\\Purify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stevebauman\\Purify\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Stevebauman\\Purify\\PurifyServiceProvider"
+            ],
+            "aliases": {
+                "Purify": "Stevebauman\\Purify\\Facades\\Purify"
+            }
+        }
+    }
+}

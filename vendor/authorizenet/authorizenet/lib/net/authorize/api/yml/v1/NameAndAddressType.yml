@@ -1,0 +1,82 @@
+net\authorize\api\contract\v1\NameAndAddressType:
+    properties:
+        firstName:
+            expose: true
+            access_type: public_method
+            serialized_name: firstName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFirstName
+                setter: setFirstName
+            type: string
+        lastName:
+            expose: true
+            access_type: public_method
+            serialized_name: lastName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getLastName
+                setter: setLastName
+            type: string
+        company:
+            expose: true
+            access_type: public_method
+            serialized_name: company
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCompany
+                setter: setCompany
+            type: string
+        address:
+            expose: true
+            access_type: public_method
+            serialized_name: address
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAddress
+                setter: setAddress
+            type: string
+        city:
+            expose: true
+            access_type: public_method
+            serialized_name: city
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCity
+                setter: setCity
+            type: string
+        state:
+            expose: true
+            access_type: public_method
+            serialized_name: state
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getState
+                setter: setState
+            type: string
+        zip:
+            expose: true
+            access_type: public_method
+            serialized_name: zip
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getZip
+                setter: setZip
+            type: string
+        country:
+            expose: true
+            access_type: public_method
+            serialized_name: country
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCountry
+                setter: setCountry
+            type: string

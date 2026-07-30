@@ -1,0 +1,112 @@
+net\authorize\api\contract\v1\ProfileTransOrderType:
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        customerPaymentProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileId
+                setter: setCustomerPaymentProfileId
+            type: string
+        customerShippingAddressId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerShippingAddressId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerShippingAddressId
+                setter: setCustomerShippingAddressId
+            type: string
+        order:
+            expose: true
+            access_type: public_method
+            serialized_name: order
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOrder
+                setter: setOrder
+            type: net\authorize\api\contract\v1\OrderExType
+        taxExempt:
+            expose: true
+            access_type: public_method
+            serialized_name: taxExempt
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxExempt
+                setter: setTaxExempt
+            type: boolean
+        recurringBilling:
+            expose: true
+            access_type: public_method
+            serialized_name: recurringBilling
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRecurringBilling
+                setter: setRecurringBilling
+            type: boolean
+        cardCode:
+            expose: true
+            access_type: public_method
+            serialized_name: cardCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardCode
+                setter: setCardCode
+            type: string
+        splitTenderId:
+            expose: true
+            access_type: public_method
+            serialized_name: splitTenderId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSplitTenderId
+                setter: setSplitTenderId
+            type: string
+        processingOptions:
+            expose: true
+            access_type: public_method
+            serialized_name: processingOptions
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProcessingOptions
+                setter: setProcessingOptions
+            type: net\authorize\api\contract\v1\ProcessingOptionsType
+        subsequentAuthInformation:
+            expose: true
+            access_type: public_method
+            serialized_name: subsequentAuthInformation
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubsequentAuthInformation
+                setter: setSubsequentAuthInformation
+            type: net\authorize\api\contract\v1\SubsequentAuthInformationType
+        authorizationIndicatorType:
+            expose: true
+            access_type: public_method
+            serialized_name: authorizationIndicatorType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuthorizationIndicatorType
+                setter: setAuthorizationIndicatorType
+            type: net\authorize\api\contract\v1\AuthorizationIndicatorType

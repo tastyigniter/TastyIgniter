@@ -1,0 +1,62 @@
+net\authorize\api\contract\v1\CreditCardType:
+    properties:
+        cardCode:
+            expose: true
+            access_type: public_method
+            serialized_name: cardCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardCode
+                setter: setCardCode
+            type: string
+        isPaymentToken:
+            expose: true
+            access_type: public_method
+            serialized_name: isPaymentToken
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIsPaymentToken
+                setter: setIsPaymentToken
+            type: boolean
+        cryptogram:
+            expose: true
+            access_type: public_method
+            serialized_name: cryptogram
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCryptogram
+                setter: setCryptogram
+            type: string
+        tokenRequestorName:
+            expose: true
+            access_type: public_method
+            serialized_name: tokenRequestorName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTokenRequestorName
+                setter: setTokenRequestorName
+            type: string
+        tokenRequestorId:
+            expose: true
+            access_type: public_method
+            serialized_name: tokenRequestorId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTokenRequestorId
+                setter: setTokenRequestorId
+            type: string
+        tokenRequestorEci:
+            expose: true
+            access_type: public_method
+            serialized_name: tokenRequestorEci
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTokenRequestorEci
+                setter: setTokenRequestorEci
+            type: string

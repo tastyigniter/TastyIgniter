@@ -1,0 +1,73 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    if: "! contains(toJSON(github.event.head_commit.message), 'skip ci')"
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # windows-latest, macos-latest
+        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
+        include:
+          - php: 7.2
+            phpunit: 7
+          - php: 7.3
+            phpunit: 7
+          - php: 7.4
+            phpunit: 7
+          - php: 8.0
+            phpunit: 8
+          - php: 8.1
+            phpunit: 9
+          - php: 8.2
+            phpunit: 9
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+
+    - name: Cache Composer dependencies
+      id: cache 
+      uses: actions/cache@v3
+      with:
+        path: ~/.composer/cache/files
+        key: ${{ matrix.os }}-core-lib-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ matrix.os }}-core-lib-${{ matrix.php }}-composer-
+
+    - name: Update dependencies
+      run: composer update
+
+    - name: Check style src
+      run: composer lint-src
+
+    - name: Check style test
+      run: composer lint-test
+
+    - name: Run phan analysis
+      run: composer analyze
+
+    - name: Run tests
+      run: composer test-ci
+
+    - name: Upload coverage report
+      if: ${{ matrix.os == 'ubuntu-latest' && matrix.php == '8.1' }}
+      uses: paambaati/codeclimate-action@v3.0.0
+      env:
+        CC_TEST_REPORTER_ID: 3ee5e7a87dbd07c2616dfc72aada93a8d88684a483279f3995ab045190b5a811
+      with:
+        coverageLocations: |
+          ${{github.workspace}}/coverage-clover.xml:clover

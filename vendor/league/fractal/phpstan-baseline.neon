@@ -1,0 +1,72 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$separator of function explode expects non\\-empty\\-string, string given\\.$#"
+			count: 1
+			path: src/Manager.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Pagination\\\\LengthAwarePaginator\\:\\:count\\(\\)\\.$#"
+			count: 1
+			path: src/Pagination/IlluminatePaginatorAdapter.php
+
+		-
+			message: "#^Call to an undefined method League\\\\Fractal\\\\Resource\\\\ResourceInterface\\:\\:getMeta\\(\\)\\.$#"
+			count: 1
+			path: src/Scope.php
+
+		-
+			message: "#^Call to an undefined method League\\\\Fractal\\\\TransformerAbstract\\:\\:transform\\(\\)\\.$#"
+			count: 2
+			path: src/Scope.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with array will always evaluate to false\\.$#"
+			count: 1
+			path: src/Scope.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$includeKey\\)\\: Unexpected token \"\\$includeKey\", expected type at offset 18$#"
+			count: 2
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$includeObject\\)\\: Unexpected token \"\\$includeObject\", expected type at offset 18$#"
+			count: 1
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$includeObject\\)\\: Unexpected token \"\\$includeObject\", expected type at offset 73$#"
+			count: 1
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$includeObjects\\)\\: Unexpected token \"\\$includeObjects\", expected type at offset 18$#"
+			count: 1
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$key\\)\\: Unexpected token \"\\$key\", expected type at offset 102$#"
+			count: 1
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$linkedIds\\)\\: Unexpected token \"\\$linkedIds\", expected type at offset 48$#"
+			count: 1
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$relationship\\)\\: Unexpected token \"\\$relationship\", expected type at offset 47$#"
+			count: 1
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$relationships\\)\\: Unexpected token \"\\$relationships\", expected type at offset 44$#"
+			count: 2
+			path: src/Serializer/JsonApiSerializer.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$serializedData\\)\\: Unexpected token \"\\$serializedData\", expected type at offset 73$#"
+			count: 1
+			path: src/Serializer/JsonApiSerializer.php
+

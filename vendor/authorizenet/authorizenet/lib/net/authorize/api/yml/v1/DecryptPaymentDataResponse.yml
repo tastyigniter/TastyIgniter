@@ -1,0 +1,44 @@
+net\authorize\api\contract\v1\DecryptPaymentDataResponse:
+    xml_root_name: decryptPaymentDataResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        shippingInfo:
+            expose: true
+            access_type: public_method
+            serialized_name: shippingInfo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShippingInfo
+                setter: setShippingInfo
+            type: net\authorize\api\contract\v1\CustomerAddressType
+        billingInfo:
+            expose: true
+            access_type: public_method
+            serialized_name: billingInfo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBillingInfo
+                setter: setBillingInfo
+            type: net\authorize\api\contract\v1\CustomerAddressType
+        cardInfo:
+            expose: true
+            access_type: public_method
+            serialized_name: cardInfo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardInfo
+                setter: setCardInfo
+            type: net\authorize\api\contract\v1\CreditCardMaskedType
+        paymentDetails:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentDetails
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentDetails
+                setter: setPaymentDetails
+            type: net\authorize\api\contract\v1\PaymentDetailsType

@@ -1,0 +1,30 @@
+net\authorize\api\contract\v1\ListOfAUDetailsType:
+    properties:
+        auUpdate:
+            expose: true
+            access_type: public_method
+            serialized_name: auUpdate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuUpdate
+                setter: setAuUpdate
+            xml_list:
+                inline: true
+                entry_name: auUpdate
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\AuUpdateType>
+        auDelete:
+            expose: true
+            access_type: public_method
+            serialized_name: auDelete
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuDelete
+                setter: setAuDelete
+            xml_list:
+                inline: true
+                entry_name: auDelete
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\AuDeleteType>

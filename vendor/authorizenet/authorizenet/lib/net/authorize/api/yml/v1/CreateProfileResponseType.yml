@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\CreateProfileResponseType:
+    properties:
+        messages:
+            expose: true
+            access_type: public_method
+            serialized_name: messages
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMessages
+                setter: setMessages
+            type: net\authorize\api\contract\v1\MessagesType
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        customerPaymentProfileIdList:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileIdList
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileIdList
+                setter: setCustomerPaymentProfileIdList
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: numericString
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        customerShippingAddressIdList:
+            expose: true
+            access_type: public_method
+            serialized_name: customerShippingAddressIdList
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerShippingAddressIdList
+                setter: setCustomerShippingAddressIdList
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: numericString
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

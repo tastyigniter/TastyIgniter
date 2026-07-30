@@ -1,0 +1,54 @@
+name: ✨ Feature
+description: Propose a straightforward extension
+title: "[Feature] <title>"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+  - type: checkboxes
+    attributes:
+      label: Is this your first time submitting a feature request?
+      description: >
+        We want to make sure that features are distinct and discoverable,
+        so that other members of the community can find them and offer their thoughts.
+
+        Issues are the right place to request straightforward extensions of existing functionality.
+      options:
+        - label: I have searched the existing issues, and I could not find an existing issue for this feature
+          required: true
+        - label: I am requesting an extension of the existing functionality
+  - type: textarea
+    attributes:
+      label: Describe the feature
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Describe alternatives you've considered
+      description: |
+        A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Who will this benefit?
+      description: |
+        What kind of use case will this feature be useful for? Please be specific and provide examples, this will help us prioritize properly.
+    validations:
+      required: false
+  - type: input
+    attributes:
+      label: Are you interested in contributing this feature?
+      description: Let us know if you want to write some code, and how we can help.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Anything else?
+      description: |
+        Links? References? Anything that will give us more context about the feature you are suggesting!
+    validations:
+      required: false

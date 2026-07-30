@@ -1,0 +1,24 @@
+net\authorize\api\contract\v1\DecryptPaymentDataRequest:
+    xml_root_name: decryptPaymentDataRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        opaqueData:
+            expose: true
+            access_type: public_method
+            serialized_name: opaqueData
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOpaqueData
+                setter: setOpaqueData
+            type: net\authorize\api\contract\v1\OpaqueDataType
+        callId:
+            expose: true
+            access_type: public_method
+            serialized_name: callId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCallId
+                setter: setCallId
+            type: string

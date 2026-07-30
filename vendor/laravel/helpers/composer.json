@@ -1,0 +1,49 @@
+{
+    "name": "laravel/helpers",
+    "description": "Provides backwards compatibility for helpers in the latest Laravel release.",
+    "keywords": ["laravel", "helpers"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Taylor Otwell",
+            "email": "taylor@laravel.com"
+        },
+        {
+            "name": "Dries Vints",
+            "email": "dries@laravel.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2.0|^8.0",
+        "illuminate/support": "~5.8.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^7.0|^8.0|^9.0|^10.0|^11.0|^12.0"
+    },
+    "autoload": {
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "config": {
+        "audit": {
+            "block-insecure": false
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

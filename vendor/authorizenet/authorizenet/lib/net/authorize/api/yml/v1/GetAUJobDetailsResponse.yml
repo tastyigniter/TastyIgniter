@@ -1,0 +1,24 @@
+net\authorize\api\contract\v1\GetAUJobDetailsResponse:
+    xml_root_name: getAUJobDetailsResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        totalNumInResultSet:
+            expose: true
+            access_type: public_method
+            serialized_name: totalNumInResultSet
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTotalNumInResultSet
+                setter: setTotalNumInResultSet
+            type: integer
+        auDetails:
+            expose: true
+            access_type: public_method
+            serialized_name: auDetails
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuDetails
+                setter: setAuDetails
+            type: net\authorize\api\contract\v1\ListOfAUDetailsType

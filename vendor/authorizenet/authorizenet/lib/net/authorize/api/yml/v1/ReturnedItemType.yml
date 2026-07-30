@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\ReturnedItemType:
+    properties:
+        id:
+            expose: true
+            access_type: public_method
+            serialized_name: id
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getId
+                setter: setId
+            type: string
+        dateUTC:
+            expose: true
+            access_type: public_method
+            serialized_name: dateUTC
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDateUTC
+                setter: setDateUTC
+            type: GoetasWebservices\Xsd\XsdToPhp\XMLSchema\DateTime
+        dateLocal:
+            expose: true
+            access_type: public_method
+            serialized_name: dateLocal
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDateLocal
+                setter: setDateLocal
+            type: GoetasWebservices\Xsd\XsdToPhp\XMLSchema\DateTime
+        code:
+            expose: true
+            access_type: public_method
+            serialized_name: code
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCode
+                setter: setCode
+            type: string
+        description:
+            expose: true
+            access_type: public_method
+            serialized_name: description
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDescription
+                setter: setDescription
+            type: string

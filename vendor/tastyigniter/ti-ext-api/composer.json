@@ -1,0 +1,83 @@
+{
+    "name": "tastyigniter/ti-ext-api",
+    "type": "tastyigniter-package",
+    "description": "Manages and generates RESTful APIs using available models in your TastyIgniter app.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sam Poyigi",
+            "email": "sam@sampoyigi.com"
+        }
+    ],
+    "keywords": [
+        "tastyigniter",
+        "rest",
+        "api"
+    ],
+    "require": {
+        "laravel/sanctum": "^4.0",
+        "spatie/laravel-fractal": "^6.0",
+        "tastyigniter/core": "^v4.0",
+        "tastyigniter/ti-ext-user": "^v4.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.2",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "pestphp/pest-plugin-type-coverage": "^3.0",
+        "rector/rector": "^2.0",
+        "sampoyigi/testbench": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Igniter\\Api\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Igniter\\Api\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "tastyigniter-extension": {
+            "code": "igniter.api",
+            "name": "APIs for TastyIgniter",
+            "icon": {
+                "class": "fa fa-cloud",
+                "color": "#fff",
+                "backgroundColor": "#FF4900"
+            },
+            "homepage": "https://tastyigniter.com/marketplace/item/igniter-api"
+        },
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "composer/installers": true,
+            "php-http/discovery": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test:lint": "vendor/bin/pint --test --ansi",
+        "test:lint-fix": "vendor/bin/pint --ansi",
+        "test:refactor": "vendor/bin/rector process --dry-run --ansi",
+        "test:refactor-fix": "vendor/bin/rector process --ansi",
+        "test:static": "vendor/bin/phpstan analyse --memory-limit=1056M --ansi",
+        "test:static-fix": "vendor/bin/phpstan --generate-baseline --memory-limit=1056M --ansi",
+        "test:pest": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage --exactly=100 --compact",
+        "test:type-coverage": "vendor/bin/pest --type-coverage --min=100",
+        "test": [
+            "@test:refactor",
+            "@test:static",
+            "@test:lint",
+            "@test:coverage"
+        ]
+    }
+}

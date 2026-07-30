@@ -1,0 +1,77 @@
+%YAML 1.2
+---
+common-version: 1.2.0
+compliance:
+  Agent Identifier:
+    Agents:
+  Authentication:
+    API Key:
+    Token:
+      Callback:
+      Literal:
+      URL:
+        Query Time:
+  Debugging:
+    Error Information:
+    Logs:
+  Protocol:
+    JSON:
+    MessagePack:
+  REST:
+    Authentication:
+      Authorize:
+      Create Token Request:
+      Get Client Identifier:
+      Request Token:
+    Channel:
+      Encryption:
+      Existence Check:
+      Get:
+      History:
+      Iterate:
+      Name:
+      Presence:
+        History:
+        Member List:
+      Publish:
+        Idempotence:
+      Push Notifications:
+        List Subscriptions:
+        Subscribe:
+      Release:
+      Status:
+        Channel Details: # https://github.com/ably/ably-php/pull/159
+    Opaque Request:
+    Push Notifications Administration:
+      Channel Subscription:
+        List:
+        List Channels:
+        Remove:
+        Save:
+      Device Registration:
+        Get:
+        List:
+        Remove:
+        Save:
+      Publish:
+    Request Timeout:
+    Service:
+      Get Time:
+    Statistics:
+      Query:
+  Service:
+    Environment:
+    Fallbacks:
+      Hosts:
+      Internet Up Check:
+      Retry Count:
+      Retry Duration:
+      Retry Timeout:
+    Host:
+  Testing:
+    Disable TLS:
+    TCP Insecure Port:
+    TCP Secure Port:
+  Transport:
+    Connection Open Timeout:
+    Proxy:

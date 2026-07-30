@@ -1,0 +1,166 @@
+<?php
+
+namespace Livewire\Mechanisms\HandleRequests;
+
+use Illuminate\Support\Facades\Route;
+use Livewire\Features\SupportScriptsAndAssets\SupportScriptsAndAssets;
+
+use Livewire\Mechanisms\Mechanism;
+
+use function Livewire\trigger;
+
+class HandleRequests extends Mechanism
+{
+    protected $updateRoute;
+
+    function boot()
+    {
+        // Register the default route immediately (before routes files load)
+        // so it's positioned before any catch-all routes.
+        if (! $this->updateRoute && ! $this->updateRouteExists()) {
+            app($this::class)->setUpdateRoute(function ($handle) {
+                return Route::post('/livewire/update', $handle)
+                    ->middleware('web')
+                    ->name('default.livewire.update');
+            });
+        }
+
+        $this->skipRequestPayloadTamperingMiddleware();
+    }
+
+    protected function updateRouteExists()
+    {
+        return $this->findUpdateRoute() !== null;
+    }
+
+    function getUpdateUri()
+    {
+        // When routes are cached, $this->updateRoute may be null because
+        // setUpdateRoute() was never called (the route already existed).
+        // In this case, find the route from the router.
+        $route = $this->updateRoute ?? $this->findUpdateRoute();
+
+        return (string) str(app('url')->toRoute($route, [], false))->start('/');
+    }
+
+    protected function findUpdateRoute()
+    {
+        // Find the route with name ending in 'livewire.update'.
+        // Custom routes can have prefixes (e.g., 'tenant.livewire.update')
+        // so we check for routes ending with 'livewire.update', not just exact matches.
+        // Prioritise custom routes over the default route.
+        $defaultRoute = null;
+
+        foreach (Route::getRoutes()->getRoutes() as $route) {
+            if (str($route->getName())->endsWith('livewire.update')) {
+                // If it's the default route, save it but keep looking for a custom one
+                if ($route->getName() === 'default.livewire.update') {
+                    $defaultRoute = $route;
+                    continue;
+                }
+
+                // Found a custom route, return it immediately
+                return $route;
+            }
+        }
+
+        return $defaultRoute;
+    }
+
+    function skipRequestPayloadTamperingMiddleware()
+    {
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::skipWhen(function () {
+            return $this->isLivewireRequest();
+        });
+
+        \Illuminate\Foundation\Http\Middleware\TrimStrings::skipWhen(function () {
+            return $this->isLivewireRequest();
+        });
+    }
+
+    function setUpdateRoute($callback)
+    {
+        $route = $callback([self::class, 'handleUpdate']);
+
+        // Append `livewire.update` to the existing name, if any.
+        if (! str($route->getName())->endsWith('livewire.update')) {
+            $route->name('livewire.update');
+        }
+
+        $this->updateRoute = $route;
+    }
+
+    function isLivewireRequest()
+    {
+        return request()->hasHeader('X-Livewire');
+    }
+
+    function isLivewireRoute()
+    {
+        // @todo: Rename this back to `isLivewireRequest` once the need for it in tests has been fixed.
+        $route = request()->route();
+
+        if (! $route) return false;
+
+        /*
+         * Check to see if route name ends with `livewire.update`, as if
+         * a custom update route is used and they add a name, then when
+         * we call `->name('livewire.update')` on the route it will
+         * suffix the existing name with `livewire.update`.
+         */
+        return $route->named('*livewire.update');
+    }
+
+    function handleUpdate()
+    {
+        $requestPayload = request('components');
+
+        if (! is_array($requestPayload) || empty($requestPayload)) {
+            abort(404);
+        }
+
+        foreach ($requestPayload as $component) {
+            if (! is_array($component)
+                || ! is_string($component['snapshot'] ?? null)
+                || ! is_array($component['updates'] ?? null)
+                || ! is_array($component['calls'] ?? null)
+            ) {
+                abort(404);
+            }
+        }
+
+        $finish = trigger('request', $requestPayload);
+
+        $requestPayload = $finish($requestPayload);
+
+        $componentResponses = [];
+
+        foreach ($requestPayload as $componentPayload) {
+            $snapshot = json_decode($componentPayload['snapshot'], associative: true);
+            $updates = $componentPayload['updates'];
+            $calls = $componentPayload['calls'];
+
+            try {
+                [ $snapshot, $effects ] = app('livewire')->update($snapshot, $updates, $calls);
+            } catch (\TypeError $e) {
+                if (config('app.debug')) throw $e;
+
+                abort(419);
+            }
+
+            $componentResponses[] = [
+                'snapshot' => json_encode($snapshot),
+                'effects' => $effects,
+            ];
+        }
+
+        $responsePayload = [
+            'components' => $componentResponses,
+            'assets' => SupportScriptsAndAssets::getAssets(),
+        ];
+
+        $finish = trigger('response', $responsePayload);
+
+        return $finish($responsePayload);
+    }
+}

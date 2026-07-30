@@ -1,0 +1,102 @@
+net\authorize\api\contract\v1\ARBSubscriptionType:
+    properties:
+        name:
+            expose: true
+            access_type: public_method
+            serialized_name: name
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getName
+                setter: setName
+            type: string
+        paymentSchedule:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentSchedule
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentSchedule
+                setter: setPaymentSchedule
+            type: net\authorize\api\contract\v1\PaymentScheduleType
+        amount:
+            expose: true
+            access_type: public_method
+            serialized_name: amount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmount
+                setter: setAmount
+            type: float
+        trialAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: trialAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTrialAmount
+                setter: setTrialAmount
+            type: float
+        payment:
+            expose: true
+            access_type: public_method
+            serialized_name: payment
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayment
+                setter: setPayment
+            type: net\authorize\api\contract\v1\PaymentType
+        order:
+            expose: true
+            access_type: public_method
+            serialized_name: order
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOrder
+                setter: setOrder
+            type: net\authorize\api\contract\v1\OrderType
+        customer:
+            expose: true
+            access_type: public_method
+            serialized_name: customer
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomer
+                setter: setCustomer
+            type: net\authorize\api\contract\v1\CustomerType
+        billTo:
+            expose: true
+            access_type: public_method
+            serialized_name: billTo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBillTo
+                setter: setBillTo
+            type: net\authorize\api\contract\v1\NameAndAddressType
+        shipTo:
+            expose: true
+            access_type: public_method
+            serialized_name: shipTo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShipTo
+                setter: setShipTo
+            type: net\authorize\api\contract\v1\NameAndAddressType
+        profile:
+            expose: true
+            access_type: public_method
+            serialized_name: profile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfile
+                setter: setProfile
+            type: net\authorize\api\contract\v1\CustomerProfileIdType

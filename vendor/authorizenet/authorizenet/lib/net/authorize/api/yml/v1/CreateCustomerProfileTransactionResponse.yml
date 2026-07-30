@@ -1,0 +1,24 @@
+net\authorize\api\contract\v1\CreateCustomerProfileTransactionResponse:
+    xml_root_name: createCustomerProfileTransactionResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transactionResponse:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionResponse
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionResponse
+                setter: setTransactionResponse
+            type: net\authorize\api\contract\v1\TransactionResponseType
+        directResponse:
+            expose: true
+            access_type: public_method
+            serialized_name: directResponse
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDirectResponse
+                setter: setDirectResponse
+            type: string

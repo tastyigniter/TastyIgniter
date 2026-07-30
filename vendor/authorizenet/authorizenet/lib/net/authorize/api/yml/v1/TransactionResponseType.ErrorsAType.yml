@@ -1,0 +1,16 @@
+net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType:
+    properties:
+        error:
+            expose: true
+            access_type: public_method
+            serialized_name: error
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getError
+                setter: setError
+            xml_list:
+                inline: true
+                entry_name: error
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\TransactionResponseType\ErrorsAType\ErrorAType>

@@ -1,0 +1,84 @@
+{
+  "name": "mollie/mollie-api-php",
+  "description": "Mollie API client library for PHP. Mollie is a European Payment Service provider and offers international payment methods such as Mastercard, VISA, American Express and PayPal, and local payment methods such as iDEAL, Bancontact, SOFORT Banking, SEPA direct debit, Belfius Direct Net, KBC Payment Button and various gift cards such as Podiumcadeaukaart and fashioncheque.",
+  "keywords": [
+    "mollie",
+    "payment",
+    "service",
+    "ideal",
+    "creditcard",
+    "apple pay",
+    "mistercash",
+    "bancontact",
+    "sofort",
+    "sofortbanking",
+    "sepa",
+    "paypal",
+    "paysafecard",
+    "podiumcadeaukaart",
+    "przelewy24",
+    "banktransfer",
+    "direct debit",
+    "belfius",
+    "belfius direct net",
+    "refunds",
+    "api",
+    "payments",
+    "gateway",
+    "subscriptions",
+    "recurring",
+    "charges",
+    "kbc",
+    "cbc",
+    "gift cards",
+    "intersolve",
+    "fashioncheque",
+    "inghomepay",
+    "klarna",
+    "paylater",
+    "sliceit"
+  ],
+  "homepage": "https://www.mollie.com/en/developers",
+  "license": "BSD-2-Clause",
+  "authors": [
+    {
+      "name": "Mollie B.V.",
+      "email": "info@mollie.com"
+    }
+  ],
+  "require": {
+    "php": "^7.2|^8.0",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "composer/ca-bundle": "^1.2"
+  },
+  "require-dev": {
+    "eloquent/liberator": "^2.0||^3.0",
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "guzzlehttp/guzzle": "^6.3 || ^7.0",
+    "phpstan/phpstan": "^1.12",
+    "phpunit/phpunit": "^8.5 || ^9.5"
+  },
+  "suggest": {
+    "mollie/oauth2-mollie-php": "Use OAuth to authenticate with the Mollie API. This is needed for some endpoints. Visit https://docs.mollie.com/ for more information."
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Mollie\\Api\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/",
+      "Tests\\Mollie\\Api\\": "tests/Mollie/API/"
+    }
+  },
+  "scripts": {
+    "test": "./vendor/bin/phpunit tests",
+    "format": "./vendor/bin/php-cs-fixer fix --allow-risky=yes"
+  }
+}

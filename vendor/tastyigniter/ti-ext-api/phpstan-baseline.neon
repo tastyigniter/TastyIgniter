@@ -1,0 +1,253 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Igniter\\User\\Models\\Address\:\:\$country\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/AddressTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Category\:\:\$locations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/CategoryTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\User\\Models\\Customer\:\:\$orders\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/CustomerTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\User\\Models\\Customer\:\:\$reservations\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/CustomerTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\Location\:\:\$delivery_areas\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/LocationTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\Location\:\:\$working_hours\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/LocationTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\MenuItemOption\:\:\$option\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuItemOptionTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Currency\\Contracts\\CurrencyInterface\:\:\$currency_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuItemOptionValueTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\MenuOption\:\:\$option_values\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuOptionTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Currency\\Contracts\\CurrencyInterface\:\:\$currency_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuOptionValueTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$categories\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$mealtimes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$stocks\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Currency\\Contracts\\CurrencyInterface\:\:\$currency_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/MenuTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Order\:\:\$assignee\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/OrderTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Order\:\:\$assignee_group\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/OrderTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Order\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/OrderTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Order\:\:\$status_history\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/OrderTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Currency\\Contracts\\CurrencyInterface\:\:\$currency_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/OrderTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Reservation\\Models\\Reservation\:\:\$assignee\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/ReservationTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Reservation\\Models\\Reservation\:\:\$assignee_group\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/ReservationTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Reservation\\Models\\Reservation\:\:\$status_history\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/ReservationTransformer.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\Review\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/ApiResources/Transformers/ReviewTransformer.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Igniter\\Api\\Models\\Resource\>\:\:mapWithKeys\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: src/Classes/ApiManager.php
+
+		-
+			message: '#^Method Igniter\\Api\\Console\\IssueApiToken\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''name'', null, 2, ''The name to…''\}, array\{''email'', null, 2, ''The email of the…''\}, array\{''admin'', null, 1, ''Specify to issue…''\}, array\{''abilities'', null, 12, ''The abilities of…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Console/IssueApiToken.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Api\\Classes\\ApiController\:\:\$restConfig\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restAfterCreate\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restAfterDelete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restAfterSave\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restAfterUpdate\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restBeforeCreate\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restBeforeSave\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restExtendQuery\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restValidate\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Api\\Classes\\ApiController\:\:restValidateQuery\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Actions/RestController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Resource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$endpoint\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Resource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$is_custom\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Resource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$meta\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Resource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Resource.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 5
+			path: src/Models/Resource.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:tokens\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Token.php

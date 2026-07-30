@@ -1,0 +1,74 @@
+{
+    "name": "laravel/reverb",
+    "description": "Laravel Reverb provides a real-time WebSocket communication backend for Laravel applications.",
+    "keywords": [
+        "laravel",
+        "websocket",
+        "websockets",
+        "real-time"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Taylor Otwell",
+            "email": "taylor@laravel.com"
+        },
+        {
+            "name": "Joe Dixon",
+            "email": "joe@laravel.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "clue/redis-react": "^2.6",
+        "guzzlehttp/psr7": "^2.6",
+        "illuminate/console": "^10.47|^11.0|^12.0|^13.0",
+        "illuminate/contracts": "^10.47|^11.0|^12.0|^13.0",
+        "illuminate/http": "^10.47|^11.0|^12.0|^13.0",
+        "illuminate/support": "^10.47|^11.0|^12.0|^13.0",
+        "laravel/prompts": "^0.1.15|^0.2.0|^0.3.0",
+        "pusher/pusher-php-server": "^7.2",
+        "ratchet/rfc6455": "^0.4",
+        "react/promise-timer": "^1.10",
+        "react/socket": "^1.14",
+        "symfony/console": "^6.0|^7.0|^8.0",
+        "symfony/http-foundation": "^6.3|^7.0|^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.36|^9.15|^10.8|^11.0",
+        "pestphp/pest": "^2.0|^3.0|^4.0",
+        "phpstan/phpstan": "^1.10",
+        "ratchet/pawl": "^0.4.1",
+        "react/async": "^4.2",
+        "react/http": "^1.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laravel\\Reverb\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laravel\\Reverb\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Laravel\\Reverb\\ApplicationManagerServiceProvider",
+                "Laravel\\Reverb\\ReverbServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/pest"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

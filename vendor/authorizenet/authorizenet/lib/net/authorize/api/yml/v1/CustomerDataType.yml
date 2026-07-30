@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\CustomerDataType:
+    properties:
+        type:
+            expose: true
+            access_type: public_method
+            serialized_name: type
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getType
+                setter: setType
+            type: string
+        id:
+            expose: true
+            access_type: public_method
+            serialized_name: id
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getId
+                setter: setId
+            type: string
+        email:
+            expose: true
+            access_type: public_method
+            serialized_name: email
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmail
+                setter: setEmail
+            type: string
+        driversLicense:
+            expose: true
+            access_type: public_method
+            serialized_name: driversLicense
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDriversLicense
+                setter: setDriversLicense
+            type: net\authorize\api\contract\v1\DriversLicenseType
+        taxId:
+            expose: true
+            access_type: public_method
+            serialized_name: taxId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxId
+                setter: setTaxId
+            type: string

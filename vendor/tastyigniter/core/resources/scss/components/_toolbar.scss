@@ -1,0 +1,74 @@
+.toolbar {
+  .toolbar-action {
+    clear: both;
+    width: 100%;
+  }
+
+  @include media-breakpoint-down(sm) {
+    .toolbar-action {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+  }
+}
+
+.toolbar-action {
+  .btn + .btn {
+    margin-left: .5rem;
+    outline: 0 none;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.active,
+    &:active {
+      box-shadow: none;
+    }
+  }
+
+  .btn-group {
+    .btn:not(:first-child) {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .btn:not(:last-child):not(.dropdown-toggle) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .btn + .btn {
+      margin-left: 0;
+    }
+  }
+
+  .btn-left {
+    float: left;
+  }
+
+  .btn-right {
+    float: right;
+  }
+
+  @each $color, $value in $theme-colors {
+    @if not ($color == "primary" or $color == "default" or $color == "light") {
+      .btn-#{$color} {
+        @include button-variant($white, $gray-300, $body-color, darken($value, 10%), darken($value, 10%), color-contrast(darken($value, 12.5%)));
+        color: $body-color;
+      }
+    }
+  }
+  @each $color, $value in $theme-colors {
+    @if not ($color == "primary" or $color == "default" or $color == "light") {
+      .btn-outline-#{$color} {
+        @include button-outline-variant($body-color, color-contrast(darken($value, 12.5%)), $value, $value);
+      }
+    }
+  }
+}

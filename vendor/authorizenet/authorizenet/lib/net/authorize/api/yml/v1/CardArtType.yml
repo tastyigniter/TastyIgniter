@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\CardArtType:
+    properties:
+        cardBrand:
+            expose: true
+            access_type: public_method
+            serialized_name: cardBrand
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardBrand
+                setter: setCardBrand
+            type: string
+        cardImageHeight:
+            expose: true
+            access_type: public_method
+            serialized_name: cardImageHeight
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardImageHeight
+                setter: setCardImageHeight
+            type: string
+        cardImageUrl:
+            expose: true
+            access_type: public_method
+            serialized_name: cardImageUrl
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardImageUrl
+                setter: setCardImageUrl
+            type: string
+        cardImageWidth:
+            expose: true
+            access_type: public_method
+            serialized_name: cardImageWidth
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardImageWidth
+                setter: setCardImageWidth
+            type: string
+        cardType:
+            expose: true
+            access_type: public_method
+            serialized_name: cardType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardType
+                setter: setCardType
+            type: string

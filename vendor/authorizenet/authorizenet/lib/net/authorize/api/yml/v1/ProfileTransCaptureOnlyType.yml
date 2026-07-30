@@ -1,0 +1,12 @@
+net\authorize\api\contract\v1\ProfileTransCaptureOnlyType:
+    properties:
+        approvalCode:
+            expose: true
+            access_type: public_method
+            serialized_name: approvalCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getApprovalCode
+                setter: setApprovalCode
+            type: string

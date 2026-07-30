@@ -1,0 +1,23 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+        - config
+        - database
+        - resources
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        - '#PHPDoc tag @var#'
+        - identifier: generics.notGeneric
+        - identifier: function.alreadyNarrowedType
+        - identifier: larastan.noEnvCallsOutsideOfConfig
+        - identifier: trait.unused
+        - '#Call to an undefined method Illuminate\\Database\\Schema\\Blueprint::dropForeignKeyIfExists#'
+        - '#Call to an undefined method Illuminate\\Database\\Schema\\Blueprint::dropIndexIfExists#'
+        - '#Return type \(Igniter\\Flame\\Database\\Relations\\[A-Za-z]+\) of method Igniter\\Flame\\Database\\Model::[a-zA-Z]+\(\) should be compatible with return type \(Illuminate\\Database\\Eloquent\\Relations\\[A-Za-z]+.*\)#'
+    excludePaths:
+        - ./src/Admin/Models/Staff.php

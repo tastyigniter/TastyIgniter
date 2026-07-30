@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\PaymentScheduleType\IntervalAType:
+    properties:
+        length:
+            expose: true
+            access_type: public_method
+            serialized_name: length
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getLength
+                setter: setLength
+            type: integer
+        unit:
+            expose: true
+            access_type: public_method
+            serialized_name: unit
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUnit
+                setter: setUnit
+            type: string

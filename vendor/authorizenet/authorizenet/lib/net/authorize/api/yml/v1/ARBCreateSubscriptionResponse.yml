@@ -1,0 +1,24 @@
+net\authorize\api\contract\v1\ARBCreateSubscriptionResponse:
+    xml_root_name: ARBCreateSubscriptionResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        subscriptionId:
+            expose: true
+            access_type: public_method
+            serialized_name: subscriptionId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubscriptionId
+                setter: setSubscriptionId
+            type: string
+        profile:
+            expose: true
+            access_type: public_method
+            serialized_name: profile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfile
+                setter: setProfile
+            type: net\authorize\api\contract\v1\CustomerProfileIdType

@@ -1,0 +1,12 @@
+name: CI Pipeline
+
+on: [ push, workflow_dispatch ]
+
+jobs:
+  php-tests:
+    strategy:
+      matrix:
+        php: [ '8.3', '8.4' ]
+    uses: tastyigniter/workflows/.github/workflows/php-tests.yml@main
+    with:
+      php-version: ${{ matrix.php }}

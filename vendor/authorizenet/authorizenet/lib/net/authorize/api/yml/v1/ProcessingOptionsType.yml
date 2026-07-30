@@ -1,0 +1,42 @@
+net\authorize\api\contract\v1\ProcessingOptionsType:
+    properties:
+        isFirstRecurringPayment:
+            expose: true
+            access_type: public_method
+            serialized_name: isFirstRecurringPayment
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIsFirstRecurringPayment
+                setter: setIsFirstRecurringPayment
+            type: boolean
+        isFirstSubsequentAuth:
+            expose: true
+            access_type: public_method
+            serialized_name: isFirstSubsequentAuth
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIsFirstSubsequentAuth
+                setter: setIsFirstSubsequentAuth
+            type: boolean
+        isSubsequentAuth:
+            expose: true
+            access_type: public_method
+            serialized_name: isSubsequentAuth
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIsSubsequentAuth
+                setter: setIsSubsequentAuth
+            type: boolean
+        isStoredCredentials:
+            expose: true
+            access_type: public_method
+            serialized_name: isStoredCredentials
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIsStoredCredentials
+                setter: setIsStoredCredentials
+            type: boolean

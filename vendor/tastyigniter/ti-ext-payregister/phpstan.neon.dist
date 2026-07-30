@@ -1,0 +1,15 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+    paths:
+        - src/
+        - database/
+        - resources/
+    ignoreErrors:
+        - '#Access to an undefined property Igniter\\PayRegister\\Models\\Payment::\$[a-zA-Z]+#'
+        - identifier: generics.notGeneric
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+#    checkMissingIterableValueType: false

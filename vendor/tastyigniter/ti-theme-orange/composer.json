@@ -1,0 +1,107 @@
+{
+    "name": "tastyigniter/ti-theme-orange",
+    "type": "tastyigniter-package",
+    "description": "Free Modern, Responsive and Clean TastyIgniter Theme based on Livewire and Bootstrap.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "TastyIgniter Dev Team"
+        }
+    ],
+    "keywords": [
+        "tastyigniter",
+        "theme",
+        "orange"
+    ],
+    "require": {
+        "livewire/livewire": "^v3.7",
+        "spatie/laravel-google-fonts": "^1.2",
+        "tastyigniter/core": "^v4.0",
+        "tastyigniter/ti-ext-cart": "^v4.0",
+        "tastyigniter/ti-ext-coupons": "^v4.0",
+        "tastyigniter/ti-ext-frontend": "^v4.0",
+        "tastyigniter/ti-ext-local": "^v4.0",
+        "tastyigniter/ti-ext-pages": "^v4.0",
+        "tastyigniter/ti-ext-payregister": "^v4.0",
+        "tastyigniter/ti-ext-reservation": "^v4.0",
+        "tastyigniter/ti-ext-socialite": "^v4.0",
+        "tastyigniter/ti-ext-user": "^v4.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.2",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "rector/rector": "^2.0",
+        "sampoyigi/testbench": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Igniter\\Orange\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Igniter\\Orange\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Igniter\\Orange\\ServiceProvider"
+            ]
+        },
+        "tastyigniter-theme": {
+            "code": "igniter-orange",
+            "name": "Orange Theme",
+            "locked": true,
+            "source-path": "/resources/views",
+            "meta-path": "/resources/meta",
+            "publish-paths": [
+                "/public"
+            ],
+            "require": {
+                "igniter.broadcast": "*",
+                "igniter.cart": "*",
+                "igniter.coupons": "*",
+                "igniter.frontend": "*",
+                "igniter.local": "*",
+                "igniter.pages": "*",
+                "igniter.payregister": "*",
+                "igniter.reservation": "*",
+                "igniter.socialite": "*",
+                "igniter.translate": "*",
+                "igniter.user": "*"
+            }
+        },
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true,
+            "composer/installers": true
+        }
+    },
+    "scripts": {
+        "test:lint": "vendor/bin/pint --test --ansi",
+        "test:lint-fix": "vendor/bin/pint --ansi",
+        "test:refactor": "vendor/bin/rector process --dry-run --ansi",
+        "test:refactor-fix": "vendor/bin/rector process --ansi",
+        "test:static": "vendor/bin/phpstan analyse --memory-limit=1056M --ansi",
+        "test:static-fix": "vendor/bin/phpstan --generate-baseline --memory-limit=1056M --ansi",
+        "test:pest": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage --exactly=100 --compact",
+        "test:type-coverage": "vendor/bin/pest --type-coverage --min=100",
+        "test": [
+            "@test:refactor",
+            "@test:static",
+            "@test:lint",
+            "@test:coverage"
+        ]
+    }
+}

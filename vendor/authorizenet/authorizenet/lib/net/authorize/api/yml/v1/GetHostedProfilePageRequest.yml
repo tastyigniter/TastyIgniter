@@ -1,0 +1,29 @@
+net\authorize\api\contract\v1\GetHostedProfilePageRequest:
+    xml_root_name: getHostedProfilePageRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        hostedProfileSettings:
+            expose: true
+            access_type: public_method
+            serialized_name: hostedProfileSettings
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getHostedProfileSettings
+                setter: setHostedProfileSettings
+            type: array<net\authorize\api\contract\v1\SettingType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: setting
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

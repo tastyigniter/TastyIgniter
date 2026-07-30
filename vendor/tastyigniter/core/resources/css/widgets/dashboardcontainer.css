@@ -1,0 +1,18 @@
+.dashboard-widgets {
+    margin-top: -15px;
+}
+
+.widget-item-action {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: none;
+}
+
+.widget-item:hover .widget-item-action {
+    display: block;
+}
+
+.widget-title {
+    padding-bottom: 10px;
+}

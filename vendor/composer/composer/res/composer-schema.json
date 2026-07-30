@@ -1,0 +1,1734 @@
+{
+    "$schema": "https://json-schema.org/draft-04/schema#",
+    "title": "Composer Package",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Package name, including 'vendor-name/' prefix.",
+            "pattern": "^[a-z0-9]([_.-]?[a-z0-9]+)*\/[a-z0-9](([_.]|-{1,2})?[a-z0-9]+)*$"
+        },
+        "description": {
+            "type": "string",
+            "description": "Short package description."
+        },
+        "license": {
+            "type": ["string", "array"],
+            "description": "License name. Or an array of license names."
+        },
+        "type": {
+            "description": "Package type, either 'library' for common packages, 'composer-plugin' for plugins, 'metapackage' for empty packages, or a custom type ([a-z0-9-]+) defined by whatever project this package applies to.",
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+        },
+        "abandoned": {
+            "type": ["boolean", "string"],
+            "description": "Indicates whether this package has been abandoned, it can be boolean or a package name/URL pointing to a recommended alternative. Defaults to false."
+        },
+        "version": {
+            "type": "string",
+            "description": "Package version, see https://getcomposer.org/doc/04-schema.md#version for more info on valid schemes.",
+            "pattern": "^[vV]?\\d+(?:[.-]\\d+){0,3}[._-]?(?:(?:[sS][tT][aA][bB][lL][eE]|[bB][eE][tT][aA]|[bB]|[rR][cC]|[aA][lL][pP][hH][aA]|[aA]|[pP][aA][tT][cC][hH]|[pP][lL]|[pP])(?:(?:[.-]?\\d+)*)?)?(?:[.-]?[dD][eE][vV]|\\.x-dev)?(?:\\+.*)?$|^dev-.*$"
+        },
+        "default-branch": {
+            "type": ["boolean"],
+            "description": "Internal use only, do not specify this in composer.json. Indicates whether this version is the default branch of the linked VCS repository. Defaults to false."
+        },
+        "non-feature-branches": {
+            "type": ["array"],
+            "description": "A set of string or regex patterns for non-numeric branch names that will not be handled as feature branches.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "keywords": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "description": "A tag/keyword that this package relates to."
+            }
+        },
+        "readme": {
+            "type": "string",
+            "description": "Relative path to the readme document."
+        },
+        "time": {
+            "type": "string",
+            "description": "Package release date, in 'YYYY-MM-DD', 'YYYY-MM-DD HH:MM:SS' or 'YYYY-MM-DDTHH:MM:SSZ' format."
+        },
+        "authors": {
+            "$ref": "#/definitions/authors"
+        },
+        "homepage": {
+            "type": "string",
+            "description": "Homepage URL for the project.",
+            "format": "uri"
+        },
+        "support": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "description": "Email address for support.",
+                    "format": "email"
+                },
+                "issues": {
+                    "type": "string",
+                    "description": "URL to the issue tracker.",
+                    "format": "uri"
+                },
+                "forum": {
+                    "type": "string",
+                    "description": "URL to the forum.",
+                    "format": "uri"
+                },
+                "wiki": {
+                    "type": "string",
+                    "description": "URL to the wiki.",
+                    "format": "uri"
+                },
+                "irc": {
+                    "type": "string",
+                    "description": "IRC channel for support, as irc://server/channel.",
+                    "format": "uri"
+                },
+                "chat": {
+                    "type": "string",
+                    "description": "URL to the support chat.",
+                    "format": "uri"
+                },
+                "source": {
+                    "type": "string",
+                    "description": "URL to browse or download the sources.",
+                    "format": "uri"
+                },
+                "docs": {
+                    "type": "string",
+                    "description": "URL to the documentation.",
+                    "format": "uri"
+                },
+                "rss": {
+                    "type": "string",
+                    "description": "URL to the RSS feed.",
+                    "format": "uri"
+                },
+                "security": {
+                    "type": "string",
+                    "description": "URL to the vulnerability disclosure policy (VDP).",
+                    "format": "uri"
+                }
+            }
+        },
+        "funding": {
+            "type": "array",
+            "description": "A list of options to fund the development and maintenance of the package.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "Type of funding or platform through which funding is possible."
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "URL to a website with details on funding and a way to fund the package.",
+                        "format": "uri"
+                    }
+                }
+            }
+        },
+        "source": {
+            "$ref": "#/definitions/source"
+        },
+        "dist": {
+            "$ref": "#/definitions/dist"
+        },
+        "_comment": {
+            "type": ["array", "string"],
+            "description": "A key to store comments in"
+        },
+        "require": {
+            "type": "object",
+            "description": "This is an object of package name (keys) and version constraints (values) that are required to run this package.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "require-dev": {
+            "type": "object",
+            "description": "This is an object of package name (keys) and version constraints (values) that this package requires for developing it (testing tools and such).",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "replace": {
+            "type": "object",
+            "description": "This is an object of package name (keys) and version constraints (values) that can be replaced by this package.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "conflict": {
+            "type": "object",
+            "description": "This is an object of package name (keys) and version constraints (values) that conflict with this package.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "provide": {
+            "type": "object",
+            "description": "This is an object of package name (keys) and version constraints (values) that this package provides in addition to this package's name.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "suggest": {
+            "type": "object",
+            "description": "This is an object of package name (keys) and descriptions (values) that this package suggests work well with it (this will be suggested to the user during installation).",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "repositories": {
+            "type": ["object", "array"],
+            "description": "A set of additional repositories where packages can be found.",
+            "additionalProperties": {
+                "anyOf": [
+                    { "$ref": "#/definitions/anonymous-repository" },
+                    { "type": "boolean", "enum": [false] }
+                ]
+            },
+            "items": {
+                "anyOf": [
+                    { "$ref": "#/definitions/repository" },
+                    {
+                        "type": "object",
+                        "additionalProperties": { "type": "boolean", "enum": [false] },
+                        "minProperties": 1,
+                        "maxProperties": 1
+                    }
+                ]
+            }
+        },
+        "minimum-stability": {
+            "type": ["string"],
+            "description": "The minimum stability the packages must have to be install-able. Possible values are: dev, alpha, beta, RC, stable.",
+            "enum": ["dev", "alpha", "beta", "rc", "RC", "stable"]
+        },
+        "prefer-stable": {
+            "type": ["boolean"],
+            "description": "If set to true, stable packages will be preferred to dev packages when possible, even if the minimum-stability allows unstable packages."
+        },
+        "autoload": {
+            "$ref": "#/definitions/autoload"
+        },
+        "autoload-dev": {
+            "type": "object",
+            "description": "Description of additional autoload rules for development purpose (eg. a test suite).",
+            "properties": {
+                "psr-0": {
+                    "type": "object",
+                    "description": "This is an object of namespaces (keys) and the directories they can be found into (values, can be arrays of paths) by the autoloader.",
+                    "additionalProperties": {
+                        "type": ["string", "array"],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "psr-4": {
+                    "type": "object",
+                    "description": "This is an object of namespaces (keys) and the PSR-4 directories they can map to (values, can be arrays of paths) by the autoloader.",
+                    "additionalProperties": {
+                        "type": ["string", "array"],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "classmap": {
+                    "type": "array",
+                    "description": "This is an array of paths that contain classes to be included in the class-map generation process."
+                },
+                "files": {
+                    "type": "array",
+                    "description": "This is an array of files that are always required on every request."
+                }
+            }
+        },
+        "target-dir": {
+            "deprecated": true,
+            "description": "DEPRECATED: Forces the package to be installed into the given subdirectory path. This is used for autoloading PSR-0 packages that do not contain their full path. Use forward slashes for cross-platform compatibility.",
+            "type": "string"
+        },
+        "include-path": {
+            "deprecated": true,
+            "type": ["array"],
+            "description": "DEPRECATED: A list of directories which should get added to PHP's include path. This is only present to support legacy projects, and all new code should preferably use autoloading.",
+            "items": {
+                "type": "string"
+            }
+        },
+        "bin": {
+            "type": ["string", "array"],
+            "description": "A set of files, or a single file, that should be treated as binaries and symlinked into bin-dir (from config).",
+            "items": {
+                "type": "string"
+            }
+        },
+        "archive": {
+            "type": ["object"],
+            "description": "Options for creating package archives for distribution.",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "A base name for archive."
+                },
+                "exclude": {
+                    "type": "array",
+                    "description": "A list of patterns for paths to exclude or include if prefixed with an exclamation mark."
+                }
+            }
+        },
+        "php-ext": {
+            "type": "object",
+            "description": "Settings for PHP extension packages.",
+            "properties": {
+                "extension-name": {
+                    "type": "string",
+                    "description": "If specified, this will be used as the name of the extension, where needed by tooling. If this is not specified, the extension name will be derived from the Composer package name (e.g. `vendor/name` would become `ext-name`). The extension name may be specified with or without the `ext-` prefix, and tools that use this must normalise this appropriately.",
+                    "example": "ext-xdebug"
+                },
+                "priority": {
+                    "type": "integer",
+                    "description": "This is used to add a prefix to the INI file, e.g. `90-xdebug.ini` which affects the loading order. The priority is a number in the range 10-99 inclusive, with 10 being the highest priority (i.e. will be processed first), and 99 being the lowest priority (i.e. will be processed last). There are two digits so that the files sort correctly on any platform, whether the sorting is natural or not.",
+                    "minimum": 10,
+                    "maximum": 99,
+                    "example": 80,
+                    "default": 80
+                },
+                "support-zts": {
+                    "type": "boolean",
+                    "description": "Does this package support Zend Thread Safety",
+                    "example": false,
+                    "default": true
+                },
+                "support-nts": {
+                    "type": "boolean",
+                    "description": "Does this package support non-Thread Safe mode",
+                    "example": false,
+                    "default": true
+                },
+                "build-path": {
+                    "type": ["string", "null"],
+                    "description": "If specified, this is the subdirectory that will be used to build the extension instead of the root of the project.",
+                    "example": "my-extension-source",
+                    "default": null
+                },
+                "download-url-method": {
+                    "oneOf": [
+                        {
+                            "type": "string",
+                            "description": "DEPRECATED: use the array form instead. If specified, this technique will be used to override the URL that PIE uses to download the asset. The default, if not specified, is composer-default.",
+                            "deprecated": true,
+                            "enum": ["composer-default", "pre-packaged-source", "pre-packaged-binary"],
+                            "example": "composer-default",
+                            "default": "composer-default"
+                        },
+                        {
+                            "type": "array",
+                            "description": "Multiple techniques can be specified, in which case PIE will try each in turn until one succeeds. The first technique that succeeds will be used.",
+                            "items": {
+                                "type": "string",
+                                "description": "If specified, this technique will be used to override the URL that PIE uses to download the asset. The default, if not specified, is composer-default.",
+                                "enum": ["composer-default", "pre-packaged-source", "pre-packaged-binary"],
+                                "example": ["pre-packaged-binary", "composer-default"]
+                            },
+                            "minItems": 1,
+                            "default": ["composer-default"]
+                        }
+                    ]
+                },
+                "os-families": {
+                    "type": "array",
+                    "minItems": 1,
+                    "description": "An array of OS families to mark as compatible with the extension. Specifying this property will mean this package is not installable with PIE on any OS family not listed here. Must not be specified alongside os-families-exclude.",
+                    "items": {
+                        "type": "string",
+                        "enum": ["windows", "bsd", "darwin", "solaris", "linux", "unknown"],
+                        "description": "The name of the OS family to mark as compatible."
+                    }
+                },
+                "os-families-exclude": {
+                    "type": "array",
+                    "minItems": 1,
+                    "description": "An array of OS families to mark as incompatible with the extension. Specifying this property will mean this package is installable on any OS family except those listed here. Must not be specified alongside os-families.",
+                    "items": {
+                        "type": "string",
+                        "enum": ["windows", "bsd", "darwin", "solaris", "linux", "unknown"],
+                        "description": "The name of the OS family to exclude."
+                    }
+                },
+                "configure-options": {
+                    "type": "array",
+                    "description": "These configure options make up the flags that can be passed to ./configure when installing the extension.",
+                    "items": {
+                        "type": "object",
+                        "required": ["name"],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The name of the flag, this would typically be prefixed with `--`, for example, the value 'the-flag' would be passed as `./configure --the-flag`.",
+                                "example": "without-xdebug-compression",
+                                "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-_]*$"
+                            },
+                            "needs-value": {
+                                "type": "boolean",
+                                "description": "If this is set to true, the flag needs a value (e.g. --with-somelib=<path>), otherwise it is a flag without a value (e.g. --enable-some-feature).",
+                                "example": false,
+                                "default": false
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "The description of what the flag does or means.",
+                                "example": "Disable compression through zlib"
+                            }
+                        }
+                    }
+                }
+            },
+            "allOf": [
+                {
+                    "not": {
+                        "required": ["os-families", "os-families-exclude"]
+                    }
+                }
+            ]
+        },
+        "config": {
+            "type": "object",
+            "description": "Composer options.",
+            "properties": {
+                "platform": {
+                    "type": "object",
+                    "description": "This is an object of package name (keys) and version (values) that will be used to mock the platform packages on this machine, the version can be set to false to make it appear like the package is not present.",
+                    "additionalProperties": {
+                        "type": ["string", "boolean"]
+                    }
+                },
+                "allow-plugins": {
+                    "type": ["object", "boolean"],
+                    "description": "This is an object of {\"pattern\": true|false} with packages which are allowed to be loaded as plugins, or true to allow all, false to allow none. Defaults to {} which prompts when an unknown plugin is added.",
+                    "additionalProperties": {
+                        "type": ["boolean"]
+                    }
+                },
+                "process-timeout": {
+                    "type": "integer",
+                    "description": "The timeout in seconds for process executions, defaults to 300 (5mins)."
+                },
+                "use-include-path": {
+                    "type": "boolean",
+                    "description": "If true, the Composer autoloader will also look for classes in the PHP include path."
+                },
+                "use-parent-dir": {
+                    "type": ["string", "boolean"],
+                    "description": "When running Composer in a directory where there is no composer.json, if there is one present in a directory above Composer will by default ask you whether you want to use that directory's composer.json instead. One of: true (always use parent if needed), false (never ask or use it) or \"prompt\" (ask every time), defaults to prompt."
+                },
+                "preferred-install": {
+                    "type": ["string", "object"],
+                    "description": "The install method Composer will prefer to use, defaults to auto and can be any of source, dist, auto, or an object of {\"pattern\": \"preference\"}.",
+                    "additionalProperties": {
+                        "type": ["string"]
+                    }
+                },
+                "audit": {
+                    "type": "object",
+                    "deprecated": true,
+                    "description": "DEPRECATED: use 'config.policy' instead. All 'audit.*' keys still work as a fallback for now. See https://getcomposer.org/doc/06-config.md#policy",
+                    "properties": {
+                        "ignore": {
+                            "deprecated": true,
+                            "description": "DEPRECATED: use 'config.policy.advisories.ignore-id' for advisory IDs (CVE/GHSA/PKSA) and 'config.policy.advisories.ignore' for package names instead. The new format uses 'on-block' / 'on-audit' booleans instead of 'apply: audit|block|all'.",
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "description": "A list of advisory ids, remote ids, CVE ids or package names (keys) with either explanations (string values) or detailed configuration (object values with 'apply' and 'reason' fields) for why they're ignored.",
+                                    "additionalProperties": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string",
+                                                "description": "Explanation for ignoring this advisory (applies to audit reports and version blocking)"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "description": "Detailed configuration for ignoring this advisory",
+                                                "properties": {
+                                                    "apply": {
+                                                        "type": "string",
+                                                        "enum": ["audit", "block", "all"],
+                                                        "description": "Where to apply this ignore: 'audit' (only audit reports), 'block' (only version blocking), or 'all' (both)"
+                                                    },
+                                                    "reason": {
+                                                        "type": "string",
+                                                        "description": "Explanation for ignoring this advisory, e.g. vulnerable code path not reachable in application"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "type": "null",
+                                                "description": "Ignore without explanation (applies to audit reports and version blocking)"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "array",
+                                    "description": "A set of advisory ids, remote ids, CVE ids or package names that are reported but let the audit command pass. Applies to audit reports and version blocking.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "abandoned": {
+                            "enum": ["ignore", "report", "fail"],
+                            "deprecated": true,
+                            "description": "DEPRECATED: use 'config.policy.abandoned.audit' instead. Whether abandoned packages should be ignored, reported as problems or cause an audit failure. Applies only to audit reports, not to version blocking."
+                        },
+                        "ignore-severity": {
+                            "deprecated": true,
+                            "description": "DEPRECATED: use 'config.policy.advisories.ignore-severity' instead. The new format uses 'on-block' / 'on-audit' booleans instead of 'apply: audit|block|all'.",
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "description": "A list of severities (keys) with either explanations (string values) or detailed configuration (object values with 'apply' fields) for why they're ignored.",
+                                    "additionalProperties": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string",
+                                                "description": "Explanation for ignoring this severity (applies to audit reports and version blocking)"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "description": "Detailed configuration for ignoring this severity",
+                                                "properties": {
+                                                    "apply": {
+                                                        "type": "string",
+                                                        "enum": ["audit", "block", "all"],
+                                                        "description": "Where to apply this ignore: 'audit' (only audit reports), 'block' (only version blocking), or 'all' (both)"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "type": "null",
+                                                "description": "Ignore without explanation (applies to audit reports and version blocking)"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "array",
+                                    "description": "A list of severities for which advisories with matching severity will be ignored, e.g. critical, high, medium, low, or none. Applies to audit reports and version blocking.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        "ignore-unreachable": {
+                            "type": "boolean",
+                            "deprecated": true,
+                            "description": "DEPRECATED: use 'config.policy.ignore-unreachable' instead. The new key accepts a boolean or an array of scopes ('audit', 'install', 'update') and is shared across all dependency policies."
+                        },
+                        "block-insecure": {
+                            "type": "boolean",
+                            "deprecated": true,
+                            "description": "DEPRECATED: use 'config.policy.advisories.block' instead. Whether insecure versions should be blocked during a composer update/require command or not.",
+                            "default": true
+                        },
+                        "block-abandoned": {
+                            "type": "boolean",
+                            "deprecated": true,
+                            "description": "DEPRECATED: use 'config.policy.abandoned.block' instead. Whether abandoned packages should be blocked during a composer update/require command or not.",
+                            "default": false
+                        },
+                        "ignore-abandoned": {
+                            "deprecated": true,
+                            "description": "DEPRECATED: use 'config.policy.abandoned.ignore' instead. The new format uses 'on-block' / 'on-audit' booleans instead of 'apply: audit|block|all'.",
+                            "anyOf": [
+                                {
+                                    "type": "object",
+                                    "description": "A list of abandoned package names (keys) with either explanations (string values) or detailed configuration (object values with 'apply' and 'reason' fields) for why they're ignored.",
+                                    "additionalProperties": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string",
+                                                "description": "Explanation for ignoring this abandoned package (applies to audit reports and version blocking)"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "description": "Detailed configuration for ignoring this abandoned package",
+                                                "properties": {
+                                                    "apply": {
+                                                        "type": "string",
+                                                        "enum": ["audit", "block", "all"],
+                                                        "description": "Where to apply this ignore: 'audit' (only audit reports), 'block' (only version blocking), or 'all' (both)"
+                                                    },
+                                                    "reason": {
+                                                        "type": "string",
+                                                        "description": "Explanation for ignoring this abandoned package"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "type": "null",
+                                                "description": "Ignore without explanation (applies to audit reports and version blocking)"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "type": "array",
+                                    "description": "A set of abandoned package names that are reported but let the audit command pass and that are not blocked during updates/requires.",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "policy": {
+                    "type": ["boolean", "object"],
+                    "description": "Unified security and package policy configuration. Set to false to disable all policy enforcement.",
+                    "properties": {
+                        "advisories": {
+                            "oneOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "Configuration for packages affected by security advisories.",
+                                    "properties": {
+                                        "block": {
+                                            "type": "boolean",
+                                            "description": "When true (default), package versions with active security advisories are blocked during update/require/remove.",
+                                            "default": true
+                                        },
+                                        "audit": {
+                                            "enum": ["ignore", "report", "fail"],
+                                            "description": "How composer audit treats packages with security advisories. Defaults to fail.",
+                                            "default": "fail"
+                                        },
+                                        "ignore-id": { "$ref": "#/definitions/policy-ignore-id" },
+                                        "ignore": { "$ref": "#/definitions/policy-ignore" },
+                                        "ignore-severity": { "$ref": "#/definitions/policy-ignore-severity" }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            ]
+                        },
+                        "malware": {
+                            "oneOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "Configuration for packages flagged as containing malware.",
+                                    "properties": {
+                                        "block": {
+                                            "type": "boolean",
+                                            "description": "When true (default), packages flagged as malware are blocked.",
+                                            "default": true
+                                        },
+                                        "block-scope": {
+                                            "enum": ["all", "update", "install"],
+                                            "description": "Controls which commands trigger blocking: all (default), update (only update/require/remove), or install (only install).",
+                                            "default": "all"
+                                        },
+                                        "audit": {
+                                            "enum": ["ignore", "report", "fail"],
+                                            "description": "How composer audit treats packages flagged as malware. Defaults to fail.",
+                                            "default": "fail"
+                                        },
+                                        "ignore": { "$ref": "#/definitions/policy-ignore" },
+                                        "ignore-source": {
+                                            "type": "array",
+                                            "description": "A list of source names to exclude from malware checks.",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            ]
+                        },
+                        "abandoned": {
+                            "oneOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "object",
+                                    "description": "Configuration for abandoned packages.",
+                                    "properties": {
+                                        "block": {
+                                            "type": "boolean",
+                                            "description": "When true, abandoned packages cannot be installed during update/require/remove. Defaults to false.",
+                                            "default": false
+                                        },
+                                        "audit": {
+                                            "enum": ["ignore", "report", "fail"],
+                                            "description": "How composer audit treats abandoned packages. Defaults to fail.",
+                                            "default": "fail"
+                                        },
+                                        "ignore": { "$ref": "#/definitions/policy-ignore" }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            ]
+                        },
+                        "ignore-unreachable": {
+                            "description": "Controls for which operations unreachable repositories and policy sources are silently ignored. Defaults to [\"update\", \"install\"]. Set to true to ignore for all operations, false for none.",
+                            "oneOf": [
+                                {
+                                    "type": "boolean"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": ["audit", "install", "update"]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "patternProperties": {
+                        "^ignore(?!-unreachable$)": {
+                            "not": {},
+                            "description": "Custom dependency policy names must not start with \"ignore\" — that prefix is reserved for future use."
+                        },
+                        "^(package|packages|license|licence|licenses|licences|support|maintenance|security|minimum-release-age)$": {
+                            "not": {},
+                            "description": "This name is reserved for future use and cannot be used as a custom dependency policy name."
+                        }
+                    },
+                    "additionalProperties": {
+                        "description": "Custom dependency policy configuration.",
+                        "oneOf": [
+                            {
+                                "type": "boolean"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "block": {
+                                        "type": "boolean",
+                                        "description": "When true (default), matched packages are blocked during update/require/remove.",
+                                        "default": true
+                                    },
+                                    "audit": {
+                                        "enum": ["ignore", "report", "fail"],
+                                        "description": "How composer audit treats packages matched by this dependency policy. Defaults to fail.",
+                                        "default": "fail"
+                                    },
+                                    "sources": {
+                                        "type": "array",
+                                        "description": "Sources supplying the package versions this dependency policy applies to.",
+                                        "items": {
+                                            "type": "object",
+                                            "required": ["type", "url"],
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": ["url"],
+                                                    "description": "Source type, currently only 'url' is supported."
+                                                },
+                                                "url": {
+                                                    "type": "string",
+                                                    "pattern": "^https://",
+                                                    "description": "URL to fetch the list of package versions from. Must use https://."
+                                                }
+                                            },
+                                            "additionalProperties": false
+                                        }
+                                    },
+                                    "ignore": { "$ref": "#/definitions/policy-ignore" }
+                                }
+                            }
+                        ]
+                    }
+                },
+                "notify-on-install": {
+                    "type": "boolean",
+                    "description": "Composer allows repositories to define a notification URL, so that they get notified whenever a package from that repository is installed. This option allows you to disable that behaviour, defaults to true."
+                },
+                "source-fallback": {
+                    "type": "boolean",
+                    "description": "DEPRECATED, will be removed in Composer 2.11. Defaults to false. If true, Composer will fall back to a different installation source (e.g., from dist to source or vice versa) when a download fails. Automatic source fallback has security implications, please open an issue at https://github.com/composer/composer/issues if you need this kept around.",
+                    "deprecated": true
+                },
+                "github-protocols": {
+                    "type": "array",
+                    "description": "A list of protocols to use for github.com clones, in priority order, defaults to [\"https\", \"ssh\", \"git\"].",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "github-oauth": {
+                    "type": "object",
+                    "description": "An object of domain name => github API oauth tokens, typically {\"github.com\":\"<token>\"}.",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "gitlab-oauth": {
+                    "type": "object",
+                    "description": "An object of domain name => gitlab API oauth tokens, typically {\"gitlab.com\":{\"expires-at\":\"<expiration date>\", \"refresh-token\":\"<refresh token>\", \"token\":\"<token>\"}}.",
+                    "additionalProperties": {
+                        "type": ["string", "object"],
+                        "required": [ "token"],
+                        "properties": {
+                            "expires-at": {
+                                "type": "integer",
+                                "description": "The expiration date for this GitLab token"
+                            },
+                            "refresh-token": {
+                                "type": "string",
+                                "description": "The refresh token used for GitLab authentication"
+                            },
+                            "token": {
+                                "type": "string",
+                                "description": "The token used for GitLab authentication"
+                            }
+                        }
+                    }
+                },
+                "gitlab-token": {
+                    "type": "object",
+                    "description": "An object of domain name => gitlab private tokens, typically {\"gitlab.com\":\"<token>\"}, or an object with username and token keys.",
+                    "additionalProperties": {
+                        "type": ["string", "object"],
+                        "required": ["username", "token"],
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "description": "The username used for GitLab authentication"
+                            },
+                            "token": {
+                                "type": "string",
+                                "description": "The token used for GitLab authentication"
+                            }
+                        }
+                    }
+                },
+                "gitlab-protocol": {
+                    "enum": ["git", "http", "https"],
+                    "description": "A protocol to force use of when creating a repository URL for the `source` value of the package metadata. One of `git` or `http`. By default, Composer will generate a git URL for private repositories and http one for public repos."
+                },
+                "bearer": {
+                    "type": "object",
+                    "description": "An object of domain name => bearer authentication token, for example {\"example.com\":\"<token>\"}.",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "custom-headers": {
+                    "type": "object",
+                    "description": "Custom HTTP headers for specific domains.",
+                    "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "A header in format 'Header-Name: Header-Value'"
+                        }
+                    }
+                },
+                "forgejo-token": {
+                    "type": "object",
+                    "description": "An object of domain name => forgejo username/access token, typically {\"codeberg.org\":{\"username\": \"<username>\", \"token\": \"<access-token>\"}}.",
+                    "additionalProperties": {
+                        "type": ["object"],
+                        "required": ["username", "token"],
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "description": "The username used for Forgejo authentication"
+                            },
+                            "token": {
+                                "type": "string",
+                                "description": "The access token used for Forgejo authentication"
+                            }
+                        }
+                    }
+                },
+                "disable-tls": {
+                    "type": "boolean",
+                    "description": "Defaults to `false`. If set to true all HTTPS URLs will be tried with HTTP instead and no network level encryption is performed. Enabling this is a security risk and is NOT recommended. The better way is to enable the php_openssl extension in php.ini."
+                },
+                "secure-http": {
+                    "type": "boolean",
+                    "description": "Defaults to `true`. If set to true only HTTPS URLs are allowed to be downloaded via Composer. If you really absolutely need HTTP access to something then you can disable it, but using \"Let's Encrypt\" to get a free SSL certificate is generally a better alternative."
+                },
+                "secure-svn-domains": {
+                    "type": "array",
+                    "description": "A list of domains which should be trusted/marked as using a secure Subversion/SVN transport. By default svn:// protocol is seen as insecure and will throw. This is a better/safer alternative to disabling `secure-http` altogether.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "cafile": {
+                    "type": "string",
+                    "description": "A way to set the path to the openssl CA file. In PHP 5.6+ you should rather set this via openssl.cafile in php.ini, although PHP 5.6+ should be able to detect your system CA file automatically."
+                },
+                "capath": {
+                    "type": "string",
+                    "description": "If cafile is not specified or if the certificate is not found there, the directory pointed to by capath is searched for a suitable certificate. capath must be a correctly hashed certificate directory."
+                },
+                "http-basic": {
+                    "type": "object",
+                    "description": "An object of domain name => {\"username\": \"...\", \"password\": \"...\"}.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "required": ["username", "password"],
+                        "properties": {
+                            "username": {
+                                "type": "string",
+                                "description": "The username used for HTTP Basic authentication"
+                            },
+                            "password": {
+                                "type": "string",
+                                "description": "The password used for HTTP Basic authentication"
+                            }
+                        }
+                    }
+                },
+                "client-certificate": {
+                    "type": "object",
+                    "description": "An object of domain name => {\"local_cert\": \"...\", \"local_pk\"?: \"...\", \"passphrase\"?: \"...\"} to provide client certificate.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "required": ["local_cert"],
+                        "properties": {
+                            "local_cert": {
+                                "type": "string",
+                                "description": "Path to a certificate (pem) or pair certificate+key (pem)"
+                            },
+                            "local_pk": {
+                                "type": "string",
+                                "description": "Path to a private key file (pem)"
+                            },
+                            "passphrase": {
+                                "type": "string",
+                                "description": "Passphrase for private key"
+                            }
+                        }
+                    }
+                },
+                "store-auths": {
+                    "type": ["string", "boolean"],
+                    "description": "What to do after prompting for authentication, one of: true (store), false (do not store) or \"prompt\" (ask every time), defaults to prompt."
+                },
+                "vendor-dir": {
+                    "type": "string",
+                    "description": "The location where all packages are installed, defaults to \"vendor\"."
+                },
+                "bin-dir": {
+                    "type": "string",
+                    "description": "The location where all binaries are linked, defaults to \"vendor/bin\"."
+                },
+                "data-dir": {
+                    "type": "string",
+                    "description": "The location where old phar files are stored, defaults to \"$home\" except on XDG Base Directory compliant unixes."
+                },
+                "cache-dir": {
+                    "type": "string",
+                    "description": "The location where all caches are located, defaults to \"~/.composer/cache\" on *nix and \"%LOCALAPPDATA%\\Composer\" on windows."
+                },
+                "cache-files-dir": {
+                    "type": "string",
+                    "description": "The location where files (zip downloads) are cached, defaults to \"{$cache-dir}/files\"."
+                },
+                "cache-repo-dir": {
+                    "type": "string",
+                    "description": "The location where repo (git/hg repo clones) are cached, defaults to \"{$cache-dir}/repo\"."
+                },
+                "cache-vcs-dir": {
+                    "type": "string",
+                    "description": "The location where vcs infos (git clones, github api calls, etc. when reading vcs repos) are cached, defaults to \"{$cache-dir}/vcs\"."
+                },
+                "cache-ttl": {
+                    "type": "integer",
+                    "description": "The default cache time-to-live, defaults to 15552000 (6 months)."
+                },
+                "cache-files-ttl": {
+                    "type": "integer",
+                    "description": "The cache time-to-live for files, defaults to the value of cache-ttl."
+                },
+                "cache-files-maxsize": {
+                    "type": ["string", "integer"],
+                    "description": "The cache max size for the files cache, defaults to \"300MiB\"."
+                },
+                "cache-read-only": {
+                    "type": ["boolean"],
+                    "description": "Whether to use the Composer cache in read-only mode."
+                },
+                "bin-compat": {
+                    "enum": ["auto", "full", "proxy", "symlink"],
+                    "description": "The compatibility of the binaries, defaults to \"auto\" (automatically guessed), can be \"full\" (compatible with both Windows and Unix-based systems) and \"proxy\" (only bash-style proxy)."
+                },
+                "discard-changes": {
+                    "type": ["string", "boolean"],
+                    "description": "The default style of handling dirty updates, defaults to false and can be any of true, false or \"stash\"."
+                },
+                "autoloader-suffix": {
+                    "type": "string",
+                    "description": "Optional string to be used as a suffix for the generated Composer autoloader. When null a random one will be generated."
+                },
+                "optimize-autoloader": {
+                    "type": "boolean",
+                    "description": "Always optimize when dumping the autoloader."
+                },
+                "prepend-autoloader": {
+                    "type": "boolean",
+                    "description": "If false, the composer autoloader will not be prepended to existing autoloaders, defaults to true."
+                },
+                "classmap-authoritative": {
+                    "type": "boolean",
+                    "description": "If true, the composer autoloader will not scan the filesystem for classes that are not found in the class map, defaults to false."
+                },
+                "apcu-autoloader": {
+                    "type": "boolean",
+                    "description": "If true, the Composer autoloader will check for APCu and use it to cache found/not-found classes when the extension is enabled, defaults to false."
+                },
+                "github-domains": {
+                    "type": "array",
+                    "description": "A list of domains to use in github mode. This is used for GitHub Enterprise setups, defaults to [\"github.com\"].",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "github-expose-hostname": {
+                    "type": "boolean",
+                    "description": "Defaults to true. If set to false, the OAuth tokens created to access the github API will have a date instead of the machine hostname."
+                },
+                "gitlab-domains": {
+                    "type": "array",
+                    "description": "A list of domains to use in gitlab mode. This is used for custom GitLab setups, defaults to [\"gitlab.com\"].",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "forgejo-domains": {
+                    "type": "array",
+                    "description": "A list of domains to use in forgejo mode. This is used for custom Forgejo setups, defaults to [\"codeberg.org\"].",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "bitbucket-oauth": {
+                    "type": "object",
+                    "description": "An object of domain name => {\"consumer-key\": \"...\", \"consumer-secret\": \"...\"}.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "required": ["consumer-key", "consumer-secret"],
+                        "properties": {
+                            "consumer-key": {
+                                "type": "string",
+                                "description": "The consumer-key used for OAuth authentication"
+                            },
+                            "consumer-secret": {
+                                "type": "string",
+                                "description": "The consumer-secret used for OAuth authentication"
+                            },
+                            "access-token": {
+                                "type": "string",
+                                "description": "The OAuth token retrieved from Bitbucket's API, this is written by Composer and you should not set it nor modify it."
+                            },
+                            "access-token-expiration": {
+                                "type": "integer",
+                                "description": "The generated token's expiration timestamp, this is written by Composer and you should not set it nor modify it."
+                            }
+                        }
+                    }
+                },
+                "use-github-api": {
+                    "type": "boolean",
+                    "description": "Defaults to true.  If set to false, globally disables the use of the GitHub API for all GitHub repositories and clones the repository as it would for any other repository."
+                },
+                "archive-format": {
+                    "type": "string",
+                    "description": "The default archiving format when not provided on cli, defaults to \"tar\"."
+                },
+                "archive-dir": {
+                    "type": "string",
+                    "description": "The default archive path when not provided on cli, defaults to \".\"."
+                },
+                "htaccess-protect": {
+                    "type": "boolean",
+                    "description": "Defaults to true. If set to false, Composer will not create .htaccess files in the composer home, cache, and data directories."
+                },
+                "sort-packages": {
+                    "type": "boolean",
+                    "description": "Defaults to false. If set to true, Composer will sort packages when adding/updating a new dependency."
+                },
+                "lock": {
+                    "type": "boolean",
+                    "description": "Defaults to true. If set to false, Composer will not create a composer.lock file."
+                },
+                "platform-check": {
+                    "type": ["boolean", "string"],
+                    "enum": ["php-only", true, false],
+                    "description": "Defaults to \"php-only\" which checks only the PHP version. Setting to true will also check the presence of required PHP extensions. If set to false, Composer will not create and require a platform_check.php file as part of the autoloader bootstrap."
+                },
+                "bump-after-update": {
+                    "type": ["string", "boolean"],
+                    "enum": ["dev", "no-dev", true, false],
+                    "description": "Defaults to false and can be any of true, false, \"dev\"` or \"no-dev\"`. If set to true, Composer will run the bump command after running the update command. If set to \"dev\" or \"no-dev\" then only the corresponding dependencies will be bumped."
+                },
+                "allow-missing-requirements": {
+                    "type": ["boolean"],
+                    "description": "Defaults to false. If set to true, Composer will allow install when lock file is not up to date with the latest changes in composer.json."
+                },
+                "update-with-minimal-changes": {
+                    "type": ["boolean"],
+                    "description": "Defaults to false. If set to true, Composer will only perform absolutely necessary changes to transitive dependencies during update."
+                }
+            }
+        },
+        "extra": {
+            "type": ["object", "array"],
+            "description": "Arbitrary extra data that can be used by plugins, for example, package of type composer-plugin may have a 'class' key defining an installer class name.",
+            "additionalProperties": true
+        },
+        "scripts": {
+            "type": ["object"],
+            "description": "Script listeners that will be executed before/after some events.",
+            "properties": {
+                "pre-install-cmd": {
+                    "type": ["array", "string"],
+                    "description": "Occurs before the install command is executed, contains one or more Class::method callables or shell commands."
+                },
+                "post-install-cmd": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after the install command is executed, contains one or more Class::method callables or shell commands."
+                },
+                "pre-update-cmd": {
+                    "type": ["array", "string"],
+                    "description": "Occurs before the update command is executed, contains one or more Class::method callables or shell commands."
+                },
+                "post-update-cmd": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after the update command is executed, contains one or more Class::method callables or shell commands."
+                },
+                "pre-status-cmd": {
+                    "type": ["array", "string"],
+                    "description": "Occurs before the status command is executed, contains one or more Class::method callables or shell commands."
+                },
+                "post-status-cmd": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after the status command is executed, contains one or more Class::method callables or shell commands."
+                },
+                "pre-package-install": {
+                    "type": ["array", "string"],
+                    "description": "Occurs before a package is installed, contains one or more Class::method callables or shell commands."
+                },
+                "post-package-install": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after a package is installed, contains one or more Class::method callables or shell commands."
+                },
+                "pre-package-update": {
+                    "type": ["array", "string"],
+                    "description": "Occurs before a package is updated, contains one or more Class::method callables or shell commands."
+                },
+                "post-package-update": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after a package is updated, contains one or more Class::method callables or shell commands."
+                },
+                "pre-package-uninstall": {
+                    "type": ["array", "string"],
+                    "description": "Occurs before a package has been uninstalled, contains one or more Class::method callables or shell commands."
+                },
+                "post-package-uninstall": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after a package has been uninstalled, contains one or more Class::method callables or shell commands."
+                },
+                "pre-autoload-dump": {
+                    "type": ["array", "string"],
+                    "description": "Occurs before the autoloader is dumped, contains one or more Class::method callables or shell commands."
+                },
+                "post-autoload-dump": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after the autoloader is dumped, contains one or more Class::method callables or shell commands."
+                },
+                "post-root-package-install": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after the root-package is installed, contains one or more Class::method callables or shell commands."
+                },
+                "post-create-project-cmd": {
+                    "type": ["array", "string"],
+                    "description": "Occurs after the create-project command is executed, contains one or more Class::method callables or shell commands."
+                }
+            }
+        },
+        "scripts-descriptions": {
+            "type": ["object"],
+            "description": "Descriptions for custom commands, shown in console help.",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "scripts-aliases": {
+            "type": ["object"],
+            "description": "Aliases for custom commands.",
+            "additionalProperties": {
+                "type": "array"
+            }
+        }
+    },
+    "definitions": {
+        "authors": {
+            "type": "array",
+            "description": "List of authors that contributed to the package. This is typically the main maintainers, not the full list.",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [ "name"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Full name of the author."
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email address of the author.",
+                        "format": "email"
+                    },
+                    "homepage": {
+                        "type": "string",
+                        "description": "Homepage URL for the author.",
+                        "format": "uri"
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "Author's role in the project."
+                    }
+                }
+            }
+        },
+        "autoload": {
+            "type": "object",
+            "description": "Description of how the package can be autoloaded.",
+            "properties": {
+                "psr-0": {
+                    "type": "object",
+                    "description": "This is an object of namespaces (keys) and the directories they can be found in (values, can be arrays of paths) by the autoloader.",
+                    "additionalProperties": {
+                        "type": ["string", "array"],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "psr-4": {
+                    "type": "object",
+                    "description": "This is an object of namespaces (keys) and the PSR-4 directories they can map to (values, can be arrays of paths) by the autoloader.",
+                    "additionalProperties": {
+                        "type": ["string", "array"],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "classmap": {
+                    "type": "array",
+                    "description": "This is an array of paths that contain classes to be included in the class-map generation process."
+                },
+                "files": {
+                    "type": "array",
+                    "description": "This is an array of files that are always required on every request."
+                },
+                "exclude-from-classmap": {
+                    "type": "array",
+                    "description": "This is an array of patterns to exclude from autoload classmap generation. (e.g. \"exclude-from-classmap\": [\"/test/\", \"/tests/\", \"/Tests/\"]"
+                }
+            }
+        },
+        "repository": {
+            "type": "object",
+            "anyOf": [
+                { "$ref": "#/definitions/composer-repository" },
+                { "$ref": "#/definitions/vcs-repository" },
+                { "$ref": "#/definitions/path-repository" },
+                { "$ref": "#/definitions/artifact-repository" },
+                { "$ref": "#/definitions/pear-repository" },
+                { "$ref": "#/definitions/package-repository" }
+            ]
+        },
+        "anonymous-repository": {
+            "allOf": [
+                { "$ref": "#/definitions/repository" },
+                { "not": { "required": ["name"] } }
+            ]
+        },
+        "composer-repository": {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+                "name": { "type":  "string" },
+                "type": { "type": "string", "enum": ["composer"] },
+                "url": { "type": "string" },
+                "canonical": { "type": "boolean" },
+                "only": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "additionalProperties": true
+                },
+                "allow_ssl_downgrade": { "type": "boolean" },
+                "force-lazy-providers": { "type": "boolean" },
+                "filter": {
+                    "type": ["boolean", "object"],
+                    "description": "Filter list configuration for this repository. Set to false to disable all filter lists advertised by this repository, or to an object listing advertised list names that should be skipped (set to false). Lists not mentioned remain enabled.",
+                    "additionalProperties": {
+                        "type": "boolean",
+                        "description": "Set to false to skip this list from the repository."
+                    }
+                }
+            }
+        },
+        "vcs-repository": {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+                "name": { "type":  "string" },
+                "type": { "type": "string", "enum": ["vcs", "github", "git", "gitlab", "bitbucket", "git-bitbucket", "hg", "fossil", "perforce", "svn", "forgejo"] },
+                "url": { "type": "string" },
+                "canonical": { "type": "boolean" },
+                "only": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "no-api": { "type": "boolean" },
+                "secure-http": { "type": "boolean" },
+                "svn-cache-credentials": { "type": "boolean" },
+                "trunk-path": { "type": ["string", "boolean"] },
+                "branches-path": { "type": ["string", "boolean"] },
+                "tags-path": { "type": ["string", "boolean"] },
+                "package-path": { "type": "string" },
+                "depot": { "type": "string" },
+                "branch": { "type": "string" },
+                "unique_perforce_client_name": { "type": "string" },
+                "p4user": { "type": "string" },
+                "p4password": { "type": "string" }
+            }
+        },
+        "path-repository": {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+                "name": { "type":  "string" },
+                "type": { "type": "string", "enum": ["path"] },
+                "url": { "type": "string" },
+                "canonical": { "type": "boolean" },
+                "only": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "properties": {
+                        "reference": { "type": ["string"], "enum": ["none", "config", "auto"] },
+                        "symlink": { "type": ["boolean", "null"] },
+                        "relative": { "type": ["boolean"] },
+                        "versions": { "type": "object", "additionalProperties": { "type": "string" } }
+                    },
+                    "additionalProperties": true
+                }
+            }
+        },
+        "artifact-repository": {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+                "name": { "type":  "string" },
+                "type": { "type": "string", "enum": ["artifact"] },
+                "url": { "type": "string" },
+                "canonical": { "type": "boolean" },
+                "only": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "pear-repository": {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+                "name": { "type":  "string" },
+                "type": { "type": "string", "enum": ["pear"] },
+                "url": { "type": "string" },
+                "canonical": { "type": "boolean" },
+                "only": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "vendor-alias": { "type": "string" }
+            }
+        },
+        "package-repository": {
+            "type": "object",
+            "required": ["type", "package"],
+            "properties": {
+                "name": { "type":  "string" },
+                "type": { "type": "string", "enum": ["package"] },
+                "canonical": { "type": "boolean" },
+                "only": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "package": {
+                    "oneOf": [
+                        { "$ref": "#/definitions/inline-package" },
+                        {
+                            "type": "array",
+                            "items": { "$ref": "#/definitions/inline-package" }
+                        }
+                    ]
+                }
+            }
+        },
+        "inline-package": {
+            "type": "object",
+            "required": ["name", "version"],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Package name, including 'vendor-name/' prefix."
+                },
+                "type": {
+                    "type": "string"
+                },
+                "target-dir": {
+                    "deprecated": true,
+                    "description": "DEPRECATED: Forces the package to be installed into the given subdirectory path. This is used for autoloading PSR-0 packages that do not contain their full path. Use forward slashes for cross-platform compatibility.",
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "keywords": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "homepage": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "license": {
+                    "type": [
+                        "string",
+                        "array"
+                    ]
+                },
+                "authors": {
+                    "$ref": "#/definitions/authors"
+                },
+                "require": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "replace": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "conflict": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "provide": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "require-dev": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "suggest": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "extra": {
+                    "type": ["object", "array"],
+                    "additionalProperties": true
+                },
+                "autoload": {
+                    "$ref": "#/definitions/autoload"
+                },
+                "archive": {
+                    "type": ["object"],
+                    "properties": {
+                        "exclude": {
+                            "type": "array"
+                        }
+                    }
+                },
+                "bin": {
+                    "type": ["string", "array"],
+                    "description": "A set of files, or a single file, that should be treated as binaries and symlinked into bin-dir (from config).",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "include-path": {
+                    "deprecated": true,
+                    "type": ["array"],
+                    "description": "DEPRECATED: A list of directories which should get added to PHP's include path. This is only present to support legacy projects, and all new code should preferably use autoloading.",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "source": {
+                    "$ref": "#/definitions/source"
+                },
+                "dist": {
+                    "$ref": "#/definitions/dist"
+                }
+            },
+            "additionalProperties": true
+        },
+        "source": {
+            "type": "object",
+            "required": ["type", "url", "reference"],
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "reference": {
+                    "type": "string"
+                },
+                "mirrors": {
+                    "type": "array"
+                }
+            }
+        },
+        "dist": {
+            "type": "object",
+            "required": ["type", "url"],
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "reference": {
+                    "type": "string"
+                },
+                "shasum": {
+                    "type": "string"
+                },
+                "mirrors": {
+                    "type": "array"
+                }
+            }
+        },
+        "policy-ignore": {
+            "description": "Package name patterns with optional version constraints and per-rule scoping (on-block/on-audit).",
+            "anyOf": [
+                {
+                    "type": "array",
+                    "description": "Simple list of package names or patterns to ignore.",
+                    "items": { "type": "string" }
+                },
+                {
+                    "type": "object",
+                    "description": "Map of package names/patterns to reason strings or detailed rule objects.",
+                    "additionalProperties": {
+                        "anyOf": [
+                            { "type": "string", "description": "Reason for ignoring this package." },
+                            { "type": "null", "description": "Ignore without explanation." },
+                            {
+                                "type": "object",
+                                "description": "Detailed ignore rule with optional constraint and scoping.",
+                                "properties": {
+                                    "constraint": { "type": "string", "description": "Version constraint to limit the ignore to specific versions." },
+                                    "reason": { "type": "string", "description": "Explanation for ignoring this package." },
+                                    "on-block": { "type": "boolean", "description": "If false, does not ignore during version blocking (only during audit)." },
+                                    "on-audit": { "type": "boolean", "description": "If false, does not ignore during audit reporting (only during blocking)." }
+                                }
+                            },
+                            {
+                                "type": "array",
+                                "description": "Multiple ignore rules for the same package.",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "constraint": { "type": "string" },
+                                        "reason": { "type": "string" },
+                                        "on-block": { "type": "boolean" },
+                                        "on-audit": { "type": "boolean" }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "policy-ignore-id": {
+            "description": "Advisory IDs (CVE, GHSA, PKSA, ...) with optional reason and per-rule scoping (on-block/on-audit).",
+            "anyOf": [
+                {
+                    "type": "array",
+                    "description": "Simple list of advisory IDs to ignore.",
+                    "items": { "type": "string" }
+                },
+                {
+                    "type": "object",
+                    "description": "Map of advisory IDs to reason strings or detailed rule objects.",
+                    "additionalProperties": {
+                        "anyOf": [
+                            { "type": "string", "description": "Reason for ignoring this advisory ID." },
+                            { "type": "null", "description": "Ignore without explanation." },
+                            {
+                                "type": "object",
+                                "description": "Detailed ignore rule with optional scoping.",
+                                "properties": {
+                                    "reason": { "type": "string", "description": "Explanation for ignoring this advisory ID." },
+                                    "on-block": { "type": "boolean", "description": "If false, does not ignore during version blocking (only during audit)." },
+                                    "on-audit": { "type": "boolean", "description": "If false, does not ignore during audit reporting (only during blocking)." }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "policy-ignore-severity": {
+            "description": "Advisory severity levels (low, medium, high, critical) with optional reason and per-rule scoping (on-block/on-audit).",
+            "$comment": "anyOf (not oneOf) because the array and object branches both contain string values that can validate against multiple sub-schemas; oneOf would reject otherwise-valid input.",
+            "anyOf": [
+                {
+                    "anyOf": [
+                        {
+                            "type": "array",
+                            "description": "Simple list of severity levels to ignore.",
+                            "items": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+                        },
+                        {
+                            "type": "object",
+                            "description": "Map of severity levels to reason strings or detailed rule objects.",
+                            "additionalProperties": {
+                                "anyOf": [
+                                    {
+                                        "type": "string",
+                                        "description": "Reason for ignoring this severity level."
+                                    },
+                                    {
+                                        "type": "null",
+                                        "description": "Ignore without explanation."
+                                    },
+                                    {
+                                        "type": "object",
+                                        "description": "Detailed ignore rule with optional scoping.",
+                                        "properties": {
+                                            "reason": { "type": "string", "description": "Explanation for ignoring this severity level." },
+                                            "on-block": { "type": "boolean", "description": "If false, does not ignore during version blocking (only during audit)." },
+                                            "on-audit": { "type": "boolean", "description": "If false, does not ignore during audit reporting (only during blocking)." }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "array",
+                    "description": "A list of severities for which advisories with matching severity will be ignored, e.g. critical, high, medium, low, or none. Applies to audit reports and version blocking.",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        }
+    }
+}

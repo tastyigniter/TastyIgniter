@@ -1,0 +1,84 @@
+{
+    "name": "tastyigniter/ti-ext-socialite",
+    "type": "tastyigniter-package",
+    "description": "Allows visitors to register/sign in with their social media accounts.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sam Poyigi",
+            "email": "sam@sampoyigi.com"
+        }
+    ],
+    "keywords": [
+        "tastyigniter",
+        "social",
+        "login",
+        "facebook",
+        "twitter",
+        "google"
+    ],
+    "require": {
+        "tastyigniter/core": "^v4.0",
+        "tastyigniter/ti-ext-user": "^v4.0",
+        "laravel/socialite": "^5.2"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.2",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "rector/rector": "^2.0",
+        "sampoyigi/testbench": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Igniter\\Socialite\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Igniter\\Socialite\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "tastyigniter-extension": {
+            "code": "igniter.socialite",
+            "name": "Socialite",
+            "icon": {
+                "class": "fa fa-users",
+                "color": "#FFFFFF",
+                "backgroundColor": "#FF4900"
+            },
+            "homepage": "https://tastyigniter.com/marketplace/item/igniter-socialite"
+        },
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true,
+            "composer/installers": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test:lint": "vendor/bin/pint --test --ansi",
+        "test:lint-fix": "vendor/bin/pint --ansi",
+        "test:refactor": "vendor/bin/rector process --dry-run --ansi",
+        "test:refactor-fix": "vendor/bin/rector process --ansi",
+        "test:static": "vendor/bin/phpstan analyse --memory-limit=1056M --ansi",
+        "test:static-fix": "vendor/bin/phpstan --generate-baseline --memory-limit=1056M --ansi",
+        "test:pest": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage --exactly=100 --compact",
+        "test:type-coverage": "vendor/bin/pest --type-coverage --min=100",
+        "test": [
+            "@test:refactor",
+            "@test:static",
+            "@test:lint",
+            "@test:coverage"
+        ]
+    }
+}

@@ -1,0 +1,64 @@
+net\authorize\api\contract\v1\CreateCustomerProfileFromTransactionRequest:
+    xml_root_name: createCustomerProfileFromTransactionRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transId:
+            expose: true
+            access_type: public_method
+            serialized_name: transId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransId
+                setter: setTransId
+            type: string
+        customer:
+            expose: true
+            access_type: public_method
+            serialized_name: customer
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomer
+                setter: setCustomer
+            type: net\authorize\api\contract\v1\CustomerProfileBaseType
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        defaultPaymentProfile:
+            expose: true
+            access_type: public_method
+            serialized_name: defaultPaymentProfile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDefaultPaymentProfile
+                setter: setDefaultPaymentProfile
+            type: boolean
+        defaultShippingAddress:
+            expose: true
+            access_type: public_method
+            serialized_name: defaultShippingAddress
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDefaultShippingAddress
+                setter: setDefaultShippingAddress
+            type: boolean
+        profileType:
+            expose: true
+            access_type: public_method
+            serialized_name: profileType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileType
+                setter: setProfileType
+            type: string

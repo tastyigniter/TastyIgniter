@@ -1,0 +1,32 @@
+// ======================================================================== //
+// TastyIgniter Admin UI
+// ======================================================================== //
+//
+// Helpers
+@import "../../node_modules/bootstrap/scss/functions";
+//
+// Variables, Mixins
+@import "helpers/variables";
+@import "helpers/mixins";
+//
+// Vendors: Bootstrap Helpers
+@import "helpers/bootstrap-helpers";
+//
+// Helpers: Maps
+@import "helpers/maps";
+//
+// Vendors: FontAwesome, SweetAlert
+@import "vendor/+import_vendors";
+//
+// Vendors: Bootstrap components
+@import "helpers/bootstrap-components";
+//
+// Bootstrap backward compatibility
+@import "helpers/bootstrap-replace";
+//
+// Components
+@import "components/+import-components";
+//
+// Utilities
+@import "utilities/+import-utilities";
+

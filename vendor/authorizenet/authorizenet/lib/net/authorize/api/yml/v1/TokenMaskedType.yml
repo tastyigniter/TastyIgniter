@@ -1,0 +1,42 @@
+net\authorize\api\contract\v1\TokenMaskedType:
+    properties:
+        tokenSource:
+            expose: true
+            access_type: public_method
+            serialized_name: tokenSource
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTokenSource
+                setter: setTokenSource
+            type: string
+        tokenNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: tokenNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTokenNumber
+                setter: setTokenNumber
+            type: string
+        expirationDate:
+            expose: true
+            access_type: public_method
+            serialized_name: expirationDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getExpirationDate
+                setter: setExpirationDate
+            type: string
+        tokenRequestorId:
+            expose: true
+            access_type: public_method
+            serialized_name: tokenRequestorId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTokenRequestorId
+                setter: setTokenRequestorId
+            type: string

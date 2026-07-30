@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\AuResponseType:
+    properties:
+        auReasonCode:
+            expose: true
+            access_type: public_method
+            serialized_name: auReasonCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuReasonCode
+                setter: setAuReasonCode
+            type: string
+        profileCount:
+            expose: true
+            access_type: public_method
+            serialized_name: profileCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileCount
+                setter: setProfileCount
+            type: integer
+        reasonDescription:
+            expose: true
+            access_type: public_method
+            serialized_name: reasonDescription
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getReasonDescription
+                setter: setReasonDescription
+            type: string

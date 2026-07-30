@@ -1,0 +1,7 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Foundation\\Application\:\:providerIsLoaded\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/Manager.php

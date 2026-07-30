@@ -1,0 +1,14 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - config/
+        - database/
+        - src/
+        - resources/
+    ignoreErrors:
+        - '#PHPDoc tag @var#'
+        - identifier: generics.notGeneric
+        - identifier: trait.unused

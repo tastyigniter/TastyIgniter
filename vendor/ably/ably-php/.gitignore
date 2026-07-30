@@ -1,0 +1,9 @@
+.idea
+.DS_Store
+tmp/
+config.php
+/composer.lock
+/.phpunit.result.cache
+/vendor/
+
+.*.swp

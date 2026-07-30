@@ -1,0 +1,54 @@
+net\authorize\api\contract\v1\ValidateCustomerPaymentProfileRequest:
+    xml_root_name: validateCustomerPaymentProfileRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        customerPaymentProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileId
+                setter: setCustomerPaymentProfileId
+            type: string
+        customerShippingAddressId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerShippingAddressId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerShippingAddressId
+                setter: setCustomerShippingAddressId
+            type: string
+        cardCode:
+            expose: true
+            access_type: public_method
+            serialized_name: cardCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardCode
+                setter: setCardCode
+            type: string
+        validationMode:
+            expose: true
+            access_type: public_method
+            serialized_name: validationMode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getValidationMode
+                setter: setValidationMode
+            type: string

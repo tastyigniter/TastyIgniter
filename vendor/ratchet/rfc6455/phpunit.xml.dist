@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        forceCoversAnnotation="true"
+        bootstrap="tests/bootstrap.php"
+        colors="true"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        stopOnError="false"
+        >
+
+    <testsuites>
+        <testsuite name="tests">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </coverage>
+</phpunit>

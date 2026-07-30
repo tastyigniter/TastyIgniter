@@ -1,0 +1,17 @@
+.components {
+  padding-bottom: 5px;
+}
+.components .components-container {
+  overflow-y: auto;
+  max-height: 55vh;
+}
+.components .components-container::-webkit-scrollbar {
+  display: none;
+}
+.components .components-item {
+  position: relative;
+}
+.components .components-item:focus,
+.components .components-item:hover {
+  cursor: pointer;
+}

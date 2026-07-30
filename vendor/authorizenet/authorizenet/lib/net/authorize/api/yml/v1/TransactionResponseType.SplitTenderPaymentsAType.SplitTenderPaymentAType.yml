@@ -1,0 +1,92 @@
+net\authorize\api\contract\v1\TransactionResponseType\SplitTenderPaymentsAType\SplitTenderPaymentAType:
+    properties:
+        transId:
+            expose: true
+            access_type: public_method
+            serialized_name: transId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransId
+                setter: setTransId
+            type: string
+        responseCode:
+            expose: true
+            access_type: public_method
+            serialized_name: responseCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getResponseCode
+                setter: setResponseCode
+            type: string
+        responseToCustomer:
+            expose: true
+            access_type: public_method
+            serialized_name: responseToCustomer
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getResponseToCustomer
+                setter: setResponseToCustomer
+            type: string
+        authCode:
+            expose: true
+            access_type: public_method
+            serialized_name: authCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuthCode
+                setter: setAuthCode
+            type: string
+        accountNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: accountNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAccountNumber
+                setter: setAccountNumber
+            type: string
+        accountType:
+            expose: true
+            access_type: public_method
+            serialized_name: accountType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAccountType
+                setter: setAccountType
+            type: string
+        requestedAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: requestedAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRequestedAmount
+                setter: setRequestedAmount
+            type: string
+        approvedAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: approvedAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getApprovedAmount
+                setter: setApprovedAmount
+            type: string
+        balanceOnCard:
+            expose: true
+            access_type: public_method
+            serialized_name: balanceOnCard
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBalanceOnCard
+                setter: setBalanceOnCard
+            type: string

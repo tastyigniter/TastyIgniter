@@ -1,0 +1,13 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - database/
+        - src/
+        - resources/
+    ignoreErrors:
+        - '#PHPDoc tag @var#'
+        - identifier: generics.notGeneric

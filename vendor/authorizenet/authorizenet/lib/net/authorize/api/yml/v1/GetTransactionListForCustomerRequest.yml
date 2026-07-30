@@ -1,0 +1,44 @@
+net\authorize\api\contract\v1\GetTransactionListForCustomerRequest:
+    xml_root_name: getTransactionListForCustomerRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        customerPaymentProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileId
+                setter: setCustomerPaymentProfileId
+            type: string
+        sorting:
+            expose: true
+            access_type: public_method
+            serialized_name: sorting
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSorting
+                setter: setSorting
+            type: net\authorize\api\contract\v1\TransactionListSortingType
+        paging:
+            expose: true
+            access_type: public_method
+            serialized_name: paging
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaging
+                setter: setPaging
+            type: net\authorize\api\contract\v1\PagingType

@@ -1,0 +1,13 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src/
+        - resources/
+#    ignoreErrors:
+#        - '#PHPDoc tag @var#'
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+#    checkMissingIterableValueType: false

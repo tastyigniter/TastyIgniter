@@ -1,0 +1,89 @@
+{
+    "name": "tastyigniter/ti-ext-payregister",
+    "type": "tastyigniter-package",
+    "description": "Allows you to accept credit card payments using PayPal, Stripe, Authorize.Net and/or Mollie.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sam Poyigi",
+            "email": "sam@sampoyigi.com"
+        }
+    ],
+    "keywords": [
+        "tastyigniter",
+        "paypal",
+        "stripe",
+        "square",
+        "payment",
+        "gateway",
+        "authorizenet",
+        "mollie"
+    ],
+    "require": {
+        "tastyigniter/core": "^v4.0",
+        "php-http/guzzle7-adapter": "^1.0",
+        "authorizenet/authorizenet": "2.0.2",
+        "stripe/stripe-php": "^7.93",
+        "mollie/mollie-api-php": "^2.0",
+        "square/square": "26.0.0.20230419"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.2",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "rector/rector": "^2.0",
+        "sampoyigi/testbench": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Igniter\\PayRegister\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Igniter\\PayRegister\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "tastyigniter-extension": {
+            "code": "igniter.payregister",
+            "name": "Pay Register",
+            "icon": {
+                "class": "fa fa-cash-register",
+                "backgroundColor": "#FF4900",
+                "color": "#FFFFFF"
+            },
+            "homepage": "https://tastyigniter.com/marketplace/item/igniter-payregister"
+        },
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true,
+            "composer/installers": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test:lint": "vendor/bin/pint --test --ansi",
+        "test:lint-fix": "vendor/bin/pint --ansi",
+        "test:refactor": "vendor/bin/rector process --dry-run --ansi",
+        "test:refactor-fix": "vendor/bin/rector process --ansi",
+        "test:static": "vendor/bin/phpstan analyse --memory-limit=1056M --ansi",
+        "test:static-fix": "vendor/bin/phpstan --generate-baseline --memory-limit=1056M --ansi",
+        "test:pest": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage --exactly=100 --compact",
+        "test:type-coverage": "vendor/bin/pest --type-coverage --min=100",
+        "test": [
+            "@test:refactor",
+            "@test:static",
+            "@test:lint",
+            "@test:coverage"
+        ]
+    }
+}

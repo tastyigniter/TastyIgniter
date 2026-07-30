@@ -1,0 +1,14 @@
+net\authorize\api\contract\v1\UpdateCustomerPaymentProfileResponse:
+    xml_root_name: updateCustomerPaymentProfileResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        validationDirectResponse:
+            expose: true
+            access_type: public_method
+            serialized_name: validationDirectResponse
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getValidationDirectResponse
+                setter: setValidationDirectResponse
+            type: string

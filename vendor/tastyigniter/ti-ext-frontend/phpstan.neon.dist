@@ -1,0 +1,15 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src/
+        - database/
+        - resources/
+#    ignoreErrors:
+#        - '#PHPDoc tag @var#'
+#    excludePaths:
+#        - ./*/*/FileToBeExcluded.php
+#    checkMissingIterableValueType: false

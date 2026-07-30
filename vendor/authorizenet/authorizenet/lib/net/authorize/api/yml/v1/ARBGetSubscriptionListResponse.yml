@@ -1,0 +1,29 @@
+net\authorize\api\contract\v1\ARBGetSubscriptionListResponse:
+    xml_root_name: ARBGetSubscriptionListResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        totalNumInResultSet:
+            expose: true
+            access_type: public_method
+            serialized_name: totalNumInResultSet
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTotalNumInResultSet
+                setter: setTotalNumInResultSet
+            type: integer
+        subscriptionDetails:
+            expose: true
+            access_type: public_method
+            serialized_name: subscriptionDetails
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubscriptionDetails
+                setter: setSubscriptionDetails
+            type: array<net\authorize\api\contract\v1\SubscriptionDetailType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: subscriptionDetail
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

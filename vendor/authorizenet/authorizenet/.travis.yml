@@ -1,0 +1,66 @@
+language: php
+
+sudo: false
+
+matrix:
+  include:
+    - php: 5.6
+      env: 
+        - PHPUNIT_VERSION=5.6.*
+        - TEST_SUITE=samples
+      dist: trusty
+    - php: 7.0
+      env: 
+        - PHPUNIT_VERSION=5.6.*
+        - TEST_SUITE=samples
+      dist: trusty
+    - php: 7.1
+      env: 
+        - PHPUNIT_VERSION=5.7.*
+        - TEST_SUITE=samples
+      dist: trusty
+    - php: 7.2
+      env: 
+        - PHPUNIT_VERSION=8.5.*
+        - TEST_SUITE=samples
+      dist: bionic
+    - php: 7.3
+      env: 
+        - PHPUNIT_VERSION=9.5.*
+        - TEST_SUITE=samples
+      dist: bionic
+    - php: 7.4
+      env: 
+        - PHPUNIT_VERSION=9.5.*
+        - TEST_SUITE=samples
+      dist: bionic
+    - php: 8.0
+      env: 
+        - PHPUNIT_VERSION=9.5.*
+        - TEST_SUITE=samples
+      dist: bionic
+
+before_install:
+    # execute all of the commands which need to be executed 
+    # before installing dependencies
+    - composer validate # make sure that our composer.json file is valid for packaging
+
+install:
+    # install all of the dependencies we need here
+    - pecl install xmldiff
+    - composer require "phpunit/phpunit:${PHPUNIT_VERSION}" --no-update
+    - composer update --prefer-dist
+
+before_script:
+    # execute all of the commands which need to be executed 
+    # before running actual tests
+    - git submodule update --remote --recursive
+
+script:
+    # execute all of the tests or other commands to determine
+    # whether the build will pass or fail
+    - if [[ "$TEST_SUITE" == "samples" ]]; then phpenv config-rm xdebug.ini; cp -R lib sample-code-php/; cp -R vendor sample-code-php/; cd sample-code-php; vendor/phpunit/phpunit/phpunit TestRunner.php .;  fi
+
+after_script:
+#    - if [[ "$TEST_SUITE" == "coverage" ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
+#    - if [[ "$TEST_SUITE" == "coverage" ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi

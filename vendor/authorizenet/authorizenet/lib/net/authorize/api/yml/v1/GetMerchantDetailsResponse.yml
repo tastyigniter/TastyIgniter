@@ -1,0 +1,154 @@
+net\authorize\api\contract\v1\GetMerchantDetailsResponse:
+    xml_root_name: getMerchantDetailsResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        isTestMode:
+            expose: true
+            access_type: public_method
+            serialized_name: isTestMode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIsTestMode
+                setter: setIsTestMode
+            type: boolean
+        processors:
+            expose: true
+            access_type: public_method
+            serialized_name: processors
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProcessors
+                setter: setProcessors
+            type: array<net\authorize\api\contract\v1\ProcessorType>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: processor
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        merchantName:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantName
+                setter: setMerchantName
+            type: string
+        gatewayId:
+            expose: true
+            access_type: public_method
+            serialized_name: gatewayId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getGatewayId
+                setter: setGatewayId
+            type: string
+        marketTypes:
+            expose: true
+            access_type: public_method
+            serialized_name: marketTypes
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMarketTypes
+                setter: setMarketTypes
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: marketType
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        productCodes:
+            expose: true
+            access_type: public_method
+            serialized_name: productCodes
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProductCodes
+                setter: setProductCodes
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: productCode
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        paymentMethods:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentMethods
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentMethods
+                setter: setPaymentMethods
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: paymentMethod
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        currencies:
+            expose: true
+            access_type: public_method
+            serialized_name: currencies
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCurrencies
+                setter: setCurrencies
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: currency
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        publicClientKey:
+            expose: true
+            access_type: public_method
+            serialized_name: publicClientKey
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPublicClientKey
+                setter: setPublicClientKey
+            type: string
+        businessInformation:
+            expose: true
+            access_type: public_method
+            serialized_name: businessInformation
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBusinessInformation
+                setter: setBusinessInformation
+            type: net\authorize\api\contract\v1\CustomerAddressType
+        merchantTimeZone:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantTimeZone
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantTimeZone
+                setter: setMerchantTimeZone
+            type: string
+        contactDetails:
+            expose: true
+            access_type: public_method
+            serialized_name: contactDetails
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getContactDetails
+                setter: setContactDetails
+            type: array<net\authorize\api\contract\v1\ContactDetailType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: contactDetail
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

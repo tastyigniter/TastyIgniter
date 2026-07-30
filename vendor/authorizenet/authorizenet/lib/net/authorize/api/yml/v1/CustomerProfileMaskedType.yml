@@ -1,0 +1,40 @@
+net\authorize\api\contract\v1\CustomerProfileMaskedType:
+    properties:
+        paymentProfiles:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentProfiles
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentProfiles
+                setter: setPaymentProfiles
+            xml_list:
+                inline: true
+                entry_name: paymentProfiles
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\CustomerPaymentProfileMaskedType>
+        shipToList:
+            expose: true
+            access_type: public_method
+            serialized_name: shipToList
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getShipToList
+                setter: setShipToList
+            xml_list:
+                inline: true
+                entry_name: shipToList
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            type: array<net\authorize\api\contract\v1\CustomerAddressExType>
+        profileType:
+            expose: true
+            access_type: public_method
+            serialized_name: profileType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfileType
+                setter: setProfileType
+            type: string

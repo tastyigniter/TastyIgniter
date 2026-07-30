@@ -1,0 +1,62 @@
+net\authorize\api\contract\v1\CreditCardMaskedType:
+    properties:
+        cardNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: cardNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardNumber
+                setter: setCardNumber
+            type: string
+        expirationDate:
+            expose: true
+            access_type: public_method
+            serialized_name: expirationDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getExpirationDate
+                setter: setExpirationDate
+            type: string
+        cardType:
+            expose: true
+            access_type: public_method
+            serialized_name: cardType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardType
+                setter: setCardType
+            type: string
+        cardArt:
+            expose: true
+            access_type: public_method
+            serialized_name: cardArt
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardArt
+                setter: setCardArt
+            type: net\authorize\api\contract\v1\CardArtType
+        issuerNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: issuerNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIssuerNumber
+                setter: setIssuerNumber
+            type: string
+        isPaymentToken:
+            expose: true
+            access_type: public_method
+            serialized_name: isPaymentToken
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIsPaymentToken
+                setter: setIsPaymentToken
+            type: boolean

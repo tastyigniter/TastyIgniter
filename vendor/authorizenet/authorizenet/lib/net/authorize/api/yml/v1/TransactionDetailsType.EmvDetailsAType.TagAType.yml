@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\TransactionDetailsType\EmvDetailsAType\TagAType:
+    properties:
+        tagId:
+            expose: true
+            access_type: public_method
+            serialized_name: tagId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTagId
+                setter: setTagId
+            type: string
+        data:
+            expose: true
+            access_type: public_method
+            serialized_name: data
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getData
+                setter: setData
+            type: string

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         convertDeprecationsToExceptions="true">
+  <coverage>
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="ably">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <listeners>
+    <listener file="tests/extensions/DebugTestListener.php" class="DebugTestListener"/>
+  </listeners>
+</phpunit>

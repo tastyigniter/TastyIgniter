@@ -1,0 +1,92 @@
+@php
+    $fieldOptions = $field->options();
+    $checkedValues = (array)$field->value;
+    $isScrollable = count($fieldOptions) > 10;
+    $inlineMode = (bool)$field->getConfig('inlineMode');
+@endphp
+@if($this->previewMode && $field->value)
+
+    <div class="field-checkboxlist">
+        <input type="hidden" name="{{ $field->getName() }}" value="" />
+        @foreach($fieldOptions as $value => $option)
+            @php
+                $checkboxId = 'checkbox_'.$field->getId().'_'.$loop->iteration;
+                if (!is_array($option)) $option = [$option];
+            @endphp
+            <div class="form-check{{ $inlineMode ? ' form-check-inline' : '' }} mb-2">
+                <input
+                    type="checkbox"
+                    id="{{ $checkboxId }}"
+                    class="form-check-input"
+                    name="{{ $field->getName() }}[]"
+                    value="{{ $value }}"
+                    disabled="disabled"
+                    @checked(in_array($value, $checkedValues))
+                >
+                <label class="form-check-label" for="{{ $checkboxId }}">
+                    {{ is_lang_key($option[0]) ? lang($option[0]) : $option[0] }}
+                    @isset($option[1])
+                        <p class="help-block font-weight-normal">{{ is_lang_key($option[1]) ? lang($option[1]) : $option[1] }}</p>
+                    @endisset
+                </label>
+            </div>
+        @endforeach
+    </div>
+
+@elseif (!$this->previewMode && count($fieldOptions))
+
+    <div class="field-checkboxlist {{ $isScrollable ? 'is-scrollable' : '' }}">
+        @if($isScrollable)
+            <small>
+                @lang('igniter::admin.text_select'):
+                <a href="javascript:;" data-field-checkboxlist-all>@lang('igniter::admin.text_select_all')</a>,
+                <a href="javascript:;" data-field-checkboxlist-none>@lang('igniter::admin.text_select_none')</a>
+            </small>
+
+            <div class="field-checkboxlist-scrollable">
+                <div class="scrollbar">
+                    @endif
+
+                    <input
+                        type="hidden"
+                        name="{{ $field->getName() }}"
+                        value="" />
+
+                    @foreach($fieldOptions as $value => $option)
+                        @php
+                            $checkboxId = 'checkbox_'.$field->getId().'_'.$loop->iteration;
+                            if (is_string($option)) $option = [$option];
+                        @endphp
+                        <div class="form-check{{ $inlineMode ? ' form-check-inline' : '' }} mb-2">
+                            <input
+                                type="checkbox"
+                                id="{{ $checkboxId }}"
+                                class="form-check-input"
+                                name="{{ $field->getName() }}[]"
+                                value="{{ $value }}"
+                                {!! in_array($value, $checkedValues) ? 'checked="checked"' : '' !!}
+                                {!! $field->getAttributes() !!}
+                            />
+
+                            <label class="form-check-label" for="{{ $checkboxId }}">
+                                {{ isset($option[0]) ? lang($option[0]) : '&nbsp;' }}
+                                @isset($option[1])
+                                    <p class="help-block font-weight-normal">@lang($option[1])</p>
+                                @endisset
+                            </label>
+                        </div>
+                    @endforeach
+
+                    @if($isScrollable)
+                </div>
+            </div>
+        @endif
+
+    </div>
+
+@else
+
+    @if($field->placeholder)
+        <p>@lang($field->placeholder)</p>
+    @endif
+@endif

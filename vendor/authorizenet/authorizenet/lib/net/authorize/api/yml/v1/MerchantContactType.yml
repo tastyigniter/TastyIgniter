@@ -1,0 +1,62 @@
+net\authorize\api\contract\v1\MerchantContactType:
+    properties:
+        merchantName:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantName
+                setter: setMerchantName
+            type: string
+        merchantAddress:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantAddress
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantAddress
+                setter: setMerchantAddress
+            type: string
+        merchantCity:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantCity
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantCity
+                setter: setMerchantCity
+            type: string
+        merchantState:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantState
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantState
+                setter: setMerchantState
+            type: string
+        merchantZip:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantZip
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantZip
+                setter: setMerchantZip
+            type: string
+        merchantPhone:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantPhone
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantPhone
+                setter: setMerchantPhone
+            type: string

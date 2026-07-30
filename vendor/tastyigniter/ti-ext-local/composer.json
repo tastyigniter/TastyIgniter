@@ -1,0 +1,81 @@
+{
+    "name": "tastyigniter/ti-ext-local",
+    "type": "tastyigniter-package",
+    "description": "This extension allows your customers find and view menu items of their nearest location.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sam Poyigi",
+            "email": "sam@sampoyigi.com"
+        }
+    ],
+    "require": {
+        "tastyigniter/core": "^v4.0",
+        "tastyigniter/ti-ext-automation": "^v4.0",
+        "tastyigniter/ti-ext-cart": "^v4.0",
+        "tastyigniter/ti-ext-reservation": "^v4.0"
+    },
+    "require-dev": {
+        "igniterlabs/ti-ext-importexport": "v4.x-dev",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.2",
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "rector/rector": "^2.0",
+        "sampoyigi/testbench": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Igniter\\Local\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Igniter\\Local\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "tastyigniter-extension": {
+            "code": "igniter.local",
+            "name": "Local",
+            "icon": {
+                "class": "fa fa-map-marker",
+                "backgroundColor": "#FF4900",
+                "color": "#fff"
+            },
+            "homepage": "https://tastyigniter.com/marketplace/item/igniter-local"
+        },
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true,
+            "composer/installers": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test:lint": "vendor/bin/pint --test --ansi",
+        "test:lint-fix": "vendor/bin/pint --ansi",
+        "test:refactor": "vendor/bin/rector process --dry-run --ansi",
+        "test:refactor-fix": "vendor/bin/rector process --ansi",
+        "test:static": "vendor/bin/phpstan analyse --memory-limit=1056M --ansi",
+        "test:static-fix": "vendor/bin/phpstan --generate-baseline --memory-limit=1056M --ansi",
+        "test:pest": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage --exactly=100 --compact",
+        "test:type-coverage": "vendor/bin/pest --type-coverage --min=100",
+        "test": [
+            "@test:refactor",
+            "@test:static",
+            "@test:lint",
+            "@test:coverage"
+        ]
+    },
+    "suggest": {
+        "igniterlabs/ti-ext-importexport": "For importing and exporting menu items."
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "private": true,
+    "scripts": {
+        "prod": "mix --production"
+    },
+    "devDependencies": {
+        "laravel-echo": "^2.1.4",
+        "laravel-mix": "^6.0.6",
+        "pusher-js": "^8.4.0"
+    }
+}

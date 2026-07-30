@@ -1,0 +1,138 @@
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of Composer.
+ *
+ * (c) Nils Adermann <naderman@naderman.de>
+ *     Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Composer\Repository;
+
+use Composer\Advisory\PartialSecurityAdvisory;
+use Composer\Advisory\SecurityAdvisory;
+use Composer\FilterList\FilterListEntry;
+use Composer\Package\Loader\ArrayLoader;
+use Composer\Package\Loader\ValidatingArrayLoader;
+use Composer\Package\Version\VersionParser;
+use Composer\Pcre\Preg;
+
+/**
+ * Package repository.
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
+class PackageRepository extends ArrayRepository implements AdvisoryProviderInterface, FilterListProviderInterface
+{
+    /** @var mixed[] */
+    private $config;
+
+    /** @var mixed[] */
+    private $securityAdvisories;
+
+    /** @var mixed[] */
+    private $filter;
+
+    /**
+     * Initializes filesystem repository.
+     *
+     * @param array{package: mixed[]} $config package definition
+     */
+    public function __construct(array $config)
+    {
+        parent::__construct();
+        $this->config = $config['package'];
+
+        // make sure we have an array of package definitions
+        if (!is_numeric(key($this->config))) {
+            $this->config = [$this->config];
+        }
+
+        $this->securityAdvisories = $config['security-advisories'] ?? [];
+        $this->filter = $config['filter'] ?? [];
+    }
+
+    /**
+     * Initializes repository (reads file, or remote address).
+     */
+    protected function initialize(): void
+    {
+        parent::initialize();
+
+        $loader = new ValidatingArrayLoader(new ArrayLoader(null, true), true);
+        foreach ($this->config as $package) {
+            try {
+                $package = $loader->load($package);
+            } catch (\Exception $e) {
+                throw new InvalidRepositoryException('A repository of type "package" contains an invalid package definition: '.$e->getMessage()."\n\nInvalid package definition:\n".json_encode($package));
+            }
+
+            $this->addPackage($package);
+        }
+    }
+
+    public function getRepoName(): string
+    {
+        return Preg::replace('{^array }', 'package ', parent::getRepoName());
+    }
+
+    public function hasSecurityAdvisories(): bool
+    {
+        return count($this->securityAdvisories) > 0;
+    }
+
+    public function getSecurityAdvisories(array $packageConstraintMap, bool $allowPartialAdvisories = false): array
+    {
+        $parser = new VersionParser();
+
+        $advisories = [];
+        foreach ($this->securityAdvisories as $packageName => $packageAdvisories) {
+            if (isset($packageConstraintMap[$packageName])) {
+                $advisories[$packageName] = array_values(array_filter(array_map(function (array $data) use ($packageName, $allowPartialAdvisories, $packageConstraintMap, $parser) {
+                    $advisory = PartialSecurityAdvisory::create($packageName, $data, $parser);
+                    if (!$allowPartialAdvisories && !$advisory instanceof SecurityAdvisory) {
+                        throw new \RuntimeException('Advisory for '.$packageName.' could not be loaded as a full advisory from '.$this->getRepoName() . PHP_EOL . var_export($data, true));
+                    }
+
+                    if (!$advisory->affectedVersions->matches($packageConstraintMap[$packageName])) {
+                        return null;
+                    }
+
+                    return $advisory;
+                }, $packageAdvisories)));
+            }
+        }
+
+        return ['advisories' => array_filter($advisories, static function ($adv): bool { return \count($adv) > 0; }), 'namesFound' => array_keys($advisories)];
+    }
+
+    public function hasFilter(): bool
+    {
+        return count($this->filter) > 0;
+    }
+
+    public function getFilter(array $packageConstraintMap, array $configuredLists): array
+    {
+        $parser = new VersionParser();
+
+        $filter = [];
+        foreach ($this->filter as $listName => $listEntries) {
+            foreach ($listEntries as $data) {
+                $filterEntry = FilterListEntry::create($listName, $data, $parser);
+                if (isset($packageConstraintMap[$filterEntry->packageName])) {
+                    $filter[$listName][] = $filterEntry;
+                }
+            }
+        }
+
+        return ['filter' => $filter];
+    }
+
+    public function getFilterLists(): array
+    {
+        return array_keys($this->filter);
+    }
+}

@@ -1,0 +1,3 @@
+net\authorize\api\contract\v1\ErrorResponse:
+    xml_root_name: ErrorResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

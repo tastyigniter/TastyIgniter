@@ -1,0 +1,44 @@
+.btn {
+  border-bottom-width: $btn-border-bottom-width;
+  cursor: pointer;
+}
+
+.btn-edit {
+  color: $primary;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.list-action .btn,
+.btn-action {
+  padding: $btn-action-padding;
+}
+
+.btn-light, .btn-default {
+  background-color: $white;
+  border-color: $gray-300;
+
+  &:hover {
+    background-color: $white;
+    border-color: $gray-400;
+  }
+}
+
+.btn-primary,
+.btn-success,
+.btn-danger {
+  color: $white;
+
+  &:hover,
+  &:focus,
+  &:active {
+    color: $white !important;
+  }
+}
+
+.btn-light:not(:disabled):not(.disabled):active,
+.btn-light:not(:disabled):not(.disabled).active,
+.show > .btn-light.dropdown-toggle {
+  background-color: $gray-400;
+  border-color: $gray-400;
+}

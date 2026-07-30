@@ -1,0 +1,39 @@
+net\authorize\api\contract\v1\GetCustomerShippingAddressResponse:
+    xml_root_name: getCustomerShippingAddressResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        defaultShippingAddress:
+            expose: true
+            access_type: public_method
+            serialized_name: defaultShippingAddress
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDefaultShippingAddress
+                setter: setDefaultShippingAddress
+            type: boolean
+        address:
+            expose: true
+            access_type: public_method
+            serialized_name: address
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAddress
+                setter: setAddress
+            type: net\authorize\api\contract\v1\CustomerAddressExType
+        subscriptionIds:
+            expose: true
+            access_type: public_method
+            serialized_name: subscriptionIds
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubscriptionIds
+                setter: setSubscriptionIds
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: subscriptionId
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

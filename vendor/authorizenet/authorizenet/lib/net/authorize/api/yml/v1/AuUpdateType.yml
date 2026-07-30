@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\AuUpdateType:
+    properties:
+        newCreditCard:
+            expose: true
+            access_type: public_method
+            serialized_name: newCreditCard
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getNewCreditCard
+                setter: setNewCreditCard
+            type: net\authorize\api\contract\v1\CreditCardMaskedType
+        oldCreditCard:
+            expose: true
+            access_type: public_method
+            serialized_name: oldCreditCard
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOldCreditCard
+                setter: setOldCreditCard
+            type: net\authorize\api\contract\v1\CreditCardMaskedType

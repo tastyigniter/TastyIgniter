@@ -1,0 +1,43 @@
+{
+    "name": "rybakit/msgpack",
+    "description": "A pure PHP implementation of the MessagePack serialization format.",
+    "keywords": ["msgpack", "messagepack", "pure", "streaming"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eugene Leonovich",
+            "email": "gen.work@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "ext-decimal": "*",
+        "ext-gmp": "*",
+        "friendsofphp/php-cs-fixer": "^3",
+        "phpunit/phpunit": "^11",
+        "vimeo/psalm": "^5 || ^6"
+    },
+    "suggest": {
+        "ext-decimal": "For converting overflowed integers to Decimal objects",
+        "ext-gmp": "For converting overflowed integers to GMP objects"
+    },
+    "autoload": {
+        "psr-4": {
+            "MessagePack\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MessagePack\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    }
+}

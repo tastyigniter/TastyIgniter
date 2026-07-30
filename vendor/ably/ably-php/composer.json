@@ -1,0 +1,36 @@
+{
+    "name": "ably/ably-php",
+    "description": "Ably REST client library for PHP.",
+    "keywords": ["messaging", "messages", "ably"],
+    "homepage": "https://www.ably.com/",
+    "require": {
+        "php": "^7.2 || ^8.0",
+        "rybakit/msgpack": ">=0.9.1",
+        "ext-json" : "*",
+        "ext-curl" : "*",
+        "ext-openssl" : "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5 || ^9.5"
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Ably",
+            "email": "support@ably.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Ably\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}

@@ -1,0 +1,29 @@
+net\authorize\api\contract\v1\GetCustomerProfileResponse:
+    xml_root_name: getCustomerProfileResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        profile:
+            expose: true
+            access_type: public_method
+            serialized_name: profile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfile
+                setter: setProfile
+            type: net\authorize\api\contract\v1\CustomerProfileMaskedType
+        subscriptionIds:
+            expose: true
+            access_type: public_method
+            serialized_name: subscriptionIds
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubscriptionIds
+                setter: setSubscriptionIds
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: subscriptionId
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

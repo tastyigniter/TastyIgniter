@@ -1,0 +1,98 @@
++function ($) {
+    "use strict";
+
+    // FIELD CONNECTOR CLASS DEFINITION
+    // ============================
+
+    var Connector = function (element, options) {
+        this.options = options
+        this.$el = $(element)
+        this.$sortable = null
+        this.$sortableContainer = $(this.options.sortableContainer, this.$el)
+
+        // Init
+        this.init()
+    }
+
+    Connector.DEFAULTS = {
+        alias: undefined,
+        editable: true,
+        sortableHandle: '.connector-item-handle',
+        sortableContainer: '.field-connector-items',
+    }
+
+    Connector.prototype.init = function () {
+        if (!this.options.editable)
+            return
+
+        this.$el.on('click', '[data-control="load-item"]', $.proxy(this.onLoadItem, this))
+
+        this.bindSorting()
+    }
+
+    Connector.prototype.bindSorting = function () {
+        var sortableOptions = {
+            handle: this.options.sortableHandle,
+        }
+
+        this.$sortable = Sortable.create(this.$sortableContainer.get(0), sortableOptions)
+    }
+
+    Connector.prototype.unbind = function () {
+        this.$sortable.destroy()
+        this.$el.removeData('ti.connector')
+        this.$el = null
+    }
+
+    // EVENT HANDLERS
+    // ============================
+
+    Connector.prototype.onLoadItem = function (event) {
+        var $button = $(event.currentTarget)
+
+        new $.ti.recordEditor.modal({
+            alias: this.options.alias,
+            recordId: $button.data('itemId'),
+            onSave: function () {
+                this.hide()
+            }
+        })
+    }
+
+    // FIELD CONNECTOR PLUGIN DEFINITION
+    // ============================
+
+    var old = $.fn.connector
+
+    $.fn.connector = function (option) {
+        var args = Array.prototype.slice.call(arguments, 1), result
+        this.each(function () {
+            var $this = $(this)
+            var data = $this.data('ti.connector')
+            var options = $.extend({}, Connector.DEFAULTS, $this.data(), typeof option == 'object' && option)
+            if (!data) $this.data('ti.connector', (data = new Connector(this, options)))
+            if (typeof option == 'string') result = data[option].apply(data, args)
+            if (typeof result != 'undefined') return false
+        })
+
+        return result ? result : this
+    }
+
+    $.fn.connector.Constructor = Connector
+
+    // FIELD CONNECTOR NO CONFLICT
+    // =================
+
+    $.fn.connector.noConflict = function () {
+        $.fn.connector = old
+        return this
+    }
+
+    // FIELD CONNECTOR DATA-API
+    // ===============
+
+    $(document).render(function () {
+        $('[data-control="connector"]', document).connector()
+    });
+
+}(window.jQuery);

@@ -1,0 +1,14 @@
+net\authorize\api\contract\v1\MobileDeviceRegistrationRequest:
+    xml_root_name: mobileDeviceRegistrationRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        mobileDevice:
+            expose: true
+            access_type: public_method
+            serialized_name: mobileDevice
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMobileDevice
+                setter: setMobileDevice
+            type: net\authorize\api\contract\v1\MobileDeviceType

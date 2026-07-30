@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\FDSFilterType:
+    properties:
+        name:
+            expose: true
+            access_type: public_method
+            serialized_name: name
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getName
+                setter: setName
+            type: string
+        action:
+            expose: true
+            access_type: public_method
+            serialized_name: action
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAction
+                setter: setAction
+            type: string

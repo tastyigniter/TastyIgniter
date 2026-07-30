@@ -1,0 +1,16 @@
+{
+    "parser": "blade",
+    "singleQuote": true,
+    "htmlWhitespaceSensitivity": "css",
+    "printWidth": 120,
+    "tabWidth": 4,
+    "bladePhpFormatting": "off",
+    "bladePhpFormattingTargets": [],
+    "bladeDirectiveArgSpacing": "none",
+    "bladeEchoSpacing": "space",
+    "bladeInlineIntentElements": ["svg", "svg:*"],
+    "plugins": [
+        "prettier-plugin-blade",
+        "prettier-plugin-tailwindcss"
+    ]
+}

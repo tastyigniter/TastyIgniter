@@ -1,0 +1,433 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Carbon\:\:diffInUTCHour\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/AutomationRules/Conditions/OrderAttribute.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:futureOrderDays\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/AbstractOrderType.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:getMinimumOrderTotal\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/AbstractOrderType.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:getOrderLeadTime\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/AbstractOrderType.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:getOrderTimeInterval\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/AbstractOrderType.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:getOrderTimeRestriction\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/AbstractOrderType.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:hasFutureOrder\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Classes/AbstractOrderType.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:minimumFutureOrderDays\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/AbstractOrderType.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$mealtimes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Classes/CartManager.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$stocks\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Classes/CartManager.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:allowGuestOrder\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/OrderManager.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:listAvailablePayments\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/OrderManager.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$options$#'
+			identifier: parameter.notFound
+			count: 3
+			path: src/Contracts/Buyable.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Admin\\Classes\\BaseWidget\:\:\$previewMode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/FormWidgets/StockEditor.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$stocks\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/FormWidgets/StockEditor.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Admin\\Classes\\AdminController\:\:getFormContext\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/FormWidgets/StockEditor.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:getStockByLocation\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/FormWidgets/StockEditor.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:getStockableLocations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/FormWidgets/StockEditor.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:getStockableName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/FormWidgets/StockEditor.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Stock\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Controllers/Inventory.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Http\\Controllers\\Inventory\:\:refreshList\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Http/Controllers/Inventory.php
+
+		-
+			message: '#^Method Igniter\\Cart\\Http\\Controllers\\Inventory\:\:findStockOrFail\(\) should return Igniter\\Cart\\Models\\Stock but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Http/Controllers/Inventory.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Http\\Controllers\\Orders\:\:formFindModelObject\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Orders.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Middleware/InjectStatusWorkflow.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Listeners/ExtendDashboardCharts.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$label\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Listeners/ExtendDashboardCharts.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:getOrderTimeInterval\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Listeners/OrderPerTimeslotLimitReached.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:categories\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Listeners/OrderPerTimeslotLimitReached.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: \(object\{order_type\: string, order_time\: mixed, menus\: Illuminate\\Support\\Collection\}&stdClass\), Closure\(Igniter\\Cart\\Models\\Order\)\: \(object\{order_type\: string, order_time\: mixed, menus\: Illuminate\\Support\\Collection\}&stdClass\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Listeners/OrderPerTimeslotLimitReached.php
+
+		-
+			message: '#^Relation ''menu_options'' is not found in Igniter\\Cart\\Models\\Order model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Listeners/OrderPerTimeslotLimitReached.php
+
+		-
+			message: '#^Relation ''menus'' is not found in Igniter\\Cart\\Models\\Order model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Listeners/OrderPerTimeslotLimitReached.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:getSettings\(\)\.$#'
+			identifier: method.notFound
+			count: 15
+			path: src/Models/Concerns/LocationAction.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Ingredient\:\:menus\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Ingredient.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$mealtimes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Menu.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Menu\:\:\$stocks\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Models/Menu.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Category\|Igniter\\Flame\\Database\\Builder\<static\(Igniter\\Cart\\Models\\Menu\)\>\:\:sync\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Menu.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Ingredient\|Igniter\\Flame\\Database\\Builder\<static\(Igniter\\Cart\\Models\\Menu\)\>\:\:sync\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Menu.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Menu\:\:mealtimes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Menu.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Menu\:\:stocks\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Menu.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$id$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Models/Menu.php
+
+		-
+			message: '#^Relation ''menu_options'' is not found in Igniter\\Cart\\Models\\Menu model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Models/Menu.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\MenuItemOption\:\:\$linkedOptionValues\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/MenuItemOption.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$menu_option_values\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/MenuItemOption.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$option_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/MenuItemOption.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuItemOption\:\:linkedOptionValues\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/MenuItemOption.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuItemOption\:\:menu_option_values\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/MenuItemOption.php
+
+		-
+			message: '#^Relation ''menu_option_values'' is not found in Igniter\\Cart\\Models\\MenuItemOption model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: src/Models/MenuItemOption.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuOption\:\:menu_option_values\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/MenuOption.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuOption\:\:option_values\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Models/MenuOption.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\MenuOptionValue\:\:\$option\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/MenuOptionValue.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\MenuOptionValue\:\:\$stocks\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Models/MenuOptionValue.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuOptionValue\:\:ingredients\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/MenuOptionValue.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuOptionValue\:\:stocks\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/MenuOptionValue.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuItemOption\:\:linkedOptionValues\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/Observers/MenuItemOptionObserver.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Category\|Igniter\\Flame\\Database\\Builder\<Igniter\\Cart\\Models\\Menu\>\:\:detach\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Observers/MenuObserver.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Ingredient\|Igniter\\Flame\\Database\\Builder\<Igniter\\Cart\\Models\\Menu\>\:\:detach\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Observers/MenuObserver.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Menu\:\:mealtimes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Observers/MenuObserver.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\<Igniter\\Cart\\Models\\Menu\>\|Igniter\\Local\\Models\\Location\:\:detach\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Observers/MenuObserver.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuOption\:\:locations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Observers/MenuOptionObserver.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\MenuOptionValue\:\:ingredients\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Observers/MenuOptionValueObserver.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Cart\\Models\\Order\:\:totals\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/Models/Order.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Support\\Carbon\:\:diffInRealMinutes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Order.php
+
+		-
+			message: '#^Method Igniter\\Cart\\Models\\Order\:\:addOrderMenuOptions\(\) should return bool but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Models/Order.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$order_id$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Models/Order.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\OrderMenuOptionValue\:\:\$menu_option\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/OrderMenuOptionValue.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Stock\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Models/Stock.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Cart\\Models\\Stock\:\:\$stockable\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Stock.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Models/StockHistory.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$customer_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/OrderCreatedNotification.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/OrderCreatedNotification.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:hasCollection\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/OrderTypes/Collection.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:hasDelivery\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/OrderTypes/Delivery.php

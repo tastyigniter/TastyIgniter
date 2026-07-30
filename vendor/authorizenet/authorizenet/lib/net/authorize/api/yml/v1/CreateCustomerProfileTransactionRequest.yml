@@ -1,0 +1,24 @@
+net\authorize\api\contract\v1\CreateCustomerProfileTransactionRequest:
+    xml_root_name: createCustomerProfileTransactionRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transaction:
+            expose: true
+            access_type: public_method
+            serialized_name: transaction
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransaction
+                setter: setTransaction
+            type: net\authorize\api\contract\v1\ProfileTransactionType
+        extraOptions:
+            expose: true
+            access_type: public_method
+            serialized_name: extraOptions
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getExtraOptions
+                setter: setExtraOptions
+            type: string

@@ -1,0 +1,20 @@
+//
+// Loading indicator
+// --------------------------------------------------
+
+.progress-indicator-container {
+  position: relative;
+  min-height: 42px;
+
+  .progress-indicator {
+    background-color: $body-bg;
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+    z-index: $zindex-fixed;
+  }
+}

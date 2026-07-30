@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\TransactionListSortingType:
+    properties:
+        orderBy:
+            expose: true
+            access_type: public_method
+            serialized_name: orderBy
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOrderBy
+                setter: setOrderBy
+            type: string
+        orderDescending:
+            expose: true
+            access_type: public_method
+            serialized_name: orderDescending
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOrderDescending
+                setter: setOrderDescending
+            type: boolean

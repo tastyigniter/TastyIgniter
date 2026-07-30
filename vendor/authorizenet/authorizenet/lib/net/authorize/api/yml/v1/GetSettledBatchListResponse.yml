@@ -1,0 +1,19 @@
+net\authorize\api\contract\v1\GetSettledBatchListResponse:
+    xml_root_name: getSettledBatchListResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        batchList:
+            expose: true
+            access_type: public_method
+            serialized_name: batchList
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBatchList
+                setter: setBatchList
+            type: array<net\authorize\api\contract\v1\BatchDetailsType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: batch
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

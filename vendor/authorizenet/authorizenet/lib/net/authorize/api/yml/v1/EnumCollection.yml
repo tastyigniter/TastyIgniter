@@ -1,0 +1,104 @@
+net\authorize\api\contract\v1\EnumCollection:
+    xml_root_name: EnumCollection
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        customerProfileSummaryType:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileSummaryType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileSummaryType
+                setter: setCustomerProfileSummaryType
+            type: net\authorize\api\contract\v1\CustomerProfileSummaryType
+        paymentSimpleType:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentSimpleType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentSimpleType
+                setter: setPaymentSimpleType
+            type: net\authorize\api\contract\v1\PaymentSimpleType
+        accountTypeEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: accountTypeEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAccountTypeEnum
+                setter: setAccountTypeEnum
+            type: string
+        cardTypeEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: cardTypeEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardTypeEnum
+                setter: setCardTypeEnum
+            type: string
+        fDSFilterActionEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: FDSFilterActionEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFDSFilterActionEnum
+                setter: setFDSFilterActionEnum
+            type: string
+        permissionsEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: permissionsEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPermissionsEnum
+                setter: setPermissionsEnum
+            type: string
+        settingNameEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: settingNameEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSettingNameEnum
+                setter: setSettingNameEnum
+            type: string
+        settlementStateEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: settlementStateEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSettlementStateEnum
+                setter: setSettlementStateEnum
+            type: string
+        transactionStatusEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionStatusEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionStatusEnum
+                setter: setTransactionStatusEnum
+            type: string
+        transactionTypeEnum:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionTypeEnum
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionTypeEnum
+                setter: setTransactionTypeEnum
+            type: string

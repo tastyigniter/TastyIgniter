@@ -1,0 +1,212 @@
+net\authorize\api\contract\v1\BatchStatisticType:
+    properties:
+        accountType:
+            expose: true
+            access_type: public_method
+            serialized_name: accountType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAccountType
+                setter: setAccountType
+            type: string
+        chargeAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargeAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargeAmount
+                setter: setChargeAmount
+            type: float
+        chargeCount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargeCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargeCount
+                setter: setChargeCount
+            type: integer
+        refundAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: refundAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRefundAmount
+                setter: setRefundAmount
+            type: float
+        refundCount:
+            expose: true
+            access_type: public_method
+            serialized_name: refundCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRefundCount
+                setter: setRefundCount
+            type: integer
+        voidCount:
+            expose: true
+            access_type: public_method
+            serialized_name: voidCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getVoidCount
+                setter: setVoidCount
+            type: integer
+        declineCount:
+            expose: true
+            access_type: public_method
+            serialized_name: declineCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDeclineCount
+                setter: setDeclineCount
+            type: integer
+        errorCount:
+            expose: true
+            access_type: public_method
+            serialized_name: errorCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getErrorCount
+                setter: setErrorCount
+            type: integer
+        returnedItemAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: returnedItemAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getReturnedItemAmount
+                setter: setReturnedItemAmount
+            type: float
+        returnedItemCount:
+            expose: true
+            access_type: public_method
+            serialized_name: returnedItemCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getReturnedItemCount
+                setter: setReturnedItemCount
+            type: integer
+        chargebackAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargebackAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargebackAmount
+                setter: setChargebackAmount
+            type: float
+        chargebackCount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargebackCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargebackCount
+                setter: setChargebackCount
+            type: integer
+        correctionNoticeCount:
+            expose: true
+            access_type: public_method
+            serialized_name: correctionNoticeCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCorrectionNoticeCount
+                setter: setCorrectionNoticeCount
+            type: integer
+        chargeChargeBackAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargeChargeBackAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargeChargeBackAmount
+                setter: setChargeChargeBackAmount
+            type: float
+        chargeChargeBackCount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargeChargeBackCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargeChargeBackCount
+                setter: setChargeChargeBackCount
+            type: integer
+        refundChargeBackAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: refundChargeBackAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRefundChargeBackAmount
+                setter: setRefundChargeBackAmount
+            type: float
+        refundChargeBackCount:
+            expose: true
+            access_type: public_method
+            serialized_name: refundChargeBackCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRefundChargeBackCount
+                setter: setRefundChargeBackCount
+            type: integer
+        chargeReturnedItemsAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargeReturnedItemsAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargeReturnedItemsAmount
+                setter: setChargeReturnedItemsAmount
+            type: float
+        chargeReturnedItemsCount:
+            expose: true
+            access_type: public_method
+            serialized_name: chargeReturnedItemsCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getChargeReturnedItemsCount
+                setter: setChargeReturnedItemsCount
+            type: integer
+        refundReturnedItemsAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: refundReturnedItemsAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRefundReturnedItemsAmount
+                setter: setRefundReturnedItemsAmount
+            type: float
+        refundReturnedItemsCount:
+            expose: true
+            access_type: public_method
+            serialized_name: refundReturnedItemsCount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRefundReturnedItemsCount
+                setter: setRefundReturnedItemsCount
+            type: integer

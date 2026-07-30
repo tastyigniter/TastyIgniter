@@ -1,0 +1,97 @@
+2015-09-24  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Add dependency injection support (issue #42)
+	* Fix casting of arrays of simple types
+	* Version 0.10.0
+
+2015-08-14  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Add case-insensitive property matching (issue #40)
+	* Add option to disable map() parameter type enforcement (issue #37)
+	* Release 0.9.0
+
+2015-07-06  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Add support for seting objects directly if they have
+	  the correct type already by @radmen
+	* Throw exception when a non-object is passed to map()
+	* Release 0.8.0
+
+2015-06-19  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Support "mixed" variable type (issue #33)
+	* Release 0.7.0
+
+2015-05-28  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix namespace error with setter type hints
+	* Release 0.6.1
+
+2015-04-09  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Prefer setter methods over directy property access
+	* Change setter method name calculation for properties
+	  with _ underscores by @msankhala
+	* Release 0.6.0
+
+2015-03-18  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Add support for nullable types (int|null) by @barryvdh
+	* Increase test coverage to 100%
+	* Fix float value detection by @sonicgd
+	* Release 0.5.0
+
+2015-01-08  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix bug #23: handle empty variable types
+	* Fix bug #24: Namespaced ArrayObject class with namespaced
+	               value type does not work
+	* Release 0.4.4
+
+2014-12-17  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Change license from AGPL v3 to OSL-3.0
+	* Release 0.4.3
+
+2014-12-05  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix array mapping when value is NULL by @darkgaro
+	* Release 0.4.2
+
+2014-11-04  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix handling of private properties with public setters
+	* Fix handling of simple array types in namespaced files
+	* Release 0.4.1
+
+2014-08-20  Sebastian Mendel  <sebastian.mendel@netresearch.de>
+
+	* Incorporate performance tweaks from @Jalle19
+	* Release 0.4.0
+
+2014-06-11  Andre Hähnel  <andre.haehnel@netresearch.de>
+
+	* Optional exceptions for missing or undefined data
+	* Release 0.3.0
+
+2014-05-16  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Handle NULL values when mapping simple data types onto objects
+	* Release 0.2.1
+
+2014-05-15  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Add support for mapping simple data types onto objects
+	* Fix tests on phpunit 4.x
+	* Release version 0.2.0
+
+2014-03-17  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Prevent autoloading classes with ] in its name
+	* Release version 0.1.3
+
+2014-02-03  Christian Weiske  <christian.weiske@netresearch.de>
+
+	* Fix issue #2: Namespace is prepended two times
+	* Fix issue #1: Remove declare(encoding="UTF-8") calls
+	* Release version 0.1.2

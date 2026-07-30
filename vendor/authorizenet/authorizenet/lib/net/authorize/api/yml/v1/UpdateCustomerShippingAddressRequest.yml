@@ -1,0 +1,34 @@
+net\authorize\api\contract\v1\UpdateCustomerShippingAddressRequest:
+    xml_root_name: updateCustomerShippingAddressRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        address:
+            expose: true
+            access_type: public_method
+            serialized_name: address
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAddress
+                setter: setAddress
+            type: net\authorize\api\contract\v1\CustomerAddressExType
+        defaultShippingAddress:
+            expose: true
+            access_type: public_method
+            serialized_name: defaultShippingAddress
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDefaultShippingAddress
+                setter: setDefaultShippingAddress
+            type: boolean

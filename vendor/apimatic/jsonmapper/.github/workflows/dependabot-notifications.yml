@@ -1,0 +1,126 @@
+name: Dependabot Notifications
+
+on:
+  workflow_run:
+    workflows: ["*"]
+    types:
+      - completed
+
+jobs:
+  notify-checks:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Get PR Information
+        if: github.actor == 'dependabot[bot]'
+        id: get-pr-info
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const run = context.payload.workflow_run;
+            
+            // Get PR directly from the workflow run's head SHA
+            const response = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner,
+              repo,
+              commit_sha: run.head_sha
+            });
+            
+            const pr = response.data[0];  // Get the first associated PR
+            
+            if (pr) {
+              core.exportVariable('PR_TITLE', pr.title);
+              core.exportVariable('PR_AUTHOR', pr.user.login);
+              core.exportVariable('PR_LINK', pr.html_url);
+              core.exportVariable('PR_NUMBER', pr.number.toString());
+            } else {
+              core.exportVariable('PR_TITLE', 'Unknown');
+              core.exportVariable('PR_AUTHOR', context.actor);
+              core.exportVariable('PR_LINK', `https://github.com/${owner}/${repo}/pulls`);
+              core.exportVariable('PR_NUMBER', '');
+            }
+            
+            // Get check runs for this commit
+            const checkRuns = await github.rest.checks.listForRef({
+              owner,
+              repo,
+              ref: run.head_sha
+            });
+            
+            // Count different check conclusions
+            const stats = checkRuns.data.check_runs.reduce((acc, check) => {
+              acc[check.conclusion] = (acc[check.conclusion] || 0) + 1;
+              return acc;
+            }, {});
+            
+            // Create status summary
+            const summary = Object.entries(stats)
+              .map(([status, count]) => `${count} ${status}`)
+              .join(', ');
+            
+            core.exportVariable('CHECKS_SUMMARY', summary);
+            
+            // Determine overall status
+            const hasFailures = stats.failure > 0;
+            const hasSuccess = stats.success > 0;
+            const hasCancelled = stats.cancelled > 0;
+            
+            let overallStatus;
+            if (hasFailures) {
+              overallStatus = 'failure';
+            } else if (hasCancelled && !hasSuccess) {
+              overallStatus = 'cancelled';
+            } else if (hasSuccess) {
+              overallStatus = 'success';
+            } else {
+              overallStatus = 'unknown';
+            }
+            
+            // Only set status if this is the last workflow to complete
+            const incompleteRuns = await github.rest.actions.listWorkflowRunsForRepo({
+              owner,
+              repo,
+              head_sha: run.head_sha,
+              status: 'in_progress'
+            });
+            
+            if (incompleteRuns.data.total_count === 0) {
+              core.exportVariable('ALL_CHECKS_STATUS', overallStatus);
+              core.exportVariable('SHOULD_NOTIFY', 'true');
+              
+              // If checks failed and PR exists, close it
+              if ((overallStatus === 'failure' || overallStatus === 'cancelled') && pr) {
+                await github.rest.pulls.update({
+                  owner,
+                  repo,
+                  pull_number: pr.number,
+                  state: 'closed'
+                });
+                
+                // Add comment explaining why PR was closed
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number: pr.number,
+                  body: `This PR was automatically closed because some checks failed.\nStatus Summary: ${summary}`
+                });
+              }
+            } else {
+              core.exportVariable('SHOULD_NOTIFY', 'false');
+            }
+
+      - name: Send Slack Notification for Success
+        if: env.SHOULD_NOTIFY == 'true' && env.ALL_CHECKS_STATUS == 'success' && github.actor == 'dependabot[bot]'
+        id: slack
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          channel-id: 'C08TLGVQ6V8'
+          slack-message: |
+            Repository: ${{ github.repository }}
+            Title: ${{ env.PR_TITLE }}
+            Author: ${{ env.PR_AUTHOR }}
+            Link: ${{ env.PR_LINK }}
+            Status Summary: ${{ env.CHECKS_SUMMARY }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

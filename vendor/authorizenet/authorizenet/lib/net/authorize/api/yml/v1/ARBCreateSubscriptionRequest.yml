@@ -1,0 +1,14 @@
+net\authorize\api\contract\v1\ARBCreateSubscriptionRequest:
+    xml_root_name: ARBCreateSubscriptionRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        subscription:
+            expose: true
+            access_type: public_method
+            serialized_name: subscription
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubscription
+                setter: setSubscription
+            type: net\authorize\api\contract\v1\ARBSubscriptionType

@@ -1,0 +1,1213 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__callStatic\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Admin/Classes/AdminController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Admin/Classes/AdminController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Admin/Classes/AdminController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:getDataTableOptions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/FormWidgets/DataTable.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\Relation\:\:search\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/FormWidgets/DataTable.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:attachRecordTo\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/FormWidgets/RecordEditor.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getRecordEditorOptions\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/FormWidgets/RecordEditor.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\Relation\:\:sorted\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/FormWidgets/Relation.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|Illuminate\\Database\\Eloquent\\Model\:\:\$notify_customer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Admin/Models/StatusHistory.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\|Illuminate\\Database\\Eloquent\\Model\:\:\$status_comment\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Admin/Models/StatusHistory.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Admin\\Models\\StatusHistory\:\:\$object\.$#'
+			identifier: property.notFound
+			count: 5
+			path: src/Admin/Notifications/StatusUpdatedNotification.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:orSearch\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/Widgets/Lists.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:search\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/Widgets/Lists.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Pagination\\LengthAwarePaginator\:\:getCollection\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Admin/Widgets/Table.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Currency\\Contracts\\CurrencyInterface\:\:get\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Currency/Currency.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:getDefaultTagName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Attach/MediaAdder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:media\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Attach/MediaAdder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:prepareUnattachedMedia\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Attach/MediaAdder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:processUnattachedMedia\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Attach/MediaAdder.php
+
+		-
+			message: '#^PHPDoc tag @property for property Igniter\\Flame\\Database\\Attach\\MediaAdder\:\:\$performedOn contains invalid type Igniter\\Flame\\Database\\Attach\\HasMedia\.$#'
+			identifier: propertyTag.trait
+			count: 1
+			path: src/Flame/Database/Attach/MediaAdder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:afterCreat\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:afterDelet\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:afterFetche\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:afterSav\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:afterUpdat\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:beforeCreat\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:beforeDelet\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:beforeFetche\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:beforeSav\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:beforeUpdat\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Database\\Eloquent\\Builder\:\:search\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^PHPDoc type array of property Igniter\\Flame\\Database\\Model\:\:\$attributes is not covariant with PHPDoc type array\<string, mixed\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$attributes\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Flame/Database/Model.php
+
+		-
+			message: '#^Call to method getKeyName\(\) on an unknown class Kalnoy\\Nestedset\\NodeTrait\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Flame/Database/NestedSet/QueryBuilder.php
+
+		-
+			message: '#^Call to method getPerPage\(\) on an unknown class Kalnoy\\Nestedset\\NodeTrait\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Flame/Database/NestedSet/QueryBuilder.php
+
+		-
+			message: '#^Call to method newCollection\(\) on an unknown class Kalnoy\\Nestedset\\NodeTrait\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Flame/Database/NestedSet/QueryBuilder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\<Igniter\\Flame\\Database\\Model\>\:\:findSimilarSlugs\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/PermalinkMaker.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:permalinkable\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/PermalinkMaker.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:withUniqueSlugConstraints\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/PermalinkMaker.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\BelongsTo\:\:getForeignKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\BelongsTo\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\BelongsTo\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:bindEventOnce\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:fireEvent\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getRelationDefinition\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:reloadRelations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Database\\Relations\\BelongsTo\:\:associate\(\) should return Illuminate\\Database\\Eloquent\\Model but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Database\\Relations\\BelongsTo\:\:dissociate\(\) should return Illuminate\\Database\\Eloquent\\Model but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Database/Relations/BelongsTo.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\BelongsToMany\:\:withDefault\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/BelongsToMany.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Relations\\Pivot,string\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/BelongsToMany.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Relations\\Pivot,string\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/BelongsToMany.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Relations\\Pivot,string\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/BelongsToMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasMany\:\:withDefault\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasMany\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasMany\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to private method delete\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to private method update\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to private method whereNotIn\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Database\\Relations\\HasMany\:\:addMany\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Flame/Database/Relations/HasMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasManyThrough\:\:getForeignKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasManyThrough\:\:withDefault\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasManyThrough\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasManyThrough\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getRelationDefinition\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasManyThrough\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasManyThrough\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasManyThrough\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasManyThrough.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasOne\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasOne\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Call to private method delete\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Call to private method update\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 2
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Database\\Relations\\HasOne\:\:addMany\(\) invoked with 2 parameters, 1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Flame/Database/Relations/HasOne.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasOneThrough\:\:getForeignKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasOneThrough.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasOneThrough\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/HasOneThrough.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\HasOneThrough\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/HasOneThrough.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getRelationDefinition\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Flame/Database/Relations/HasOneThrough.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOneThrough\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasOneThrough.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOneThrough\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasOneThrough.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\HasOneThrough\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/HasOneThrough.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphMany\:\:getForeignKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphMany\:\:withDefault\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphMany\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphMany\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:bindEventOnce\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:fireEvent\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getRelationDefinition\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to private method delete\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to private method update\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to private method whereNotIn\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphOne\:\:getForeignKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphOne\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphOne\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to private method delete\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to private method update\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 2
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphOne\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphOne.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphTo\:\:getForeignKey\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphTo\:\:withPivot\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphTo\:\:withTimestamps\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphTo\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphTo\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\MorphTo\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Database\\Relations\\MorphTo\:\:associate\(\) should return Illuminate\\Database\\Eloquent\\Model but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Database\\Relations\\MorphTo\:\:dissociate\(\) should return Illuminate\\Database\\Eloquent\\Model but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Database/Relations/MorphTo.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Pivot\|Illuminate\\Database\\Eloquent\\Relations\\Pivot\:\:setMorphType\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphToMany.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Relations\\MorphToMany\:\:withDefault\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Database/Relations/MorphToMany.php
+
+		-
+			message: '#^Call to private method orderBy\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Relations\\Pivot,string\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphToMany.php
+
+		-
+			message: '#^Call to private method select\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Relations\\Pivot,string\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphToMany.php
+
+		-
+			message: '#^Call to private method whereRaw\(\) of parent class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany\<Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Model,Illuminate\\Database\\Eloquent\\Relations\\Pivot,string\>\.$#'
+			identifier: method.private
+			count: 1
+			path: src/Flame/Database/Relations/MorphToMany.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Str\:\:normalizeClassName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Flame/Mixins/StringMixin.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Pagic\\Contracts\\TemplateLoader\:\:setSource\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Pagic/Environment.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\View\\Compilers\\CompilerInterface\:\:compileString\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Pagic/Environment.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\View\\Compilers\\CompilerInterface\:\:setPath\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Pagic/Environment.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Pagic\\Contracts\\TemplateInterface\:\:\$exists\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Flame/Pagic/Loader.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Pagic\\Contracts\\TemplateInterface\:\:\$mTime\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Flame/Pagic/Loader.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Pagic\\Model\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Flame/Pagic/Model.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Pagic\\Model\:\:\$isHidden\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Flame/Pagic/Model.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Pagic\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Flame/Pagic/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Pagic\\Model\:\:get\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Pagic/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Pagic\\Model\:\:remember\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Flame/Pagic/Model.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Pagic\\Model\:\:getCodeClassParent\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Flame/Pagic/Parsers/FileParser.php
+
+		-
+			message: '#^Cannot call static method extend\(\) on int\|string\.$#'
+			identifier: staticMethod.nonObject
+			count: 1
+			path: src/Flame/Providers/EventServiceProvider.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Scaffold\\Console\\MakeComponent\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Overwrite existing…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Scaffold/Console/MakeComponent.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Scaffold\\Console\\MakeController\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Overwrite existing…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Scaffold/Console/MakeController.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Scaffold\\Console\\MakeExtension\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Overwrite existing…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Scaffold/Console/MakeExtension.php
+
+		-
+			message: '#^Method Igniter\\Flame\\Scaffold\\Console\\MakeModel\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Overwrite existing…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Flame/Scaffold/Console/MakeModel.php
+
+		-
+			message: '#^Igniter\\Flame\\Support\\Extendable\:\:extendableCall\(\) calls parent\:\:__call\(\) but Igniter\\Flame\\Support\\Extendable does not extend any class\.$#'
+			identifier: class.noParent
+			count: 1
+			path: src/Flame/Support/Extendable.php
+
+		-
+			message: '#^Igniter\\Flame\\Support\\Extendable\:\:extendableCallStatic\(\) calls parent\:\:__callStatic\(\) but Igniter\\Flame\\Support\\Extendable does not extend any class\.$#'
+			identifier: class.noParent
+			count: 1
+			path: src/Flame/Support/Extendable.php
+
+		-
+			message: '#^Igniter\\Flame\\Support\\Extendable\:\:extendableGet\(\) calls parent\:\:__get\(\) but Igniter\\Flame\\Support\\Extendable does not extend any class\.$#'
+			identifier: class.noParent
+			count: 1
+			path: src/Flame/Support/Extendable.php
+
+		-
+			message: '#^Igniter\\Flame\\Support\\Extendable\:\:extendableSet\(\) calls parent\:\:__set\(\) but Igniter\\Flame\\Support\\Extendable does not extend any class\.$#'
+			identifier: class.noParent
+			count: 1
+			path: src/Flame/Support/Extendable.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Str\:\:getClassId\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Flame/Support/Helpers/helpers.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Str\:\:normalizeClassName\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Flame/Support/Helpers/helpers.php
+
+		-
+			message: '#^Parameter \#1 \$message of static method Illuminate\\Log\\Logger\:\:error\(\) expects array\|Illuminate\\Contracts\\Support\\Arrayable\|Illuminate\\Contracts\\Support\\Jsonable\|Illuminate\\Support\\Stringable\|string, Exception given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Flame/Support/Helpers/helpers.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__callStatic\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Main/Classes/MainController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Main/Classes/MainController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/Main/Classes/MainController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Routing\\Router\:\:pagic\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Main/Classes/RouteRegistrar.php
+
+		-
+			message: '#^Class Igniter\\Main\\Events\\ThemeGetActiveEvent does not have a constructor and must be instantiated without any parameters\.$#'
+			identifier: new.noConstructor
+			count: 2
+			path: src/Main/Events/ThemeGetActiveEvent.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:deleteMedia\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Main/FormWidgets/MediaFinder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:findMedia\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Main/FormWidgets/MediaFinder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:mediable\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Main/FormWidgets/MediaFinder.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:newMediaInstance\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Main/FormWidgets/MediaFinder.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\Main\\Models\\Theme\)\:\:DEFAULTABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/Main/Models/Theme.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\Main\\Models\\Theme\)\:\:SWITCHABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/Main/Models/Theme.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 3
+			path: src/Main/Models/Theme.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/System/Actions/SettingsModel.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$item\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/System/Actions/SettingsModel.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$settingsCode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/System/Actions/SettingsModel.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$settingsFieldsConfig\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/System/Actions/SettingsModel.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:initSettingsData\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/System/Actions/SettingsModel.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/System/Classes/BaseComponent.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__callStatic\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/System/Classes/Controller.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__get\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/System/Classes/Controller.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Routing\\Controller\:\:__set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: src/System/Classes/Controller.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\ExtensionRefresh\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''pretend'', null, 1, ''Dump the SQL…''\}, array\{''step'', null, 4, ''The number of…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/ExtensionRefresh.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\ExtensionRemove\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Force remove\.''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/ExtensionRemove.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\IgniterDown\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''database'', null, 4, ''The database…''\}, array\{''force'', null, 1, ''Force the operation…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/IgniterDown.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\IgniterInstall\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Force the operation…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/IgniterInstall.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\IgniterPackageDiscover\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Force the operation…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/IgniterPackageDiscover.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\IgniterUp\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''database'', null, 4, ''The database…''\}, array\{''force'', null, 1, ''Force the operation…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/IgniterUp.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\IgniterUpdate\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Force updates\.''\}, array\{''check'', null, 1, ''Run update checks…''\}, array\{''core'', null, 1, ''Update core…''\}, array\{''addons'', null, 12, ''Update specified…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/IgniterUpdate.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\IgniterUtil\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''admin'', null, 1, ''Compile admin…''\}, array\{''minify'', null, 2, ''Whether to minify…''\}, array\{''carteKey'', null, 2, ''Specify a carteKey…''\}, array\{''theme'', null, 2, ''Specify a theme…''\}, array\{''extensions'', null, 1, ''Set the version…''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/IgniterUtil.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\ThemePublish\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''existing'', null, 1, ''Publish and…''\}, array\{''force'', null, 1, ''Force publish\.''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/ThemePublish.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\ThemeRemove\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''force'', null, 1, ''Force remove\.''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/ThemeRemove.php
+
+		-
+			message: '#^Method Igniter\\System\\Console\\Commands\\ThemeVendorPublish\:\:getOptions\(\) should return array\<array\{0\: non\-empty\-string, 1\?\: non\-empty\-array\<string\>\|string, 2\?\: int\<0, 31\>, 3\?\: string, 4\?\: mixed, 5\?\: \(Closure\(Symfony\\Component\\Console\\Completion\\CompletionInput, Symfony\\Component\\Console\\Completion\\CompletionSuggestions\)\: list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\)\|list\<string\|Symfony\\Component\\Console\\Completion\\Suggestion\>\}\|Symfony\\Component\\Console\\Input\\InputOption\> but returns array\{array\{''existing'', null, 1, ''Publish and…''\}, array\{''all'', null, 1, ''Publish assets for…''\}, array\{''theme'', null, 10, ''One or many theme…'', array\{\}\}, array\{''force'', null, 1, ''Force publish\.''\}\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/System/Console/Commands/ThemeVendorPublish.php
+
+		-
+			message: '#^Parameter \#1 \$context of method Igniter\\System\\Health\\Checks\\BackgroundTasksCheck\:\:issues\(\) expects array\{scheduleHeartbeat\: mixed, queueDriver\: string, queueHeartbeat\: mixed, failedJobs\: int, scheduleAgeMinutes\: int\|null, queueAgeMinutes\: int\|null\}, array\{scheduleHeartbeat\: mixed, queueDriver\: string, queueHeartbeat\: mixed, failedJobs\: int, scheduleAgeMinutes\: float\|null, queueAgeMinutes\: float\|null\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Health/Checks/BackgroundTasksCheck.php
+
+		-
+			message: '#^Parameter \#1 \$context of method Igniter\\System\\Health\\Checks\\BackgroundTasksCheck\:\:meta\(\) expects array\{scheduleHeartbeat\: mixed, queueDriver\: string, queueHeartbeat\: mixed, failedJobs\: int, scheduleAgeMinutes\: int\|null, queueAgeMinutes\: int\|null\}, array\{scheduleHeartbeat\: mixed, queueDriver\: string, queueHeartbeat\: mixed, failedJobs\: int, scheduleAgeMinutes\: float\|null, queueAgeMinutes\: float\|null\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Health/Checks/BackgroundTasksCheck.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:map\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: array\{name\: mixed, version\: mixed\}, Closure\(Igniter\\System\\Models\\Extension\)\: array\{name\: mixed, version\: mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Health/Checks/ExtensionThemeVersionCheck.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:filter\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: bool\)\|null, Closure\(Igniter\\System\\Models\\Extension\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Health/Checks/ExtensionThemeVersionCheck.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Admin\\Classes\\BaseWidget\:\:reInitialize\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/System/Http/Controllers/System.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\:\:sorted\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/System/Libraries/Country.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\Country\)\:\:DEFAULTABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/Country.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\Country\)\:\:SWITCHABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/Country.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 3
+			path: src/System/Models/Country.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\Currency\)\:\:COUNTRY_RELATION\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/Currency.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\Currency\)\:\:DEFAULTABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/Currency.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 3
+			path: src/System/Models/Currency.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/System/Models/Extension.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\Language\)\:\:DEFAULTABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/Language.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\Language\)\:\:SWITCHABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/Language.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 3
+			path: src/System/Models/Language.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\MailLayout\)\:\:SWITCHABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/MailLayout.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/System/Models/MailLayout.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/System/Models/MailPartial.php
+
+		-
+			message: '#^Call to an undefined static method Igniter\\System\\Models\\MailTheme\:\:instance\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: src/System/Models/MailTheme.php
+
+		-
+			message: '#^Static method Igniter\\Flame\\Database\\Builder\:\:get\(\) invoked with 2 parameters, 0\-1 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/System/Models/MailTheme.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\System\\Models\\Page\)\:\:SWITCHABLE_COLUMN\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/System/Models/Page.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:generatePermalinkOnSave\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/System/Models/Page.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/System/Models/Settings.php

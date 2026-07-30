@@ -1,0 +1,267 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Support running from git checkout
+$projectDirectory = dirname(__DIR__);
+if (is_dir($projectDirectory . DIRECTORY_SEPARATOR . 'vendor')) {
+    set_include_path($projectDirectory . PATH_SEPARATOR . get_include_path());
+}
+
+// Autoload composer classes
+$composerAutoload = stream_resolve_include_path('vendor/autoload.php');
+if (!$composerAutoload) {
+    echo "Cannot load json-schema library\n";
+    exit(1);
+}
+require $composerAutoload;
+
+use JsonSchema\Constraints\Constraint;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\DraftIdentifiers;
+use JsonSchema\SchemaStorage;
+use JsonSchema\Validator;
+
+$arOptions = [];
+$arArgs = [];
+array_shift($argv); // script itself
+foreach ($argv as $arg) {
+    if ($arg[0] === '-') {
+        $arOptions[$arg] = true;
+    } else {
+        $arArgs[] = $arg;
+    }
+}
+
+if (count($arArgs) < 2 || isset($arOptions['--help']) || isset($arOptions['-h'])) {
+    echo <<<HLP
+Run JSON Schema test suite test cases
+Usage: run-test-case <test-file> "<group description>[/<test description>]"
+
+Arguments:
+  test-file     Path to a test JSON file. Resolved in order:
+                1. As given (absolute or relative to CWD)
+                2. Relative to the bundled test suite root
+  description   "<group>" or "<group>/<test>" — split on the first "/" only.
+                Exact match is tried first, then case-insensitive substring.
+                Omit the test part to run all tests in the group.
+
+Options:
+  -v --verbose  Also print the schema
+  -h --help     Show this help
+
+Exit codes:
+  0  All matched tests passed
+  1  At least one test failed
+  2  Usage error, file not found, or group/test not found
+
+HLP;
+    exit(0);
+}
+
+$suiteRoot = $projectDirectory . '/vendor/json-schema/json-schema-test-suite/tests';
+$remotesDir = $projectDirectory . '/vendor/json-schema/json-schema-test-suite/remotes';
+
+// Resolve test file path: as-is first, then relative to suite root
+$filePath = $arArgs[0];
+if (!file_exists($filePath)) {
+    $filePath = $suiteRoot . '/' . $arArgs[0];
+    if (!file_exists($filePath)) {
+        echo "Error: test file not found: {$arArgs[0]}\n";
+        exit(2);
+    }
+}
+$filePath = (string) realpath($filePath);
+
+// Detect draft name from directory component (e.g. draft4, draft7, draft2019-09)
+$draft = null;
+if (preg_match('/(draft[^\/]+)/i', str_replace('\\', '/', $filePath), $m)) {
+    $draft = strtolower($m[1]);
+}
+
+// Parse "<group>/<test>" — split on first "/" only so slashes in test descriptions are preserved
+$descParts = explode('/', $arArgs[1], 2);
+$groupDesc = $descParts[0];
+$testDesc  = $descParts[1] ?? null;
+
+// Load test file
+$contents = json_decode((string) file_get_contents($filePath), false);
+if (!is_array($contents)) {
+    echo "Error: invalid test file format\n";
+    exit(2);
+}
+
+// Search: exact match first, then case-insensitive substring
+// $matchedGroup tracks a group that matched even when no test inside it matched
+$foundGroup   = null;
+$foundTest    = null;
+$matchedGroup = null;
+
+foreach ([true, false] as $exact) {
+    foreach ($contents as $group) {
+        $groupMatch = $exact
+            ? $group->description === $groupDesc
+            : stripos($group->description, $groupDesc) !== false;
+
+        if (!$groupMatch) {
+            continue;
+        }
+
+        if ($testDesc === null) {
+            $foundGroup = $group;
+            break 2;
+        }
+
+        $matchedGroup = $group;
+
+        foreach ($group->tests as $test) {
+            $testMatch = $exact
+                ? $test->description === $testDesc
+                : stripos($test->description, $testDesc) !== false;
+
+            if ($testMatch) {
+                $foundGroup = $group;
+                $foundTest  = $test;
+                break 3;
+            }
+        }
+    }
+}
+
+if ($matchedGroup === null && $foundGroup === null) {
+    echo "Error: no matching group found for: {$groupDesc}\n";
+    echo "Available groups:\n";
+    foreach ($contents as $group) {
+        echo "  - {$group->description}\n";
+    }
+    exit(2);
+}
+
+if ($testDesc !== null && $foundTest === null) {
+    echo "Error: no matching test found for: {$testDesc}\n";
+    $listGroup = $matchedGroup ?? $foundGroup;
+    echo "Available tests in \"{$listGroup->description}\":\n";
+    foreach ($listGroup->tests as $test) {
+        $expect = $test->valid ? 'valid' : 'invalid';
+        echo "  [{$expect}] {$test->description}\n";
+    }
+    exit(2);
+}
+
+// Determine check mode (mirrors JsonSchemaTestSuiteTest::getCheckModeForDraft)
+$checkMode = in_array($draft, ['draft6', 'draft7'], true)
+    ? Constraint::CHECK_MODE_NORMAL | Constraint::CHECK_MODE_STRICT
+    : Constraint::CHECK_MODE_NORMAL;
+
+try {
+    $draftIdentifier = DraftIdentifiers::fromConstraintName($draft ?? 'draft4');
+} catch (\InvalidArgumentException $e) {
+    $draftIdentifier = DraftIdentifiers::DRAFT_4();
+}
+
+// Set up validator (mirrors JsonSchemaTestSuiteTest::testTestCaseValidatesCorrectly)
+$schema = $foundGroup->schema;
+$schemaId = is_object($schema) && property_exists($schema, 'id')
+    ? $schema->id
+    : SchemaStorage::INTERNAL_PROVIDED_SCHEMA_URI;
+
+$schemaStorage = new SchemaStorage();
+$schemaStorage->addSchema($schemaId, $schema);
+
+if (is_dir($remotesDir)) {
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($remotesDir));
+    foreach ($iterator as $info) {
+        if (!$info->isFile()) {
+            continue;
+        }
+        $remoteId = str_replace($remotesDir, 'http://localhost:1234', $info->getPathname());
+        $schemaStorage->addSchema($remoteId, json_decode((string) file_get_contents($info->getPathname()), false));
+    }
+}
+
+$factory = new Factory($schemaStorage);
+$factory->setDefaultDialect($draftIdentifier->getValue());
+
+/** @param object $test */
+$runTest = static function (object $test) use ($factory, $schema, $checkMode): array {
+    $validator = new Validator($factory);
+    try {
+        $validator->validate($test->data, $schema, $checkMode);
+    } catch (\Exception $e) {
+        return ['error' => $e->getMessage()];
+    }
+    $isValid = count($validator->getErrors()) === 0;
+    return [
+        'passed'  => $isValid === $test->valid,
+        'isValid' => $isValid,
+        'errors'  => $validator->getErrors(),
+    ];
+};
+
+$verbose = isset($arOptions['--verbose']) || isset($arOptions['-v']);
+
+// Run all tests in the group when no specific test was requested
+if ($foundTest === null) {
+    echo "Group: {$foundGroup->description}\n";
+    if ($verbose) {
+        echo "Schema: " . json_encode($schema, JSON_PRETTY_PRINT) . "\n";
+    }
+    $passCount = 0;
+    $failCount = 0;
+    foreach ($foundGroup->tests as $test) {
+        $result = $runTest($test);
+        if (isset($result['error'])) {
+            echo sprintf("[ERROR] %s\n", $test->description);
+            echo "  Error during validation: {$result['error']}\n";
+            $failCount++;
+            continue;
+        }
+        $expect = $test->valid ? 'valid' : 'invalid';
+        $label  = $result['passed'] ? 'PASS' : 'FAIL';
+        echo sprintf("[%s] [%s] %s\n", $label, $expect, $test->description);
+        if (!$result['passed']) {
+            if ($result['isValid']) {
+                echo "  Validator returned valid but the test case expects invalid.\n";
+            } else {
+                foreach ($result['errors'] as $error) {
+                    echo sprintf("  [%s] %s\n", $error['property'], $error['message']);
+                }
+            }
+            $failCount++;
+        } else {
+            $passCount++;
+        }
+    }
+    echo "\n{$passCount} passed, {$failCount} failed.\n";
+    exit($failCount > 0 ? 1 : 0);
+}
+
+$result = $runTest($foundTest);
+
+if (isset($result['error'])) {
+    echo "Error during validation: {$result['error']}\n";
+    exit(2);
+}
+
+echo "Group : {$foundGroup->description}\n";
+echo "Test  : {$foundTest->description}\n";
+if ($verbose) {
+    echo "Schema: " . json_encode($schema, JSON_PRETTY_PRINT) . "\n";
+}
+echo "Data  : " . json_encode($foundTest->data) . "\n";
+echo "Expect: " . ($foundTest->valid ? 'valid' : 'invalid') . "\n";
+echo "Result: " . ($result['passed'] ? 'PASS' : 'FAIL') . "\n";
+
+if (!$result['passed']) {
+    if ($result['isValid']) {
+        echo "\nValidator returned valid but the test case expects invalid.\n";
+    } else {
+        echo "\nValidation errors:\n";
+        foreach ($result['errors'] as $error) {
+            echo sprintf("  [%s] %s\n", $error['property'], $error['message']);
+        }
+    }
+}
+
+exit($result['passed'] ? 0 : 1);

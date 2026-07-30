@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  PHPUnit:
+    name: PHPUnit (PHP ${{ matrix.php }})(${{ matrix.env }}) on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-24.04
+        env:
+          - client
+          - server
+        php:
+          - 7.4
+          - 8.0
+          - 8.1
+          - 8.2
+          - 8.3
+          - 8.4
+          - 8.5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+      - run: docker pull crossbario/autobahn-testsuite
+      - run: composer install
+
+      - run: sh tests/ab/run_ab_tests.sh
+        env:
+            ABTEST: ${{ matrix.env }}
+      - run: vendor/bin/phpunit --verbose

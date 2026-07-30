@@ -1,0 +1,24 @@
+.navbar-footer {
+  font-size: 12px;
+  padding: 15px;
+  margin-left: $page-margin-left;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  .text-version {
+    text-align: right;
+  }
+
+  .text-copyright,
+  .text-version {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+@include media-breakpoint-down(sm) {
+  .navbar-footer {
+    display: none;
+  }
+}

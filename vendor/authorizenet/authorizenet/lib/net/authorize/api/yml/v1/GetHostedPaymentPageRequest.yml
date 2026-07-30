@@ -1,0 +1,29 @@
+net\authorize\api\contract\v1\GetHostedPaymentPageRequest:
+    xml_root_name: getHostedPaymentPageRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transactionRequest:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionRequest
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionRequest
+                setter: setTransactionRequest
+            type: net\authorize\api\contract\v1\TransactionRequestType
+        hostedPaymentSettings:
+            expose: true
+            access_type: public_method
+            serialized_name: hostedPaymentSettings
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getHostedPaymentSettings
+                setter: setHostedPaymentSettings
+            type: array<net\authorize\api\contract\v1\SettingType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: setting
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

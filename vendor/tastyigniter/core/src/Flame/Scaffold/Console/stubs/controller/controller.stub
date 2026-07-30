@@ -1,0 +1,57 @@
+<?php
+
+namespace {{studly_author}}\{{studly_extension}}\Http\Controllers;
+
+use Igniter\Admin\Facades\AdminMenu;
+
+/**
+ * {{title_name}} Admin Controller
+ */
+class {{studly_name}} extends \Igniter\Admin\Classes\AdminController
+{
+    public array $implement = [
+        \Igniter\Admin\Http\Actions\FormController::class,
+        \Igniter\Admin\Http\Actions\ListController::class
+    ];
+
+    public array $listConfig = [
+        'list' => [
+            'model' => \{{studly_author}}\{{studly_extension}}\Models\{{studly_singular_name}}::class,
+            'title' => '{{title_name}}',
+            'emptyMessage' => 'lang:igniter::admin.list.text_empty',
+            'defaultSort' => ['id', 'DESC'],
+            'configFile' => '{{snake_singular_name}}',
+        ],
+    ];
+
+    public array $formConfig = [
+        'name' => '{{title_name}}',
+        'model' => \{{studly_author}}\{{studly_extension}}\Models\{{studly_singular_name}}::class,
+        'create' => [
+            'title' => 'lang:igniter::admin.form.create_title',
+            'redirect' => '{{lower_author}}/{{lower_extension}}/{{lower_name}}/edit/{id}',
+            'redirectClose' => '{{lower_author}}/{{lower_extension}}/{{lower_name}}',
+            'redirectNew' => '{{lower_author}}/{{lower_extension}}/{{lower_name}}/create',
+        ],
+        'edit' => [
+            'title' => 'lang:igniter::admin.form.edit_title',
+            'redirect' => '{{lower_author}}/{{lower_extension}}/{{lower_name}}/edit/{id}',
+            'redirectClose' => '{{lower_author}}/{{lower_extension}}/{{lower_name}}',
+            'redirectNew' => '{{lower_author}}/{{lower_extension}}/{{lower_name}}/create',
+        ],
+        'preview' => [
+            'title' => 'lang:igniter::admin.form.preview_title',
+            'back' => '{{lower_author}}/{{lower_extension}}/{{lower_name}}',
+        ],
+        'configFile' => '{{snake_singular_name}}',
+    ];
+
+    protected null|string|array $requiredPermissions = '{{studly_author}}.{{studly_extension}}';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        AdminMenu::setContext('{{lower_name}}', '{{lower_author}}.{{lower_extension}}');
+    }
+}

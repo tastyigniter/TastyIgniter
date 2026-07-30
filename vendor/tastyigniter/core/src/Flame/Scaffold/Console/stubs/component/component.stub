@@ -1,0 +1,17 @@
+<?php
+
+namespace {{studly_author}}\{{studly_extension}}\Components;
+
+use Igniter\System\Classes\BaseComponent;
+
+class {{studly_name}} extends BaseComponent
+{
+    public function defineProperties(): array
+    {
+        return [];
+    }
+
+    public function onRun() {
+        // Do something when the component is loaded by a page or layout
+    }
+}

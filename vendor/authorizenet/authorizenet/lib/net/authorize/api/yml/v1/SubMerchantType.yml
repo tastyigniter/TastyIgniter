@@ -1,0 +1,112 @@
+net\authorize\api\contract\v1\SubMerchantType:
+    properties:
+        identifier:
+            expose: true
+            access_type: public_method
+            serialized_name: identifier
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIdentifier
+                setter: setIdentifier
+            type: string
+        doingBusinessAs:
+            expose: true
+            access_type: public_method
+            serialized_name: doingBusinessAs
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDoingBusinessAs
+                setter: setDoingBusinessAs
+            type: string
+        paymentServiceProviderName:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentServiceProviderName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentServiceProviderName
+                setter: setPaymentServiceProviderName
+            type: string
+        paymentServiceFacilitator:
+            expose: true
+            access_type: public_method
+            serialized_name: paymentServiceFacilitator
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaymentServiceFacilitator
+                setter: setPaymentServiceFacilitator
+            type: string
+        streetAddress:
+            expose: true
+            access_type: public_method
+            serialized_name: streetAddress
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getStreetAddress
+                setter: setStreetAddress
+            type: string
+        phone:
+            expose: true
+            access_type: public_method
+            serialized_name: phone
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPhone
+                setter: setPhone
+            type: string
+        email:
+            expose: true
+            access_type: public_method
+            serialized_name: email
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmail
+                setter: setEmail
+            type: string
+        postalCode:
+            expose: true
+            access_type: public_method
+            serialized_name: postalCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPostalCode
+                setter: setPostalCode
+            type: string
+        city:
+            expose: true
+            access_type: public_method
+            serialized_name: city
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCity
+                setter: setCity
+            type: string
+        regionCode:
+            expose: true
+            access_type: public_method
+            serialized_name: regionCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRegionCode
+                setter: setRegionCode
+            type: string
+        countryCode:
+            expose: true
+            access_type: public_method
+            serialized_name: countryCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCountryCode
+                setter: setCountryCode
+            type: string

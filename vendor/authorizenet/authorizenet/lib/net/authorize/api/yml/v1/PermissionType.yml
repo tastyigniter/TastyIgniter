@@ -1,0 +1,12 @@
+net\authorize\api\contract\v1\PermissionType:
+    properties:
+        permissionName:
+            expose: true
+            access_type: public_method
+            serialized_name: permissionName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPermissionName
+                setter: setPermissionName
+            type: string

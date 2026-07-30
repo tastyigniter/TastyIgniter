@@ -1,0 +1,14 @@
+net\authorize\api\contract\v1\CreateTransactionRequest:
+    xml_root_name: createTransactionRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transactionRequest:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionRequest
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionRequest
+                setter: setTransactionRequest
+            type: net\authorize\api\contract\v1\TransactionRequestType

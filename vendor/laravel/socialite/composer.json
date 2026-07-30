@@ -1,0 +1,65 @@
+{
+    "name": "laravel/socialite",
+    "description": "Laravel wrapper around OAuth 1 & OAuth 2 libraries.",
+    "keywords": [
+        "oauth",
+        "laravel"
+    ],
+    "license": "MIT",
+    "homepage": "https://laravel.com",
+    "support": {
+        "issues": "https://github.com/laravel/socialite/issues",
+        "source": "https://github.com/laravel/socialite"
+    },
+    "authors": [
+        {
+            "name": "Taylor Otwell",
+            "email": "taylor@laravel.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2|^8.0",
+        "ext-json": "*",
+        "firebase/php-jwt": "^6.4|^7.0",
+        "guzzlehttp/guzzle": "^6.0|^7.0",
+        "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/http": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+        "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0|^12.0|^13.0",
+        "league/oauth1-client": "^1.11",
+        "phpseclib/phpseclib": "^3.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.0",
+        "orchestra/testbench": "^4.18|^5.20|^6.47|^7.55|^8.36|^9.15|^10.8|^11.0",
+        "phpstan/phpstan": "^1.12.23",
+        "phpunit/phpunit": "^8.0|^9.3|^10.4|^11.5|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laravel\\Socialite\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laravel\\Socialite\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Laravel\\Socialite\\SocialiteServiceProvider"
+            ],
+            "aliases": {
+                "Socialite": "Laravel\\Socialite\\Facades\\Socialite"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

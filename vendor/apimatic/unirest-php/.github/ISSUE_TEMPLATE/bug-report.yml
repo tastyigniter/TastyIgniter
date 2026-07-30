@@ -1,0 +1,79 @@
+name: 🐞 Bug
+description: Report a bug or an issue you've found
+title: "[Bug] <title>"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: checkboxes
+    attributes:
+      label: Is this a new bug?
+      description: >
+        In other words: Is this an error, flaw, failure or fault? Please search issues to see if someone has already reported the bug you encountered.
+      options:
+        - label: I believe this is a new bug
+          required: true
+        - label: I have searched the existing issues, and I could not find an existing issue for this bug
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Current Behavior
+      description: A concise description of what you're experiencing.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps To Reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. In this environment...
+        2. With this config...
+        3. Run '...'
+        4. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Environment
+      description: |
+        examples:
+          - **OS**: Ubuntu 20.04
+          - **Language version**: PHP 8.2 (`php -v`)
+          - **SDK Name**: PayPal (If you are using this library as a dependency, please name the parent SDK)
+      value: |
+        - **OS**:
+        - **Language version**:
+        - **SDK Name**:
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: |
+        If applicable, log output to help explain your problem.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Additional Context
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+    validations:
+      required: false

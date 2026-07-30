@@ -1,0 +1,62 @@
+name: Tests
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    if: "! contains(toJSON(github.event.head_commit.message), 'skip ci')"
+    strategy:
+      matrix:
+        php: ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
+        include:
+          - php: 5.6
+            phpunit: 5
+          - php: 7.0
+            phpunit: 6
+          - php: 7.1
+            phpunit: 6
+          - php: 7.2
+            phpunit: 7
+          - php: 7.3
+            phpunit: 7
+          - php: 7.4
+            phpunit: 7
+          - php: 8.0
+            phpunit: 8
+          - php: 8.1
+            phpunit: 9
+          - php: 8.2
+            phpunit: 9
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache/files
+          key: php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: php-${{ matrix.php }}-composer-
+  
+      - name: Install dependencies
+        run: composer install --prefer-source
+
+      - name: Check code style
+        run: vendor/bin/phpcs --standard=PEAR src/
+
+      - name: Run tests
+        run: composer test-ci
+
+      - name: SonarQube Scan
+        if: ${{ matrix.php == '8.1' && github.actor != 'dependabot[bot]' }}
+        uses: SonarSource/sonarqube-scan-action@v6.0.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,133 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Foundation\\Application\:\:refresh\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Auth/AuthServiceProvider.php
+
+		-
+			message: '#^Method Igniter\\User\\Auth\\CustomerGuard\:\:getByCredentials\(\) should return Igniter\\User\\Auth\\Models\\User\|null but returns Illuminate\\Contracts\\Auth\\Authenticatable\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Auth/CustomerGuard.php
+
+		-
+			message: '#^Method Igniter\\User\\Auth\\CustomerGuard\:\:getById\(\) should return Igniter\\User\\Auth\\Models\\User\|null but returns Illuminate\\Contracts\\Auth\\Authenticatable\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Auth/CustomerGuard.php
+
+		-
+			message: '#^Method Igniter\\User\\Auth\\CustomerGuard\:\:getByToken\(\) should return Igniter\\User\\Auth\\Models\\User\|null but returns Illuminate\\Contracts\\Auth\\Authenticatable\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Auth/CustomerGuard.php
+
+		-
+			message: '#^Method Igniter\\User\\Auth\\UserGuard\:\:getByCredentials\(\) should return Igniter\\User\\Auth\\Models\\User\|null but returns Illuminate\\Contracts\\Auth\\Authenticatable\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Auth/UserGuard.php
+
+		-
+			message: '#^Method Igniter\\User\\Auth\\UserGuard\:\:getById\(\) should return Igniter\\User\\Auth\\Models\\User\|null but returns Illuminate\\Contracts\\Auth\\Authenticatable\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Auth/UserGuard.php
+
+		-
+			message: '#^Method Igniter\\User\\Auth\\UserGuard\:\:getByToken\(\) should return Igniter\\User\\Auth\\Models\\User\|null but returns Illuminate\\Contracts\\Auth\\Authenticatable\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Auth/UserGuard.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: mixed, Closure\(Igniter\\User\\Models\\UserPreference, int\)\: true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Console/Commands/ClearUserStateCommand.php
+
+		-
+			message: '#^Call to function is_a\(\) with Igniter\\Admin\\Classes\\AdminController and class\-string\<stdClass\>&literal\-string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: src/Http/Actions/AssigneeController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:reloadRelations\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Users.php
+
+		-
+			message: '#^Access to undefined constant static\(Igniter\\User\\Models\\Address\)\:\:CUSTOMER_RELATION\.$#'
+			identifier: classConstant.notFound
+			count: 1
+			path: src/Models/Address.php
+
+		-
+			message: '#^Parameter \#2 \$callback of method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:whereHas\(\) expects \(Closure\(Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\)\: mixed\)\|null, Closure\(Igniter\\Flame\\Database\\Builder\)\: Igniter\\Flame\\Database\\Builder given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Models/Address.php
+
+		-
+			message: '#^Method Igniter\\User\\Models\\AssignableLog\:\:getUnAssignedQueue\(\) should return Igniter\\Flame\\Database\\Builder but returns Illuminate\\Database\\Query\\Builder\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Models/AssignableLog.php
+
+		-
+			message: '#^Parameter \#2 \$callback of method Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\:\:whereHas\(\) expects \(Closure\(Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\>\)\: mixed\)\|null, Closure\(Igniter\\Flame\\Database\\Builder\)\: void given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Models/AssignableLog.php
+
+		-
+			message: '#^Property Igniter\\User\\Models\\Customer\:\:\$last_login \(Illuminate\\Support\\Carbon\|null\) does not accept Carbon\\CarbonInterface\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Models/Customer.php
+
+		-
+			message: '#^Method Igniter\\User\\Models\\Notification\:\:prunable\(\) should return Illuminate\\Database\\Eloquent\\Builder but returns Illuminate\\Database\\Query\\Builder\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Models/Notification.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$assignable\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Notifications/AssigneeUpdatedNotification.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$assignee\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Notifications/AssigneeUpdatedNotification.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$assignee_group\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Notifications/AssigneeUpdatedNotification.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/AssigneeUpdatedNotification.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$full_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Notifications/CustomerRegisteredNotification.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Builder\<Igniter\\User\\Models\\User\>\|Igniter\\User\\Models\\User\:\:whereIsSuperUser\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Notifications/CustomerRegisteredNotification.php

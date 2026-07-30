@@ -1,0 +1,229 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined static method Igniter\\Local\\Models\\ReviewSettings\:\:set\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: database/migrations/2020_09_17_000300_create_reviews_table_or_rename.php
+
+		-
+			message: '#^Call to an undefined method DateTime\:\:between\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:availableOrderTypes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:shouldAddLeadTime\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:IsEnabled\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Classes/Location.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Classes/WorkingPeriod.php
+
+		-
+			message: '#^Comparison operation "\=\=" between DateInterval and 0 results in an error\.$#'
+			identifier: equal.invalid
+			count: 1
+			path: src/Classes/WorkingRange.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Classes/WorkingRange.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Classes/WorkingSchedule.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 1
+			path: src/Classes/WorkingTimeslot.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Admin\\Classes\\BaseWidget\:\:\$previewMode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/FormWidgets/ScheduleEditor.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Admin\\Classes\\BaseWidget\:\:\$previewMode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/FormWidgets/SettingsEditor.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Routing\\Controller\:\:\$locationConfig\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Http/Actions/LocationAwareController.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Http\\Controllers\\Locations\:\:getFormModel\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Locations.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Http\\Controllers\\Locations\:\:refreshList\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Http/Controllers/Locations.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Admin\\Classes\\BaseWidget\:\:\$previewMode\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/MainMenuWidgets/LocationPicker.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\Location\:\:\$country\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\Location\:\:\$delivery_areas\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Models/Location.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\Location\:\:\$settings\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\Location\:\:\$working_hours\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/Location.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:delivery_areas\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Models/Location.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:futureOrderDays\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:hasFutureOrder\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:settings\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Location.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Local\\Models\\Location\:\:working_hours\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/Location.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Local\\Models\\LocationSettings\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Models/LocationSettings.php
+
+		-
+			message: '#^Call to function array_key_exists\(\) with ''form'' and non\-empty\-array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Models/LocationSettings.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$customer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Review.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$customer_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Review.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$customer_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Review.php
+
+		-
+			message: '#^Access to an undefined property Igniter\\Flame\\Database\\Model\:\:\$location_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Models/Review.php
+
+		-
+			message: '#^Call to an undefined method Igniter\\Flame\\Database\\Model\:\:isCompleted\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Review.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 2
+			path: src/Models/Review.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:selectDistance\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Scopes/LocationScope.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getLocationableRelationObject\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/Scopes/LocationableScope.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:locationableIsMorphRelationType\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Models/Scopes/LocationableScope.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:locationableIsSingleRelationType\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/Scopes/LocationableScope.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:locationableRelationName\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Models/Scopes/LocationableScope.php

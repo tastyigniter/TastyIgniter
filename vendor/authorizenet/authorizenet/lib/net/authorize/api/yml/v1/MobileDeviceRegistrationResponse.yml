@@ -1,0 +1,4 @@
+net\authorize\api\contract\v1\MobileDeviceRegistrationResponse:
+    xml_root_name: mobileDeviceRegistrationResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties: {  }

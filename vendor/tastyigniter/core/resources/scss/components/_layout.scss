@@ -1,0 +1,36 @@
+.page-wrapper {
+  background-color: $gray-100;
+  display: flex;
+  flex-direction: column;
+
+  > .content {
+    margin: 0;
+  }
+
+  .page-content {
+    padding-bottom: $page-padding-y;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .page-container {
+    .sidebar {
+      width: 14rem !important;
+    }
+
+    .page-wrapper {
+      flex: 1 1 0%;
+    }
+  }
+}
+
+body.dragging, body.dragging {
+  cursor: move !important;
+
+  .dragged {
+    position: absolute;
+    top: 0;
+    opacity: .5;
+    z-index: 2000;
+  }
+}

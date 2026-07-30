@@ -1,0 +1,15 @@
+.card-counter {
+    text-align: right;
+    padding: 10px;
+    transition: .3s linear all;
+}
+.card-counter .stat-number {
+    font-size: 28px;
+    display: block;
+    line-height: 45px;
+}
+.card-counter .stat-text {
+    font-style: italic;
+    opacity: 0.5;
+    display: block;
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.22.0@fc2c6ab4d5fa5d644d8617089f012f3bb84b8703">
+  <file src="src/Pagination/DoctrinePaginatorAdapter.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>int</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;paginator-&gt;getQuery()-&gt;getMaxResults()</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Pagination/IlluminatePaginatorAdapter.php">
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>count</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Scope.php">
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>getMeta</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMethod occurrences="1">
+      <code>transform</code>
+    </UndefinedMethod>
+  </file>
+</files>

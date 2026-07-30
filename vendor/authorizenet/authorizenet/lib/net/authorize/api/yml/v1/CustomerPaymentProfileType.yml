@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\CustomerPaymentProfileType:
+    properties:
+        payment:
+            expose: true
+            access_type: public_method
+            serialized_name: payment
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayment
+                setter: setPayment
+            type: net\authorize\api\contract\v1\PaymentType
+        driversLicense:
+            expose: true
+            access_type: public_method
+            serialized_name: driversLicense
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDriversLicense
+                setter: setDriversLicense
+            type: net\authorize\api\contract\v1\DriversLicenseType
+        taxId:
+            expose: true
+            access_type: public_method
+            serialized_name: taxId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxId
+                setter: setTaxId
+            type: string
+        defaultPaymentProfile:
+            expose: true
+            access_type: public_method
+            serialized_name: defaultPaymentProfile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDefaultPaymentProfile
+                setter: setDefaultPaymentProfile
+            type: boolean
+        subsequentAuthInformation:
+            expose: true
+            access_type: public_method
+            serialized_name: subsequentAuthInformation
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSubsequentAuthInformation
+                setter: setSubsequentAuthInformation
+            type: net\authorize\api\contract\v1\SubsequentAuthInformationType

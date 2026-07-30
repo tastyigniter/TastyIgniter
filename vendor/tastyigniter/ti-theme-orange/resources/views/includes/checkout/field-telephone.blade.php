@@ -1,0 +1,11 @@
+<x-igniter-orange::forms.telephone
+    id="input-telephone"
+    :number="$field->value"
+    field="{{$field->getName()}}"
+    :label="lang($field->label)"
+/>
+<x-igniter-orange::forms.error
+    field="{{$field->getName()}}"
+    id="{{$field->getId()}}-feedback"
+    class="text-danger"
+/>

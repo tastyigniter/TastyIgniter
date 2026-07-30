@@ -1,0 +1,19 @@
+net\authorize\api\contract\v1\GetCustomerProfileIdsResponse:
+    xml_root_name: getCustomerProfileIdsResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        ids:
+            expose: true
+            access_type: public_method
+            serialized_name: ids
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIds
+                setter: setIds
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: numericString
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\CustomerPaymentProfileBaseType:
+    properties:
+        customerType:
+            expose: true
+            access_type: public_method
+            serialized_name: customerType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerType
+                setter: setCustomerType
+            type: string
+        billTo:
+            expose: true
+            access_type: public_method
+            serialized_name: billTo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBillTo
+                setter: setBillTo
+            type: net\authorize\api\contract\v1\CustomerAddressType

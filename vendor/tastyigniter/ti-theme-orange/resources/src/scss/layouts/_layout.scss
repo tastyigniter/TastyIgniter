@@ -1,0 +1,9 @@
+body {
+  background-color: var(--page-bg);
+
+  > header {
+    nav {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}

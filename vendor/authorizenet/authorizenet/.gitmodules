@@ -1,0 +1,3 @@
+[submodule "sample-code-php"]
+	path = sample-code-php
+	url = https://github.com/AuthorizeNet/sample-code-php.git

@@ -1,0 +1,41 @@
+{
+  "doctype": "html5",
+  "favicon": "$/igniter-orange/images/favicon.ico",
+  "meta": [
+    {
+      "name": "Content-type",
+      "content": "text/html; charset=utf-8",
+      "type": "equiv"
+    },
+    {
+      "name": "X-UA-Compatible",
+      "content": "IE=edge",
+      "type": "equiv"
+    },
+    {
+      "name": "viewport",
+      "content": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+      "type": "name"
+    }
+  ],
+  "style": [
+    {
+      "path": "$/igniter-orange/css/app.css",
+      "name": "app-css",
+      "data-navigate-track": "true"
+    }
+  ],
+  "script": [
+    {
+      "path": "$/igniter-orange/js/app.js",
+      "name": "app-js"
+    }
+  ],
+  "bundles": [
+    {
+      "type": "scss",
+      "files": "igniter-orange::src/scss/app.scss",
+      "destination": "$/igniter-orange/css/app.css"
+    }
+  ]
+}

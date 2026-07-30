@@ -1,0 +1,19 @@
+net\authorize\api\contract\v1\GetAUJobSummaryResponse:
+    xml_root_name: getAUJobSummaryResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        auSummary:
+            expose: true
+            access_type: public_method
+            serialized_name: auSummary
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuSummary
+                setter: setAuSummary
+            type: array<net\authorize\api\contract\v1\AuResponseType>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: auResponse
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

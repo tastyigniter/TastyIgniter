@@ -1,0 +1,72 @@
+net\authorize\api\contract\v1\CustomerPaymentProfileListItemType:
+    properties:
+        defaultPaymentProfile:
+            expose: true
+            access_type: public_method
+            serialized_name: defaultPaymentProfile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDefaultPaymentProfile
+                setter: setDefaultPaymentProfile
+            type: boolean
+        customerPaymentProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileId
+                setter: setCustomerPaymentProfileId
+            type: integer
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: integer
+        billTo:
+            expose: true
+            access_type: public_method
+            serialized_name: billTo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBillTo
+                setter: setBillTo
+            type: net\authorize\api\contract\v1\CustomerAddressType
+        payment:
+            expose: true
+            access_type: public_method
+            serialized_name: payment
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayment
+                setter: setPayment
+            type: net\authorize\api\contract\v1\PaymentMaskedType
+        originalNetworkTransId:
+            expose: true
+            access_type: public_method
+            serialized_name: originalNetworkTransId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOriginalNetworkTransId
+                setter: setOriginalNetworkTransId
+            type: string
+        originalAuthAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: originalAuthAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOriginalAuthAmount
+                setter: setOriginalAuthAmount
+            type: float

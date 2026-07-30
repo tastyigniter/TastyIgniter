@@ -1,0 +1,40 @@
+name: Tests
+on:
+  workflow_dispatch:
+  push:
+    branches: [ v2-master ]
+  pull_request:
+    branches: [ v2-master ]
+permissions:
+  contents: read
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    if: "! contains(toJSON(github.event.head_commit.message), 'skip ci')"
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+      - name: Cache Composer dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.composer/cache/files
+          key: unirest-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: unirest-php-${{ matrix.php }}-composer-
+      - name: Update dependencies
+        run: composer update
+      - name: Run lint
+        run: composer lint
+      - name: Run analyze
+        run: composer analyze
+      - name: Run tests
+        run: composer test-coverage-text

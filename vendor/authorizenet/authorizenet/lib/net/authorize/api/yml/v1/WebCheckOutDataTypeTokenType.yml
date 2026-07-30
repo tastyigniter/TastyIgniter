@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\WebCheckOutDataTypeTokenType:
+    properties:
+        cardNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: cardNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardNumber
+                setter: setCardNumber
+            type: string
+        expirationDate:
+            expose: true
+            access_type: public_method
+            serialized_name: expirationDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getExpirationDate
+                setter: setExpirationDate
+            type: string
+        cardCode:
+            expose: true
+            access_type: public_method
+            serialized_name: cardCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardCode
+                setter: setCardCode
+            type: string
+        zip:
+            expose: true
+            access_type: public_method
+            serialized_name: zip
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getZip
+                setter: setZip
+            type: string
+        fullName:
+            expose: true
+            access_type: public_method
+            serialized_name: fullName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFullName
+                setter: setFullName
+            type: string

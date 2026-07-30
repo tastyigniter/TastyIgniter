@@ -1,0 +1,47 @@
+// ======================================================================== //
+// Import vendors
+// ======================================================================== //
+
+@import "bootstrap-partials";
+//
+// Sweetalert2
+@import "sweetalert2";
+
+.toast-container {
+  --bs-toast-zindex: 99999;
+}
+
+// Animate.css
+@import "animate";
+//
+// PhotoSwipe
+@import "photoswipe";
+//
+// INTL Tel Input
+@import "intlTelInput";
+
+.iti {
+  width: 100%;
+}
+
+.iti__flag {
+  background-image: url("/vendor/igniter-orange/images/iti/flags.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .iti__flag {
+    background-image: url("/vendor/igniter-orange/images/iti/flags@2x.png");
+  }
+}
+
+.iti--separate-dial-code .iti__selected-flag {
+  background-color: transparent;
+}
+
+.iti__country-list {
+  z-index: 1000;
+}
+
+//
+// Flatpickr
+@import "flatpickr";

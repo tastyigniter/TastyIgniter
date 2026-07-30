@@ -1,0 +1,11 @@
+net\authorize\api\contract\v1\EmailSettingsType:
+    properties:
+        version:
+            expose: true
+            access_type: public_method
+            serialized_name: version
+            accessor:
+                getter: getVersion
+                setter: setVersion
+            xml_attribute: true
+            type: integer

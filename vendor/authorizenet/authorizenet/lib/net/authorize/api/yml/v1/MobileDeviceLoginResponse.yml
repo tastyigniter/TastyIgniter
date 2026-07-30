@@ -1,0 +1,39 @@
+net\authorize\api\contract\v1\MobileDeviceLoginResponse:
+    xml_root_name: mobileDeviceLoginResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        merchantContact:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantContact
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantContact
+                setter: setMerchantContact
+            type: net\authorize\api\contract\v1\MerchantContactType
+        userPermissions:
+            expose: true
+            access_type: public_method
+            serialized_name: userPermissions
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUserPermissions
+                setter: setUserPermissions
+            type: array<net\authorize\api\contract\v1\PermissionType>
+            xml_list:
+                inline: false
+                skip_when_empty: false
+                entry_name: permission
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+        merchantAccount:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantAccount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantAccount
+                setter: setMerchantAccount
+            type: net\authorize\api\contract\v1\TransRetailInfoType

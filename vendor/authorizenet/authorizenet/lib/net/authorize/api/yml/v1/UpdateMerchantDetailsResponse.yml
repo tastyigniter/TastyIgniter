@@ -1,0 +1,4 @@
+net\authorize\api\contract\v1\UpdateMerchantDetailsResponse:
+    xml_root_name: updateMerchantDetailsResponse
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties: {  }

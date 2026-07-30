@@ -1,0 +1,29 @@
+{
+    "name": "clue/redis-protocol",
+    "description": "A streaming Redis protocol (RESP) parser and serializer written in pure PHP.",
+    "keywords": ["streaming", "redis", "protocol", "resp", "parser", "serializer"],
+    "homepage": "https://github.com/clue/redis-protocol",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christian Lück",
+            "email": "christian@lueck.tv"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6 || ^5.7 || ^4.8.36"
+    },
+    "autoload": {
+        "psr-4": {
+            "Clue\\Redis\\Protocol\\": "src/"
+        }
+    }    ,
+    "autoload-dev": {
+        "psr-4": {
+            "Clue\\Tests\\Redis\\Protocol\\": "tests/"
+        }
+    }
+}

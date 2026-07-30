@@ -1,0 +1,8 @@
+.record-editor-item [data-control="edit-record"],
+.record-editor-item [data-control="delete-record"] {
+  visibility: hidden;
+}
+.record-editor-item:hover [data-control="edit-record"],
+.record-editor-item:hover [data-control="delete-record"] {
+  visibility: visible;
+}

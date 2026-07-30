@@ -1,0 +1,12 @@
+net\authorize\api\contract\v1\CustomerAddressExType:
+    properties:
+        customerAddressId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerAddressId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerAddressId
+                setter: setCustomerAddressId
+            type: string

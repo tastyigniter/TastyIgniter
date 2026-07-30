@@ -1,0 +1,92 @@
+net\authorize\api\contract\v1\MerchantAuthenticationType:
+    properties:
+        name:
+            expose: true
+            access_type: public_method
+            serialized_name: name
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getName
+                setter: setName
+            type: string
+        transactionKey:
+            expose: true
+            access_type: public_method
+            serialized_name: transactionKey
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransactionKey
+                setter: setTransactionKey
+            type: string
+        sessionToken:
+            expose: true
+            access_type: public_method
+            serialized_name: sessionToken
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSessionToken
+                setter: setSessionToken
+            type: string
+        password:
+            expose: true
+            access_type: public_method
+            serialized_name: password
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPassword
+                setter: setPassword
+            type: string
+        impersonationAuthentication:
+            expose: true
+            access_type: public_method
+            serialized_name: impersonationAuthentication
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getImpersonationAuthentication
+                setter: setImpersonationAuthentication
+            type: net\authorize\api\contract\v1\ImpersonationAuthenticationType
+        fingerPrint:
+            expose: true
+            access_type: public_method
+            serialized_name: fingerPrint
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getFingerPrint
+                setter: setFingerPrint
+            type: net\authorize\api\contract\v1\FingerPrintType
+        clientKey:
+            expose: true
+            access_type: public_method
+            serialized_name: clientKey
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getClientKey
+                setter: setClientKey
+            type: string
+        accessToken:
+            expose: true
+            access_type: public_method
+            serialized_name: accessToken
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAccessToken
+                setter: setAccessToken
+            type: string
+        mobileDeviceId:
+            expose: true
+            access_type: public_method
+            serialized_name: mobileDeviceId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMobileDeviceId
+                setter: setMobileDeviceId
+            type: string

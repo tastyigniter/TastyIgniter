@@ -1,0 +1,45 @@
+{
+  "name": "apimatic/core",
+  "description": "Core logic and the utilities for the Apimatic's PHP SDK",
+  "keywords": [
+    "apimatic",
+    "php",
+    "core",
+    "CoreLib"
+  ],
+  "license": "MIT",
+  "type": "library",
+  "homepage": "https://github.com/apimatic/core-lib-php",
+  "require": {
+    "php": "^7.2 || ^8.0",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "apimatic/core-interfaces": "^0.1.0",
+    "apimatic/jsonmapper": "^3.0.4",
+    "php-jsonpointer/php-jsonpointer": "^3.0.2"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.5",
+    "phan/phan": "5.4.2",
+    "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5"
+  },
+  "autoload": {
+    "psr-4": { "Core\\": "src/" }
+  },
+  "autoload-dev": {
+    "psr-4": { "Core\\Tests\\": "tests/" }
+  },
+  "scripts": {
+    "test": "phpunit --coverage-text",
+    "test-ci": "phpunit --coverage-text --coverage-clover=coverage-clover.xml",
+    "test-coverage": "phpunit --path-coverage --coverage-html=coverage",
+    "analyze": "phan --allow-polyfill-parser",
+    "lint-fix-src": "phpcbf --standard=phpcs-ruleset.xml src/",
+    "lint-fix-test": "phpcbf --standard=phpcs-ruleset.xml tests/",
+    "lint-src": "phpcs --standard=phpcs-ruleset.xml src/",
+    "lint-test": "phpcs --standard=phpcs-ruleset.xml tests/",
+    "lint": ["@lint-src", "@lint-test"]
+  }
+}

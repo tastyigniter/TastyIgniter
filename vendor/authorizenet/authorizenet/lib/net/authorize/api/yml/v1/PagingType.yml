@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\PagingType:
+    properties:
+        limit:
+            expose: true
+            access_type: public_method
+            serialized_name: limit
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getLimit
+                setter: setLimit
+            type: integer
+        offset:
+            expose: true
+            access_type: public_method
+            serialized_name: offset
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOffset
+                setter: setOffset
+            type: integer

@@ -1,0 +1,44 @@
+net\authorize\api\contract\v1\GetCustomerPaymentProfileRequest:
+    xml_root_name: getCustomerPaymentProfileRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        customerPaymentProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileId
+                setter: setCustomerPaymentProfileId
+            type: string
+        unmaskExpirationDate:
+            expose: true
+            access_type: public_method
+            serialized_name: unmaskExpirationDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUnmaskExpirationDate
+                setter: setUnmaskExpirationDate
+            type: boolean
+        includeIssuerInfo:
+            expose: true
+            access_type: public_method
+            serialized_name: includeIssuerInfo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getIncludeIssuerInfo
+                setter: setIncludeIssuerInfo
+            type: boolean

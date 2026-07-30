@@ -1,0 +1,49 @@
+{
+    "sensitiveTags": [
+        {
+            "tagName": "cardCode",
+            "pattern": "",
+            "replacement": "",
+            "disableMask": false
+        },
+        {
+            "tagName": "cardNumber",
+            "pattern": "(\\p{N}+)(\\p{N}{4})",
+            "replacement": "xxxx-$2",
+            "disableMask": false
+        },
+        {
+            "tagName": "expirationDate",
+            "pattern": "",
+            "replacement": "",
+            "disableMask": false
+        },
+        {
+            "tagName": "accountNumber",
+            "pattern": "(\\p{N}+)(\\p{N}{4})",
+            "replacement": "xxxx-$2",
+            "disableMask": false
+        },
+        {
+            "tagName": "nameOnAccount",
+            "pattern": "",
+            "replacement": "",
+            "disableMask": false
+        },
+        {
+            "tagName": "transactionKey",
+            "pattern": "",
+            "replacement": "",
+            "disableMask": false
+        }
+    ],
+    "sensitiveStringRegexes": [
+        "4\\p{N}{3}([\\ \\-]?)\\p{N}{4}\\1\\p{N}{4}\\1\\p{N}{4}",
+        "4\\p{N}{3}([\\ \\-]?)(?:\\p{N}{4}\\1){2}\\p{N}(?:\\p{N}{3})?",
+        "5[1-5]\\p{N}{2}([\\ \\-]?)\\p{N}{4}\\1\\p{N}{4}\\1\\p{N}{4}",
+        "6(?:011|22(?:1(?=[\\ \\-]?(?:2[6-9]|[3-9]))|[2-8]|9(?=[\\ \\-]?(?:[01]|2[0-5])))|4[4-9]\\p{N}|5\\p{N}\\p{N})([\\ \\-]?)\\p{N}{4}\\1\\p{N}{4}\\1\\p{N}{4}",
+        "35(?:2[89]|[3-8]\\p{N})([\\ \\-]?)\\p{N}{4}\\1\\p{N}{4}\\1\\p{N}{4}",
+        "3[47]\\p{N}\\p{N}([\\ \\-]?)\\p{N}{6}\\1\\p{N}{5}"
+    ]
+}
+

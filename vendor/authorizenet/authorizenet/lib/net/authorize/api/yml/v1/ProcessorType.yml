@@ -1,0 +1,37 @@
+net\authorize\api\contract\v1\ProcessorType:
+    properties:
+        name:
+            expose: true
+            access_type: public_method
+            serialized_name: name
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getName
+                setter: setName
+            type: string
+        id:
+            expose: true
+            access_type: public_method
+            serialized_name: id
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getId
+                setter: setId
+            type: integer
+        cardTypes:
+            expose: true
+            access_type: public_method
+            serialized_name: cardTypes
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardTypes
+                setter: setCardTypes
+            type: array<string>
+            xml_list:
+                inline: false
+                skip_when_empty: true
+                entry_name: cardType
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd

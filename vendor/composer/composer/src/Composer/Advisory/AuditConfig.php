@@ -1,0 +1,39 @@
+<?php declare(strict_types=1);
+
+/*
+ * This file is part of Composer.
+ *
+ * (c) Nils Adermann <naderman@naderman.de>
+ *     Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Composer\Advisory;
+
+/**
+ * @readonly
+ * @internal
+ */
+class AuditConfig
+{
+    /**
+     * @var bool Whether to run audit
+     */
+    public $audit;
+
+    /**
+     * @var Auditor::FORMAT_*
+     */
+    public $auditFormat;
+
+    /**
+     * @param Auditor::FORMAT_* $auditFormat
+     */
+    public function __construct(bool $audit = true, string $auditFormat = Auditor::FORMAT_SUMMARY)
+    {
+        $this->audit = $audit;
+        $this->auditFormat = $auditFormat;
+    }
+}

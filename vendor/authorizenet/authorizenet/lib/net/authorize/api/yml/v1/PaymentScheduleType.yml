@@ -1,0 +1,42 @@
+net\authorize\api\contract\v1\PaymentScheduleType:
+    properties:
+        interval:
+            expose: true
+            access_type: public_method
+            serialized_name: interval
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getInterval
+                setter: setInterval
+            type: net\authorize\api\contract\v1\PaymentScheduleType\IntervalAType
+        startDate:
+            expose: true
+            access_type: public_method
+            serialized_name: startDate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getStartDate
+                setter: setStartDate
+            type: 'DateTime<''Y-m-d''>'
+        totalOccurrences:
+            expose: true
+            access_type: public_method
+            serialized_name: totalOccurrences
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTotalOccurrences
+                setter: setTotalOccurrences
+            type: integer
+        trialOccurrences:
+            expose: true
+            access_type: public_method
+            serialized_name: trialOccurrences
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTrialOccurrences
+                setter: setTrialOccurrences
+            type: integer

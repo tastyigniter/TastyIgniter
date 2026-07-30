@@ -1,0 +1,82 @@
+net\authorize\api\contract\v1\ProfileTransRefundType:
+    properties:
+        customerProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerProfileId
+                setter: setCustomerProfileId
+            type: string
+        customerPaymentProfileId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerPaymentProfileId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerPaymentProfileId
+                setter: setCustomerPaymentProfileId
+            type: string
+        customerShippingAddressId:
+            expose: true
+            access_type: public_method
+            serialized_name: customerShippingAddressId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerShippingAddressId
+                setter: setCustomerShippingAddressId
+            type: string
+        creditCardNumberMasked:
+            expose: true
+            access_type: public_method
+            serialized_name: creditCardNumberMasked
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCreditCardNumberMasked
+                setter: setCreditCardNumberMasked
+            type: string
+        bankRoutingNumberMasked:
+            expose: true
+            access_type: public_method
+            serialized_name: bankRoutingNumberMasked
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBankRoutingNumberMasked
+                setter: setBankRoutingNumberMasked
+            type: string
+        bankAccountNumberMasked:
+            expose: true
+            access_type: public_method
+            serialized_name: bankAccountNumberMasked
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBankAccountNumberMasked
+                setter: setBankAccountNumberMasked
+            type: string
+        order:
+            expose: true
+            access_type: public_method
+            serialized_name: order
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOrder
+                setter: setOrder
+            type: net\authorize\api\contract\v1\OrderExType
+        transId:
+            expose: true
+            access_type: public_method
+            serialized_name: transId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransId
+                setter: setTransId
+            type: string

@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\DriversLicenseType:
+    properties:
+        number:
+            expose: true
+            access_type: public_method
+            serialized_name: number
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getNumber
+                setter: setNumber
+            type: string
+        state:
+            expose: true
+            access_type: public_method
+            serialized_name: state
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getState
+                setter: setState
+            type: string
+        dateOfBirth:
+            expose: true
+            access_type: public_method
+            serialized_name: dateOfBirth
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDateOfBirth
+                setter: setDateOfBirth
+            type: string

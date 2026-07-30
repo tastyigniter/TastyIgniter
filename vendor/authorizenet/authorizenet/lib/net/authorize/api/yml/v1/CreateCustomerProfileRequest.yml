@@ -1,0 +1,24 @@
+net\authorize\api\contract\v1\CreateCustomerProfileRequest:
+    xml_root_name: createCustomerProfileRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        profile:
+            expose: true
+            access_type: public_method
+            serialized_name: profile
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProfile
+                setter: setProfile
+            type: net\authorize\api\contract\v1\CustomerProfileType
+        validationMode:
+            expose: true
+            access_type: public_method
+            serialized_name: validationMode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getValidationMode
+                setter: setValidationMode
+            type: string

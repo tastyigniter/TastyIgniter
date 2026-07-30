@@ -1,0 +1,42 @@
+#notification {
+  position: fixed;
+  top: 20px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: 40%;
+  z-index: 1090;
+
+  .alert {
+    box-shadow: $box-shadow;
+
+    p {
+      margin-bottom: 0;
+    }
+
+    &:not(.show) {
+      display: none;
+    }
+
+    .show {
+      display: block;
+    }
+  }
+}
+@media (max-width: 768px) {
+  #notification {
+    width: 100%;
+  }
+}
+.alert-collapse {
+  .alert {
+    padding: .3rem 1.25rem;
+    margin-bottom: 0;
+  }
+}
+.swal-button--confirm {
+  @extend .btn-primary;
+}
+.swal-button--cancel {
+  @extend .btn-light;
+}

@@ -1,0 +1,34 @@
+net\authorize\api\contract\v1\SendCustomerTransactionReceiptRequest:
+    xml_root_name: sendCustomerTransactionReceiptRequest
+    xml_root_namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+    properties:
+        transId:
+            expose: true
+            access_type: public_method
+            serialized_name: transId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTransId
+                setter: setTransId
+            type: string
+        customerEmail:
+            expose: true
+            access_type: public_method
+            serialized_name: customerEmail
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCustomerEmail
+                setter: setCustomerEmail
+            type: string
+        emailSettings:
+            expose: true
+            access_type: public_method
+            serialized_name: emailSettings
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEmailSettings
+                setter: setEmailSettings
+            type: net\authorize\api\contract\v1\EmailSettingsType

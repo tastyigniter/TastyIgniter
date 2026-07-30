@@ -1,0 +1,75 @@
+.choices {
+  margin-bottom: 0;
+}
+
+.choices__inner,
+.choices[data-type*="select-one"] .choices__inner {
+  padding: $input-padding-y $input-padding-x;
+}
+
+.choices__inner {
+  background-color: $input-bg;
+  border-color: $border-color;
+  border-radius: $input-border-radius;
+  min-height: unset;
+  line-height: $input-line-height;
+}
+
+.is-focused .choices__inner,
+.is-open .choices__inner,
+.is-open .choices__list--dropdown,
+.is-open .choices__list[aria-expanded] {
+  border-color: $input-focus-border-color;
+}
+
+.choices__list--single {
+  padding-top: 0;
+  padding-left: 0;
+  padding-bottom: 0;
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+  background-color: $primary;
+  color: $white;
+}
+
+.choices__input {
+  background-color: $input-bg;
+  padding: 0 0 0 2px;
+}
+
+.choices__list--multiple .choices__item {
+  margin-bottom: 2px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: $font-size-xs;
+  border-radius: $input-border-radius;
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+  z-index: 5;
+}
+
+.choices__list--dropdown .choices__item,
+.choices__list[aria-expanded] .choices__item {
+  padding: 8px 10px;
+}
+
+.choices__list--multiple .choices__item,
+.choices__list--multiple .choices__item.is-highlighted {
+  background-color: $gray-300;
+  border-color: $gray-400;
+  color: $input-color;
+}
+
+.choices[data-type*="select-multiple"] .choices__button,
+.choices[data-type*="text"] .choices__button {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGZpbGw9IiMwYzBjMTAiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==');
+  border-color: $gray-400;
+}
+
+.choices.is-disabled .choices__inner, .choices.is-disabled .choices__input {
+  background-color: $input-disabled-bg;
+}

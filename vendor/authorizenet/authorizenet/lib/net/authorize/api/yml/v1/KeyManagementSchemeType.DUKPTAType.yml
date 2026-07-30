@@ -1,0 +1,42 @@
+net\authorize\api\contract\v1\KeyManagementSchemeType\DUKPTAType:
+    properties:
+        operation:
+            expose: true
+            access_type: public_method
+            serialized_name: Operation
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getOperation
+                setter: setOperation
+            type: string
+        mode:
+            expose: true
+            access_type: public_method
+            serialized_name: Mode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMode
+                setter: setMode
+            type: net\authorize\api\contract\v1\KeyManagementSchemeType\DUKPTAType\ModeAType
+        deviceInfo:
+            expose: true
+            access_type: public_method
+            serialized_name: DeviceInfo
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDeviceInfo
+                setter: setDeviceInfo
+            type: net\authorize\api\contract\v1\KeyManagementSchemeType\DUKPTAType\DeviceInfoAType
+        encryptedData:
+            expose: true
+            access_type: public_method
+            serialized_name: EncryptedData
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getEncryptedData
+                setter: setEncryptedData
+            type: net\authorize\api\contract\v1\KeyManagementSchemeType\DUKPTAType\EncryptedDataAType

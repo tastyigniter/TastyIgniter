@@ -1,0 +1,36 @@
+{
+    "name": "clue/redis-react",
+    "description": "Async Redis client implementation, built on top of ReactPHP.",
+    "keywords": ["Redis", "database", "client", "async", "ReactPHP"],
+    "homepage": "https://github.com/clue/reactphp-redis",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Christian Lück",
+            "email": "christian@clue.engineering"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "clue/redis-protocol": "^0.3.2",
+        "evenement/evenement": "^3.0 || ^2.0 || ^1.0",
+        "react/event-loop": "^1.2",
+        "react/promise": "^3.2 || ^2.0 || ^1.1",
+        "react/promise-timer": "^1.11",
+        "react/socket": "^1.16"
+    },
+    "require-dev": {
+        "clue/block-react": "^1.5",
+        "phpunit/phpunit": "^9.6 || ^5.7 || ^4.8.36"
+    },
+    "autoload": {
+        "psr-4": {
+            "Clue\\React\\Redis\\": "src/"
+         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Clue\\Tests\\React\\Redis\\": "tests/"
+        }
+    }
+}

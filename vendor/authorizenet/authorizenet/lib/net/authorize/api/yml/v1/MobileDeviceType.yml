@@ -1,0 +1,52 @@
+net\authorize\api\contract\v1\MobileDeviceType:
+    properties:
+        mobileDeviceId:
+            expose: true
+            access_type: public_method
+            serialized_name: mobileDeviceId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMobileDeviceId
+                setter: setMobileDeviceId
+            type: string
+        description:
+            expose: true
+            access_type: public_method
+            serialized_name: description
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDescription
+                setter: setDescription
+            type: string
+        phoneNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: phoneNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPhoneNumber
+                setter: setPhoneNumber
+            type: string
+        devicePlatform:
+            expose: true
+            access_type: public_method
+            serialized_name: devicePlatform
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDevicePlatform
+                setter: setDevicePlatform
+            type: string
+        deviceActivation:
+            expose: true
+            access_type: public_method
+            serialized_name: deviceActivation
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDeviceActivation
+                setter: setDeviceActivation
+            type: string

@@ -1,0 +1,21 @@
+
+# configuration settings for labeler
+
+version: v1
+
+labels:
+  - label: "automerge"
+    sync: true
+    matcher:
+      title: "^Generated PR for Release:"
+
+  - label: "automerge-author"
+    sync: true
+    matcher:
+      author:
+        - square-sdk-deployer
+
+  - label: "automerge-branch"
+    sync: true
+    matcher:
+      branch: "^release"

@@ -1,0 +1,62 @@
+net\authorize\api\contract\v1\PayPalType:
+    properties:
+        successUrl:
+            expose: true
+            access_type: public_method
+            serialized_name: successUrl
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSuccessUrl
+                setter: setSuccessUrl
+            type: string
+        cancelUrl:
+            expose: true
+            access_type: public_method
+            serialized_name: cancelUrl
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCancelUrl
+                setter: setCancelUrl
+            type: string
+        paypalLc:
+            expose: true
+            access_type: public_method
+            serialized_name: paypalLc
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaypalLc
+                setter: setPaypalLc
+            type: string
+        paypalHdrImg:
+            expose: true
+            access_type: public_method
+            serialized_name: paypalHdrImg
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaypalHdrImg
+                setter: setPaypalHdrImg
+            type: string
+        paypalPayflowcolor:
+            expose: true
+            access_type: public_method
+            serialized_name: paypalPayflowcolor
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPaypalPayflowcolor
+                setter: setPaypalPayflowcolor
+            type: string
+        payerID:
+            expose: true
+            access_type: public_method
+            serialized_name: payerID
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPayerID
+                setter: setPayerID
+            type: string

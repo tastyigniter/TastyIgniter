@@ -1,0 +1,22 @@
+net\authorize\api\contract\v1\CreditCardTrackType:
+    properties:
+        track1:
+            expose: true
+            access_type: public_method
+            serialized_name: track1
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTrack1
+                setter: setTrack1
+            type: string
+        track2:
+            expose: true
+            access_type: public_method
+            serialized_name: track2
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTrack2
+                setter: setTrack2
+            type: string

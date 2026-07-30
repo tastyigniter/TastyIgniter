@@ -1,0 +1,182 @@
+net\authorize\api\contract\v1\OrderType:
+    properties:
+        invoiceNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: invoiceNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getInvoiceNumber
+                setter: setInvoiceNumber
+            type: string
+        description:
+            expose: true
+            access_type: public_method
+            serialized_name: description
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDescription
+                setter: setDescription
+            type: string
+        discountAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: discountAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDiscountAmount
+                setter: setDiscountAmount
+            type: float
+        taxIsAfterDiscount:
+            expose: true
+            access_type: public_method
+            serialized_name: taxIsAfterDiscount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxIsAfterDiscount
+                setter: setTaxIsAfterDiscount
+            type: boolean
+        totalTaxTypeCode:
+            expose: true
+            access_type: public_method
+            serialized_name: totalTaxTypeCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTotalTaxTypeCode
+                setter: setTotalTaxTypeCode
+            type: string
+        purchaserVATRegistrationNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: purchaserVATRegistrationNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPurchaserVATRegistrationNumber
+                setter: setPurchaserVATRegistrationNumber
+            type: string
+        merchantVATRegistrationNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: merchantVATRegistrationNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getMerchantVATRegistrationNumber
+                setter: setMerchantVATRegistrationNumber
+            type: string
+        vatInvoiceReferenceNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: vatInvoiceReferenceNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getVatInvoiceReferenceNumber
+                setter: setVatInvoiceReferenceNumber
+            type: string
+        purchaserCode:
+            expose: true
+            access_type: public_method
+            serialized_name: purchaserCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPurchaserCode
+                setter: setPurchaserCode
+            type: string
+        summaryCommodityCode:
+            expose: true
+            access_type: public_method
+            serialized_name: summaryCommodityCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSummaryCommodityCode
+                setter: setSummaryCommodityCode
+            type: string
+        purchaseOrderDateUTC:
+            expose: true
+            access_type: public_method
+            serialized_name: purchaseOrderDateUTC
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getPurchaseOrderDateUTC
+                setter: setPurchaseOrderDateUTC
+            type: 'DateTime<''Y-m-d''>'
+        supplierOrderReference:
+            expose: true
+            access_type: public_method
+            serialized_name: supplierOrderReference
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getSupplierOrderReference
+                setter: setSupplierOrderReference
+            type: string
+        authorizedContactName:
+            expose: true
+            access_type: public_method
+            serialized_name: authorizedContactName
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAuthorizedContactName
+                setter: setAuthorizedContactName
+            type: string
+        cardAcceptorRefNumber:
+            expose: true
+            access_type: public_method
+            serialized_name: cardAcceptorRefNumber
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCardAcceptorRefNumber
+                setter: setCardAcceptorRefNumber
+            type: string
+        amexDataTAA1:
+            expose: true
+            access_type: public_method
+            serialized_name: amexDataTAA1
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmexDataTAA1
+                setter: setAmexDataTAA1
+            type: string
+        amexDataTAA2:
+            expose: true
+            access_type: public_method
+            serialized_name: amexDataTAA2
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmexDataTAA2
+                setter: setAmexDataTAA2
+            type: string
+        amexDataTAA3:
+            expose: true
+            access_type: public_method
+            serialized_name: amexDataTAA3
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmexDataTAA3
+                setter: setAmexDataTAA3
+            type: string
+        amexDataTAA4:
+            expose: true
+            access_type: public_method
+            serialized_name: amexDataTAA4
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAmexDataTAA4
+                setter: setAmexDataTAA4
+            type: string

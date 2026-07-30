@@ -1,0 +1,12 @@
+net\authorize\api\contract\v1\KeyManagementSchemeType:
+    properties:
+        dUKPT:
+            expose: true
+            access_type: public_method
+            serialized_name: DUKPT
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDUKPT
+                setter: setDUKPT
+            type: net\authorize\api\contract\v1\KeyManagementSchemeType\DUKPTAType

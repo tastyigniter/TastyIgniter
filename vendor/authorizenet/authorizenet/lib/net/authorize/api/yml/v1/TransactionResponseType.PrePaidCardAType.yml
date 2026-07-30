@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\TransactionResponseType\PrePaidCardAType:
+    properties:
+        requestedAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: requestedAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getRequestedAmount
+                setter: setRequestedAmount
+            type: string
+        approvedAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: approvedAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getApprovedAmount
+                setter: setApprovedAmount
+            type: string
+        balanceOnCard:
+            expose: true
+            access_type: public_method
+            serialized_name: balanceOnCard
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBalanceOnCard
+                setter: setBalanceOnCard
+            type: string

@@ -1,0 +1,262 @@
+net\authorize\api\contract\v1\LineItemType:
+    properties:
+        itemId:
+            expose: true
+            access_type: public_method
+            serialized_name: itemId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getItemId
+                setter: setItemId
+            type: string
+        name:
+            expose: true
+            access_type: public_method
+            serialized_name: name
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getName
+                setter: setName
+            type: string
+        description:
+            expose: true
+            access_type: public_method
+            serialized_name: description
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDescription
+                setter: setDescription
+            type: string
+        quantity:
+            expose: true
+            access_type: public_method
+            serialized_name: quantity
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getQuantity
+                setter: setQuantity
+            type: float
+        unitPrice:
+            expose: true
+            access_type: public_method
+            serialized_name: unitPrice
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUnitPrice
+                setter: setUnitPrice
+            type: float
+        taxable:
+            expose: true
+            access_type: public_method
+            serialized_name: taxable
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxable
+                setter: setTaxable
+            type: boolean
+        unitOfMeasure:
+            expose: true
+            access_type: public_method
+            serialized_name: unitOfMeasure
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getUnitOfMeasure
+                setter: setUnitOfMeasure
+            type: string
+        typeOfSupply:
+            expose: true
+            access_type: public_method
+            serialized_name: typeOfSupply
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTypeOfSupply
+                setter: setTypeOfSupply
+            type: string
+        taxRate:
+            expose: true
+            access_type: public_method
+            serialized_name: taxRate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxRate
+                setter: setTaxRate
+            type: float
+        taxAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: taxAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxAmount
+                setter: setTaxAmount
+            type: float
+        nationalTax:
+            expose: true
+            access_type: public_method
+            serialized_name: nationalTax
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getNationalTax
+                setter: setNationalTax
+            type: float
+        localTax:
+            expose: true
+            access_type: public_method
+            serialized_name: localTax
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getLocalTax
+                setter: setLocalTax
+            type: float
+        vatRate:
+            expose: true
+            access_type: public_method
+            serialized_name: vatRate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getVatRate
+                setter: setVatRate
+            type: float
+        alternateTaxId:
+            expose: true
+            access_type: public_method
+            serialized_name: alternateTaxId
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAlternateTaxId
+                setter: setAlternateTaxId
+            type: string
+        alternateTaxType:
+            expose: true
+            access_type: public_method
+            serialized_name: alternateTaxType
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAlternateTaxType
+                setter: setAlternateTaxType
+            type: string
+        alternateTaxTypeApplied:
+            expose: true
+            access_type: public_method
+            serialized_name: alternateTaxTypeApplied
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAlternateTaxTypeApplied
+                setter: setAlternateTaxTypeApplied
+            type: string
+        alternateTaxRate:
+            expose: true
+            access_type: public_method
+            serialized_name: alternateTaxRate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAlternateTaxRate
+                setter: setAlternateTaxRate
+            type: float
+        alternateTaxAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: alternateTaxAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getAlternateTaxAmount
+                setter: setAlternateTaxAmount
+            type: float
+        totalAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: totalAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTotalAmount
+                setter: setTotalAmount
+            type: float
+        commodityCode:
+            expose: true
+            access_type: public_method
+            serialized_name: commodityCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCommodityCode
+                setter: setCommodityCode
+            type: string
+        productCode:
+            expose: true
+            access_type: public_method
+            serialized_name: productCode
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProductCode
+                setter: setProductCode
+            type: string
+        productSKU:
+            expose: true
+            access_type: public_method
+            serialized_name: productSKU
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getProductSKU
+                setter: setProductSKU
+            type: string
+        discountRate:
+            expose: true
+            access_type: public_method
+            serialized_name: discountRate
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDiscountRate
+                setter: setDiscountRate
+            type: float
+        discountAmount:
+            expose: true
+            access_type: public_method
+            serialized_name: discountAmount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getDiscountAmount
+                setter: setDiscountAmount
+            type: float
+        taxIncludedInTotal:
+            expose: true
+            access_type: public_method
+            serialized_name: taxIncludedInTotal
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxIncludedInTotal
+                setter: setTaxIncludedInTotal
+            type: boolean
+        taxIsAfterDiscount:
+            expose: true
+            access_type: public_method
+            serialized_name: taxIsAfterDiscount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTaxIsAfterDiscount
+                setter: setTaxIsAfterDiscount
+            type: boolean

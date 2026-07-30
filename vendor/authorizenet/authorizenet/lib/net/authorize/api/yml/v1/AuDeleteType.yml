@@ -1,0 +1,12 @@
+net\authorize\api\contract\v1\AuDeleteType:
+    properties:
+        creditCard:
+            expose: true
+            access_type: public_method
+            serialized_name: creditCard
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCreditCard
+                setter: setCreditCard
+            type: net\authorize\api\contract\v1\CreditCardMaskedType

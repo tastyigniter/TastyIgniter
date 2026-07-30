@@ -1,0 +1,58 @@
+<?php
+
+return [
+    'list' => [
+        'filter' => [],
+        'toolbar' => [
+//            'buttons' => [
+//                'create' => [
+//                    'label' => 'lang:igniter::admin.button_new',
+//                    'class' => 'btn btn-primary',
+//                    'href' => '{{lower_author}}/{{lower_extension}}/{{lower_plural_name}}/create'
+//                ],
+//                'delete' => [
+//                    'label' => 'lang:igniter::admin.button_delete',
+//                    'class' => 'btn btn-danger',
+//                    'data-attach-loading' => '',
+//                    'data-request-form' => '#lists-list-form',
+//                    'data-request' => 'onDelete',
+//                    'data-request-data' => "_method:'DELETE'",
+//                    'data-request-confirm' => 'lang:igniter::admin.alert_warning_confirm'
+//                ],
+//            ],
+        ],
+        'columns' => [
+            'id' => [
+                'label' => 'ID'
+            ]
+        ],
+    ],
+    'form' => [
+        'toolbar' => [
+//            'buttons' => [
+//                'save' => [
+//                    'label' => 'lang:igniter::admin.button_save',
+//                    'partial' => 'form/toolbar_save_button',
+//                    'class' => 'btn btn-primary',
+//                    'data-request' => 'onSave',
+//                    'data-progress-indicator' => 'lang:igniter::admin.text_saving'
+//                ],
+//                'delete' => [
+//                    'label' => 'lang:igniter::admin.button_icon_delete', 'class' => 'btn btn-danger',
+//                    'data-request' => 'onDelete', 'data-request-data' => "_method:'DELETE'",
+//                    'data-progress-indicator' => 'lang:igniter::admin.text_deleting',
+//                    'data-request-confirm' => 'lang:igniter::admin.alert_warning_confirm', 'context' => ['edit'],
+//                ],
+//            ],
+        ],
+        'fields' => [],
+        'tabs' => [
+            'fields' => [
+                'id' => [
+                    'label' => 'ID',
+                    'type' => 'number',
+                ]
+            ]
+        ]
+    ],
+];

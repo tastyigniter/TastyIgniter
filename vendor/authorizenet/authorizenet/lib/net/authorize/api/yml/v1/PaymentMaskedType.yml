@@ -1,0 +1,32 @@
+net\authorize\api\contract\v1\PaymentMaskedType:
+    properties:
+        creditCard:
+            expose: true
+            access_type: public_method
+            serialized_name: creditCard
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getCreditCard
+                setter: setCreditCard
+            type: net\authorize\api\contract\v1\CreditCardMaskedType
+        bankAccount:
+            expose: true
+            access_type: public_method
+            serialized_name: bankAccount
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getBankAccount
+                setter: setBankAccount
+            type: net\authorize\api\contract\v1\BankAccountMaskedType
+        tokenInformation:
+            expose: true
+            access_type: public_method
+            serialized_name: tokenInformation
+            xml_element:
+                namespace: AnetApi/xml/v1/schema/AnetApiSchema.xsd
+            accessor:
+                getter: getTokenInformation
+                setter: setTokenInformation
+            type: net\authorize\api\contract\v1\TokenMaskedType

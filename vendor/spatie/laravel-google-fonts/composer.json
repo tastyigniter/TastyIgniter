@@ -1,0 +1,72 @@
+{
+    "name": "spatie/laravel-google-fonts",
+    "description": "Manage self-hosted Google Fonts in Laravel apps",
+    "keywords": [
+        "spatie",
+        "laravel",
+        "laravel-google-fonts",
+        "Google Fonts"
+    ],
+    "homepage": "https://github.com/spatie/laravel-google-fonts",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastian De Deyne",
+            "email": "sebastian@spatie.be",
+            "role": "Developer"
+        },
+        {
+            "name": "Freek Van der herten",
+            "email": "freek@spatie.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "guzzlehttp/guzzle": "^7.3|^7.2",
+        "illuminate/contracts": "^8.37|^9.0|^10.0|^11.0|^12.0|^13.0",
+        "spatie/laravel-package-tools": "^1.7.0"
+    },
+    "require-dev": {
+        "brianium/paratest": "^6.3|^7.4",
+        "nunomaduro/collision": "^5.4|^6.0|^8.0",
+        "orchestra/testbench": "^6.17|^7.0|^8.0|^9.0|^10.0|^11.0",
+        "pestphp/pest": "^1.22|^2.34|^3.7|^4.4",
+        "spatie/laravel-ray": "^1.17",
+        "spatie/pest-plugin-snapshots": "^1.1|^2.1",
+        "spatie/phpunit-snapshot-assertions": "^4.2|^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spatie\\GoogleFonts\\": "src",
+            "Spatie\\GoogleFonts\\Database\\Factories\\": "database/factories"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spatie\\GoogleFonts\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Spatie\\GoogleFonts\\GoogleFontsServiceProvider"
+            ],
+            "aliases": {
+                "GoogleFonts": "Spatie\\GoogleFonts\\GoogleFontsFacade"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
