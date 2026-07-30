@@ -37,7 +37,8 @@
         "php": "^8.3",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^3.0",
-        "tastyigniter/core": "^4.3"
+        "tastyigniter/core": "^4.3",
+        "cweagans/composer-patches": "^1.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -85,6 +86,11 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "patches": {
+            "tastyigniter/core": {
+                "Make timestamp migration strict-mode safe and idempotent": "patches/tastyigniter-core-strict-mysql-timestamps.patch"
+            }
         }
     },
     "minimum-stability": "stable",
@@ -95,7 +101,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "pestphp/pest-plugin": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "cweagans/composer-patches": true
         }
     }
 }
