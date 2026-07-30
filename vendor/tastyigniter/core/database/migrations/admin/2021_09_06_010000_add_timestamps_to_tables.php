@@ -103,7 +103,7 @@ return new class extends Migration
         );
         $connection->statement(
             "UPDATE {$qualifiedTable} SET {$quotedLegacyColumn} = NULL "
-            ."WHERE CAST({$quotedLegacyColumn} AS CHAR) IN ('', '0000-00-00 00:00:00')",
+            ."WHERE CAST({$quotedLegacyColumn} AS CHAR) IN ('', '0000-00-00', '0000-00-00 00:00:00')",
         );
         $connection->statement(
             "ALTER TABLE {$qualifiedTable} CHANGE {$quotedLegacyColumn} {$quotedNewColumn} "

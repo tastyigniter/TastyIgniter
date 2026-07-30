@@ -3,25 +3,77 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasColumn('igniter_reviews', 'date_added')) {
+        $this->convertLegacyTimestamp('igniter_reviews', 'date_added', 'created_at');
+        $this->ensureNullableTimestamp('igniter_reviews', 'updated_at');
+    }
+
+    private function ensureNullableTimestamp(string $table, string $column): void
+    {
+        if (!Schema::hasTable($table)) {
             return;
         }
 
-        Schema::table('igniter_reviews', function(Blueprint $table): void {
-            $table->renameColumn('date_added', 'created_at');
-        });
+        $connection = Schema::getConnection();
+        $qualifiedTable = $this->quoteIdentifier($connection->getTablePrefix().$table);
+        $quotedColumn = $this->quoteIdentifier($column);
 
-        Schema::table('igniter_reviews', function(Blueprint $table): void {
-            $table->timestamp('created_at')->change();
-            $table->timestamp('updated_at');
-        });
+        if (!Schema::hasColumn($table, $column)) {
+            $connection->statement("ALTER TABLE {$qualifiedTable} ADD {$quotedColumn} TIMESTAMP NULL DEFAULT NULL");
+
+            return;
+        }
+
+        $connection->statement("ALTER TABLE {$qualifiedTable} MODIFY {$quotedColumn} TIMESTAMP NULL DEFAULT NULL");
+    }
+
+    private function convertLegacyTimestamp(string $table, string $legacyColumn, string $newColumn): void
+    {
+        if (!Schema::hasTable($table)) {
+            return;
+        }
+
+        $hasLegacyColumn = Schema::hasColumn($table, $legacyColumn);
+        $hasNewColumn = Schema::hasColumn($table, $newColumn);
+
+        if ($hasLegacyColumn && $hasNewColumn) {
+            throw new \RuntimeException(sprintf(
+                'Ambiguous timestamp migration for table [%s]: both [%s] and [%s] exist.',
+                $table,
+                $legacyColumn,
+                $newColumn,
+            ));
+        }
+
+        if (!$hasLegacyColumn) {
+            $this->ensureNullableTimestamp($table, $newColumn);
+
+            return;
+        }
+
+        $connection = Schema::getConnection();
+        $qualifiedTable = $this->quoteIdentifier($connection->getTablePrefix().$table);
+        $quotedLegacyColumn = $this->quoteIdentifier($legacyColumn);
+        $quotedNewColumn = $this->quoteIdentifier($newColumn);
+
+        $connection->statement("ALTER TABLE {$qualifiedTable} MODIFY {$quotedLegacyColumn} TIMESTAMP NULL DEFAULT NULL");
+        $connection->statement(
+            "UPDATE {$qualifiedTable} SET {$quotedLegacyColumn} = NULL "
+            ."WHERE CAST({$quotedLegacyColumn} AS CHAR) IN ('', '0000-00-00', '0000-00-00 00:00:00')",
+        );
+        $connection->statement(
+            "ALTER TABLE {$qualifiedTable} CHANGE {$quotedLegacyColumn} {$quotedNewColumn} TIMESTAMP NULL DEFAULT NULL",
+        );
+    }
+
+    private function quoteIdentifier(string $identifier): string
+    {
+        return '`'.str_replace('`', '``', $identifier).'`';
     }
 
     public function down(): void {}
