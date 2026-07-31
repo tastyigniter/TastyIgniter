@@ -4,21 +4,28 @@
 operations work. It supports PHP 8.3+, Laravel 12, TastyIgniter core 4.3 and the
 official Local and User extensions. Cart, Reservation and Pay Register are optional
 runtime integration seams in this foundation and are present in this application.
-No new business capability or data model is implemented.
+Phase 1.3 adds authorization and operational landing foundations only; it implements no POS, kitchen, waiter, shift, payment, inventory, or accounting workflow.
 
 ## Ownership and structure
 
 - `src/Contracts` contains small, stable application-facing contracts.
 - `src/Integrations` is the only preferred boundary for calls to official domains.
-- `src/Support/PermissionDefinitions.php` is the canonical permission catalogue.
+- `src/Support/PermissionDefinitions.php` is the canonical permission catalogue and `RoleProfiles.php` is the machine-readable default matrix.
 - `routes/web.php`, `resources/views`, and `resources/lang` establish conventional
   extension resource roots. Phase 1 routes and UI remain under the application.
-- `database/migrations` is intentionally absent because no table is required.
+- `database/migrations` contains only the extension-owned staff default-location preference table. The preference never grants branch access.
 - Root `tests/Feature/RestaurantOpsExtensionTest.php` exercises the extension in
   the complete application bootstrap; Location Context retains its existing tests.
 
-The detailed pre-change audit and Option A ADR are in
-`docs/phase-1.2-pre-change-audit.md`.
+The detailed audits are in `docs/phase-1.2-pre-change-audit.md` and `docs/phase-1.3-pre-change-audit.md`.
+
+## Operational roles and synchronization
+
+Official `UserRole` is the authorization profile mechanism; official `UserGroup` remains untouched for allocation. Stable role codes are `restaurant_ops_owner`, `restaurant_ops_branch_manager`, `restaurant_ops_cashier`, `restaurant_ops_waiter`, and `restaurant_ops_kitchen`.
+
+Preview with `php artisan restaurant-ops:sync-roles --dry-run`. Create absent exact-code roles with `--create-missing`; add only absent extension permission grants with `--add-missing-permissions`. The command never removes grants, changes assignments, disables staff, or claims a similar-name custom role. Run database migrations before using default-location preferences.
+
+Extension-owned admin routes are named `naxas.restaurantops.overview`, `.head-office`, `.branch`, `.cashier`, `.waiter`, and `.kitchen`. All use the configured admin URI, admin authentication, Location Context, explicit permission middleware, and concrete-location middleware on transactional workspaces. These pages are clearly labelled future-work landing pages and contain no simulated business data.
 
 ## Location Context compatibility
 

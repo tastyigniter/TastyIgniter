@@ -6,13 +6,42 @@ namespace Naxas\RestaurantOps\Support;
 
 final class PermissionDefinitions
 {
+    private const GROUPS = [
+        'Operations' => ['Access', 'BranchDashboard', 'HeadOfficeDashboard', 'Audit.View'],
+        'LocationContext' => ['Access', 'Switch', 'ViewAll', 'Manage'],
+        'POS' => ['Access', 'Order.Create', 'Order.Edit', 'Order.Hold', 'Order.Recall', 'Discount.Apply', 'Discount.Approve', 'Void.Request', 'Void.Approve', 'Payment.Settle', 'Payment.Refund', 'Receipt.Reprint'],
+        'DineIn' => ['Access', 'Table.Open', 'Table.Transfer', 'Table.Merge', 'Bill.Split', 'Bill.Request', 'Session.OverrideClose'],
+        'Waiter' => ['Access', 'Order.Create', 'Order.Edit', 'Kitchen.Send', 'Bill.Request', 'Void.Request', 'Discount.Request'],
+        'Kitchen' => ['Access', 'Ticket.Accept', 'Ticket.Prepare', 'Ticket.Ready', 'Ticket.Complete', 'Ticket.Cancel', 'Ticket.Refire'],
+        'Shifts' => ['Access', 'Open', 'CashMovement.Create', 'Close', 'ViewOwn', 'ViewBranch', 'Approve', 'ForceClose'],
+        'Reports' => ['BranchSales', 'Consolidated', 'PaymentSummary', 'DiscountsVoids', 'ShiftVariance'],
+    ];
+
+    public static function all(): array
+    {
+        $definitions = [];
+        foreach (self::GROUPS as $module => $actions) {
+            foreach ($actions as $action) {
+                $code = 'Restaurant.'.$module.'.'.$action;
+                $key = strtolower(str_replace('.', '_', $module.'_'.$action));
+                $definitions[$code] = [
+                    'label' => 'naxas.restaurantops::default.permissions.'.$key,
+                    'group' => 'naxas.restaurantops::default.permission_groups.'.strtolower($module),
+                    'description' => 'naxas.restaurantops::default.permission_description',
+                ];
+            }
+        }
+
+        return $definitions;
+    }
+
     public static function locationContext(): array
     {
-        return [
-            'Restaurant.LocationContext.Access' => ['label' => 'Access assigned locations', 'group' => 'Location operations'],
-            'Restaurant.LocationContext.Switch' => ['label' => 'Switch active location', 'group' => 'Location operations'],
-            'Restaurant.LocationContext.ViewAll' => ['label' => 'Use all-locations reporting mode', 'group' => 'Location operations'],
-            'Restaurant.LocationContext.Manage' => ['label' => 'Manage location operations', 'group' => 'Location operations'],
-        ];
+        return array_intersect_key(self::all(), array_flip([
+            'Restaurant.LocationContext.Access',
+            'Restaurant.LocationContext.Switch',
+            'Restaurant.LocationContext.ViewAll',
+            'Restaurant.LocationContext.Manage',
+        ]));
     }
 }

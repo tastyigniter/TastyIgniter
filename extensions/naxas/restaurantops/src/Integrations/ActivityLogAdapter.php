@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Naxas\RestaurantOps\Integrations;
 
-use Illuminate\Contracts\Log\Log;
 use Naxas\RestaurantOps\Contracts\AuditLogger;
+use Psr\Log\LoggerInterface;
 
 final class ActivityLogAdapter implements AuditLogger
 {
-    public function __construct(private readonly Log $log) {}
+    public function __construct(private readonly LoggerInterface $log) {}
 
     public function info(string $message, array $context = []): void
     {
