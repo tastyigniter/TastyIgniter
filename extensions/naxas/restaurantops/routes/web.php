@@ -6,6 +6,7 @@ use Naxas\RestaurantOps\Http\Controllers\MenuConfiguration\MenuConfigurations;
 use Naxas\RestaurantOps\Http\Controllers\MenuIntegration\CartItems;
 use Naxas\RestaurantOps\Http\Controllers\MenuIntegration\OrderItemSnapshots;
 use Naxas\RestaurantOps\Http\Controllers\OperationalLandings;
+use Naxas\RestaurantOps\Http\Controllers\Pos\PosOrders;
 use Naxas\RestaurantOps\Http\Controllers\Shifts\CashierShifts;
 
 Route::middleware(['web'])
@@ -43,4 +44,20 @@ Route::middleware(config('igniter-routes.adminMiddleware', ['web']))
         Route::post('/shifts/{shift}/approve', [CashierShifts::class, 'approve'])->middleware(['restaurant.ops.permission:Restaurant.Shifts.Approve', 'restaurant.ops.transactional'])->name('shifts.approve');
         Route::post('/shifts/{shift}/reject', [CashierShifts::class, 'reject'])->middleware(['restaurant.ops.permission:Restaurant.Shifts.Approve', 'restaurant.ops.transactional'])->name('shifts.reject');
         Route::post('/shifts/{shift}/force-close', [CashierShifts::class, 'forceClose'])->middleware(['restaurant.ops.permission:Restaurant.Shifts.ForceClose', 'restaurant.ops.transactional'])->name('shifts.force-close');
+        Route::get('/pos', [PosOrders::class, 'screen'])->middleware('restaurant.ops.permission:Restaurant.POS.Access')->name('pos.index');
+        Route::get('/pos/orders', [PosOrders::class, 'index'])->middleware('restaurant.ops.permission:Restaurant.POS.Access')->name('pos.orders.index');
+        Route::post('/pos/orders', [PosOrders::class, 'store'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Create')->name('pos.orders.store');
+        Route::get('/pos/orders/{posOrder}', [PosOrders::class, 'show'])->middleware('restaurant.ops.permission:Restaurant.POS.Access')->name('pos.orders.show');
+        Route::patch('/pos/orders/{posOrder}', [PosOrders::class, 'update'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Edit')->name('pos.orders.update');
+        Route::post('/pos/orders/{posOrder}/items', [PosOrders::class, 'addItem'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Edit')->name('pos.items.store');
+        Route::patch('/pos/orders/{posOrder}/items/{item}', [PosOrders::class, 'updateItem'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Edit')->name('pos.items.update');
+        Route::delete('/pos/orders/{posOrder}/items/{item}', [PosOrders::class, 'removeItem'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Edit')->name('pos.items.destroy');
+        Route::post('/pos/orders/{posOrder}/hold', [PosOrders::class, 'hold'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Hold')->name('pos.orders.hold');
+        Route::post('/pos/orders/{posOrder}/recall', [PosOrders::class, 'recall'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Recall')->name('pos.orders.recall');
+        Route::post('/pos/orders/{posOrder}/confirm', [PosOrders::class, 'confirm'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Create')->name('pos.orders.confirm');
+        Route::post('/pos/orders/{posOrder}/request-kitchen', [PosOrders::class, 'kitchen'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Edit')->name('pos.orders.kitchen');
+        Route::post('/pos/orders/{posOrder}/lock-payment', [PosOrders::class, 'payment'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Edit')->name('pos.orders.payment');
+        Route::post('/pos/orders/{posOrder}/discounts', [PosOrders::class, 'discount'])->middleware('restaurant.ops.permission:Restaurant.POS.Discount.Apply')->name('pos.discounts.store');
+        Route::post('/pos/orders/{posOrder}/void-requests', [PosOrders::class, 'voidRequest'])->middleware('restaurant.ops.permission:Restaurant.POS.Void.Request')->name('pos.void-requests.store');
+        Route::post('/pos/orders/{posOrder}/cancel', [PosOrders::class, 'cancel'])->middleware('restaurant.ops.permission:Restaurant.POS.Void.Request')->name('pos.orders.cancel');
     });
