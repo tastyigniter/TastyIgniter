@@ -10,6 +10,7 @@ use Igniter\Cart\Models\MenuItemOption;
 use Igniter\Cart\Models\MenuItemOptionValue;
 use Igniter\Cart\Models\MenuOption;
 use Igniter\Cart\Models\MenuOptionValue;
+use Naxas\RestaurantOps\Http\Controllers\MenuConfiguration\MenuConfigurations;
 use Naxas\RestaurantOps\MenuConfiguration\Contracts\KitchenRoutingResolver;
 use Naxas\RestaurantOps\Models\ItemVariant;
 use Naxas\RestaurantOps\Support\PermissionDefinitions;
@@ -43,7 +44,10 @@ final class MenuConfigurationCompatibilityTest extends TestCase
         $route = app('router')->getRoutes()->getByName('naxas.restaurantops.menu-configuration.variants.store');
         self::assertNotNull($route);
         self::assertStringStartsWith(trim(parse_url(admin_url(''), PHP_URL_PATH), '/').'/', trim($route->uri(), '/'));
-        self::assertIsArray($route->getAction('uses'));
+        self::assertSame(
+            MenuConfigurations::class.'@storeVariant',
+            $route->getActionName(),
+        );
         self::assertContains('restaurant.ops.permission:Restaurant.MenuConfig.Variants.Manage', $route->gatherMiddleware());
     }
 }

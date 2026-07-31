@@ -1,0 +1,82 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\Feature;
+
+use Igniter\Admin\Classes\Navigation;
+use Igniter\System\Classes\ExtensionManager;
+use Igniter\User\Facades\AdminAuth;
+use Mockery;
+use Naxas\RestaurantOps\Extension;
+use Tests\TestCase;
+
+final class RestaurantOpsNavigationTest extends TestCase
+{
+    protected function tearDown(): void
+    {
+        AdminAuth::clearResolvedInstance('admin.auth');
+        parent::tearDown();
+    }
+
+    public function test_superuser_navigation_resolves_every_complete_item_without_warning(): void
+    {
+        $definitions = $this->definitions();
+        $this->assertCompleteSchema($definitions);
+        AdminAuth::shouldReceive('user')->andReturn($this->userWithPermissions(fn (): bool => true));
+
+        $visible = $this->resolve($definitions);
+
+        self::assertSame(array_keys($definitions['restaurant-operations']['child']), array_keys($visible['restaurant-operations']['child']));
+        self::assertSame([10, 20, 30, 40, 50, 60, 70], array_column($visible['restaurant-operations']['child'], 'priority'));
+    }
+
+    public function test_restricted_user_navigation_filters_children_without_partial_items(): void
+    {
+        $allowed = ['Restaurant.Operations.Access', 'Restaurant.Operations.BranchDashboard'];
+        AdminAuth::shouldReceive('user')->andReturn($this->userWithPermissions(fn (string $permission): bool => in_array($permission, $allowed, true)));
+
+        $visible = $this->resolve($this->definitions());
+
+        self::assertSame(['restaurant-ops-overview', 'restaurant-ops-branch'], array_keys($visible['restaurant-operations']['child']));
+        $this->assertCompleteSchema($visible);
+    }
+
+    private function definitions(): array
+    {
+        $extension = app(ExtensionManager::class)->findExtension('Naxas.RestaurantOps');
+        self::assertInstanceOf(Extension::class, $extension);
+
+        return $extension->registerNavigation();
+    }
+
+    private function resolve(array $definitions): array
+    {
+        $navigation = new Navigation;
+        $navigation->registerNavItems($definitions);
+
+        return $navigation->getVisibleNavItems();
+    }
+
+    private function userWithPermissions(callable $permissions): object
+    {
+        $user = Mockery::mock();
+        $user->shouldReceive('hasPermission')->andReturnUsing($permissions);
+
+        return $user;
+    }
+
+    private function assertCompleteSchema(array $items): void
+    {
+        foreach ($items as $item) {
+            foreach (['title', 'href', 'class', 'permission', 'priority'] as $key) {
+                self::assertArrayHasKey($key, $item);
+            }
+            self::assertIsInt($item['priority']);
+            if (isset($item['child'])) {
+                self::assertIsArray($item['child']);
+                $this->assertCompleteSchema($item['child']);
+            }
+        }
+    }
+}
