@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Naxas\RestaurantOps\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Naxas\RestaurantOps\Contracts\AuditLogger;
 use Naxas\RestaurantOps\Contracts\LocationContextContract;
-use Naxas\RestaurantOps\Services\OperationalLandingResolver;
 use Naxas\RestaurantOps\Services\RoleProfileResolver;
 use Naxas\RestaurantOps\Support\RoleProfiles;
 
@@ -17,19 +14,10 @@ final class OperationalLandings
     public function __construct(
         private readonly LocationContextContract $context,
         private readonly RoleProfileResolver $profiles,
-        private readonly OperationalLandingResolver $landing,
-        private readonly AuditLogger $audit,
     ) {}
 
-    public function overview(): View|RedirectResponse
+    public function overview(): View
     {
-        $user = app('admin.auth')->user();
-        if ($route = $this->landing->routeName($user)) {
-            $this->audit->info('restaurant_ops.landing_resolved', ['staff_id' => $user->getKey(), 'route' => $route]);
-
-            return redirect()->route($route);
-        }
-
         return $this->render('navigation.overview', 'overview');
     }
 

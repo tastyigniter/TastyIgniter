@@ -61,6 +61,26 @@ class RestaurantOpsExtensionTest extends TestCase
         }
     }
 
+    public function test_every_navigation_page_has_one_stable_named_route(): void
+    {
+        $expected = [
+            'overview', 'head-office', 'branch-operations', 'cashier', 'pos', 'orders.active',
+            'orders.held', 'waiter', 'kitchen', 'menu-config.index', 'shifts.index', 'shifts.mine',
+            'shifts.branch-review',
+        ];
+        $restaurantOpsRoutes = collect(Route::getRoutes()->getRoutes())
+            ->filter(fn ($route): bool => str_starts_with((string) $route->getName(), 'naxas.restaurantops.'));
+
+        foreach ($expected as $suffix) {
+            $name = 'naxas.restaurantops.'.$suffix;
+            $this->assertNotNull(Route::getRoutes()->getByName($name), $name.' is not registered');
+            $this->assertCount(1, $restaurantOpsRoutes->filter(fn ($route): bool => $route->getName() === $name));
+        }
+
+        $names = $restaurantOpsRoutes->pluck('action.as')->filter();
+        $this->assertCount($names->count(), $names->unique());
+    }
+
     public function test_public_upstream_integration_seams_are_available(): void
     {
         foreach ([StaffAdapter::class, LocationAdapter::class, OrderAdapter::class, MenuAdapter::class,

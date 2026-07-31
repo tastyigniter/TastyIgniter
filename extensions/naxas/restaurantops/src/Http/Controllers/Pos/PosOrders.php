@@ -37,6 +37,16 @@ final class PosOrders extends Controller
         return response()->json(['data' => $query->paginate(30)]);
     }
 
+    public function active(): Response
+    {
+        return $this->orderList('active', lang('Naxas.RestaurantOps::default.navigation.active_orders'));
+    }
+
+    public function held(): Response
+    {
+        return $this->orderList('held', lang('Naxas.RestaurantOps::default.navigation.held_orders'));
+    }
+
     public function show(PosOrder $posOrder): Response
     {
         $this->resource($posOrder);
@@ -161,5 +171,16 @@ final class PosOrders extends Controller
     private function user(): mixed
     {
         return app('admin.auth')->user();
+    }
+
+    private function orderList(string $status, string $title): Response
+    {
+        $orders = PosOrder::with('items')
+            ->where('location_id', app(LocationContextContract::class)->currentId())
+            ->where('status', $status)
+            ->latest()
+            ->paginate(30);
+
+        return response()->view('Naxas.RestaurantOps::pos.orders', compact('orders', 'status', 'title'));
     }
 }
