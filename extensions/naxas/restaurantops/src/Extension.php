@@ -9,13 +9,17 @@ use Igniter\Cart\Models\Menu;
 use Igniter\Cart\Models\OrderMenu;
 use Igniter\System\Classes\BaseExtension;
 use Naxas\RestaurantOps\Console\SyncRolesCommand;
+use Naxas\RestaurantOps\Console\VerifyMenuIntegrationCommand;
 use Naxas\RestaurantOps\Contracts\AuditLogger;
 use Naxas\RestaurantOps\Contracts\LocationContextContract;
 use Naxas\RestaurantOps\Http\Middleware\RequiresOperationalPermission;
 use Naxas\RestaurantOps\Http\Middleware\RequiresTransactionalLocation;
 use Naxas\RestaurantOps\Integrations\ActivityLogAdapter;
+use Naxas\RestaurantOps\Listeners\PersistEnhancedOrderSnapshots;
 use Naxas\RestaurantOps\MenuConfiguration\Contracts\KitchenRoutingResolver;
 use Naxas\RestaurantOps\MenuConfiguration\DefaultKitchenRoutingResolver;
+use Naxas\RestaurantOps\MenuIntegration\Contracts\OfficialCartAdapter;
+use Naxas\RestaurantOps\MenuIntegration\TastyIgniterCartAdapter;
 use Naxas\RestaurantOps\Models\ItemVariant;
 use Naxas\RestaurantOps\Models\MenuItemMetadata;
 use Naxas\RestaurantOps\Models\OrderItemSnapshot;
@@ -24,6 +28,10 @@ use Override;
 
 class Extension extends BaseExtension
 {
+    protected $listen = [
+        'igniter.checkout.afterSaveOrder' => [PersistEnhancedOrderSnapshots::class],
+    ];
+
     #[Override]
     public function boot(): void
     {
@@ -44,7 +52,9 @@ class Extension extends BaseExtension
         $this->app->scoped(LocationContextContract::class, fn ($app): LocationContextContract => $app->make(LocationContext::class));
         $this->app->singleton(AuditLogger::class, ActivityLogAdapter::class);
         $this->app->singleton(KitchenRoutingResolver::class, DefaultKitchenRoutingResolver::class);
+        $this->app->scoped(OfficialCartAdapter::class, TastyIgniterCartAdapter::class);
         $this->registerConsoleCommand('restaurant-ops.sync-roles', SyncRolesCommand::class);
+        $this->registerConsoleCommand('restaurant-ops.verify-menu-integration', VerifyMenuIntegrationCommand::class);
         $this->app['router']->aliasMiddleware('restaurant.ops.permission', RequiresOperationalPermission::class);
         $this->app['router']->aliasMiddleware('restaurant.ops.transactional', RequiresTransactionalLocation::class);
     }

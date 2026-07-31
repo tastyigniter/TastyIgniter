@@ -8,6 +8,8 @@ use Igniter\Flame\Database\Model;
 
 final class OrderItemSnapshot extends Model
 {
+    public $timestamps = false;
+
     protected $table = 'naxas_restaurant_ops_order_item_snapshots';
 
     protected $guarded = [];
