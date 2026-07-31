@@ -14,7 +14,10 @@ $modules = [
 ];
 foreach ($modules as $module => $actions) {
     foreach ($actions as $action) {
-        $permissions[strtolower(str_replace('.', '_', $module.'_'.$action))] = trim(preg_replace('/(?<!^)[A-Z]/', ' $0', str_replace('.', ' ', $action)));
+        $actionLabel = trim(preg_replace('/(?<!^)[A-Z]/', ' $0', str_replace('.', ' ', $action)));
+        $permissions[strtolower(str_replace('.', '_', $module.'_'.$action))] = $module === 'MenuConfig'
+            ? 'Menu Configuration: '.$actionLabel
+            : $actionLabel;
     }
 }
 
@@ -35,7 +38,7 @@ return [
         'menu_configuration' => 'Menu Configuration',
     ],
     'menu_configuration' => [
-        'title' => 'Menu Configuration', 'official_menu' => 'Edit official menu', 'variants' => 'Variants',
+        'title' => 'Menu Configuration', 'catalog_title' => 'Menu Configuration Catalog', 'official_menu' => 'Edit official menu', 'variants' => 'Variants',
         'modifier_groups' => 'Attached modifier groups', 'shared_options' => 'Shared option metadata', 'combo' => 'Combo',
     ],
 ];

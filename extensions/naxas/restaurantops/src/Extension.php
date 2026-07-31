@@ -61,16 +61,16 @@ class Extension extends BaseExtension
         return [
             'restaurant-operations' => [
                 'priority' => 450, 'class' => 'restaurant-operations', 'icon' => 'fa fa-store',
-                'title' => 'naxas.restaurantops::default.navigation.operations',
+                'title' => lang('Naxas.RestaurantOps::default.navigation.operations'),
                 'href' => admin_url('restaurant-ops'), 'permission' => 'Restaurant.Operations.Access',
                 'child' => [
-                    'restaurant-ops-overview' => ['priority' => 10, 'class' => 'restaurant-ops-overview', 'title' => 'naxas.restaurantops::default.navigation.overview', 'href' => admin_url('restaurant-ops'), 'permission' => 'Restaurant.Operations.Access'],
-                    'restaurant-ops-head-office' => ['priority' => 20, 'class' => 'restaurant-ops-head-office', 'title' => 'naxas.restaurantops::default.navigation.head_office', 'href' => admin_url('restaurant-ops/head-office'), 'permission' => 'Restaurant.Operations.HeadOfficeDashboard'],
-                    'restaurant-ops-branch' => ['priority' => 30, 'class' => 'restaurant-ops-branch', 'title' => 'naxas.restaurantops::default.navigation.branch', 'href' => admin_url('restaurant-ops/branch'), 'permission' => 'Restaurant.Operations.BranchDashboard'],
-                    'restaurant-ops-cashier' => ['priority' => 40, 'class' => 'restaurant-ops-cashier', 'title' => 'naxas.restaurantops::default.navigation.cashier', 'href' => admin_url('restaurant-ops/cashier'), 'permission' => 'Restaurant.POS.Access'],
-                    'restaurant-ops-waiter' => ['priority' => 50, 'class' => 'restaurant-ops-waiter', 'title' => 'naxas.restaurantops::default.navigation.waiter', 'href' => admin_url('restaurant-ops/waiter'), 'permission' => 'Restaurant.Waiter.Access'],
-                    'restaurant-ops-kitchen' => ['priority' => 60, 'class' => 'restaurant-ops-kitchen', 'title' => 'naxas.restaurantops::default.navigation.kitchen', 'href' => admin_url('restaurant-ops/kitchen'), 'permission' => 'Restaurant.Kitchen.Access'],
-                    'restaurant-ops-menu-config' => ['priority' => 70, 'class' => 'restaurant-ops-menu-config', 'title' => 'naxas.restaurantops::default.navigation.menu_configuration', 'href' => admin_url('restaurant-ops/menu-configuration'), 'permission' => 'Restaurant.MenuConfig.Access'],
+                    'restaurant-ops-overview' => ['priority' => 10, 'class' => 'restaurant-ops-overview', 'title' => lang('Naxas.RestaurantOps::default.navigation.overview'), 'href' => admin_url('restaurant-ops'), 'permission' => 'Restaurant.Operations.Access'],
+                    'restaurant-ops-head-office' => ['priority' => 20, 'class' => 'restaurant-ops-head-office', 'title' => lang('Naxas.RestaurantOps::default.navigation.head_office'), 'href' => admin_url('restaurant-ops/head-office'), 'permission' => 'Restaurant.Operations.HeadOfficeDashboard'],
+                    'restaurant-ops-branch' => ['priority' => 30, 'class' => 'restaurant-ops-branch', 'title' => lang('Naxas.RestaurantOps::default.navigation.branch'), 'href' => admin_url('restaurant-ops/branch'), 'permission' => 'Restaurant.Operations.BranchDashboard'],
+                    'restaurant-ops-cashier' => ['priority' => 40, 'class' => 'restaurant-ops-cashier', 'title' => lang('Naxas.RestaurantOps::default.navigation.cashier'), 'href' => admin_url('restaurant-ops/cashier'), 'permission' => 'Restaurant.POS.Access'],
+                    'restaurant-ops-waiter' => ['priority' => 50, 'class' => 'restaurant-ops-waiter', 'title' => lang('Naxas.RestaurantOps::default.navigation.waiter'), 'href' => admin_url('restaurant-ops/waiter'), 'permission' => 'Restaurant.Waiter.Access'],
+                    'restaurant-ops-kitchen' => ['priority' => 60, 'class' => 'restaurant-ops-kitchen', 'title' => lang('Naxas.RestaurantOps::default.navigation.kitchen'), 'href' => admin_url('restaurant-ops/kitchen'), 'permission' => 'Restaurant.Kitchen.Access'],
+                    'restaurant-ops-menu-config' => ['priority' => 70, 'class' => 'restaurant-ops-menu-config', 'title' => lang('Naxas.RestaurantOps::default.navigation.menu_configuration'), 'href' => admin_url('restaurant-ops/menu-configuration'), 'permission' => 'Restaurant.MenuConfig.Access'],
                 ],
             ],
         ];
