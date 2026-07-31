@@ -16,6 +16,7 @@ use Naxas\RestaurantOps\Integrations\OrderAdapter;
 use Naxas\RestaurantOps\Integrations\PaymentAdapter;
 use Naxas\RestaurantOps\Integrations\ReservationAdapter;
 use Naxas\RestaurantOps\Integrations\StaffAdapter;
+use Naxas\RestaurantOps\Support\PermissionDefinitions;
 use Tests\TestCase;
 
 class RestaurantOpsExtensionTest extends TestCase
@@ -49,7 +50,10 @@ class RestaurantOpsExtensionTest extends TestCase
         $permissions = app(ExtensionManager::class)->findExtension('Naxas.RestaurantOps')->registerPermissions();
         $expected = ['Restaurant.LocationContext.Access', 'Restaurant.LocationContext.Switch', 'Restaurant.LocationContext.ViewAll', 'Restaurant.LocationContext.Manage'];
 
-        $this->assertSame($expected, array_keys($permissions));
+        $this->assertSame($expected, array_keys(PermissionDefinitions::locationContext()));
+        $this->assertSame(count($permissions), count(array_unique(array_keys($permissions))));
+        $this->assertArrayHasKey('Restaurant.Operations.Access', $permissions);
+        $this->assertArrayHasKey('Restaurant.Reports.Consolidated', $permissions);
         foreach (['select', 'switch', 'global'] as $route) {
             $name = 'admin.location-context.'.$route;
             $this->assertNotNull(Route::getRoutes()->getByName($name));
@@ -69,13 +73,14 @@ class RestaurantOpsExtensionTest extends TestCase
         $this->assertSame(config('igniter-routes.adminUri', '/admin'), app(AdminRouteAdapter::class)->uri());
     }
 
-    public function test_foundation_has_no_schema_or_destructive_lifecycle_hook(): void
+    public function test_foundation_has_only_extension_owned_schema_and_no_destructive_lifecycle_hook(): void
     {
         $path = base_path('extensions/naxas/restaurantops/database/migrations');
 
-        $this->assertDirectoryDoesNotExist($path);
+        $this->assertDirectoryExists($path);
+        $this->assertFileExists($path.'/2026_07_31_000001_create_restaurant_ops_staff_preferences_table.php');
         $this->assertFalse(method_exists(Extension::class, 'uninstall'));
         $extension = app(ExtensionManager::class)->findExtension('Naxas.RestaurantOps');
-        $this->assertSame([], $extension->registerNavigation());
+        $this->assertArrayHasKey('restaurant-operations', $extension->registerNavigation());
     }
 }

@@ -7,11 +7,12 @@ namespace App\Http\Middleware;
 use App\Services\LocationContext;
 use Closure;
 use Illuminate\Http\Request;
+use Naxas\RestaurantOps\Services\StaffPreferenceService;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResolveLocationContext
 {
-    public function __construct(protected LocationContext $context) {}
+    public function __construct(protected LocationContext $context, protected StaffPreferenceService $preferences) {}
 
     public function handle(Request $request, Closure $next): Response
     {
@@ -36,6 +37,12 @@ class ResolveLocationContext
 
         if ($locations->count() === 1) {
             $this->context->set($locations->first()->getKey());
+
+            return $next($request);
+        }
+
+        if ($locations->count() > 1 && ($defaultId = $this->preferences->defaultLocationId(app('admin.auth')->user()))) {
+            $this->context->set($defaultId);
 
             return $next($request);
         }

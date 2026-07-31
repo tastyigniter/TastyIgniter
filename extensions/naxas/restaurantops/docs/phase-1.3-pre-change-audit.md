@@ -1,7 +1,7 @@
 # Phase 1.3 pre-change audit: operational roles and permissions
 
 **Audit date:** 2026-07-31
-**Decision:** **NO-GO for implementation as specified**
+**Decision:** **GO under the corrected architecture approved after audit**
 
 This document records the mandatory pre-change audit. No Phase 1.3 production code was changed before or as part of this audit. The blocking issue is not a missing hook: the requested role model conflicts with the installed TastyIgniter public data model.
 
@@ -205,10 +205,10 @@ Continue using `AuditLogger` as the extension seam. Log role-sync previews/write
 
 ## GO / NO-GO decision
 
-**NO-GO.** Phase 1.3 implementation must stop at the audit boundary because the mandated “staff groups as roles with group permissions” architecture does not exist in the installed TastyIgniter version. Proceeding would violate upgrade-safety and the prohibition on duplicate authorization storage.
+The initial decision was **NO-GO** because “staff groups as roles with group permissions” does not exist in this TastyIgniter version. The project owner subsequently approved the corrected architecture below, changing the implementation decision to **GO** without weakening the audit finding.
 
 Implementation can move to **GO** after the project owner approves this precise correction:
 
 > Use TastyIgniter `UserRole` (one per staff, stable `code`, owns permissions) for the five operational authorization profiles; preserve `UserGroup` exclusively for its existing assignment/allocation purpose.
 
-After approval, execute Phases B–J in order. No operational permission catalog, sync command, metadata migration, middleware, route, landing page, navigation item, or form hook has been added by this audit.
+The Phase 1.3 implementation follows this approved correction. This audit remains the record of why no group-based permission storage was introduced.
