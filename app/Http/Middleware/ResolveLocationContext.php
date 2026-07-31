@@ -51,6 +51,13 @@ class ResolveLocationContext
             return $next($request);
         }
 
+        // RestaurantOps decides which endpoints actually require a transactional
+        // branch. Reporting and configuration pages must remain usable without
+        // forcing an active location into the session.
+        if ($request->routeIs('naxas.restaurantops.*')) {
+            return $next($request);
+        }
+
         return $this->error($request, 'location_required', 'Select an active location to continue.', 409,
             route('admin.location-context.select'));
     }
