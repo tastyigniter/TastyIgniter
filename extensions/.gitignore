@@ -1,3 +1,6 @@
 *
 !igniter/demo/
+!naxas/
+!naxas/restaurantops/
+!naxas/restaurantops/**
 !.gitignore

@@ -9,9 +9,10 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Naxas\RestaurantOps\Contracts\LocationContextContract;
 use RuntimeException;
 
-class LocationContext
+class LocationContext implements LocationContextContract
 {
     public const SESSION_KEY = 'active_location_id';
 
