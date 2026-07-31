@@ -25,6 +25,7 @@ final class RestaurantOpsMigrationSqliteSmokeTest extends TestCase
             require base_path('extensions/naxas/restaurantops/database/migrations/2026_07_31_000100_create_menu_configuration_tables.php'),
             require base_path('extensions/naxas/restaurantops/database/migrations/2026_07_31_000200_create_menu_integration_support_tables.php'),
             require base_path('extensions/naxas/restaurantops/database/migrations/2026_07_31_000300_create_cashier_shift_tables.php'),
+            require base_path('extensions/naxas/restaurantops/database/migrations/2026_07_31_000400_create_pos_order_foundation_tables.php'),
         ];
         foreach ($migrations as $migration) {
             $migration->up();
@@ -37,6 +38,9 @@ final class RestaurantOpsMigrationSqliteSmokeTest extends TestCase
         self::assertTrue(Schema::hasTable('naxas_restaurant_ops_cashier_shifts'));
         self::assertTrue(Schema::hasColumn('naxas_restaurant_ops_cashier_shifts', 'active_staff_id'));
         self::assertTrue(Schema::hasTable('naxas_restaurant_ops_shift_denominations'));
+        self::assertTrue(Schema::hasTable('naxas_restaurant_ops_pos_orders'));
+        self::assertTrue(Schema::hasColumn('naxas_restaurant_ops_pos_orders', 'outstanding_total'));
+        self::assertTrue(Schema::hasTable('naxas_restaurant_ops_pos_idempotency_keys'));
 
         foreach (array_reverse($migrations) as $migration) {
             $migration->down();
@@ -46,5 +50,6 @@ final class RestaurantOpsMigrationSqliteSmokeTest extends TestCase
         self::assertFalse(Schema::hasTable('naxas_restaurant_ops_snapshot_failures'));
         self::assertFalse(Schema::hasTable('naxas_restaurant_ops_cart_idempotency'));
         self::assertFalse(Schema::hasTable('naxas_restaurant_ops_cashier_shifts'));
+        self::assertFalse(Schema::hasTable('naxas_restaurant_ops_pos_orders'));
     }
 }
