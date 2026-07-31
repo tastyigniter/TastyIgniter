@@ -1,0 +1,23 @@
+{
+    "name": "naxas/restaurantops-extension",
+    "version": "0.1.0",
+    "type": "tastyigniter-extension",
+    "description": "Upgrade-safe application-owned foundation for restaurant operations modules.",
+    "license": "MIT",
+    "authors": [{"name": "Naxas"}],
+    "require": {
+        "php": "^8.3",
+        "tastyigniter/core": "^4.3",
+        "tastyigniter/ti-ext-local": "^4.0",
+        "tastyigniter/ti-ext-user": "^4.0"
+    },
+    "autoload": {"psr-4": {"Naxas\\RestaurantOps\\": "src/"}},
+    "extra": {
+        "tastyigniter-extension": {
+            "code": "Naxas.RestaurantOps",
+            "name": "Restaurant Operations",
+            "icon": {"class": "fa fa-store", "color": "#FFFFFF", "backgroundColor": "#E85D04"},
+            "homepage": "https://github.com/dpkcse/TastyIgniter"
+        }
+    }
+}
