@@ -30,6 +30,7 @@ final class AvailabilityResolver
                 }
             }
         }
+        $result['configuration_versions'] = $rows->map(fn ($row): array => [$row->getKey(), $row->updated_at?->getTimestamp()])->values()->all();
 
         return $result;
     }

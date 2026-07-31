@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Naxas\RestaurantOps\MenuConfiguration;
 
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 use Naxas\RestaurantOps\Models\OrderItemSnapshot;
 
@@ -15,10 +16,14 @@ final class OrderSnapshotService
     {
         $payload = $this->normalize($snapshot);
 
-        return DB::transaction(fn (): OrderItemSnapshot => OrderItemSnapshot::query()->firstOrCreate(
-            ['order_menu_id' => $orderMenuId],
-            ['order_id' => $orderId, 'menu_id' => $payload['menu_item']['id'] ?? null, 'location_id' => $payload['location']['id'] ?? null, 'service_type' => $payload['service_type'] ?? null, 'schema_version' => self::SCHEMA_VERSION, 'configuration_hash' => $payload['configuration_hash'], 'snapshot' => $payload, 'total_price' => $payload['total_price']],
-        ));
+        try {
+            return DB::transaction(fn (): OrderItemSnapshot => OrderItemSnapshot::query()->firstOrCreate(
+                ['order_menu_id' => $orderMenuId],
+                ['order_id' => $orderId, 'menu_id' => $payload['menu_item']['id'] ?? null, 'location_id' => $payload['location']['id'] ?? null, 'service_type' => $payload['service_type'] ?? null, 'schema_version' => self::SCHEMA_VERSION, 'configuration_hash' => $payload['configuration_hash'], 'snapshot' => $payload, 'total_price' => $payload['total_price']],
+            ));
+        } catch (UniqueConstraintViolationException) {
+            return OrderItemSnapshot::query()->where('order_menu_id', $orderMenuId)->firstOrFail();
+        }
     }
 
     public function readOrLegacy(int $orderMenuId, array $legacy): array

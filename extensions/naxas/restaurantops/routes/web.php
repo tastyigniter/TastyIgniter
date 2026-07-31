@@ -3,7 +3,17 @@
 use Igniter\Flame\Support\Facades\Igniter;
 use Illuminate\Support\Facades\Route;
 use Naxas\RestaurantOps\Http\Controllers\MenuConfiguration\MenuConfigurations;
+use Naxas\RestaurantOps\Http\Controllers\MenuIntegration\CartItems;
+use Naxas\RestaurantOps\Http\Controllers\MenuIntegration\OrderItemSnapshots;
 use Naxas\RestaurantOps\Http\Controllers\OperationalLandings;
+
+Route::middleware(['web'])
+    ->prefix('restaurant-ops/v1')
+    ->name('naxas.restaurantops.v1.')
+    ->group(function (): void {
+        Route::post('/cart/quote', [CartItems::class, 'quote'])->name('cart.quote');
+        Route::post('/cart/items', [CartItems::class, 'store'])->name('cart.items.store');
+    });
 
 Route::middleware(config('igniter-routes.adminMiddleware', ['web']))
     ->middleware('location.context')
@@ -20,4 +30,5 @@ Route::middleware(config('igniter-routes.adminMiddleware', ['web']))
         Route::get('/menu-configuration/{menu}', [MenuConfigurations::class, 'index'])->middleware('restaurant.ops.permission:Restaurant.MenuConfig.View')->name('menu-configuration');
         Route::post('/menu-configuration/{menu}/variants', [MenuConfigurations::class, 'storeVariant'])->middleware('restaurant.ops.permission:Restaurant.MenuConfig.Variants.Manage')->name('menu-configuration.variants.store');
         Route::delete('/menu-configuration/{menu}/variants/{variant}', [MenuConfigurations::class, 'archiveVariant'])->middleware('restaurant.ops.permission:Restaurant.MenuConfig.Variants.Manage')->name('menu-configuration.variants.archive');
+        Route::get('/order-item-snapshots/{orderMenu}', [OrderItemSnapshots::class, 'show'])->middleware('restaurant.ops.permission:Restaurant.Operations.Access')->name('order-item-snapshots.show');
     });
