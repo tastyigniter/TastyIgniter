@@ -35,10 +35,20 @@ return [
     'navigation' => [
         'operations' => 'Restaurant Operations', 'overview' => 'Operations Overview', 'head_office' => 'Head Office',
         'branch' => 'Branch Operations', 'cashier' => 'Cashier Workspace', 'waiter' => 'Waiter Workspace', 'kitchen' => 'Kitchen Workspace',
-        'menu_configuration' => 'Menu Configuration',
+        'menu_configuration' => 'Menu Configuration', 'shifts' => 'Shifts', 'active_shift' => 'My Active Shift', 'shift_review' => 'Branch Shift Review',
     ],
     'menu_configuration' => [
         'title' => 'Menu Configuration', 'catalog_title' => 'Menu Configuration Catalog', 'official_menu' => 'Edit official menu', 'variants' => 'Variants',
         'modifier_groups' => 'Attached modifier groups', 'shared_options' => 'Shared option metadata', 'combo' => 'Combo',
+    ],
+    'shifts' => [
+        'title' => 'Cashier Shifts', 'branch_help' => 'Branch-isolated cashier shift history and manager review.',
+        'open' => 'Open Shift', 'already_open' => 'You already have an active shift:', 'opening_cash' => 'Opening cash',
+        'terminal' => 'Terminal code (optional)', 'note' => 'Note', 'all_statuses' => 'All statuses', 'filter' => 'Filter',
+        'cashier' => 'Cashier', 'opened' => 'Opened', 'status' => 'Status', 'expected' => 'Expected cash',
+        'variance' => 'Variance', 'empty' => 'No shifts match the current filters.', 'shift' => 'Shift', 'location' => 'Location',
+        'provider' => 'Payment source verification', 'movements' => 'Cash movements', 'type' => 'Type', 'amount' => 'Amount',
+        'reason' => 'Reason', 'no_movements' => 'No cash movements.', 'timeline' => 'Audit timeline',
+        'closing_requested' => 'Closing requested', 'submission' => 'Submission revision', 'approved' => 'Approved',
     ],
 ];

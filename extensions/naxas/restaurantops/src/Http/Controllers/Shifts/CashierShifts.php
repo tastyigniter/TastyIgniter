@@ -1,0 +1,143 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Naxas\RestaurantOps\Http\Controllers\Shifts;
+
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Naxas\RestaurantOps\Contracts\LocationContextContract;
+use Naxas\RestaurantOps\Models\CashierShift;
+use Naxas\RestaurantOps\Models\CashMovement;
+use Naxas\RestaurantOps\Shifts\CashierShiftContext;
+use Naxas\RestaurantOps\Shifts\Exceptions\ShiftException;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
+
+final class CashierShifts extends Controller
+{
+    public function __construct(private readonly CashierShiftContext $shifts) {}
+
+    public function index(Request $request): Response
+    {
+        $user = $this->user();
+        $query = CashierShift::query()->orderByDesc('opened_at');
+        if (! $user->hasPermission('Restaurant.Shifts.ViewBranch')) {
+            $query->where('staff_id', $user->getAuthIdentifier());
+        }
+        if (! app(LocationContextContract::class)->isGlobal()) {
+            $query->where('location_id', app(LocationContextContract::class)->currentId());
+        }
+        foreach (['status', 'staff_id'] as $filter) {
+            if ($request->filled($filter)) {
+                $query->where($filter, $request->input($filter));
+            }
+        }
+        if ($request->filled('date_from')) {
+            $query->where('opened_at', '>=', $request->date('date_from')->startOfDay());
+        }
+        if ($request->filled('date_to')) {
+            $query->where('opened_at', '<=', $request->date('date_to')->endOfDay());
+        }
+        $records = $query->paginate(30)->withQueryString();
+
+        return response()->view('Naxas.RestaurantOps::shifts.index', compact('records'));
+    }
+
+    public function openForm(): Response
+    {
+        return response()->view('Naxas.RestaurantOps::shifts.open', ['activeShift' => $this->shifts->currentForStaff((int) $this->user()->getAuthIdentifier())]);
+    }
+
+    public function store(Request $request): Response
+    {
+        return $this->respond(fn () => $this->shifts->open($this->user(), (string) $request->input('opening_cash'), $request->input('terminal_code'), $request->input('opening_note')), 201);
+    }
+
+    public function show(CashierShift $shift): Response
+    {
+        $this->authorizeResource($shift);
+        $summary = $this->shifts->calculateSummary($shift);
+        $shift->load(['movements', 'submissions.denominations']);
+
+        return request()->expectsJson() ? response()->json(['data' => $shift, 'summary' => $summary]) : response()->view('Naxas.RestaurantOps::shifts.show', compact('shift', 'summary'));
+    }
+
+    public function movement(Request $request, CashierShift $shift): Response
+    {
+        $this->authorizeResource($shift, true);
+
+        return $this->respond(fn () => $this->shifts->addMovement($shift, $this->user(), (string) $request->input('type'), (string) $request->input('amount'), (string) $request->input('reason_code'), $request->input('reason_text'), $request->header('Idempotency-Key')), 201);
+    }
+
+    public function reverse(Request $request, CashierShift $shift, CashMovement $movement): Response
+    {
+        $this->authorizeResource($shift, true);
+
+        return $this->respond(fn () => $this->shifts->reverseMovement($shift, $movement, $this->user(), (string) $request->input('reason')));
+    }
+
+    public function requestClose(CashierShift $shift): Response
+    {
+        $this->authorizeResource($shift, true);
+
+        return $this->respond(fn () => $this->shifts->requestClosing($shift, $this->user()));
+    }
+
+    public function submit(Request $request, CashierShift $shift): Response
+    {
+        $this->authorizeResource($shift, true);
+
+        return $this->respond(fn () => $this->shifts->submit($shift, $this->user(), $request->input('counted_cash'), (array) $request->input('denominations', []), $request->input('closing_note')), 201);
+    }
+
+    public function approve(CashierShift $shift): Response
+    {
+        $this->authorizeResource($shift);
+
+        return $this->respond(fn () => $this->shifts->approve($shift, $this->user()));
+    }
+
+    public function reject(Request $request, CashierShift $shift): Response
+    {
+        $this->authorizeResource($shift);
+
+        return $this->respond(fn () => $this->shifts->reject($shift, $this->user(), (string) $request->input('reason')));
+    }
+
+    public function forceClose(Request $request, CashierShift $shift): Response
+    {
+        $this->authorizeResource($shift);
+
+        return $this->respond(fn () => $this->shifts->forceClose($shift, $this->user(), (string) $request->input('reason')));
+    }
+
+    private function authorizeResource(CashierShift $shift, bool $own = false): void
+    {
+        $this->shifts->assertLocation($shift);
+        $user = $this->user();
+        if (($own || ! $user->hasPermission('Restaurant.Shifts.ViewBranch')) && $shift->staff_id !== (int) $user->getAuthIdentifier()) {
+            throw ShiftException::forbidden('shift_access_denied', 'You may only operate your own shift.');
+        }
+    }
+
+    private function respond(callable $callback, int $status = 200): Response
+    {
+        try {
+            $result = $callback();
+        } catch (ShiftException $exception) {
+            return response()->json(['error' => ['code' => $exception->errorCode, 'message' => $exception->getMessage()]], $exception->status);
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json(['error' => ['code' => 'shift_concurrency_conflict', 'message' => 'The shift operation could not be completed safely.']], 409);
+        }
+
+        return response()->json(['data' => $result], $status);
+    }
+
+    private function user(): mixed
+    {
+        return app('admin.auth')->user();
+    }
+}
