@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Naxas\RestaurantOps;
 
 use App\Services\LocationContext;
+use Igniter\Cart\Models\Menu;
+use Igniter\Cart\Models\OrderMenu;
 use Igniter\System\Classes\BaseExtension;
 use Naxas\RestaurantOps\Console\SyncRolesCommand;
 use Naxas\RestaurantOps\Contracts\AuditLogger;
@@ -12,11 +14,28 @@ use Naxas\RestaurantOps\Contracts\LocationContextContract;
 use Naxas\RestaurantOps\Http\Middleware\RequiresOperationalPermission;
 use Naxas\RestaurantOps\Http\Middleware\RequiresTransactionalLocation;
 use Naxas\RestaurantOps\Integrations\ActivityLogAdapter;
+use Naxas\RestaurantOps\MenuConfiguration\Contracts\KitchenRoutingResolver;
+use Naxas\RestaurantOps\MenuConfiguration\DefaultKitchenRoutingResolver;
+use Naxas\RestaurantOps\Models\ItemVariant;
+use Naxas\RestaurantOps\Models\MenuItemMetadata;
+use Naxas\RestaurantOps\Models\OrderItemSnapshot;
 use Naxas\RestaurantOps\Support\PermissionDefinitions;
 use Override;
 
 class Extension extends BaseExtension
 {
+    #[Override]
+    public function boot(): void
+    {
+        Menu::extend(function (Menu $model): void {
+            $model->relation['hasMany']['restaurant_ops_variants'] = [ItemVariant::class, 'foreignKey' => 'menu_id'];
+            $model->relation['hasOne']['restaurant_ops_metadata'] = [MenuItemMetadata::class, 'foreignKey' => 'menu_id'];
+        });
+        OrderMenu::extend(function (OrderMenu $model): void {
+            $model->relation['hasOne']['restaurant_ops_snapshot'] = [OrderItemSnapshot::class, 'foreignKey' => 'order_menu_id'];
+        });
+    }
+
     #[Override]
     public function register(): void
     {
@@ -24,6 +43,7 @@ class Extension extends BaseExtension
 
         $this->app->scoped(LocationContextContract::class, fn ($app): LocationContextContract => $app->make(LocationContext::class));
         $this->app->singleton(AuditLogger::class, ActivityLogAdapter::class);
+        $this->app->singleton(KitchenRoutingResolver::class, DefaultKitchenRoutingResolver::class);
         $this->registerConsoleCommand('restaurant-ops.sync-roles', SyncRolesCommand::class);
         $this->app['router']->aliasMiddleware('restaurant.ops.permission', RequiresOperationalPermission::class);
         $this->app['router']->aliasMiddleware('restaurant.ops.transactional', RequiresTransactionalLocation::class);
@@ -44,12 +64,13 @@ class Extension extends BaseExtension
                 'title' => 'naxas.restaurantops::default.navigation.operations',
                 'href' => admin_url('restaurant-ops'), 'permission' => 'Restaurant.Operations.Access',
                 'child' => [
-                    'restaurant-ops-overview' => ['title' => 'naxas.restaurantops::default.navigation.overview', 'href' => admin_url('restaurant-ops'), 'permission' => 'Restaurant.Operations.Access'],
-                    'restaurant-ops-head-office' => ['title' => 'naxas.restaurantops::default.navigation.head_office', 'href' => admin_url('restaurant-ops/head-office'), 'permission' => 'Restaurant.Operations.HeadOfficeDashboard'],
-                    'restaurant-ops-branch' => ['title' => 'naxas.restaurantops::default.navigation.branch', 'href' => admin_url('restaurant-ops/branch'), 'permission' => 'Restaurant.Operations.BranchDashboard'],
-                    'restaurant-ops-cashier' => ['title' => 'naxas.restaurantops::default.navigation.cashier', 'href' => admin_url('restaurant-ops/cashier'), 'permission' => 'Restaurant.POS.Access'],
-                    'restaurant-ops-waiter' => ['title' => 'naxas.restaurantops::default.navigation.waiter', 'href' => admin_url('restaurant-ops/waiter'), 'permission' => 'Restaurant.Waiter.Access'],
-                    'restaurant-ops-kitchen' => ['title' => 'naxas.restaurantops::default.navigation.kitchen', 'href' => admin_url('restaurant-ops/kitchen'), 'permission' => 'Restaurant.Kitchen.Access'],
+                    'restaurant-ops-overview' => ['priority' => 10, 'class' => 'restaurant-ops-overview', 'title' => 'naxas.restaurantops::default.navigation.overview', 'href' => admin_url('restaurant-ops'), 'permission' => 'Restaurant.Operations.Access'],
+                    'restaurant-ops-head-office' => ['priority' => 20, 'class' => 'restaurant-ops-head-office', 'title' => 'naxas.restaurantops::default.navigation.head_office', 'href' => admin_url('restaurant-ops/head-office'), 'permission' => 'Restaurant.Operations.HeadOfficeDashboard'],
+                    'restaurant-ops-branch' => ['priority' => 30, 'class' => 'restaurant-ops-branch', 'title' => 'naxas.restaurantops::default.navigation.branch', 'href' => admin_url('restaurant-ops/branch'), 'permission' => 'Restaurant.Operations.BranchDashboard'],
+                    'restaurant-ops-cashier' => ['priority' => 40, 'class' => 'restaurant-ops-cashier', 'title' => 'naxas.restaurantops::default.navigation.cashier', 'href' => admin_url('restaurant-ops/cashier'), 'permission' => 'Restaurant.POS.Access'],
+                    'restaurant-ops-waiter' => ['priority' => 50, 'class' => 'restaurant-ops-waiter', 'title' => 'naxas.restaurantops::default.navigation.waiter', 'href' => admin_url('restaurant-ops/waiter'), 'permission' => 'Restaurant.Waiter.Access'],
+                    'restaurant-ops-kitchen' => ['priority' => 60, 'class' => 'restaurant-ops-kitchen', 'title' => 'naxas.restaurantops::default.navigation.kitchen', 'href' => admin_url('restaurant-ops/kitchen'), 'permission' => 'Restaurant.Kitchen.Access'],
+                    'restaurant-ops-menu-config' => ['priority' => 70, 'class' => 'restaurant-ops-menu-config', 'title' => 'naxas.restaurantops::default.navigation.menu_configuration', 'href' => admin_url('restaurant-ops/menu-configuration'), 'permission' => 'Restaurant.MenuConfig.Access'],
                 ],
             ],
         ];
