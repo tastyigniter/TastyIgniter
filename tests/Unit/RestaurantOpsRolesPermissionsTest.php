@@ -19,8 +19,14 @@ class RestaurantOpsRolesPermissionsTest extends TestCase
             'Restaurant.LocationContext.ViewAll', 'Restaurant.LocationContext.Manage',
         ], array_keys(PermissionDefinitions::locationContext()));
         foreach ($permissions as $definition) {
-            $this->assertStringStartsWith('naxas.restaurantops::default.permissions.', $definition['label']);
-            $this->assertStringStartsWith('naxas.restaurantops::default.permission_groups.', $definition['group']);
+            $this->assertStringStartsWith('Naxas.RestaurantOps::default.permissions.', $definition['label']);
+            $this->assertStringStartsWith('Naxas.RestaurantOps::default.permission_groups.', $definition['group']);
+            foreach (['label', 'group', 'description'] as $field) {
+                $resolved = lang($definition[$field]);
+                $this->assertMatchesRegularExpression('/[A-Za-z]/', $resolved);
+                $this->assertStringNotContainsString('naxas.restaurantops::', strtolower($resolved));
+                $this->assertStringNotContainsString('::default', $resolved);
+            }
         }
     }
 

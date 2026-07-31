@@ -29,6 +29,7 @@ final class RestaurantOpsNavigationTest extends TestCase
 
         self::assertSame(array_keys($definitions['restaurant-operations']['child']), array_keys($visible['restaurant-operations']['child']));
         self::assertSame([10, 20, 30, 40, 50, 60, 70], array_column($visible['restaurant-operations']['child'], 'priority'));
+        $this->assertHumanReadableTitles($visible);
     }
 
     public function test_restricted_user_navigation_filters_children_without_partial_items(): void
@@ -40,6 +41,20 @@ final class RestaurantOpsNavigationTest extends TestCase
 
         self::assertSame(['restaurant-ops-overview', 'restaurant-ops-branch'], array_keys($visible['restaurant-operations']['child']));
         $this->assertCompleteSchema($visible);
+        $this->assertHumanReadableTitles($visible);
+    }
+
+    public function test_navigation_and_permission_translations_fall_back_to_english(): void
+    {
+        app()->setLocale('fr');
+        config()->set('app.fallback_locale', 'en');
+
+        $this->assertHumanReadableTitles($this->definitions());
+        foreach (app(ExtensionManager::class)->findExtension('Naxas.RestaurantOps')->registerPermissions() as $definition) {
+            foreach (['label', 'group', 'description'] as $field) {
+                $this->assertHumanReadable(lang($definition[$field]));
+            }
+        }
     }
 
     private function definitions(): array
@@ -78,5 +93,21 @@ final class RestaurantOpsNavigationTest extends TestCase
                 $this->assertCompleteSchema($item['child']);
             }
         }
+    }
+
+    private function assertHumanReadableTitles(array $items): void
+    {
+        foreach ($items as $item) {
+            $this->assertHumanReadable($item['title']);
+            $this->assertHumanReadableTitles($item['child'] ?? []);
+        }
+    }
+
+    private function assertHumanReadable(string $value): void
+    {
+        self::assertNotSame('', trim($value));
+        self::assertStringNotContainsString('naxas.restaurantops::', strtolower($value));
+        self::assertStringNotContainsString('::default', $value);
+        self::assertMatchesRegularExpression('/[A-Za-z]/', $value);
     }
 }

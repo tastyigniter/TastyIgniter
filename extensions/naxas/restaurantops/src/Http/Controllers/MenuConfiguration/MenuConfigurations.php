@@ -21,14 +21,14 @@ final class MenuConfigurations
 
     public function catalog(): View
     {
-        return view('naxas.restaurantops::menu-configuration-catalog', [
+        return view('Naxas.RestaurantOps::menu-configuration-catalog', [
             'menus' => Menu::query()->orderBy('menu_name')->paginate(30),
         ]);
     }
 
     public function index(Menu $menu): View
     {
-        return view('naxas.restaurantops::menu-configuration', ['menu' => $menu, 'variants' => ItemVariant::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'groups' => MenuModifierGroup::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'sharedGroups' => ModifierGroup::query()->where('is_active', true)->orderBy('display_order')->get(), 'combo' => Combo::query()->where('menu_id', $menu->getKey())->first()]);
+        return view('Naxas.RestaurantOps::menu-configuration', ['menu' => $menu, 'variants' => ItemVariant::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'groups' => MenuModifierGroup::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'sharedGroups' => ModifierGroup::query()->where('is_active', true)->orderBy('display_order')->get(), 'combo' => Combo::query()->where('menu_id', $menu->getKey())->first()]);
     }
 
     public function storeVariant(Request $request, Menu $menu): JsonResponse

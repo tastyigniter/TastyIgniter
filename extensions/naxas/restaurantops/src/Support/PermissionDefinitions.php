@@ -26,9 +26,9 @@ final class PermissionDefinitions
                 $code = 'Restaurant.'.$module.'.'.$action;
                 $key = strtolower(str_replace('.', '_', $module.'_'.$action));
                 $definitions[$code] = [
-                    'label' => 'naxas.restaurantops::default.permissions.'.$key,
-                    'group' => 'naxas.restaurantops::default.permission_groups.'.strtolower($module),
-                    'description' => 'naxas.restaurantops::default.permission_description',
+                    'label' => 'Naxas.RestaurantOps::default.permissions.'.$key,
+                    'group' => 'Naxas.RestaurantOps::default.permission_groups.'.strtolower($module),
+                    'description' => 'Naxas.RestaurantOps::default.permission_description',
                 ];
             }
         }

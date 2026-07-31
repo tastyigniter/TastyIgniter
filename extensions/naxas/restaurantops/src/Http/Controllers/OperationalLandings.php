@@ -30,35 +30,35 @@ final class OperationalLandings
             return redirect()->route($route);
         }
 
-        return $this->render('Operations Overview', 'overview');
+        return $this->render('navigation.overview', 'overview');
     }
 
     public function headOffice(): View
     {
-        return $this->render('Head Office', 'head-office');
+        return $this->render('navigation.head_office', 'head-office');
     }
 
     public function branch(): View
     {
-        return $this->render('Branch Operations', 'branch');
+        return $this->render('navigation.branch', 'branch');
     }
 
     public function cashier(): View
     {
-        return $this->render('Cashier Workspace', 'cashier');
+        return $this->render('navigation.cashier', 'cashier');
     }
 
     public function waiter(): View
     {
-        return $this->render('Waiter Workspace', 'waiter');
+        return $this->render('navigation.waiter', 'waiter');
     }
 
     public function kitchen(): View
     {
-        return $this->render('Kitchen Workspace', 'kitchen');
+        return $this->render('navigation.kitchen', 'kitchen');
     }
 
-    private function render(string $title, string $workspace): View
+    private function render(string $titleKey, string $workspace): View
     {
         $user = app('admin.auth')->user();
         $profile = $this->profiles->resolve($user);
@@ -68,7 +68,9 @@ final class OperationalLandings
             ->filter(fn (string $module): bool => $user->hasPermission('Restaurant.'.$module.'.Access')
                 || ($module === 'Reports' && $user->hasPermission('Restaurant.Reports.BranchSales')))->values();
 
-        return view('naxas.restaurantops::landing', compact('title', 'workspace', 'user', 'profileLabel', 'assigned', 'summary') + [
+        $title = lang('Naxas.RestaurantOps::default.'.$titleKey);
+
+        return view('Naxas.RestaurantOps::landing', compact('title', 'workspace', 'user', 'profileLabel', 'assigned', 'summary') + [
             'activeLocation' => $this->context->current(), 'global' => $this->context->isGlobal(),
         ]);
     }
