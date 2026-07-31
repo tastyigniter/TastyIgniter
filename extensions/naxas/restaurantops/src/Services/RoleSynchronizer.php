@@ -4,31 +4,40 @@ declare(strict_types=1);
 
 namespace Naxas\RestaurantOps\Services;
 
+use Igniter\User\Classes\PermissionManager;
 use Igniter\User\Models\UserRole;
 use Naxas\RestaurantOps\Contracts\AuditLogger;
 use Naxas\RestaurantOps\Support\RoleProfiles;
 
 final class RoleSynchronizer
 {
-    public function __construct(private readonly AuditLogger $audit) {}
+    public function __construct(
+        private readonly AuditLogger $audit,
+        private readonly PermissionManager $permissionManager,
+    ) {}
 
     public function sync(bool $dryRun = true, bool $createMissing = false, bool $addMissingPermissions = false, ?string $only = null): array
     {
-        $result = ['detected' => [], 'created' => [], 'updated' => [], 'conflicts' => [], 'skipped' => []];
-        foreach (RoleProfiles::all() as $profile => $definition) {
+        $result = ['detected' => [], 'created' => [], 'updated' => [], 'conflicts' => [], 'missing permissions' => [], 'skipped' => []];
+        $profiles = RoleProfiles::all();
+        $registered = collect($this->permissionManager->listPermissions())->pluck('code')->all();
+        $referenced = collect($profiles)->pluck('permissions')->flatten()->unique()->all();
+        $result['missing permissions'] = array_values(array_diff($referenced, $registered));
+
+        if ($result['missing permissions']) {
+            $this->audit->info('restaurant_ops.role_sync_blocked', ['missing_permissions' => $result['missing permissions']]);
+
+            return $result;
+        }
+
+        foreach ($profiles as $profile => $definition) {
             if ($only && ! in_array($only, [$profile, $definition['code']], true)) {
                 continue;
             }
 
+            $result['detected'][] = $definition['code'];
             $role = UserRole::query()->where('code', $definition['code'])->first();
             if (! $role) {
-                $sameName = UserRole::query()->where('name', $definition['name'])->first();
-                if ($sameName) {
-                    $result['conflicts'][] = $definition['name'].' uses code '.($sameName->code ?: '(empty)');
-
-                    continue;
-                }
-
                 if (! $createMissing || $dryRun) {
                     $result['skipped'][] = $definition['code'].' (missing)';
 
@@ -46,13 +55,12 @@ final class RoleSynchronizer
                 continue;
             }
 
-            $result['detected'][] = $definition['code'];
             $missing = array_diff($definition['permissions'], array_keys((array) $role->permissions));
             if (! $missing) {
                 continue;
             }
 
-            if (! $addMissingPermissions || $dryRun) {
+            if ((! $addMissingPermissions && ! $createMissing) || $dryRun) {
                 $result['skipped'][] = $definition['code'].' ('.count($missing).' permissions missing)';
 
                 continue;
