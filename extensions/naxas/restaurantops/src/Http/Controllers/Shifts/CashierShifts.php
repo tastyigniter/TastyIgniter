@@ -49,6 +49,27 @@ final class CashierShifts extends Controller
         return response()->view('Naxas.RestaurantOps::shifts.open', ['activeShift' => $this->shifts->currentForStaff((int) $this->user()->getAuthIdentifier())]);
     }
 
+    public function mine(): Response
+    {
+        $shift = $this->shifts->currentForStaff((int) $this->user()->getAuthIdentifier());
+
+        return response()->view('Naxas.RestaurantOps::shifts.mine', compact('shift'));
+    }
+
+    public function branchReview(Request $request): Response
+    {
+        $request->merge(['status' => $request->input('status', 'submitted')]);
+        $query = CashierShift::query()
+            ->where('location_id', app(LocationContextContract::class)->currentId())
+            ->orderByDesc('opened_at');
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+        $records = $query->paginate(30)->withQueryString();
+
+        return response()->view('Naxas.RestaurantOps::shifts.branch-review', compact('records'));
+    }
+
     public function store(Request $request): Response
     {
         return $this->respond(fn () => $this->shifts->open($this->user(), (string) $request->input('opening_cash'), $request->input('terminal_code'), $request->input('opening_note')), 201);

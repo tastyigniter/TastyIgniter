@@ -14,8 +14,8 @@ final class OperationalLandingResolver
     {
         return match ($this->profiles->resolve($user)) {
             'owner' => $this->context->isGlobal() && $user->hasPermission('Restaurant.Operations.HeadOfficeDashboard')
-                ? 'naxas.restaurantops.head-office' : 'naxas.restaurantops.branch',
-            'branch_manager' => 'naxas.restaurantops.branch',
+                ? 'naxas.restaurantops.head-office' : 'naxas.restaurantops.branch-operations',
+            'branch_manager' => 'naxas.restaurantops.branch-operations',
             'cashier' => 'naxas.restaurantops.cashier',
             'waiter' => 'naxas.restaurantops.waiter',
             'kitchen' => 'naxas.restaurantops.kitchen',

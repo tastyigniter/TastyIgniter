@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use Igniter\Admin\Classes\Navigation;
 use Igniter\System\Classes\ExtensionManager;
 use Igniter\User\Facades\AdminAuth;
+use Illuminate\Support\Facades\Route;
 use Mockery;
 use Naxas\RestaurantOps\Extension;
 use Tests\TestCase;
@@ -28,8 +29,9 @@ final class RestaurantOpsNavigationTest extends TestCase
         $visible = $this->resolve($definitions);
 
         self::assertSame(array_keys($definitions['restaurant-operations']['child']), array_keys($visible['restaurant-operations']['child']));
-        self::assertSame([10, 20, 30, 40, 50, 60, 70, 80, 81, 82], array_column($visible['restaurant-operations']['child'], 'priority'));
+        self::assertSame([10, 20, 30, 40, 41, 42, 43, 50, 60, 70, 80, 81, 82], array_column($visible['restaurant-operations']['child'], 'priority'));
         $this->assertHumanReadableTitles($visible);
+        $this->assertNavigationTargetsRegisteredRoutes($visible);
     }
 
     public function test_restricted_user_navigation_filters_children_without_partial_items(): void
@@ -100,6 +102,22 @@ final class RestaurantOpsNavigationTest extends TestCase
         foreach ($items as $item) {
             $this->assertHumanReadable($item['title']);
             $this->assertHumanReadableTitles($item['child'] ?? []);
+        }
+    }
+
+    private function assertNavigationTargetsRegisteredRoutes(array $items): void
+    {
+        $dashboard = route('igniter.admin.dashboard');
+        $registeredGetUris = collect(Route::getRoutes()->getRoutes())
+            ->filter(fn ($route): bool => in_array('GET', $route->methods(), true))
+            ->map(fn ($route): string => $route->uri())
+            ->all();
+
+        foreach ($items as $item) {
+            self::assertNotSame('', trim($item['href']));
+            self::assertNotSame($dashboard, $item['href']);
+            self::assertContains(ltrim(parse_url($item['href'], PHP_URL_PATH), '/'), $registeredGetUris);
+            $this->assertNavigationTargetsRegisteredRoutes($item['child'] ?? []);
         }
     }
 

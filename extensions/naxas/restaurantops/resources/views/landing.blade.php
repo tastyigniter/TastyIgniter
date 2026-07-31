@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-body">
             <h1 class="h3">{{ $title }}</h1>
-            <p class="text-muted">This is an operational access landing page. Functional workflows are scheduled for a later phase.</p>
+            <p class="text-muted">Module foundation. Functional workflows are coming in the assigned phase.</p>
             <dl class="row mb-0">
                 <dt class="col-sm-3">Staff</dt><dd class="col-sm-9">{{ $user->name }}</dd>
                 <dt class="col-sm-3">Operational profile</dt><dd class="col-sm-9">{{ $profileLabel }}</dd>
