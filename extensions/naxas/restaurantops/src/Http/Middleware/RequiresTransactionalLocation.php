@@ -20,6 +20,12 @@ final class RequiresTransactionalLocation
             if ($request->expectsJson()) {
                 return response()->json(['error' => compact('code', 'message')], $status);
             }
+
+            if (in_array($code, ['operational_location_required', 'operational_global_mode_not_allowed'], true)) {
+                return redirect()->guest(route('admin.location-context.select'))
+                    ->with('restaurant_ops_location_message', $message);
+            }
+
             abort(403, $message);
         }
 

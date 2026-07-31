@@ -24,7 +24,7 @@ final class OperationalAccessService
             return ['operational_global_mode_not_allowed', 'Select a concrete branch for transactional operations.', 409];
         }
 
-        if (! $this->context->isGlobal() && ! $this->context->current()) {
+        if ($transactional && ! $this->context->isGlobal() && ! $this->context->current()) {
             return ['operational_location_required', 'Select an active assigned location to continue.', 409];
         }
 

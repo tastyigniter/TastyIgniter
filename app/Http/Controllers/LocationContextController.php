@@ -49,7 +49,7 @@ class LocationContextController extends Controller
 
         return $request->expectsJson()
             ? response()->json(['data' => ['active_location_id' => $location->getKey()]])
-            : redirect()->route('igniter.admin');
+            : redirect()->intended(route('naxas.restaurantops.overview'));
     }
 
     public function global(Request $request): RedirectResponse|JsonResponse
@@ -62,7 +62,7 @@ class LocationContextController extends Controller
 
         return $request->expectsJson()
             ? response()->json(['data' => ['global' => true]])
-            : redirect()->route('igniter.admin');
+            : redirect()->intended(route('naxas.restaurantops.overview'));
     }
 
     protected function forbidden(Request $request, string $message): RedirectResponse|JsonResponse

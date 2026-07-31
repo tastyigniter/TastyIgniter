@@ -7,12 +7,15 @@
     <style>
         body{margin:0;background:#f5f6f8;color:#25313c;font:15px system-ui,sans-serif}.wrap{max-width:760px;margin:7vh auto;padding:24px}
         h1{margin-bottom:6px}.lead{color:#687480;margin-top:0}.card{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #dfe3e8;border-radius:8px;padding:18px;margin:12px 0;box-shadow:0 2px 7px #0000000a}
-        .address{color:#687480;margin-top:5px}.status{font-size:12px;font-weight:700}.on{color:#28834b}.off{color:#a23a3a}button{border:0;border-radius:5px;background:#e4572e;color:#fff;padding:10px 16px;font-weight:700;cursor:pointer}button[disabled]{background:#aab1b7;cursor:not-allowed}.current{border-color:#e4572e}.global{margin-top:24px}
+        .address{color:#687480;margin-top:5px}.notice{background:#fff4dd;border:1px solid #e7bd68;border-radius:6px;padding:12px 14px}.status{font-size:12px;font-weight:700}.on{color:#28834b}.off{color:#a23a3a}button{border:0;border-radius:5px;background:#e4572e;color:#fff;padding:10px 16px;font-weight:700;cursor:pointer}button[disabled]{background:#aab1b7;cursor:not-allowed}.current{border-color:#e4572e}.global{margin-top:24px}
     </style>
 </head>
 <body><main class="wrap">
     <h1>Select a restaurant branch</h1>
     <p class="lead">Only branches assigned to your staff account are shown.</p>
+    @if(session('restaurant_ops_location_message'))
+        <p class="notice" role="alert">{{ session('restaurant_ops_location_message') }}</p>
+    @endif
     @forelse($locations as $location)
         <section class="card {{ optional($activeLocation)->getKey() === $location->getKey() ? 'current' : '' }}">
             <div><strong>{{ $location->location_name }}</strong>
