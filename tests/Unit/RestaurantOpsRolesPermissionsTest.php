@@ -37,6 +37,8 @@ class RestaurantOpsRolesPermissionsTest extends TestCase
             'restaurant_ops_owner', 'restaurant_ops_branch_manager', 'restaurant_ops_cashier',
             'restaurant_ops_waiter', 'restaurant_ops_kitchen',
         ], array_column($profiles, 'code'));
+        $this->assertCount(5, $profiles);
+        $this->assertNotContains('waiter', array_column($profiles, 'code'));
 
         $catalog = array_keys(PermissionDefinitions::all());
         foreach ($profiles as $profile) {
@@ -48,5 +50,26 @@ class RestaurantOpsRolesPermissionsTest extends TestCase
         $this->assertNotContains('Restaurant.POS.Payment.Settle', $profiles['waiter']['permissions']);
         $this->assertNotContains('Restaurant.Reports.BranchSales', $profiles['kitchen']['permissions']);
         $this->assertNotContains('Restaurant.Reports.Consolidated', $profiles['branch_manager']['permissions']);
+        $this->assertSame([], array_diff($profiles['owner']['permissions'], $catalog));
+        $this->assertSame([], array_diff($catalog, $profiles['owner']['permissions']));
+    }
+
+    public function test_phase_four_menu_configuration_permissions_are_registered(): void
+    {
+        $this->assertSame([
+            'Restaurant.MenuConfig.Access',
+            'Restaurant.MenuConfig.View',
+            'Restaurant.MenuConfig.Manage',
+            'Restaurant.MenuConfig.Variants.Manage',
+            'Restaurant.MenuConfig.Modifiers.Manage',
+            'Restaurant.MenuConfig.Combos.Manage',
+            'Restaurant.MenuConfig.Pricing.Manage',
+            'Restaurant.MenuConfig.Availability.Manage',
+            'Restaurant.MenuConfig.KitchenRouting.Manage',
+            'Restaurant.MenuConfig.LocationOverrides.Manage',
+        ], array_values(array_filter(
+            array_keys(PermissionDefinitions::all()),
+            fn (string $permission): bool => str_starts_with($permission, 'Restaurant.MenuConfig.'),
+        )));
     }
 }

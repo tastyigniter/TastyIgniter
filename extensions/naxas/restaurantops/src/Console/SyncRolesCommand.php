@@ -9,7 +9,7 @@ use Naxas\RestaurantOps\Services\RoleSynchronizer;
 
 final class SyncRolesCommand extends Command
 {
-    protected $signature = 'restaurant-ops:sync-roles {--dry-run : Preview without writing} {--create-missing : Create roles with missing exact codes} {--add-missing-permissions : Add only missing catalog grants} {--group= : Limit to a profile or stable role code}';
+    protected $signature = 'restaurant-ops:sync-roles {--dry-run : Preview without writing} {--create-missing : Create missing custom roles and add their missing catalog grants} {--add-missing-permissions : Add only missing catalog grants} {--group= : Limit to a profile or stable role code}';
 
     protected $description = 'Preview or non-destructively synchronize standard Restaurant Operations roles';
 
@@ -24,6 +24,10 @@ final class SyncRolesCommand extends Command
             $this->line(ucfirst($label).': '.(count($items) ? implode(', ', $items) : 'none'));
         }
 
-        return self::SUCCESS;
+        if ($result['missing permissions']) {
+            $this->error('Role synchronization was safely blocked. Register the listed codes through Naxas.RestaurantOps::registerPermissions and clear the application caches before retrying.');
+        }
+
+        return $result['missing permissions'] ? self::FAILURE : self::SUCCESS;
     }
 }
