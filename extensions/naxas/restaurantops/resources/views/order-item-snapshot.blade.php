@@ -1,6 +1,3 @@
-@extends('igniter::admin.layouts.default')
-
-@section('content')
 <div class="container-fluid">
     <h1 class="h3">Purchased menu configuration</h1>
     <p class="text-muted">Order item #{{ $orderMenu->getKey() }} · Snapshot schema {{ $snapshot['schema_version'] ?? 0 }}</p>
@@ -16,4 +13,3 @@
         <ul>@foreach($group['modifiers'] as $modifier)<li>{{ $modifier['quantity'] }} × {{ $modifier['name'] }} ({{ $modifier['unit_price'] }})</li>@endforeach</ul>
     @endforeach
 </div>
-@endsection

@@ -1,6 +1,4 @@
-@extends('admin::layouts.default')
 
-@section('content')
 <div class="container-fluid py-3">
     <h1 class="h3">{{ lang('Naxas.RestaurantOps::default.menu_configuration.catalog_title') }}</h1>
     <p class="text-muted">Select an official TastyIgniter menu item to configure optional RestaurantOps metadata.</p>
@@ -13,4 +11,3 @@
     </div>
     <div class="mt-3">{{ $menus->links() }}</div>
 </div>
-@endsection
