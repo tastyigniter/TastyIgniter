@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Naxas\RestaurantOps\Http\Controllers\Shifts;
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Naxas\RestaurantOps\Contracts\LocationContextContract;
+use Naxas\RestaurantOps\Http\Controllers\AdminPageController;
 use Naxas\RestaurantOps\Models\CashierShift;
 use Naxas\RestaurantOps\Models\CashMovement;
 use Naxas\RestaurantOps\Shifts\CashierShiftContext;
@@ -14,9 +14,12 @@ use Naxas\RestaurantOps\Shifts\Exceptions\ShiftException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-final class CashierShifts extends Controller
+final class CashierShifts extends AdminPageController
 {
-    public function __construct(private readonly CashierShiftContext $shifts) {}
+    public function __construct(private readonly CashierShiftContext $shifts)
+    {
+        parent::__construct();
+    }
 
     public function index(Request $request): Response
     {
@@ -41,19 +44,23 @@ final class CashierShifts extends Controller
         }
         $records = $query->paginate(30)->withQueryString();
 
-        return response()->view('Naxas.RestaurantOps::shifts.index', compact('records'));
+        $title = lang('Naxas.RestaurantOps::default.navigation.shifts');
+
+        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.index', compact('records'), $title, 'restaurant-ops-shifts'));
     }
 
     public function openForm(): Response
     {
-        return response()->view('Naxas.RestaurantOps::shifts.open', ['activeShift' => $this->shifts->currentForStaff((int) $this->user()->getAuthIdentifier())]);
+        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.open', ['activeShift' => $this->shifts->currentForStaff((int) $this->user()->getAuthIdentifier())], lang('Naxas.RestaurantOps::default.shifts.open'), 'restaurant-ops-active-shift'));
     }
 
     public function mine(): Response
     {
         $shift = $this->shifts->currentForStaff((int) $this->user()->getAuthIdentifier());
 
-        return response()->view('Naxas.RestaurantOps::shifts.mine', compact('shift'));
+        $title = lang('Naxas.RestaurantOps::default.navigation.active_shift');
+
+        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.mine', compact('shift'), $title, 'restaurant-ops-active-shift'));
     }
 
     public function branchReview(Request $request): Response
@@ -67,7 +74,9 @@ final class CashierShifts extends Controller
         }
         $records = $query->paginate(30)->withQueryString();
 
-        return response()->view('Naxas.RestaurantOps::shifts.branch-review', compact('records'));
+        $title = lang('Naxas.RestaurantOps::default.navigation.shift_review');
+
+        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.branch-review', compact('records'), $title, 'restaurant-ops-shift-review'));
     }
 
     public function store(Request $request): Response
@@ -81,7 +90,9 @@ final class CashierShifts extends Controller
         $summary = $this->shifts->calculateSummary($shift);
         $shift->load(['movements', 'submissions.denominations']);
 
-        return request()->expectsJson() ? response()->json(['data' => $shift, 'summary' => $summary]) : response()->view('Naxas.RestaurantOps::shifts.show', compact('shift', 'summary'));
+        return request()->expectsJson()
+            ? response()->json(['data' => $shift, 'summary' => $summary])
+            : response($this->renderAdminPage('Naxas.RestaurantOps::shifts.show', compact('shift', 'summary'), 'Shift #'.$shift->getKey(), 'restaurant-ops-shifts'));
     }
 
     public function movement(Request $request, CashierShift $shift): Response

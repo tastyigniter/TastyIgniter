@@ -1,6 +1,4 @@
-@extends('admin::layouts.default')
 
-@section('content')
 <div class="container-fluid py-3">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <div><h1 class="h3 mb-1">{{ lang('Naxas.RestaurantOps::default.menu_configuration.title') }}</h1><p class="text-muted mb-0">{{ $menu->menu_name }} (#{{ $menu->getKey() }}) — official menu and option data remains authoritative.</p></div>
@@ -14,4 +12,3 @@
     </div>
     <div class="card mt-3"><div class="card-body"><h2 class="h5">Scope</h2><p class="mb-0">Configure variants, official-option metadata, modifier attachments, availability/pricing, combos, kitchen names and station references through RestaurantOps APIs. Full POS, waiter and kitchen workflows are intentionally not included.</p></div></div>
 </div>
-@endsection
