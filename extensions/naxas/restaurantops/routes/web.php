@@ -17,8 +17,7 @@ Route::middleware(['web'])
         Route::post('/cart/items', [CartItems::class, 'store'])->name('cart.items.store');
     });
 
-Route::middleware(config('igniter-routes.adminMiddleware', ['web']))
-    ->middleware('location.context')
+Route::middleware([...config('igniter-routes.adminMiddleware', ['web']), 'location.context'])
     ->prefix(Igniter::adminUri().'/restaurant-ops')
     ->name('naxas.restaurantops.')
     ->group(function (): void {

@@ -4,16 +4,48 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\ResolveLocationContext;
 use Igniter\Admin\Classes\Navigation;
 use Igniter\System\Classes\ExtensionManager;
 use Igniter\User\Facades\AdminAuth;
+use Igniter\User\Http\Middleware\Authenticate as AdminAuthenticate;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 use Mockery;
 use Naxas\RestaurantOps\Extension;
+use Naxas\RestaurantOps\Http\Middleware\RequiresOperationalPermission;
+use Naxas\RestaurantOps\Http\Middleware\RequiresTransactionalLocation;
 use Tests\TestCase;
 
 final class RestaurantOpsNavigationTest extends TestCase
 {
+    public function test_restaurant_ops_routes_preserve_the_complete_admin_middleware_stack(): void
+    {
+        $router = app('router');
+
+        foreach ($router->getRoutes() as $route) {
+            $name = (string) $route->getName();
+            if (! str_starts_with($name, 'naxas.restaurantops.') || str_starts_with($name, 'naxas.restaurantops.v1.')) {
+                continue;
+            }
+
+            $middleware = $router->gatherRouteMiddleware($route);
+
+            self::assertContains(AddQueuedCookiesToResponse::class, $middleware, $name);
+            self::assertContains(StartSession::class, $middleware, $name);
+            self::assertContains(AdminAuthenticate::class, $middleware, $name);
+            self::assertContains(ResolveLocationContext::class, $middleware, $name);
+            self::assertTrue(
+                collect($middleware)->contains(fn (string $item): bool => str_starts_with($item, RequiresOperationalPermission::class.':')),
+                $name,
+            );
+
+            $transactional = collect($route->middleware())->contains('restaurant.ops.transactional');
+            self::assertSame($transactional, in_array(RequiresTransactionalLocation::class, $middleware, true), $name);
+        }
+    }
+
     protected function tearDown(): void
     {
         AdminAuth::clearResolvedInstance('admin.auth');
