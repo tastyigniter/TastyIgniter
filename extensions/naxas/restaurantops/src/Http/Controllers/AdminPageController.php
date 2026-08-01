@@ -21,6 +21,9 @@ abstract class AdminPageController extends AdminController
         Template::setTitle($title);
         Template::setHeading($title);
 
-        return $this->makeView($view, $data);
+        $contents = $this->makeViewContent($view, $data);
+        Template::setBlock('body', $contents);
+
+        return $this->makeLayout();
     }
 }

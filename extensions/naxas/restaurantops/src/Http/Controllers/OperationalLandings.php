@@ -89,8 +89,36 @@ final class OperationalLandings extends AdminPageController
             'global' => $global,
         ];
 
-        return $this->renderAdminPage('Naxas.RestaurantOps::landing', compact(
-            'title', 'workspace', 'user', 'profileLabel', 'assigned', 'summary', 'modules', 'workspaceAction', 'activeLocation', 'global', 'readiness',
-        ), $title, 'restaurant-ops-'.($workspace === 'overview' ? 'overview' : $workspace));
+        $viewData = [
+            'pageTitle' => $title,
+            'pageSubtitle' => $workspace === 'overview'
+                ? 'Monitor branch context, operational access, and current staff readiness.'
+                : 'Your permission-aware Restaurant Operations workspace.',
+            'workspace' => $workspace,
+            'staffName' => (string) $user->name,
+            'operationalProfileLabel' => $profileLabel,
+            'staffActive' => $readiness['staffActive'],
+            'activeLocation' => $activeLocation,
+            'activeLocationLabel' => $global ? 'All locations' : ($activeLocation?->location_name ?? 'Branch not selected'),
+            'assignedLocations' => $assigned,
+            'assignedLocationCount' => $assigned->count(),
+            'accessSummary' => $summary,
+            'accessibleModuleCount' => $modules->count(),
+            'quickActions' => $modules,
+            'workspaceAction' => $workspaceAction,
+            'transactionalContextReady' => $readiness['transactionalReady'],
+            'globalMode' => $global,
+            'readiness' => $readiness,
+            'readinessMessages' => $readiness['transactionalReady'] || $global
+                ? collect()
+                : collect(['Select an active assigned branch to use transactional modules.']),
+        ];
+
+        return $this->renderAdminPage(
+            'Naxas.RestaurantOps::landing',
+            $viewData,
+            $title,
+            'restaurant-ops-'.($workspace === 'overview' ? 'overview' : $workspace),
+        );
     }
 }
