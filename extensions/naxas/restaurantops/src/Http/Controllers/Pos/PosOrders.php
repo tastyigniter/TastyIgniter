@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Naxas\RestaurantOps\Http\Controllers\Pos;
 
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Naxas\RestaurantOps\Contracts\LocationContextContract;
+use Naxas\RestaurantOps\Http\Controllers\AdminPageController;
 use Naxas\RestaurantOps\Models\PosOrder;
 use Naxas\RestaurantOps\Pos\Contracts\PosOrderServiceContract;
 use Naxas\RestaurantOps\Pos\Exceptions\PosException;
@@ -14,9 +14,12 @@ use Naxas\RestaurantOps\Shifts\Contracts\ShiftContextContract;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-final class PosOrders extends Controller
+final class PosOrders extends AdminPageController
 {
-    public function __construct(private readonly PosOrderServiceContract $orders) {}
+    public function __construct(private readonly PosOrderServiceContract $orders)
+    {
+        parent::__construct();
+    }
 
     public function screen(): Response
     {
@@ -24,7 +27,7 @@ final class PosOrders extends Controller
         $shift = app(ShiftContextContract::class)->currentForStaff((int) $user->getAuthIdentifier());
         $held = $shift ? PosOrder::where('shift_id', $shift->getKey())->where('status', 'held')->latest()->limit(20)->get() : collect();
 
-        return response()->view('Naxas.RestaurantOps::pos.index', compact('shift', 'held'));
+        return response($this->renderAdminPage('Naxas.RestaurantOps::pos.index', compact('shift', 'held'), lang('Naxas.RestaurantOps::default.navigation.pos'), 'restaurant-ops-pos'));
     }
 
     public function index(Request $request): Response
@@ -181,6 +184,8 @@ final class PosOrders extends Controller
             ->latest()
             ->paginate(30);
 
-        return response()->view('Naxas.RestaurantOps::pos.orders', compact('orders', 'status', 'title'));
+        $menuItem = $status === 'held' ? 'restaurant-ops-pos-held' : 'restaurant-ops-pos-active';
+
+        return response($this->renderAdminPage('Naxas.RestaurantOps::pos.orders', compact('orders', 'status', 'title'), $title, $menuItem));
     }
 }

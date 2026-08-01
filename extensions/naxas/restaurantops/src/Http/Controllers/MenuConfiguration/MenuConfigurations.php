@@ -8,27 +8,30 @@ use Igniter\Cart\Models\Menu;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
 use Naxas\RestaurantOps\Contracts\AuditLogger;
+use Naxas\RestaurantOps\Http\Controllers\AdminPageController;
 use Naxas\RestaurantOps\Models\Combo;
 use Naxas\RestaurantOps\Models\ItemVariant;
 use Naxas\RestaurantOps\Models\MenuModifierGroup;
 use Naxas\RestaurantOps\Models\ModifierGroup;
 
-final class MenuConfigurations
+final class MenuConfigurations extends AdminPageController
 {
-    public function __construct(private readonly AuditLogger $audit) {}
-
-    public function catalog(): View
+    public function __construct(private readonly AuditLogger $audit)
     {
-        return view('Naxas.RestaurantOps::menu-configuration-catalog', [
-            'menus' => Menu::query()->orderBy('menu_name')->paginate(30),
-        ]);
+        parent::__construct();
     }
 
-    public function index(Menu $menu): View
+    public function catalog(): string
     {
-        return view('Naxas.RestaurantOps::menu-configuration', ['menu' => $menu, 'variants' => ItemVariant::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'groups' => MenuModifierGroup::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'sharedGroups' => ModifierGroup::query()->where('is_active', true)->orderBy('display_order')->get(), 'combo' => Combo::query()->where('menu_id', $menu->getKey())->first()]);
+        return $this->renderAdminPage('Naxas.RestaurantOps::menu-configuration-catalog', [
+            'menus' => Menu::query()->orderBy('menu_name')->paginate(30),
+        ], lang('Naxas.RestaurantOps::default.navigation.menu_configuration'), 'restaurant-ops-menu-config');
+    }
+
+    public function index(Menu $menu): string
+    {
+        return $this->renderAdminPage('Naxas.RestaurantOps::menu-configuration', ['menu' => $menu, 'variants' => ItemVariant::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'groups' => MenuModifierGroup::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'sharedGroups' => ModifierGroup::query()->where('is_active', true)->orderBy('display_order')->get(), 'combo' => Combo::query()->where('menu_id', $menu->getKey())->first()], lang('Naxas.RestaurantOps::default.navigation.menu_configuration'), 'restaurant-ops-menu-config');
     }
 
     public function storeVariant(Request $request, Menu $menu): JsonResponse
