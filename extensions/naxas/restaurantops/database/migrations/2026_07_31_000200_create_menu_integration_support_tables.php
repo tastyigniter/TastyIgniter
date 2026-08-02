@@ -11,13 +11,13 @@ return new class extends Migration
         Schema::create('naxas_restaurant_ops_snapshot_failures', function (Blueprint $table): void {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('order_menu_id')->unique('naxas_ops_snapshot_failure_item_unique');
+            $table->unsignedBigInteger('order_menu_id')->unique('rops_snapshot_failure_item_unique');
             $table->json('snapshot');
             $table->text('last_error');
             $table->unsignedSmallInteger('attempts')->default(1);
             $table->timestamp('last_attempt_at')->useCurrent();
             $table->timestamps();
-            $table->index(['order_id', 'last_attempt_at'], 'naxas_ops_snapshot_failure_retry');
+            $table->index(['order_id', 'last_attempt_at'], 'rops_snapshot_failure_retry');
         });
 
         Schema::create('naxas_restaurant_ops_cart_idempotency', function (Blueprint $table): void {
@@ -29,8 +29,8 @@ return new class extends Migration
             $table->json('response')->nullable();
             $table->timestamp('expires_at');
             $table->timestamps();
-            $table->unique(['scope_hash', 'key_hash'], 'naxas_ops_cart_idempotency_unique');
-            $table->index('expires_at', 'naxas_ops_cart_idempotency_expiry');
+            $table->unique(['scope_hash', 'key_hash'], 'rops_cart_idempotency_unique');
+            $table->index('expires_at', 'rops_cart_idempotency_expiry');
         });
     }
 

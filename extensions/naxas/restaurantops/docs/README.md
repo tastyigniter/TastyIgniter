@@ -1,5 +1,7 @@
 # Restaurant Operations extension foundation
 
+See [MySQL migration compatibility and recovery](mysql-migration-safety.md) for the supported lifecycle, identifier policy, preflight, partial-DDL recovery, backups, rollback limitations, and verification evidence.
+
 `Naxas.RestaurantOps` 0.1.0 is the application-owned boundary for future restaurant
 operations work. It supports PHP 8.3+, Laravel 12, TastyIgniter core 4.3 and the
 official Local and User extensions. Cart, Reservation and Pay Register are optional

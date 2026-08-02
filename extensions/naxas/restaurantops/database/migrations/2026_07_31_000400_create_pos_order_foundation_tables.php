@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('naxas_restaurant_ops_pos_orders', function (Blueprint $table): void {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('order_id')->nullable()->unique('naxas_ops_pos_official_unique');
+            $table->unsignedBigInteger('order_id')->nullable()->unique('rops_pos_official_unique');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('shift_id');
             $table->unsignedBigInteger('cashier_id');
@@ -45,11 +45,11 @@ return new class extends Migration
             $table->string('pricing_hash', 64)->nullable();
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
-            $table->foreign('shift_id', 'naxas_ops_pos_shift_fk')->references('id')->on('naxas_restaurant_ops_cashier_shifts')->restrictOnDelete();
-            $table->index(['location_id', 'status'], 'naxas_ops_pos_location_status');
-            $table->index(['shift_id', 'status'], 'naxas_ops_pos_shift_status');
-            $table->index(['cashier_id', 'status'], 'naxas_ops_pos_cashier_status');
-            $table->index('created_at', 'naxas_ops_pos_created');
+            $table->foreign('shift_id', 'rops_pos_shift_fk')->references('id')->on('naxas_restaurant_ops_cashier_shifts')->restrictOnDelete();
+            $table->index(['location_id', 'status'], 'rops_pos_location_status');
+            $table->index(['shift_id', 'status'], 'rops_pos_shift_status');
+            $table->index(['cashier_id', 'status'], 'rops_pos_cashier_status');
+            $table->index('created_at', 'rops_pos_created');
         });
 
         Schema::create('naxas_restaurant_ops_pos_order_items', function (Blueprint $table): void {
@@ -68,9 +68,9 @@ return new class extends Migration
             $table->unsignedInteger('kitchen_sent_quantity')->default(0);
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
-            $table->foreign('pos_order_id', 'naxas_ops_pos_item_order_fk')->references('id')->on('naxas_restaurant_ops_pos_orders')->cascadeOnDelete();
-            $table->index(['pos_order_id', 'status'], 'naxas_ops_pos_item_status');
-            $table->index(['menu_id', 'variant_id'], 'naxas_ops_pos_item_menu_variant');
+            $table->foreign('pos_order_id', 'rops_pos_item_order_fk')->references('id')->on('naxas_restaurant_ops_pos_orders')->cascadeOnDelete();
+            $table->index(['pos_order_id', 'status'], 'rops_pos_item_status');
+            $table->index(['menu_id', 'variant_id'], 'rops_pos_item_menu_variant');
         });
 
         Schema::create('naxas_restaurant_ops_pos_order_events', function (Blueprint $table): void {
@@ -82,8 +82,8 @@ return new class extends Migration
             $table->json('payload')->nullable();
             $table->timestamp('occurred_at');
             $table->timestamps();
-            $table->foreign('pos_order_id', 'naxas_ops_pos_event_order_fk')->references('id')->on('naxas_restaurant_ops_pos_orders')->cascadeOnDelete();
-            $table->index(['pos_order_id', 'occurred_at'], 'naxas_ops_pos_event_timeline');
+            $table->foreign('pos_order_id', 'rops_pos_event_order_fk')->references('id')->on('naxas_restaurant_ops_pos_orders')->cascadeOnDelete();
+            $table->index(['pos_order_id', 'occurred_at'], 'rops_pos_event_timeline');
         });
 
         Schema::create('naxas_restaurant_ops_pos_approval_requests', function (Blueprint $table): void {
@@ -105,9 +105,9 @@ return new class extends Migration
             $table->timestamp('requested_at');
             $table->timestamp('decided_at')->nullable();
             $table->timestamps();
-            $table->foreign('pos_order_id', 'naxas_ops_pos_approval_order_fk')->references('id')->on('naxas_restaurant_ops_pos_orders')->cascadeOnDelete();
-            $table->foreign('order_item_id', 'naxas_ops_pos_approval_item_fk')->references('id')->on('naxas_restaurant_ops_pos_order_items')->nullOnDelete();
-            $table->index(['pos_order_id', 'type', 'status'], 'naxas_ops_pos_approval_state');
+            $table->foreign('pos_order_id', 'rops_pos_approval_order_fk')->references('id')->on('naxas_restaurant_ops_pos_orders')->cascadeOnDelete();
+            $table->foreign('order_item_id', 'rops_pos_approval_item_fk')->references('id')->on('naxas_restaurant_ops_pos_order_items')->nullOnDelete();
+            $table->index(['pos_order_id', 'type', 'status'], 'rops_pos_approval_state');
         });
 
         Schema::create('naxas_restaurant_ops_pos_idempotency_keys', function (Blueprint $table): void {
@@ -119,8 +119,8 @@ return new class extends Migration
             $table->unsignedBigInteger('pos_order_id')->nullable();
             $table->json('response_payload')->nullable();
             $table->timestamps();
-            $table->unique(['cashier_id', 'operation', 'idempotency_key'], 'naxas_ops_pos_idempotency_unique');
-            $table->index('pos_order_id', 'naxas_ops_pos_idempotency_order');
+            $table->unique(['cashier_id', 'operation', 'idempotency_key'], 'rops_pos_idempotency_unique');
+            $table->index('pos_order_id', 'rops_pos_idempotency_order');
         });
     }
 

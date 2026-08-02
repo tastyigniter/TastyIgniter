@@ -12,7 +12,7 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('staff_id');
-            $table->unsignedBigInteger('active_staff_id')->nullable()->unique('naxas_ops_shift_active_staff_unique');
+            $table->unsignedBigInteger('active_staff_id')->nullable()->unique('rops_shift_active_staff_unique');
             $table->string('terminal_code', 64)->nullable();
             $table->string('status', 24);
             $table->timestamp('opened_at');
@@ -40,11 +40,11 @@ return new class extends Migration
             $table->text('cancellation_reason')->nullable();
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
-            $table->index(['location_id', 'status'], 'naxas_ops_shift_location_status');
-            $table->index(['staff_id', 'status'], 'naxas_ops_shift_staff_status');
-            $table->index('opened_at', 'naxas_ops_shift_opened');
-            $table->index('submitted_at', 'naxas_ops_shift_submitted');
-            $table->index('approved_at', 'naxas_ops_shift_approved');
+            $table->index(['location_id', 'status'], 'rops_shift_location_status');
+            $table->index(['staff_id', 'status'], 'rops_shift_staff_status');
+            $table->index('opened_at', 'rops_shift_opened');
+            $table->index('submitted_at', 'rops_shift_submitted');
+            $table->index('approved_at', 'rops_shift_approved');
         });
 
         Schema::create('naxas_restaurant_ops_cash_movements', function (Blueprint $table): void {
@@ -65,10 +65,10 @@ return new class extends Migration
             $table->text('reversal_reason')->nullable();
             $table->string('idempotency_key', 100)->nullable();
             $table->timestamps();
-            $table->foreign('shift_id', 'naxas_ops_movement_shift_fk')->references('id')->on('naxas_restaurant_ops_cashier_shifts')->cascadeOnDelete();
-            $table->index(['shift_id', 'type', 'reversed_at'], 'naxas_ops_movement_summary');
-            $table->index(['location_id', 'occurred_at'], 'naxas_ops_movement_location_time');
-            $table->unique(['shift_id', 'idempotency_key'], 'naxas_ops_movement_idempotency');
+            $table->foreign('shift_id', 'rops_movement_shift_fk')->references('id')->on('naxas_restaurant_ops_cashier_shifts')->cascadeOnDelete();
+            $table->index(['shift_id', 'type', 'reversed_at'], 'rops_movement_summary');
+            $table->index(['location_id', 'occurred_at'], 'rops_movement_location_time');
+            $table->unique(['shift_id', 'idempotency_key'], 'rops_movement_idempotency');
         });
 
         Schema::create('naxas_restaurant_ops_shift_submissions', function (Blueprint $table): void {
@@ -91,9 +91,9 @@ return new class extends Migration
             $table->timestamp('decided_at')->nullable();
             $table->text('decision_reason')->nullable();
             $table->timestamps();
-            $table->foreign('shift_id', 'naxas_ops_submission_shift_fk')->references('id')->on('naxas_restaurant_ops_cashier_shifts')->cascadeOnDelete();
-            $table->unique(['shift_id', 'revision'], 'naxas_ops_submission_revision_unique');
-            $table->index('submitted_at', 'naxas_ops_submission_time');
+            $table->foreign('shift_id', 'rops_submission_shift_fk')->references('id')->on('naxas_restaurant_ops_cashier_shifts')->cascadeOnDelete();
+            $table->unique(['shift_id', 'revision'], 'rops_submission_revision_unique');
+            $table->index('submitted_at', 'rops_submission_time');
         });
 
         Schema::create('naxas_restaurant_ops_shift_denominations', function (Blueprint $table): void {
@@ -103,8 +103,8 @@ return new class extends Migration
             $table->unsignedInteger('quantity');
             $table->decimal('total', 15, 4);
             $table->timestamps();
-            $table->foreign('shift_submission_id', 'naxas_ops_denom_submission_fk')->references('id')->on('naxas_restaurant_ops_shift_submissions')->cascadeOnDelete();
-            $table->unique(['shift_submission_id', 'denomination'], 'naxas_ops_denom_unique');
+            $table->foreign('shift_submission_id', 'rops_denom_submission_fk')->references('id')->on('naxas_restaurant_ops_shift_submissions')->cascadeOnDelete();
+            $table->unique(['shift_submission_id', 'denomination'], 'rops_denom_unique');
         });
     }
 
