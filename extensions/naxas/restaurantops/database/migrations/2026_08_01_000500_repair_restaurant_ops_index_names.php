@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Naxas\RestaurantOps\Support\MySqlSchemaInspector;
 
 return new class extends Migration
 {
@@ -33,14 +35,41 @@ return new class extends Migration
 
     public function up(): void
     {
+        $inspector = new MySqlSchemaInspector(DB::connection());
+        $inspector->assertMySql();
+
         foreach ($this->indexes as $tableName => $indexes) {
-            if (! Schema::hasTable($tableName)) {
-                continue;
+            if (! $inspector->tableExists($tableName)) {
+                throw new RuntimeException('RestaurantOps index repair dependency is missing: table '.$tableName.'. Run the preceding RestaurantOps migrations before 000500.');
             }
             foreach ($indexes as $name => $definition) {
-                if (Schema::hasIndex($tableName, $definition['columns'], $definition['type'])) {
+                $expectedUnique = $definition['type'] === 'unique';
+                $existing = $inspector->indexMetadata($tableName, $name);
+                if ($existing !== null) {
+                    if ($existing['columns'] !== $definition['columns'] || $existing['unique'] !== $expectedUnique) {
+                        throw new RuntimeException(sprintf(
+                            'RestaurantOps schema drift: index %s on %s is %s (%s); expected %s (%s).',
+                            $name,
+                            $inspector->physicalTable($tableName),
+                            $existing['unique'] ? 'unique' : 'non-unique',
+                            implode(', ', $existing['columns']),
+                            $expectedUnique ? 'unique' : 'non-unique',
+                            implode(', ', $definition['columns']),
+                        ));
+                    }
+
                     continue;
                 }
+
+                $obsoleteName = $this->obsoleteGeneratedIndex($inspector, $tableName, $definition['columns'], $expectedUnique);
+                if ($obsoleteName !== null) {
+                    Schema::table($tableName, function (Blueprint $table) use ($obsoleteName, $name): void {
+                        $table->renameIndex($obsoleteName, $name);
+                    });
+
+                    continue;
+                }
+
                 Schema::table($tableName, function (Blueprint $table) use ($definition, $name): void {
                     $table->{$definition['type']}($definition['columns'], $name);
                 });
@@ -50,18 +79,27 @@ return new class extends Migration
 
     public function down(): void
     {
-        foreach (array_reverse($this->indexes, true) as $tableName => $indexes) {
-            if (! Schema::hasTable($tableName)) {
-                continue;
-            }
-            foreach (array_reverse($indexes, true) as $name => $definition) {
-                if (! Schema::hasIndex($tableName, $name)) {
-                    continue;
-                }
-                Schema::table($tableName, function (Blueprint $table) use ($definition, $name): void {
-                    $definition['type'] === 'unique' ? $table->dropUnique($name) : $table->dropIndex($name);
-                });
+        // These indexes belong to the original create migrations. A repair rollback
+        // must not remove valid schema that it may only have verified or renamed.
+    }
+
+    /** @param list<string> $columns */
+    private function obsoleteGeneratedIndex(MySqlSchemaInspector $inspector, string $table, array $columns, bool $unique): ?string
+    {
+        $suffix = $unique ? 'unique' : 'index';
+        $generatedNames = [
+            $table.'_'.implode('_', $columns).'_'.$suffix,
+            $inspector->physicalTable($table).'_'.implode('_', $columns).'_'.$suffix,
+        ];
+
+        foreach ($inspector->indexes($table) as $candidate => $definition) {
+            if (in_array($candidate, $generatedNames, true)
+                && $definition['columns'] === $columns
+                && $definition['unique'] === $unique) {
+                return $candidate;
             }
         }
+
+        return null;
     }
 };
