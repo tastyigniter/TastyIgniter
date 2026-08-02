@@ -20,8 +20,8 @@ return new class extends Migration
             $table->boolean('show_on_kitchen')->default(true);
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
-            $table->unique('menu_id', 'naxas_ops_item_meta_menu_unique');
-            $table->index(['menu_id', 'kitchen_station_id']);
+            $table->unique('menu_id', 'rops_item_meta_menu_unique');
+            $table->index(['menu_id', 'kitchen_station_id'], 'rops_menu_meta_kitchen_idx');
         });
 
         Schema::create('naxas_restaurant_ops_item_variants', function (Blueprint $table): void {
@@ -51,13 +51,13 @@ return new class extends Migration
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
             $table->softDeletes('archived_at');
-            $table->unique(['menu_id', 'code'], 'naxas_ops_variant_code_unique');
-            $table->index(['menu_id', 'is_active', 'display_order']);
+            $table->unique(['menu_id', 'code'], 'rops_variant_code_unique');
+            $table->index(['menu_id', 'is_active', 'display_order'], 'rops_variant_menu_active_idx');
         });
         Schema::create('naxas_restaurant_ops_modifier_groups', function (Blueprint $table): void {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('option_id')->nullable();
-            $table->string('code', 64)->unique();
+            $table->string('code', 64)->unique('rops_mod_group_code_uq');
             $table->string('name');
             $table->string('kitchen_name')->nullable();
             $table->text('description')->nullable();
@@ -81,8 +81,8 @@ return new class extends Migration
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
             $table->softDeletes('archived_at');
-            $table->unique('option_id', 'naxas_ops_group_option_unique');
-            $table->index(['is_active', 'display_order']);
+            $table->unique('option_id', 'rops_group_option_unique');
+            $table->index(['is_active', 'display_order'], 'rops_mod_group_active_idx');
         });
         Schema::create('naxas_restaurant_ops_modifier_metadata', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -105,9 +105,9 @@ return new class extends Migration
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
             $table->softDeletes('archived_at');
-            $table->unique('option_value_id', 'naxas_ops_modifier_value_unique');
-            $table->unique('code', 'naxas_ops_modifier_code_unique');
-            $table->index(['is_active', 'is_sold_out']);
+            $table->unique('option_value_id', 'rops_modifier_value_unique');
+            $table->unique('code', 'rops_modifier_code_unique');
+            $table->index(['is_active', 'is_sold_out'], 'rops_modifier_stock_idx');
         });
         Schema::create('naxas_restaurant_ops_menu_modifier_groups', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -121,10 +121,10 @@ return new class extends Migration
             $table->unsignedInteger('display_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->foreign('variant_id', 'naxas_ops_attach_variant_fk')->references('id')->on('naxas_restaurant_ops_item_variants')->restrictOnDelete();
-            $table->foreign('modifier_group_id', 'naxas_ops_attach_group_fk')->references('id')->on('naxas_restaurant_ops_modifier_groups')->restrictOnDelete();
-            $table->unique(['menu_id', 'variant_id', 'modifier_group_id'], 'naxas_ops_menu_variant_group_unique');
-            $table->index(['menu_id', 'variant_id', 'display_order'], 'naxas_ops_menu_group_lookup');
+            $table->foreign('variant_id', 'rops_attach_variant_fk')->references('id')->on('naxas_restaurant_ops_item_variants')->restrictOnDelete();
+            $table->foreign('modifier_group_id', 'rops_attach_group_fk')->references('id')->on('naxas_restaurant_ops_modifier_groups')->restrictOnDelete();
+            $table->unique(['menu_id', 'variant_id', 'modifier_group_id'], 'rops_menu_variant_group_unique');
+            $table->index(['menu_id', 'variant_id', 'display_order'], 'rops_menu_group_lookup');
         });
         Schema::create('naxas_restaurant_ops_availability_overrides', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -144,8 +144,8 @@ return new class extends Migration
             $table->timestamp('available_from')->nullable();
             $table->timestamp('available_until')->nullable();
             $table->timestamps();
-            $table->index(['location_id', 'menu_id', 'service_type', 'channel'], 'naxas_ops_override_resolution');
-            $table->index(['variant_id', 'modifier_group_id', 'modifier_id'], 'naxas_ops_override_targets');
+            $table->index(['location_id', 'menu_id', 'service_type', 'channel'], 'rops_override_resolution');
+            $table->index(['variant_id', 'modifier_group_id', 'modifier_id'], 'rops_override_targets');
         });
         Schema::create('naxas_restaurant_ops_modifier_conditions', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -154,9 +154,9 @@ return new class extends Migration
             $table->string('condition_type', 24);
             $table->boolean('expected_selected')->default(true);
             $table->timestamps();
-            $table->foreign('parent_modifier_id', 'naxas_ops_condition_parent_fk')->references('id')->on('naxas_restaurant_ops_modifier_metadata')->restrictOnDelete();
-            $table->foreign('child_group_id', 'naxas_ops_condition_child_fk')->references('id')->on('naxas_restaurant_ops_modifier_groups')->restrictOnDelete();
-            $table->unique(['parent_modifier_id', 'child_group_id', 'condition_type'], 'naxas_ops_modifier_condition_unique');
+            $table->foreign('parent_modifier_id', 'rops_condition_parent_fk')->references('id')->on('naxas_restaurant_ops_modifier_metadata')->restrictOnDelete();
+            $table->foreign('child_group_id', 'rops_condition_child_fk')->references('id')->on('naxas_restaurant_ops_modifier_groups')->restrictOnDelete();
+            $table->unique(['parent_modifier_id', 'child_group_id', 'condition_type'], 'rops_modifier_condition_unique');
         });
         Schema::create('naxas_restaurant_ops_combos', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -167,8 +167,8 @@ return new class extends Migration
             $table->unsignedInteger('version')->default(1);
             $table->timestamps();
             $table->softDeletes('archived_at');
-            $table->unique('menu_id', 'naxas_ops_combo_menu_unique');
-            $table->unique('code', 'naxas_ops_combo_code_unique');
+            $table->unique('menu_id', 'rops_combo_menu_unique');
+            $table->unique('code', 'rops_combo_code_unique');
         });
         Schema::create('naxas_restaurant_ops_combo_groups', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -180,8 +180,8 @@ return new class extends Migration
             $table->unsignedSmallInteger('max_selections')->default(1);
             $table->unsignedInteger('display_order')->default(0);
             $table->timestamps();
-            $table->foreign('combo_id', 'naxas_ops_combo_group_combo_fk')->references('id')->on('naxas_restaurant_ops_combos')->restrictOnDelete();
-            $table->unique(['combo_id', 'code'], 'naxas_ops_combo_group_code_unique');
+            $table->foreign('combo_id', 'rops_combo_group_combo_fk')->references('id')->on('naxas_restaurant_ops_combos')->restrictOnDelete();
+            $table->unique(['combo_id', 'code'], 'rops_combo_group_code_unique');
         });
         Schema::create('naxas_restaurant_ops_combo_choices', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -194,9 +194,9 @@ return new class extends Migration
             $table->unsignedInteger('display_order')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->foreign('combo_group_id', 'naxas_ops_combo_choice_group_fk')->references('id')->on('naxas_restaurant_ops_combo_groups')->restrictOnDelete();
-            $table->foreign('variant_id', 'naxas_ops_combo_choice_variant_fk')->references('id')->on('naxas_restaurant_ops_item_variants')->restrictOnDelete();
-            $table->unique(['combo_group_id', 'menu_id', 'variant_id'], 'naxas_ops_combo_choice_unique');
+            $table->foreign('combo_group_id', 'rops_combo_choice_group_fk')->references('id')->on('naxas_restaurant_ops_combo_groups')->restrictOnDelete();
+            $table->foreign('variant_id', 'rops_combo_choice_variant_fk')->references('id')->on('naxas_restaurant_ops_item_variants')->restrictOnDelete();
+            $table->unique(['combo_group_id', 'menu_id', 'variant_id'], 'rops_combo_choice_unique');
         });
         Schema::create('naxas_restaurant_ops_order_item_snapshots', function (Blueprint $table): void {
             $table->bigIncrements('id');
@@ -210,9 +210,9 @@ return new class extends Migration
             $table->json('snapshot');
             $table->decimal('total_price', 15, 4);
             $table->timestamp('created_at')->useCurrent();
-            $table->unique('order_menu_id', 'naxas_ops_snapshot_order_menu_unique');
-            $table->index(['order_id', 'order_menu_id']);
-            $table->index(['location_id', 'created_at']);
+            $table->unique('order_menu_id', 'rops_snapshot_order_menu_unique');
+            $table->index(['order_id', 'order_menu_id'], 'rops_snapshot_order_idx');
+            $table->index(['location_id', 'created_at'], 'rops_snapshot_location_idx');
         });
     }
 
