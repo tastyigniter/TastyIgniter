@@ -18,9 +18,9 @@ class LocationContextRoutesTest extends TestCase
     public function test_selector_routes_are_registered_without_replacing_existing_admin_login(): void
     {
         $this->assertNotNull(app('router')->getRoutes()->getByName('igniter.admin.login'));
-        $this->assertNotNull(app('router')->getRoutes()->getByName('admin.location-context.select'));
-        $this->assertNotNull(app('router')->getRoutes()->getByName('admin.location-context.switch'));
-        $this->assertNotNull(app('router')->getRoutes()->getByName('admin.location-context.global'));
+        $this->assertNotNull(app('router')->getRoutes()->getByName('naxas.restaurantops.location-context.select'));
+        $this->assertNotNull(app('router')->getRoutes()->getByName('naxas.restaurantops.location-context.switch'));
+        $this->assertNotNull(app('router')->getRoutes()->getByName('naxas.restaurantops.location-context.global'));
     }
 
     public function test_unauthenticated_json_selector_request_has_structured_error(): void

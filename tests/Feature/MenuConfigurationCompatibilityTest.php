@@ -41,7 +41,7 @@ final class MenuConfigurationCompatibilityTest extends TestCase
 
     public function test_routes_use_named_class_actions_and_configurable_admin_prefix(): void
     {
-        $route = app('router')->getRoutes()->getByName('naxas.restaurantops.menu-configuration.variants.store');
+        $route = app('router')->getRoutes()->getByName('naxas.restaurantops.menu-operations.variants.store');
         self::assertNotNull($route);
         self::assertStringStartsWith(trim(parse_url(admin_url(''), PHP_URL_PATH), '/').'/', trim($route->uri(), '/'));
         self::assertSame(

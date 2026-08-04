@@ -42,7 +42,7 @@ final class RestaurantOpsAccessMiddlewareTest extends TestCase
         $response = (new RequiresTransactionalLocation(new OperationalAccessService($this->contextWithoutLocation())))
             ->handle($request, fn () => response('unexpected'));
 
-        self::assertTrue($response->isRedirect(route('admin.location-context.select')));
+        self::assertTrue($response->isRedirect(route('naxas.restaurantops.location-context.select')));
         self::assertSame('Select an active assigned location to continue.', session('restaurant_ops_location_message'));
     }
 

@@ -55,7 +55,7 @@ class RestaurantOpsExtensionTest extends TestCase
         $this->assertArrayHasKey('Restaurant.Operations.Access', $permissions);
         $this->assertArrayHasKey('Restaurant.Reports.Consolidated', $permissions);
         foreach (['select', 'switch', 'global'] as $route) {
-            $name = 'admin.location-context.'.$route;
+            $name = 'naxas.restaurantops.location-context.'.$route;
             $this->assertNotNull(Route::getRoutes()->getByName($name));
             $this->assertCount(1, collect(Route::getRoutes())->filter(fn ($registered): bool => $registered->getName() === $name));
         }
@@ -65,7 +65,7 @@ class RestaurantOpsExtensionTest extends TestCase
     {
         $expected = [
             'overview', 'head-office', 'branch-operations', 'cashier', 'pos', 'orders.active',
-            'orders.held', 'waiter', 'kitchen', 'menu-config.index', 'shifts.index', 'shifts.mine',
+            'orders.held', 'waiter', 'kitchen', 'menu-operations.index', 'shifts.index', 'shifts.mine',
             'shifts.branch-review',
         ];
         $restaurantOpsRoutes = collect(Route::getRoutes()->getRoutes())

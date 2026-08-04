@@ -22,7 +22,7 @@
                 <div class="address">{{ collect([$location->location_address_1, $location->location_city])->filter()->join(', ') ?: 'Address not available' }}</div>
                 <span class="status {{ $location->location_status ? 'on' : 'off' }}">{{ $location->location_status ? 'ACTIVE' : 'INACTIVE' }}</span>
             </div>
-            <form method="post" action="{{ route('admin.location-context.switch') }}">@csrf
+            <form method="post" action="{{ route('naxas.restaurantops.location-context.switch') }}">@csrf
                 <input type="hidden" name="location_id" value="{{ $location->getKey() }}">
                 <button type="submit" @disabled(!$location->location_status && !$canSelectInactive)>{{ optional($activeLocation)->getKey() === $location->getKey() ? 'Current branch' : 'Select' }}</button>
             </form>
@@ -31,7 +31,7 @@
         <section class="card"><strong>No active branch is assigned to your account.</strong></section>
     @endforelse
     @if($canViewAll)
-        <form class="global" method="post" action="{{ route('admin.location-context.global') }}">@csrf
+        <form class="global" method="post" action="{{ route('naxas.restaurantops.location-context.global') }}">@csrf
             <button type="submit">Use all locations (reporting)</button>
         </form>
     @endif

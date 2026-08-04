@@ -70,11 +70,11 @@ final class OperationalLandings extends AdminPageController
             ['label' => lang('Naxas.RestaurantOps::default.navigation.waiter'), 'icon' => 'fa-concierge-bell', 'route' => 'naxas.restaurantops.waiter', 'permission' => 'Restaurant.Waiter.Access', 'transactional' => true],
             ['label' => lang('Naxas.RestaurantOps::default.navigation.kitchen'), 'icon' => 'fa-utensils', 'route' => 'naxas.restaurantops.kitchen', 'permission' => 'Restaurant.Kitchen.Access', 'transactional' => true],
             ['label' => lang('Naxas.RestaurantOps::default.navigation.shifts'), 'icon' => 'fa-clock', 'route' => 'naxas.restaurantops.shifts.index', 'permission' => 'Restaurant.Shifts.Access', 'transactional' => false],
-            ['label' => lang('Naxas.RestaurantOps::default.navigation.menu_configuration'), 'icon' => 'fa-sliders-h', 'route' => 'naxas.restaurantops.menu-config.index', 'permission' => 'Restaurant.MenuConfig.View', 'transactional' => false],
+            ['label' => lang('Naxas.RestaurantOps::default.navigation.menu_operations_settings'), 'icon' => 'fa-sliders-h', 'route' => 'naxas.restaurantops.menu-operations.index', 'permission' => 'Restaurant.MenuConfig.View', 'transactional' => false],
         ])->filter(fn (array $module): bool => $this->access->denial($user, $module['permission']) === null)
             ->map(function (array $module) use ($activeLocation, $global): array {
                 $requiresSelection = $module['transactional'] && ($global || ! $activeLocation);
-                $module['url'] = route($requiresSelection ? 'admin.location-context.select' : $module['route']);
+                $module['url'] = route($requiresSelection ? 'naxas.restaurantops.location-context.select' : $module['route']);
 
                 return $module;
             })->values();

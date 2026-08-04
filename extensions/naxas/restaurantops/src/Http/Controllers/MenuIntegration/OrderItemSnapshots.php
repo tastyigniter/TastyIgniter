@@ -10,8 +10,10 @@ use Naxas\RestaurantOps\MenuConfiguration\OrderSnapshotService;
 
 final class OrderItemSnapshots extends AdminPageController
 {
-    public function show(OrderMenu $orderMenu, OrderSnapshotService $snapshots): mixed
+    public function show(string $orderMenuId): mixed
     {
+        $orderMenu = OrderMenu::query()->findOrFail($orderMenuId);
+        $snapshots = app(OrderSnapshotService::class);
         $legacy = ['menu_item' => ['id' => $orderMenu->menu_id, 'name' => $orderMenu->name], 'item_note' => $orderMenu->comment, 'quantity' => $orderMenu->quantity, 'unit_total' => $orderMenu->price, 'line_total' => $orderMenu->subtotal];
         $snapshot = $snapshots->readOrLegacy((int) $orderMenu->getKey(), $legacy);
 
