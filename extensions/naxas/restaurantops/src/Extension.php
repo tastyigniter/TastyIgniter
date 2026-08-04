@@ -13,6 +13,7 @@ use Naxas\RestaurantOps\Console\SyncRolesCommand;
 use Naxas\RestaurantOps\Console\UpgradeCommand;
 use Naxas\RestaurantOps\Console\VerifyInstallationCommand;
 use Naxas\RestaurantOps\Console\VerifyMenuIntegrationCommand;
+use Naxas\RestaurantOps\Console\VerifyPaymentsCommand;
 use Naxas\RestaurantOps\Console\VerifyPosCommand;
 use Naxas\RestaurantOps\Console\VerifyShiftsCommand;
 use Naxas\RestaurantOps\Contracts\AuditLogger;
@@ -28,6 +29,12 @@ use Naxas\RestaurantOps\MenuIntegration\TastyIgniterCartAdapter;
 use Naxas\RestaurantOps\Models\ItemVariant;
 use Naxas\RestaurantOps\Models\MenuItemMetadata;
 use Naxas\RestaurantOps\Models\OrderItemSnapshot;
+use Naxas\RestaurantOps\Payments\Contracts\OfficialPaymentAdapter;
+use Naxas\RestaurantOps\Payments\Contracts\ReceiptNumberProvider;
+use Naxas\RestaurantOps\Payments\Contracts\ShiftTenderRecorder;
+use Naxas\RestaurantOps\Payments\DatabaseReceiptNumberProvider;
+use Naxas\RestaurantOps\Payments\OfficialOrderPaymentAdapter;
+use Naxas\RestaurantOps\Payments\OpenShiftTenderRecorder;
 use Naxas\RestaurantOps\Pos\Contracts\PosOrderServiceContract;
 use Naxas\RestaurantOps\Pos\PosOrderService;
 use Naxas\RestaurantOps\Shifts\CashierShiftContext;
@@ -61,12 +68,16 @@ class Extension extends BaseExtension
     public function register(): void
     {
         parent::register();
+        $this->mergeConfigFrom(__DIR__.'/../config/payment.php', 'restaurant-ops.payment');
 
         $this->app->scoped(LocationContextContract::class, fn ($app): LocationContextContract => $app->make(LocationContext::class));
         $this->app->singleton(AuditLogger::class, ActivityLogAdapter::class);
         $this->app->singleton(KitchenRoutingResolver::class, DefaultKitchenRoutingResolver::class);
         $this->app->scoped(OfficialCartAdapter::class, TastyIgniterCartAdapter::class);
         $this->app->scoped(PaymentSummaryProvider::class, OfficialPaymentSummaryProvider::class);
+        $this->app->scoped(OfficialPaymentAdapter::class, OfficialOrderPaymentAdapter::class);
+        $this->app->scoped(ReceiptNumberProvider::class, DatabaseReceiptNumberProvider::class);
+        $this->app->scoped(ShiftTenderRecorder::class, OpenShiftTenderRecorder::class);
         $this->app->scoped(ShiftClosingWarningProvider::class, PosClosingWarningProvider::class);
         $this->app->scoped(ShiftContextContract::class, CashierShiftContext::class);
         $this->app->scoped(PosOrderServiceContract::class, PosOrderService::class);
@@ -77,6 +88,7 @@ class Extension extends BaseExtension
         $this->registerConsoleCommand('restaurant-ops.verify-menu-integration', VerifyMenuIntegrationCommand::class);
         $this->registerConsoleCommand('restaurant-ops.verify-shifts', VerifyShiftsCommand::class);
         $this->registerConsoleCommand('restaurant-ops.verify-pos', VerifyPosCommand::class);
+        $this->registerConsoleCommand('restaurant-ops.verify-payments', VerifyPaymentsCommand::class);
         $this->app['router']->aliasMiddleware('restaurant.ops.permission', RequiresOperationalPermission::class);
         $this->app['router']->aliasMiddleware('restaurant.ops.transactional', RequiresTransactionalLocation::class);
     }

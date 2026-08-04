@@ -23,9 +23,12 @@ final class RestaurantOpsMigrationSafetyTest extends TestCase
     public function test_every_restaurant_ops_table_and_required_columns_are_discovered(): void
     {
         $schema = MigrationSchema::tablesAndColumns();
-        self::assertCount(23, $schema);
+        self::assertCount(29, $schema);
         self::assertContains('default_location_id', $schema['naxas_restaurant_ops_staff_preferences']);
         self::assertContains('active_staff_id', $schema['naxas_restaurant_ops_cashier_shifts']);
         self::assertContains('order_total', $schema['naxas_restaurant_ops_pos_orders']);
+        self::assertContains('idempotency_key', $schema['naxas_restaurant_ops_pos_payments']);
+        self::assertContains('amount_applied', $schema['naxas_restaurant_ops_pos_payment_tenders']);
+        self::assertContains('receipt_number', $schema['naxas_restaurant_ops_pos_receipts']);
     }
 }
