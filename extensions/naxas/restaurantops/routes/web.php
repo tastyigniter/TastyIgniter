@@ -6,6 +6,7 @@ use Naxas\RestaurantOps\Http\Controllers\MenuConfiguration\MenuConfigurations;
 use Naxas\RestaurantOps\Http\Controllers\MenuIntegration\CartItems;
 use Naxas\RestaurantOps\Http\Controllers\MenuIntegration\OrderItemSnapshots;
 use Naxas\RestaurantOps\Http\Controllers\OperationalLandings;
+use Naxas\RestaurantOps\Http\Controllers\Payments\PosPayments;
 use Naxas\RestaurantOps\Http\Controllers\Pos\PosOrders;
 use Naxas\RestaurantOps\Http\Controllers\Shifts\CashierShifts;
 
@@ -62,5 +63,14 @@ Route::middleware([...config('igniter-routes.adminMiddleware', ['web']), 'locati
         Route::post('/pos/orders/{posOrder}/lock-payment', [PosOrders::class, 'payment'])->middleware('restaurant.ops.permission:Restaurant.POS.Order.Edit')->name('pos.orders.payment');
         Route::post('/pos/orders/{posOrder}/discounts', [PosOrders::class, 'discount'])->middleware('restaurant.ops.permission:Restaurant.POS.Discount.Apply')->name('pos.discounts.store');
         Route::post('/pos/orders/{posOrder}/void-requests', [PosOrders::class, 'voidRequest'])->middleware('restaurant.ops.permission:Restaurant.POS.Void.Request')->name('pos.void-requests.store');
+        Route::get('/pos/orders/{posOrder}/payment', [PosPayments::class, 'page'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.Create')->name('pos.payments.page');
+        Route::post('/pos/orders/{posOrder}/payments/prepare', [PosPayments::class, 'prepare'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.Create')->name('pos.payments.prepare');
+        Route::post('/pos/orders/{posOrder}/payments', [PosPayments::class, 'store'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.Create')->name('pos.payments.store');
+        Route::get('/pos/orders/{posOrder}/payments/{payment}', [PosPayments::class, 'show'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.View')->name('pos.payments.show');
+        Route::post('/pos/orders/{posOrder}/payments/{payment}/reverse-request', [PosPayments::class, 'reverseRequest'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.Reverse.Request')->name('pos.payments.reverse-request');
+        Route::post('/pos/orders/{posOrder}/payments/{payment}/reverse-approve', [PosPayments::class, 'reverseApprove'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.Reverse.Approve')->name('pos.payments.reverse-approve');
+        Route::get('/pos/orders/{posOrder}/receipt', [PosPayments::class, 'receipt'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.View')->name('pos.receipt.show');
+        Route::post('/pos/orders/{posOrder}/receipt/print', [PosPayments::class, 'print'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.View')->name('pos.receipt.print');
+        Route::post('/pos/orders/{posOrder}/receipt/reprint', [PosPayments::class, 'reprint'])->middleware('restaurant.ops.permission:Restaurant.POS.Payment.ReprintReceipt')->name('pos.receipt.reprint');
         Route::post('/pos/orders/{posOrder}/cancel', [PosOrders::class, 'cancel'])->middleware('restaurant.ops.permission:Restaurant.POS.Void.Request')->name('pos.orders.cancel');
     });

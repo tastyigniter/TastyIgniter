@@ -16,5 +16,13 @@ final class PosOrderStatus
 
     public const PAYMENT_PENDING = 'payment_pending';
 
+    public const PAYMENT_PROCESSING = 'payment_processing';
+
+    public const PAID = 'paid';
+
+    public const PAYMENT_FAILED = 'payment_failed';
+
+    public const PAYMENT_REVERSED = 'payment_reversed';
+
     public const CANCELLED = 'cancelled';
 }

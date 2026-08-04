@@ -115,7 +115,12 @@ storefront smoke test; verify no schema/data changes.
 
 Never edit `vendor/`, TastyIgniter core, official extension source or published
 generated files; never hardcode `/admin` or location IDs; never duplicate official
-staff/location/order/menu/customer/reservation/payment domains. This version has no
-extension-owned page, navigation item, migration, uninstall automation, or business
-module. Full browser/database verification depends on a configured database and
-representative operational fixtures.
+staff/location/order/menu/customer/reservation/payment domains. The extension owns operational pages, navigation, additive migrations and business modules, but no destructive uninstall automation. Full browser/database verification depends on a configured database and representative operational fixtures.
+
+## Phase 1.7 payment, receipt and reconciliation
+
+RestaurantOps now supplies an extension-owned hybrid POS tender ledger for cash, card, mobile and split settlement. Official orders, totals, payment method/log, processed state, status history and legal invoice remain authoritative. Operational receipts are immutable and numbered per branch/day; they are not competing legal invoices. Reprint only increments print metadata. Shift expected cash uses opening + **applied cash sales** + cash in + adjustments - cash out - safe drops - petty expenses - cash refunds; card/mobile are reported but never enter the drawer.
+
+Admin payment routes are under the configured admin URI. Permissions are `Restaurant.POS.Payment.Create`, `.View`, `.ReprintReceipt`, `.Reverse.Request`, `.Reverse.Approve` and `Restaurant.Shifts.PaymentSummary.View`. Deploy by backing up, installing code, running migration/role sync, `restaurant-ops:verify-payments`, tests and browser runbook, then warming route/view caches. Roll back application code only after stopping payment traffic; the migration down removes Phase 1.7 operational history and must only run after an export and explicit data-loss approval.
+
+Failure recovery uses idempotent replay and locked version checks. Same-database synchronization failures roll back. The installed official API has no safe generic reversal for processed split tenders, so requests are recorded but approval execution is deliberately blocked; refunds, gateway charging, accounting export and fiscal hardware remain out of scope. See the Phase 1.7 ADR and verification runbook. Vendor remains tracked and is untouched; dependency cleanup is a separate deployment decision.
