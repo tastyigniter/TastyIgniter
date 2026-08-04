@@ -143,7 +143,7 @@ final class MigrationSchema
             foreach ([...$long, ...$constraints] as $item) {
                 $errors[] = 'Overlength database identifier on '.$item->TABLE_NAME;
             }
-            foreach (['naxas.restaurantops.overview', 'naxas.restaurantops.menu-config.index', 'naxas.restaurantops.shifts.index', 'naxas.restaurantops.pos'] as $route) {
+            foreach (['naxas.restaurantops.overview', 'naxas.restaurantops.menu-operations.index', 'naxas.restaurantops.shifts.index', 'naxas.restaurantops.pos'] as $route) {
                 if (! Route::has($route)) {
                     $errors[] = 'Missing route '.$route;
                 }

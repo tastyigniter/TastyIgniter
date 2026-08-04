@@ -35,12 +35,12 @@ return [
     'navigation' => [
         'operations' => 'Restaurant Operations', 'overview' => 'Operations Overview', 'head_office' => 'Head Office',
         'branch' => 'Branch Operations', 'cashier' => 'Cashier Workspace', 'waiter' => 'Waiter Workspace', 'kitchen' => 'Kitchen Workspace',
-        'menu_configuration' => 'Menu Configuration', 'shifts' => 'Shifts', 'active_shift' => 'My Active Shift', 'shift_review' => 'Branch Shift Review',
+        'menu_configuration' => 'Menu Operations Settings', 'menu_operations_settings' => 'Menu Operations Settings', 'shifts' => 'Shifts', 'active_shift' => 'My Active Shift', 'shift_review' => 'Branch Shift Review',
         'pos' => 'POS', 'active_orders' => 'Active Orders', 'held_orders' => 'Held Orders',
     ],
     'pos' => ['title' => 'Point of Sale', 'service' => 'Service type', 'customer' => 'Customer or guest', 'catalog' => 'Menu catalog', 'search' => 'Search menu', 'order' => 'Current order', 'totals' => 'Authoritative totals', 'hold' => 'Hold', 'recall' => 'Recall', 'confirm' => 'Confirm order', 'kitchen' => 'Send to Kitchen — queue available in a later phase', 'payment' => 'Prepare for Payment', 'no_shift' => 'Open your cashier shift before creating a POS order.'],
     'menu_configuration' => [
-        'title' => 'Menu Configuration', 'catalog_title' => 'Menu Configuration Catalog', 'official_menu' => 'Edit official menu', 'variants' => 'Variants',
+        'title' => 'Menu Operations Settings', 'catalog_title' => 'Choose an official menu item', 'official_menu' => 'Edit in official Menu Management', 'variants' => 'Operational variants',
         'modifier_groups' => 'Attached modifier groups', 'shared_options' => 'Shared option metadata', 'combo' => 'Combo',
     ],
     'shifts' => [

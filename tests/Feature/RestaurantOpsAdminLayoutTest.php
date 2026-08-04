@@ -51,13 +51,13 @@ final class RestaurantOpsAdminLayoutTest extends TestCase
 
         self::assertStringContainsString("\$workspace === 'overview' ? 'overview'", $controller);
         self::assertStringContainsString('OperationalAccessService', $controller);
-        self::assertStringContainsString("route(\$requiresSelection ? 'admin.location-context.select' : \$module['route'])", $controller);
+        self::assertStringContainsString("route(\$requiresSelection ? 'naxas.restaurantops.location-context.select' : \$module['route'])", $controller);
         self::assertStringContainsString("AdminMenu::setContext(\$menuItem, 'restaurant-operations')", $base);
         self::assertStringContainsString('Template::setTitle($title)', $base);
         self::assertStringContainsString("Template::setBlock('body', \$contents)", $base);
         self::assertStringContainsString('return $this->makeLayout()', $base);
         self::assertStringNotContainsString('$this->makeView($view', $base);
-        self::assertStringContainsString("route('admin.location-context.select')", $view);
+        self::assertStringContainsString("route('naxas.restaurantops.location-context.select')", $view);
         self::assertStringNotContainsString('Restaurant.POS.Access', $view);
         self::assertStringNotContainsString('admin_url(', $view);
         self::assertStringNotContainsString('Module foundation. Functional workflows', $view);

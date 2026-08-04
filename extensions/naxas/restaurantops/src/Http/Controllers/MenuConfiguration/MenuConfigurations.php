@@ -6,7 +6,6 @@ namespace Naxas\RestaurantOps\Http\Controllers\MenuConfiguration;
 
 use Igniter\Cart\Models\Menu;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Naxas\RestaurantOps\Contracts\AuditLogger;
 use Naxas\RestaurantOps\Http\Controllers\AdminPageController;
@@ -29,14 +28,17 @@ final class MenuConfigurations extends AdminPageController
         ], lang('Naxas.RestaurantOps::default.navigation.menu_configuration'), 'restaurant-ops-menu-config');
     }
 
-    public function index(Menu $menu): string
+    public function index(string $menuId): string
     {
+        $menu = Menu::query()->findOrFail($menuId);
+
         return $this->renderAdminPage('Naxas.RestaurantOps::menu-configuration', ['menu' => $menu, 'variants' => ItemVariant::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'groups' => MenuModifierGroup::query()->where('menu_id', $menu->getKey())->orderBy('display_order')->get(), 'sharedGroups' => ModifierGroup::query()->where('is_active', true)->orderBy('display_order')->get(), 'combo' => Combo::query()->where('menu_id', $menu->getKey())->first()], lang('Naxas.RestaurantOps::default.navigation.menu_configuration'), 'restaurant-ops-menu-config');
     }
 
-    public function storeVariant(Request $request, Menu $menu): JsonResponse
+    public function storeVariant(string $menuId): JsonResponse
     {
-        $data = $request->validate(['id' => ['nullable', 'integer'], 'code' => ['required', 'alpha_dash', 'max:64'], 'name' => ['required', 'string', 'max:255'], 'kitchen_name' => ['nullable', 'string', 'max:255'], 'price_mode' => ['required', 'in:adjustment,absolute'], 'price_value' => ['required', 'decimal:0,4', 'min:-9999999999'], 'is_default' => ['required', 'boolean'], 'is_active' => ['required', 'boolean'], 'display_order' => ['nullable', 'integer', 'min:0'], 'version' => ['nullable', 'integer', 'min:1']]);
+        $menu = Menu::query()->findOrFail($menuId);
+        $data = request()->validate(['id' => ['nullable', 'integer'], 'code' => ['required', 'alpha_dash', 'max:64'], 'name' => ['required', 'string', 'max:255'], 'kitchen_name' => ['nullable', 'string', 'max:255'], 'price_mode' => ['required', 'in:adjustment,absolute'], 'price_value' => ['required', 'decimal:0,4', 'min:-9999999999'], 'is_default' => ['required', 'boolean'], 'is_active' => ['required', 'boolean'], 'display_order' => ['nullable', 'integer', 'min:0'], 'version' => ['nullable', 'integer', 'min:1']]);
         $variant = DB::transaction(function () use ($data, $menu): ItemVariant {
             $variant = isset($data['id']) ? ItemVariant::query()->where('menu_id', $menu->getKey())->findOrFail($data['id']) : new ItemVariant(['menu_id' => $menu->getKey()]);
             if ($variant->exists && isset($data['version']) && (int) $variant->version !== (int) $data['version']) {
@@ -56,8 +58,10 @@ final class MenuConfigurations extends AdminPageController
         return response()->json(['data' => $variant, 'configuration_hash' => hash('sha256', $variant->toJson())], $variant->wasRecentlyCreated ? 201 : 200);
     }
 
-    public function archiveVariant(Menu $menu, ItemVariant $variant): JsonResponse
+    public function archiveVariant(string $menuId, string $variantId): JsonResponse
     {
+        $menu = Menu::query()->findOrFail($menuId);
+        $variant = ItemVariant::query()->findOrFail($variantId);
         abort_unless((int) $variant->menu_id === (int) $menu->getKey(), 404);
         $variant->forceFill(['is_active' => false, 'is_default' => false, 'archived_at' => now(), 'version' => $variant->version + 1])->saveOrFail();
         $this->audit->info('restaurant_ops.variant.archived', ['staff_id' => app('admin.auth')->user()?->getKey(), 'menu_id' => $menu->getKey(), 'variant_id' => $variant->getKey()]);

@@ -22,7 +22,7 @@ final class RequiresTransactionalLocation
             }
 
             if (in_array($code, ['operational_location_required', 'operational_global_mode_not_allowed'], true)) {
-                return redirect()->guest(route('admin.location-context.select'))
+                return redirect()->guest(route('naxas.restaurantops.location-context.select'))
                     ->with('restaurant_ops_location_message', $message);
             }
 

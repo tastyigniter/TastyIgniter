@@ -9,7 +9,7 @@
             <span class="badge bg-{{ $activeLocation ? 'primary' : 'warning' }}">
                 <i class="fa fa-map-marker-alt me-1"></i>{{ $activeLocationLabel }}
             </span>
-            <a class="btn btn-sm btn-outline-secondary" href="{{ route('admin.location-context.select') }}">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ route('naxas.restaurantops.location-context.select') }}">
                 <i class="fa fa-exchange-alt me-1"></i>Switch location
             </a>
         </div>
@@ -21,7 +21,7 @@
                 <div class="text-muted small text-uppercase mb-2">Active Branch</div>
                 <h2 class="h5 mb-2">{{ $activeLocationLabel }}</h2>
                 <span class="badge bg-{{ $activeLocation ? 'success' : ($globalMode ? 'info' : 'warning') }}">{{ $activeLocation ? 'Active' : ($globalMode ? 'Reporting mode' : 'Action required') }}</span>
-                <a class="d-block mt-3" href="{{ route('admin.location-context.select') }}">Switch location <i class="fa fa-arrow-right ms-1"></i></a>
+                <a class="d-block mt-3" href="{{ route('naxas.restaurantops.location-context.select') }}">Switch location <i class="fa fa-arrow-right ms-1"></i></a>
             </div></div></div>
             <div class="col-sm-6 col-xl-3"><div class="card h-100"><div class="card-body">
                 <div class="text-muted small text-uppercase mb-2">Staff Profile</div>
@@ -77,7 +77,7 @@
         <div class="card mb-4"><div class="card-body">
             <h2 class="h5">Current branch context</h2>
             <p class="mb-3">{{ $globalMode ? 'All locations (reporting only)' : ($activeLocation?->location_name ?? 'Select a branch to begin transactional work.') }}</p>
-            <a class="btn btn-primary" href="{{ route('admin.location-context.select') }}">Choose branch</a>
+            <a class="btn btn-primary" href="{{ route('naxas.restaurantops.location-context.select') }}">Choose branch</a>
             @if($workspaceAction)
                 <a class="btn btn-outline-secondary" href="{{ $workspaceAction['url'] }}">Open POS</a>
             @endif

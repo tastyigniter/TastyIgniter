@@ -4,7 +4,7 @@
     <p class="text-muted">Select an official TastyIgniter menu item to configure optional RestaurantOps metadata.</p>
     <div class="list-group">
         @foreach ($menus as $menu)
-            <a class="list-group-item list-group-item-action d-flex justify-content-between" href="{{ route('naxas.restaurantops.menu-configuration', $menu) }}">
+            <a class="list-group-item list-group-item-action d-flex justify-content-between" href="{{ route('naxas.restaurantops.menu-operations.show', $menu) }}">
                 <span>{{ $menu->menu_name }}</span><span class="text-muted">#{{ $menu->getKey() }}</span>
             </a>
         @endforeach

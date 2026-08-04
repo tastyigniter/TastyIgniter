@@ -47,7 +47,7 @@ class ResolveLocationContext
             return $next($request);
         }
 
-        if ($request->routeIs('admin.location-context.*')) {
+        if ($request->routeIs('naxas.restaurantops.location-context.*')) {
             return $next($request);
         }
 
@@ -59,7 +59,7 @@ class ResolveLocationContext
         }
 
         return $this->error($request, 'location_required', 'Select an active location to continue.', 409,
-            route('admin.location-context.select'));
+            route('naxas.restaurantops.location-context.select'));
     }
 
     protected function error(Request $request, string $code, string $message, int $status, ?string $redirect = null): Response
@@ -72,6 +72,6 @@ class ResolveLocationContext
             abort(403, $message);
         }
 
-        return redirect()->guest($redirect ?? route('admin.location-context.select'));
+        return redirect()->guest($redirect ?? route('naxas.restaurantops.location-context.select'));
     }
 }

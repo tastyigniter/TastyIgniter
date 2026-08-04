@@ -15,12 +15,12 @@ use App\Http\Controllers\LocationContextController;
 use Igniter\Flame\Support\Facades\Igniter;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(config('igniter-routes.adminMiddleware', ['web']))
-    ->middleware('location.context')
+Route::middleware(['web', 'igniter', 'igniter:admin', 'location.context', 'restaurant.ops.permission:Restaurant.LocationContext.Access'])
     ->prefix(Igniter::adminUri())
-    ->name('admin.location-context.')
+    ->name('naxas.restaurantops.location-context.')
     ->group(function (): void {
-        Route::get('/locations/select', [LocationContextController::class, 'index'])->name('select');
-        Route::post('/locations/switch', [LocationContextController::class, 'switch'])->name('switch');
-        Route::post('/locations/global', [LocationContextController::class, 'global'])->name('global');
+        Route::get('/restaurant-ops/location-context', [LocationContextController::class, 'index'])->name('index');
+        Route::get('/restaurant-ops/location-context/select', [LocationContextController::class, 'index'])->name('select');
+        Route::post('/restaurant-ops/location-context/switch', [LocationContextController::class, 'switch'])->name('switch');
+        Route::post('/restaurant-ops/location-context/global', [LocationContextController::class, 'global'])->name('global');
     });
