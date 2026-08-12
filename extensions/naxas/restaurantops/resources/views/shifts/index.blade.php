@@ -1,7 +1,7 @@
 <div class="container-fluid py-3">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <div><h1 class="h3 mb-1">@lang('Naxas.RestaurantOps::default.shifts.title')</h1><p class="text-muted mb-0">@lang('Naxas.RestaurantOps::default.shifts.branch_help')</p></div>
-        @if(admin_user()->hasPermission('Restaurant.Shifts.Open'))<a class="btn btn-primary" href="{{ route('naxas.restaurantops.shifts.open') }}">@lang('Naxas.RestaurantOps::default.shifts.open')</a>@endif
+        @if($canOpen)<a class="btn btn-primary" href="{{ route('naxas.restaurantops.shifts.open') }}">@lang('Naxas.RestaurantOps::default.shifts.open')</a>@endif
     </div>
     <form class="card card-body mb-3" method="get"><div class="row g-2">
         <div class="col-md-3"><select name="status" class="form-select"><option value="">@lang('Naxas.RestaurantOps::default.shifts.all_statuses')</option>@foreach(['open','closing_requested','submitted','approved','rejected','force_closed','cancelled'] as $status)<option @selected(request('status') === $status) value="{{ $status }}">{{ str($status)->replace('_', ' ')->title() }}</option>@endforeach</select></div>

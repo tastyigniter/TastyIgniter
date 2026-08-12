@@ -5,7 +5,7 @@
         <a class="btn btn-primary" href="{{ route('naxas.restaurantops.shifts.show', $shift) }}">View shift</a>
     @else
         <p class="text-muted">No active shift. Open a shift to begin cashier operations.</p>
-        @if(admin_user()->hasPermission('Restaurant.Shifts.Open'))
+        @if($canOpen)
             <a class="btn btn-primary" href="{{ route('naxas.restaurantops.shifts.open') }}">@lang('Naxas.RestaurantOps::default.shifts.open')</a>
         @endif
     @endif

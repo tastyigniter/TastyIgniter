@@ -42,10 +42,11 @@ final class CashierShifts extends AdminPageController
             $query->where('opened_at', '<=', request()->date('date_to')->endOfDay());
         }
         $records = $query->paginate(30)->withQueryString();
+        $canOpen = $user->hasPermission('Restaurant.Shifts.Open');
 
         $title = lang('Naxas.RestaurantOps::default.navigation.shifts');
 
-        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.index', compact('records'), $title, 'restaurant-ops-shifts'));
+        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.index', compact('records', 'canOpen'), $title, 'restaurant-ops-shifts'));
     }
 
     public function openForm(): Response
@@ -55,11 +56,13 @@ final class CashierShifts extends AdminPageController
 
     public function mine(): Response
     {
-        $shift = $this->shifts->currentForStaff((int) $this->user()->getAuthIdentifier());
+        $user = $this->user();
+        $shift = $this->shifts->currentForStaff((int) $user->getAuthIdentifier());
+        $canOpen = $user->hasPermission('Restaurant.Shifts.Open');
 
         $title = lang('Naxas.RestaurantOps::default.navigation.active_shift');
 
-        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.mine', compact('shift'), $title, 'restaurant-ops-active-shift'));
+        return response($this->renderAdminPage('Naxas.RestaurantOps::shifts.mine', compact('shift', 'canOpen'), $title, 'restaurant-ops-active-shift'));
     }
 
     public function branchReview(): Response
