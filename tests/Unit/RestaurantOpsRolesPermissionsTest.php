@@ -12,8 +12,8 @@ class RestaurantOpsRolesPermissionsTest extends TestCase
     {
         $permissions = PermissionDefinitions::all();
 
-        $this->assertCount(64, $permissions);
-        $this->assertCount(64, array_unique(array_keys($permissions)));
+        $this->assertCount(79, $permissions);
+        $this->assertCount(79, array_unique(array_keys($permissions)));
         $this->assertSame([
             'Restaurant.LocationContext.Access', 'Restaurant.LocationContext.Switch',
             'Restaurant.LocationContext.ViewAll', 'Restaurant.LocationContext.Manage',

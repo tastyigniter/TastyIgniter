@@ -9,6 +9,8 @@ use Naxas\RestaurantOps\Http\Controllers\OperationalLandings;
 use Naxas\RestaurantOps\Http\Controllers\Payments\PosPayments;
 use Naxas\RestaurantOps\Http\Controllers\Pos\PosOrders;
 use Naxas\RestaurantOps\Http\Controllers\Shifts\CashierShifts;
+use Naxas\RestaurantOps\Http\Controllers\Tables\FloorsController;
+use Naxas\RestaurantOps\Http\Controllers\Tables\TablesController;
 
 Route::middleware(['web'])
     ->prefix('restaurant-ops/v1')
@@ -46,6 +48,22 @@ Route::middleware([...config('igniter-routes.adminMiddleware', ['web']), 'locati
         Route::post('/shifts/{shift}/approve', [CashierShifts::class, 'approve'])->middleware(['restaurant.ops.permission:Restaurant.Shifts.Approve', 'restaurant.ops.transactional'])->name('shifts.approve');
         Route::post('/shifts/{shift}/reject', [CashierShifts::class, 'reject'])->middleware(['restaurant.ops.permission:Restaurant.Shifts.Approve', 'restaurant.ops.transactional'])->name('shifts.reject');
         Route::post('/shifts/{shift}/force-close', [CashierShifts::class, 'forceClose'])->middleware(['restaurant.ops.permission:Restaurant.Shifts.ForceClose', 'restaurant.ops.transactional'])->name('shifts.force-close');
+
+        Route::get('/tables', [TablesController::class, 'index'])->middleware('restaurant.ops.permission:Restaurant.Tables.Manage')->name('tables.index');
+        Route::get('/tables/map', [TablesController::class, 'map'])->middleware(['restaurant.ops.permission:Restaurant.Tables.View', 'restaurant.ops.transactional'])->name('tables.map');
+        Route::get('/floors', [FloorsController::class, 'index'])->middleware(['restaurant.ops.permission:Restaurant.Tables.View', 'restaurant.ops.transactional'])->name('floors.index');
+        Route::post('/floors', [FloorsController::class, 'store'])->middleware(['restaurant.ops.permission:Restaurant.Floors.Manage', 'restaurant.ops.transactional'])->name('floors.store');
+        Route::put('/floors/{floor}', [FloorsController::class, 'update'])->middleware(['restaurant.ops.permission:Restaurant.Floors.Manage', 'restaurant.ops.transactional'])->name('floors.update');
+        Route::post('/tables', [TablesController::class, 'store'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Manage', 'restaurant.ops.transactional'])->name('tables.store');
+        Route::put('/tables/{table}', [TablesController::class, 'update'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Manage', 'restaurant.ops.transactional'])->name('tables.update');
+        Route::post('/tables/{table}/open', [TablesController::class, 'open'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Open', 'restaurant.ops.transactional'])->name('tables.open');
+        Route::post('/table-sessions/{session}/guest-count', [TablesController::class, 'guestCount'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Open', 'restaurant.ops.transactional'])->name('table-sessions.guest-count');
+        Route::get('/table-sessions/{session}/bill', [TablesController::class, 'bill'])->middleware(['restaurant.ops.permission:Restaurant.Tables.View', 'restaurant.ops.transactional'])->name('table-sessions.bill');
+        Route::post('/table-sessions/{session}/bill-request', [TablesController::class, 'billRequest'])->middleware(['restaurant.ops.permission:Restaurant.Tables.BillRequest', 'restaurant.ops.transactional'])->name('table-sessions.bill-request');
+        Route::post('/table-sessions/{session}/transfer', [TablesController::class, 'transfer'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Transfer', 'restaurant.ops.transactional'])->name('table-sessions.transfer');
+        Route::post('/table-sessions/{session}/merge', [TablesController::class, 'merge'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Merge', 'restaurant.ops.transactional'])->name('table-sessions.merge');
+        Route::post('/table-sessions/{session}/split', [TablesController::class, 'split'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Split', 'restaurant.ops.transactional'])->name('table-sessions.split');
+        Route::post('/table-sessions/{session}/close', [TablesController::class, 'close'])->middleware(['restaurant.ops.permission:Restaurant.Tables.Close', 'restaurant.ops.transactional'])->name('table-sessions.close');
         Route::get('/pos', [PosOrders::class, 'screen'])->middleware(['restaurant.ops.permission:Restaurant.POS.Access', 'restaurant.ops.transactional'])->name('pos');
         Route::get('/orders/active', [PosOrders::class, 'active'])->middleware(['restaurant.ops.permission:Restaurant.POS.Access', 'restaurant.ops.transactional'])->name('orders.active');
         Route::get('/orders/held', [PosOrders::class, 'held'])->middleware(['restaurant.ops.permission:Restaurant.POS.Order.Recall', 'restaurant.ops.transactional'])->name('orders.held');

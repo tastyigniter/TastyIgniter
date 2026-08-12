@@ -4,11 +4,13 @@ $permissions = [];
 $modules = [
     'Operations' => ['Access', 'BranchDashboard', 'HeadOfficeDashboard', 'Audit.View'],
     'LocationContext' => ['Access', 'Switch', 'ViewAll', 'Manage'],
-    'POS' => ['Access', 'Order.Create', 'Order.Edit', 'Order.Hold', 'Order.Recall', 'Discount.Apply', 'Discount.Approve', 'Void.Request', 'Void.Approve', 'Payment.Settle', 'Payment.Refund', 'Receipt.Reprint'],
+    'POS' => ['Access', 'Order.Create', 'Order.Edit', 'Order.Hold', 'Order.Recall', 'Discount.Apply', 'Discount.Approve', 'Void.Request', 'Void.Approve', 'Payment.Settle', 'Payment.Create', 'Payment.View', 'Payment.ReprintReceipt', 'Payment.Reverse.Request', 'Payment.Reverse.Approve', 'Payment.Refund', 'Receipt.Reprint'],
     'DineIn' => ['Access', 'Table.Open', 'Table.Transfer', 'Table.Merge', 'Bill.Split', 'Bill.Request', 'Session.OverrideClose'],
+    'Tables' => ['View', 'Manage', 'Open', 'Transfer', 'Merge', 'Split', 'BillRequest', 'Close'],
+    'Floors' => ['Manage'],
     'Waiter' => ['Access', 'Order.Create', 'Order.Edit', 'Kitchen.Send', 'Bill.Request', 'Void.Request', 'Discount.Request'],
     'Kitchen' => ['Access', 'Ticket.Accept', 'Ticket.Prepare', 'Ticket.Ready', 'Ticket.Complete', 'Ticket.Cancel', 'Ticket.Refire'],
-    'Shifts' => ['Access', 'Open', 'CashMovement.Create', 'Close', 'ViewOwn', 'ViewBranch', 'Approve', 'ForceClose'],
+    'Shifts' => ['Access', 'Open', 'CashMovement.Create', 'Close', 'ViewOwn', 'ViewBranch', 'PaymentSummary.View', 'Approve', 'ForceClose'],
     'Reports' => ['BranchSales', 'Consolidated', 'PaymentSummary', 'DiscountsVoids', 'ShiftVariance'],
     'MenuConfig' => ['Access', 'View', 'Manage', 'Variants.Manage', 'Modifiers.Manage', 'Combos.Manage', 'Pricing.Manage', 'Availability.Manage', 'KitchenRouting.Manage', 'LocationOverrides.Manage'],
 ];
@@ -30,13 +32,14 @@ return [
         'pos' => 'Restaurant Operations — POS', 'dinein' => 'Restaurant Operations — Dine-in',
         'waiter' => 'Restaurant Operations — Waiter', 'kitchen' => 'Restaurant Operations — Kitchen',
         'shifts' => 'Restaurant Operations — Shifts', 'reports' => 'Restaurant Operations — Reports',
-        'menuconfig' => 'Restaurant Operations — Menu Configuration',
+        'menuconfig' => 'Restaurant Operations — Menu Configuration', 'tables' => 'Restaurant Operations — Tables',
+        'floors' => 'Restaurant Operations — Floors',
     ],
     'navigation' => [
         'operations' => 'Restaurant Operations', 'overview' => 'Operations Overview', 'head_office' => 'Head Office',
         'branch' => 'Branch Operations', 'cashier' => 'Cashier Workspace', 'waiter' => 'Waiter Workspace', 'kitchen' => 'Kitchen Workspace',
         'menu_configuration' => 'Menu Operations Settings', 'menu_operations_settings' => 'Menu Operations Settings', 'shifts' => 'Shifts', 'active_shift' => 'My Active Shift', 'shift_review' => 'Branch Shift Review',
-        'pos' => 'POS', 'active_orders' => 'Active Orders', 'held_orders' => 'Held Orders',
+        'pos' => 'POS', 'active_orders' => 'Active Orders', 'held_orders' => 'Held Orders', 'table_map' => 'Table Map', 'tables' => 'Floors & Tables',
     ],
     'pos' => ['title' => 'Point of Sale', 'service' => 'Service type', 'customer' => 'Customer or guest', 'catalog' => 'Menu catalog', 'search' => 'Search menu', 'order' => 'Current order', 'totals' => 'Authoritative totals', 'hold' => 'Hold', 'recall' => 'Recall', 'confirm' => 'Confirm order', 'kitchen' => 'Send to Kitchen — queue available in a later phase', 'payment' => 'Prepare for Payment', 'no_shift' => 'Open your cashier shift before creating a POS order.'],
     'menu_configuration' => [
