@@ -44,6 +44,7 @@ use Naxas\RestaurantOps\Shifts\Contracts\ShiftContextContract;
 use Naxas\RestaurantOps\Shifts\OfficialPaymentSummaryProvider;
 use Naxas\RestaurantOps\Shifts\PosClosingWarningProvider;
 use Naxas\RestaurantOps\Support\PermissionDefinitions;
+use Naxas\RestaurantOps\Tables\TableManagementService;
 use Override;
 
 class Extension extends BaseExtension
@@ -81,6 +82,7 @@ class Extension extends BaseExtension
         $this->app->scoped(ShiftClosingWarningProvider::class, PosClosingWarningProvider::class);
         $this->app->scoped(ShiftContextContract::class, CashierShiftContext::class);
         $this->app->scoped(PosOrderServiceContract::class, PosOrderService::class);
+        $this->app->scoped(TableManagementService::class);
         $this->registerConsoleCommand('restaurant-ops.sync-roles', SyncRolesCommand::class);
         $this->registerConsoleCommand('restaurant-ops.install', InstallCommand::class);
         $this->registerConsoleCommand('restaurant-ops.upgrade', UpgradeCommand::class);
@@ -109,6 +111,8 @@ class Extension extends BaseExtension
                 'href' => route('naxas.restaurantops.overview'), 'permission' => 'Restaurant.Operations.Access',
                 'child' => [
                     'restaurant-ops-overview' => ['priority' => 10, 'class' => 'restaurant-ops-overview', 'title' => lang('Naxas.RestaurantOps::default.navigation.overview'), 'href' => route('naxas.restaurantops.overview'), 'permission' => 'Restaurant.Operations.Access'],
+                    'restaurant-ops-table-map' => ['priority' => 35, 'class' => 'restaurant-ops-table-map', 'title' => lang('Naxas.RestaurantOps::default.navigation.table_map'), 'href' => route('naxas.restaurantops.tables.map'), 'permission' => 'Restaurant.Tables.View'],
+                    'restaurant-ops-tables' => ['priority' => 36, 'class' => 'restaurant-ops-tables', 'title' => lang('Naxas.RestaurantOps::default.navigation.tables'), 'href' => route('naxas.restaurantops.tables.index'), 'permission' => 'Restaurant.Tables.Manage'],
                     'restaurant-ops-pos' => ['priority' => 41, 'class' => 'restaurant-ops-pos', 'title' => lang('Naxas.RestaurantOps::default.navigation.pos'), 'href' => route('naxas.restaurantops.pos'), 'permission' => 'Restaurant.POS.Access'],
                     'restaurant-ops-pos-active' => ['priority' => 42, 'class' => 'restaurant-ops-pos-active', 'title' => lang('Naxas.RestaurantOps::default.navigation.active_orders'), 'href' => route('naxas.restaurantops.orders.active'), 'permission' => 'Restaurant.POS.Access'],
                     'restaurant-ops-pos-held' => ['priority' => 43, 'class' => 'restaurant-ops-pos-held', 'title' => lang('Naxas.RestaurantOps::default.navigation.held_orders'), 'href' => route('naxas.restaurantops.orders.held'), 'permission' => 'Restaurant.POS.Order.Recall'],

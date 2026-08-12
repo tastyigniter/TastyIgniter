@@ -61,7 +61,7 @@ final class RestaurantOpsNavigationTest extends TestCase
         $visible = $this->resolve($definitions);
 
         self::assertSame(array_keys($definitions['restaurant-operations']['child']), array_keys($visible['restaurant-operations']['child']));
-        self::assertSame([10, 41, 42, 43, 50, 60, 70, 80, 81, 82], array_column($visible['restaurant-operations']['child'], 'priority'));
+        self::assertSame([10, 35, 36, 41, 42, 43, 50, 60, 70, 80, 81, 82], array_column($visible['restaurant-operations']['child'], 'priority'));
         $this->assertHumanReadableTitles($visible);
         $this->assertNavigationTargetsRegisteredRoutes($visible);
     }

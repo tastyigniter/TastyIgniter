@@ -11,6 +11,8 @@ final class PermissionDefinitions
         'LocationContext' => ['Access', 'Switch', 'ViewAll', 'Manage'],
         'POS' => ['Access', 'Order.Create', 'Order.Edit', 'Order.Hold', 'Order.Recall', 'Discount.Apply', 'Discount.Approve', 'Void.Request', 'Void.Approve', 'Payment.Settle', 'Payment.Create', 'Payment.View', 'Payment.ReprintReceipt', 'Payment.Reverse.Request', 'Payment.Reverse.Approve', 'Payment.Refund', 'Receipt.Reprint'],
         'DineIn' => ['Access', 'Table.Open', 'Table.Transfer', 'Table.Merge', 'Bill.Split', 'Bill.Request', 'Session.OverrideClose'],
+        'Tables' => ['View', 'Manage', 'Open', 'Transfer', 'Merge', 'Split', 'BillRequest', 'Close'],
+        'Floors' => ['Manage'],
         'Waiter' => ['Access', 'Order.Create', 'Order.Edit', 'Kitchen.Send', 'Bill.Request', 'Void.Request', 'Discount.Request'],
         'Kitchen' => ['Access', 'Ticket.Accept', 'Ticket.Prepare', 'Ticket.Ready', 'Ticket.Complete', 'Ticket.Cancel', 'Ticket.Refire'],
         'Shifts' => ['Access', 'Open', 'CashMovement.Create', 'Close', 'ViewOwn', 'ViewBranch', 'PaymentSummary.View', 'Approve', 'ForceClose'],
